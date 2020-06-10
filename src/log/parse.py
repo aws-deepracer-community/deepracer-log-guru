@@ -56,7 +56,7 @@ def parse_intro_event(str, log_meta :LogMeta):
 
     if str.startswith(MISC_MODEL_NAME):
         log_meta.model_name = str.split("/")[1]
-        print("FOUND MODEL NAME:", log_meta.model_name)
+        # print("FOUND MODEL NAME:", log_meta.model_name)
 
     if str.startswith(MISC_ACTION_SPACE):
         raw_actions = str[len(MISC_ACTION_SPACE):].replace("'", "\"")

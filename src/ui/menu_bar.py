@@ -30,7 +30,7 @@ class MenuBar():
     def add_track_menu(self):
         menu = Menu(self.menubar, tearoff=0)
         for i, t in enumerate(self.main_app.tracks.values()):
-            menu.add_command(label=t.ui_name + " / " + t.private_description,
+            menu.add_command(label=t.ui_name,
                              command=lambda track=t: self.choose_track(track))
 
         self.menubar.add_cascade(label="Track", menu=menu)

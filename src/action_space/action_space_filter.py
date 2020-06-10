@@ -8,10 +8,10 @@ class ActionSpaceFilter:
 
     def set_new_action_space(self, new_action_space):
         if self.is_identical_action_space_(new_action_space):
-            print("DEBUG - Kept existing action space filter")
+            # print("DEBUG - Kept existing action space filter")
             return
         else:
-            print("DEBUG - Warning ... DIFFERENT action space ... so filter reset!!!")
+            # print("DEBUG - Warning ... DIFFERENT action space ... so filter reset!!!")
             self.action_space = new_action_space
             self.action_on = [True] * MAX_POSSIBLE_ACTIONS
 

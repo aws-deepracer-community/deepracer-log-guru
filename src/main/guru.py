@@ -56,11 +56,10 @@ class MainApp(tk.Frame):
         self.track_canvas = tk.Canvas(self, bg="black", width=700, height=500)
         self.track_canvas.bind("<Configure>", self.redraw)
         self.track_canvas.bind("<Button-1>", self.left_button_pressed_on_track_canvas)
-        self.track_canvas.bind("<Left>", self.left_or_up_key_pressed_on_track_canvas)
-        self.track_canvas.bind("<Up>", self.left_or_up_key_pressed_on_track_canvas)
-        self.track_canvas.bind("<Right>", self.right_or_down_key_pressed_on_track_canvas)
-        self.track_canvas.bind("<Down>", self.right_or_down_key_pressed_on_track_canvas)
-
+        self.track_canvas.bind("<Left>", self.left_or_down_key_pressed_on_track_canvas)
+        self.track_canvas.bind("<Up>", self.right_or_up_key_pressed_on_track_canvas)
+        self.track_canvas.bind("<Right>", self.right_or_up_key_pressed_on_track_canvas)
+        self.track_canvas.bind("<Down>", self.left_or_down_key_pressed_on_track_canvas)
 
         self.control_frame = tk.Frame(root)
 
@@ -96,7 +95,7 @@ class MainApp(tk.Frame):
         #
 
         self.master.title("Deep Racer Guru")
-        self.menu_bar = MenuBar(root, self)
+        self.menu_bar = MenuBar(root, self, False)
 
         #
         # All done, so display main window now
@@ -137,6 +136,8 @@ class MainApp(tk.Frame):
     def callback_open_this_file(self, file_name):
         # print("Loading ...", file_name)
 
+        redraw_menu_afterwards = not self.log
+
         self.visitor_map = None
 
         self.log = Log()
@@ -151,6 +152,10 @@ class MainApp(tk.Frame):
 
         self.episode_filter.set_all_episodes(self.log.episodes)
         self.reapply_episode_filter()
+
+        if redraw_menu_afterwards:
+            self.menu_bar = MenuBar(root, self, True)
+            self.update()
 
     def apply_new_action_space(self):
         self.action_space_filter.set_new_action_space(self.log.log_meta.action_space)
@@ -184,11 +189,11 @@ class MainApp(tk.Frame):
         self.analyzer.left_button_pressed(track_point)
         self.track_canvas.focus_set() # Set focus so we will now receive keyboard events too
 
-    def left_or_up_key_pressed_on_track_canvas(self, event):
+    def right_or_up_key_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)
         self.analyzer.go_forwards(track_point)
 
-    def right_or_down_key_pressed_on_track_canvas(self, event):
+    def left_or_down_key_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)
         self.analyzer.go_backwards(track_point)
 

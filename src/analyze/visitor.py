@@ -33,7 +33,7 @@ class VisitorMap:
             self.last_visitor[y_index][x_index] = visitor
             self.visits[y_index][x_index] += 1
 
-    def draw(self, track_graphics :TrackGraphics):
+    def draw(self, track_graphics :TrackGraphics, extra_bright :bool):
         # self.print_debug()
 
         max_visits = max(max(x) for x in self.visits)
@@ -42,14 +42,19 @@ class VisitorMap:
             return
 
         colour_multiplier = 255 / max_visits / max_visits * 2
+        min_visits = max_visits / 10
+
+        if extra_bright:
+            colour_multiplier *= 2
+            min_visits /= 2
 
         for yy, visits in enumerate(self.visits):
             for xx, visit in enumerate(visits):
-                if visit > max_visits / 10:
+                if visit >= min_visits:
                     x = self.min_x + self.granularity * xx
                     y = self.min_y + self.granularity * yy
 
-                    h = hex(round(min(255, 30 + colour_multiplier *visit * visit)))[2:]
+                    h = hex(round(min(255, 30 + colour_multiplier * visit * visit)))[2:]
 
                     if len(h) == 1:
                         h = "0" + h

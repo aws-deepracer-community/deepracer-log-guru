@@ -10,7 +10,7 @@ from src.log.log import Log
 
 
 class MenuBar():
-    def __init__(self, root, main_app):
+    def __init__(self, root, main_app, file_is_open):
         self.main_app = main_app
         self.root = root
 
@@ -18,8 +18,9 @@ class MenuBar():
 
         self.add_file_menu()
         self.add_track_menu()
-        self.add_episode_menu()
-        self.add_action_menu()
+        if file_is_open:
+            self.add_episode_menu()
+            self.add_action_menu()
         self.add_analyze_menu()
         self.add_view_menu()
         self.add_secret_sauce_menu()

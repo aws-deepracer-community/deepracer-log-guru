@@ -56,9 +56,11 @@ class Track:
         # assert track_width_error_in_cm < 2
         assert len(self.track_waypoints) > 20
 
+        # Comment this out to avoid chatter in public version
         if track_width_error_in_cm > 0.1:
-            print("WARNING - UI width is wrong by " + str(round(track_width_error_in_cm)) + " cm for track: " + self.ui_name)
-            print(self.ui_width_in_cm, self.track_width)
+            #print("WARNING - UI width is wrong by " + str(round(track_width_error_in_cm)) + " cm for track: " + self.ui_name)
+            #print(self.ui_width_in_cm, self.track_width)
+            pass
 
     def process_raw_waypoints(self):
         section_centers = self.get_section_centers()

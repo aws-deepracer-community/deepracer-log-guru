@@ -28,6 +28,9 @@ class AnalyzeRoute(Analyzer):
 
         self.colour_scheme = tk.IntVar()
 
+        self.smoothness_alternate = False
+        self.smoothness_current = False
+
     def build_control_frame(self, control_frame):
 
         tk.Radiobutton(control_frame, text="Reward 20", variable=self.colour_scheme, value=COLOUR_SCHEME_REWARD_20,
@@ -183,63 +186,72 @@ class AnalyzeRoute(Analyzer):
                 previous_event = e
 
     def colour_scheme_reward_100(self, event, previous_event):
-        if event.reward >= 100:
+        if event.reward >= 1000:
             self.track_graphics.plot_dot((event.x, event.y), 4, "white")
+        elif event.reward >= 100:
+            self.track_graphics.plot_dot((event.x, event.y), 3, "blue")
         elif event.reward >= 50:
-            self.track_graphics.plot_dot((event.x, event.y), 4, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 3, "green")
         elif event.reward >= 10:
-            self.track_graphics.plot_dot((event.x, event.y), 3, "yellow")
-        elif event.reward >= 1:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "blue")
+            self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
         else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "pink")
+            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
     def colour_scheme_reward_20(self, event, previous_event):
-        if event.reward >= 20:
+        if event.reward >= 100:
             self.track_graphics.plot_dot((event.x, event.y), 4, "white")
+        elif event.reward >= 20:
+            self.track_graphics.plot_dot((event.x, event.y), 3, "blue")
         elif event.reward >= 10:
-            self.track_graphics.plot_dot((event.x, event.y), 4, "green")
-        elif event.reward >= 5:
-            self.track_graphics.plot_dot((event.x, event.y), 3, "yellow")
+            self.track_graphics.plot_dot((event.x, event.y), 3, "green")
         elif event.reward >= 1:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "blue")
+            self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
         else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "pink")
+            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
     def colour_scheme_track_speed(self, event, previous_event):
-        if event.track_speed >= 4:
+        if event.track_speed >= 3.5:
             self.track_graphics.plot_dot((event.x, event.y), 4, "white")
         elif event.track_speed >= 3:
-            self.track_graphics.plot_dot((event.x, event.y), 4, "green")
-        elif event.track_speed >= 2:
-            self.track_graphics.plot_dot((event.x, event.y), 3, "yellow")
-        elif event.track_speed >= 1.5:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "blue")
+            self.track_graphics.plot_dot((event.x, event.y), 3, "blue")
+        elif event.track_speed >= 2.5:
+            self.track_graphics.plot_dot((event.x, event.y), 3, "green")
+        elif event.track_speed >= 1.8:
+            self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
         else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "pink")
+            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
     def colour_scheme_action_speed(self, event, previous_event):
         if event.speed >= 3:
             self.track_graphics.plot_dot((event.x, event.y), 4, "green")
         elif event.speed >= 2:
-            self.track_graphics.plot_dot((event.x, event.y), 3, "yellow")
+            self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
         else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "pink")
+            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
     def colour_scheme_smoothness(self, event, previous_event):
         if event.action_taken == previous_event.action_taken:
-            self.track_graphics.plot_dot((event.x, event.y), 4, "green")
-            self.track_graphics.plot_dot((previous_event.x, previous_event.y), 4, "green")
+            if self.smoothness_alternate:
+                colour = "green"
+            else:
+                colour = "blue"
+
+            self.track_graphics.plot_dot((event.x, event.y), 3, colour)
+            self.track_graphics.plot_dot((previous_event.x, previous_event.y), 3, colour)
+            self.smoothness_current = True
         else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "pink")
+            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
+            if self.smoothness_current:
+                self.smoothness_current = False
+                self.smoothness_alternate = not self.smoothness_alternate
 
     def colour_scheme_straightness(self, event, previous_event):
         if abs(event.steering_angle) < 0.1:
             self.track_graphics.plot_dot((event.x, event.y), 4, "green")
         elif abs(event.steering_angle) < 10.1:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "yellow")
+            self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
         else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "pink")
+            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
     def colour_scheme_none(self, event, previous_event):
         self.track_graphics.plot_dot((event.x, event.y), 2, "green")

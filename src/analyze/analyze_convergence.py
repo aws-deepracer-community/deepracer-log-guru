@@ -12,6 +12,7 @@ class AnalyzeConvergence(Analyzer):
         self.visitor_map = None
         self.skip_starts = tk.BooleanVar()
         self.granularity = tk.IntVar()
+        self.extra_bright = tk.BooleanVar()
 
     def build_control_frame(self, control_frame):
 
@@ -28,6 +29,11 @@ class AnalyzeConvergence(Analyzer):
                        command=self.chosen_new_granularity).grid(column=0, row=3, pady=5, padx=5)
         self.granularity.set(3)
 
+        tk.Checkbutton(
+            control_frame, text="Extra Bright",
+            variable=self.extra_bright,
+            command=self.checkbutton_press_extra_bright).grid(column=0, row=4, pady=5, padx=5)
+
     def redraw(self):
         if self.skip_starts.get():
             skip = 20
@@ -39,7 +45,7 @@ class AnalyzeConvergence(Analyzer):
                 self.visitor_map = self.current_track.get_visitor_map(self.granularity.get()/100)
                 for e in self.filtered_episodes:
                     e.apply_to_visitor_map(self.visitor_map, skip, self.action_space_filter)
-            self.visitor_map.draw(self.track_graphics)
+            self.visitor_map.draw(self.track_graphics, self.extra_bright.get())
 
     def warning_filtered_episodes_changed(self):
         self.visitor_map = None
@@ -52,6 +58,9 @@ class AnalyzeConvergence(Analyzer):
 
     def checkbutton_press_skip_starts(self):
         self.visitor_map = None
+        self.guru_parent_redraw()
+
+    def checkbutton_press_extra_bright(self):
         self.guru_parent_redraw()
 
     def chosen_new_granularity(self):

@@ -2,6 +2,9 @@ import tkinter as tk
 from os import chdir
 
 import src.secret_sauce.glue.glue as ss
+import src.configuration.personal_configuration as config
+
+
 from src.analyze.analyze_convergence import AnalyzeConvergence
 from src.analyze.analyze_route import AnalyzeRoute
 from src.episode.episode_filter import EpisodeFilter
@@ -12,6 +15,7 @@ from src.tracks.tracks import get_all_tracks
 from src.ui.menu_bar import MenuBar
 from src.ui.status_frame import StatusFrame
 from src.action_space.action_space_filter import ActionSpaceFilter
+
 
 
 class MainApp(tk.Frame):
@@ -41,7 +45,7 @@ class MainApp(tk.Frame):
         # Go to the correct directory where the log files are located, ready to load or save them there
         #
 
-        chdir("C:\\Users\\david\\PycharmProjects\\DeepRacerGuru_LOCAL\\real_logs")
+        chdir(config.LOG_DIRECTORY)
 
         #
         # Create the high level UI components (the canvas, control frame and status frame)
@@ -52,11 +56,10 @@ class MainApp(tk.Frame):
         self.track_canvas = tk.Canvas(self, bg="black", width=700, height=500)
         self.track_canvas.bind("<Configure>", self.redraw)
         self.track_canvas.bind("<Button-1>", self.left_button_pressed_on_track_canvas)
-        self.track_canvas.bind("<Left>", self.left_or_up_key_pressed_on_track_canvas)
-        self.track_canvas.bind("<Up>", self.left_or_up_key_pressed_on_track_canvas)
-        self.track_canvas.bind("<Right>", self.right_or_down_key_pressed_on_track_canvas)
-        self.track_canvas.bind("<Down>", self.right_or_down_key_pressed_on_track_canvas)
-
+        self.track_canvas.bind("<Left>", self.left_or_down_key_pressed_on_track_canvas)
+        self.track_canvas.bind("<Up>", self.right_or_up_key_pressed_on_track_canvas)
+        self.track_canvas.bind("<Right>", self.right_or_up_key_pressed_on_track_canvas)
+        self.track_canvas.bind("<Down>", self.left_or_down_key_pressed_on_track_canvas)
 
         self.control_frame = tk.Frame(root)
 
@@ -92,7 +95,7 @@ class MainApp(tk.Frame):
         #
 
         self.master.title("Deep Racer Guru")
-        self.menu_bar = MenuBar(root, self)
+        self.menu_bar = MenuBar(root, self, False)
 
         #
         # All done, so display main window now
@@ -131,22 +134,28 @@ class MainApp(tk.Frame):
         self.switch_analyzer(self.analyze_route)
 
     def callback_open_this_file(self, file_name):
-        print("Loading ...", file_name)
+        # print("Loading ...", file_name)
+
+        redraw_menu_afterwards = not self.log
 
         self.visitor_map = None
 
         self.log = Log()
         self.log.load_all(file_name)
 
-        # Display info until it moves to a window
-        self.log.log_meta.display_for_debug()
-        print("Loaded", file_name)
+        # Commented out now for public usage
+        # self.log.log_meta.display_for_debug()
+        # print("Loaded", file_name)
 
         self.status_frame.change_model_name(self.log.log_meta.model_name)
         self.apply_new_action_space()
 
         self.episode_filter.set_all_episodes(self.log.episodes)
         self.reapply_episode_filter()
+
+        if redraw_menu_afterwards:
+            self.menu_bar = MenuBar(root, self, True)
+            self.update()
 
     def apply_new_action_space(self):
         self.action_space_filter.set_new_action_space(self.log.log_meta.action_space)
@@ -180,11 +189,11 @@ class MainApp(tk.Frame):
         self.analyzer.left_button_pressed(track_point)
         self.track_canvas.focus_set() # Set focus so we will now receive keyboard events too
 
-    def left_or_up_key_pressed_on_track_canvas(self, event):
+    def right_or_up_key_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)
         self.analyzer.go_forwards(track_point)
 
-    def right_or_down_key_pressed_on_track_canvas(self, event):
+    def left_or_down_key_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)
         self.analyzer.go_backwards(track_point)
 

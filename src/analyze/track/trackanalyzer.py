@@ -2,7 +2,7 @@ import tkinter as tk
 
 from src.graphics.track_graphics import TrackGraphics
 
-class Analyzer:
+class TrackAnalyzer:
 
     def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame):
         self.guru_parent_redraw = guru_parent_redraw

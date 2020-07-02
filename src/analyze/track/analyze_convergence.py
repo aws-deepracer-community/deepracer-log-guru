@@ -1,10 +1,10 @@
 import tkinter as tk
 
+from src.analyze.track.trackanalyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
-from src.analyze.analyzer import Analyzer
 
 
-class AnalyzeConvergence(Analyzer):
+class AnalyzeConvergence(TrackAnalyzer):
 
     def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)

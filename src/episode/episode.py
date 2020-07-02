@@ -1,8 +1,8 @@
 import math
-from src.graphics.track_graphics import TrackGraphics
-from src.analyze.visitor import VisitorMap
+
 from src.action_space.action import MAX_POSSIBLE_ACTIONS
 from src.action_space.action_space_filter import ActionSpaceFilter
+from src.analyze.util.visitor import VisitorMap
 
 
 class Episode:

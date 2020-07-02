@@ -1,9 +1,8 @@
 import tkinter as tk
 
-from src.graphics.track_graphics import TrackGraphics
-from src.analyze.analyzer import Analyzer
 import src.secret_sauce.glue.glue as ss
-
+from src.analyze.track.trackanalyzer import TrackAnalyzer
+from src.graphics.track_graphics import TrackGraphics
 
 COLOUR_SCHEME_REWARD_20 = 0
 COLOUR_SCHEME_REWARD_100 = 1
@@ -14,7 +13,7 @@ COLOUR_SCHEME_STRAIGHTNESS = 5
 COLOUR_SCHEME_NONE = 6
 
 
-class AnalyzeRoute(Analyzer):
+class AnalyzeRoute(TrackAnalyzer):
 
 
     def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame):

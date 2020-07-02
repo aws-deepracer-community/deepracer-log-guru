@@ -1,6 +1,6 @@
 import math
-from src.analyze.visitor import VisitorMap
 
+from src.analyze.util.visitor import VisitorMap
 from src.graphics.track_graphics import TrackGraphics
 
 DISPLAY_BORDER = 0.3

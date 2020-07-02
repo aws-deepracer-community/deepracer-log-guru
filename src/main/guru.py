@@ -1,12 +1,12 @@
 import tkinter as tk
 from os import chdir
 
-import src.secret_sauce.glue.glue as ss
+from src.analyze.track.analyze_convergence import AnalyzeConvergence
+
 import src.configuration.personal_configuration as config
-
-
-from src.analyze.analyze_convergence import AnalyzeConvergence
-from src.analyze.analyze_route import AnalyzeRoute
+import src.secret_sauce.glue.glue as ss
+from src.action_space.action_space_filter import ActionSpaceFilter
+from src.analyze.track.analyze_route import AnalyzeRoute
 from src.episode.episode_filter import EpisodeFilter
 from src.graphics.track_graphics import TrackGraphics
 from src.log.log import Log
@@ -14,8 +14,6 @@ from src.main.view_manager import ViewManager
 from src.tracks.tracks import get_all_tracks
 from src.ui.menu_bar import MenuBar
 from src.ui.status_frame import StatusFrame
-from src.action_space.action_space_filter import ActionSpaceFilter
-
 
 
 class MainApp(tk.Frame):

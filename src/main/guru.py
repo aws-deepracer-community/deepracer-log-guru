@@ -31,7 +31,7 @@ class MainApp(tk.Frame):
         #
 
         self.tracks = get_all_tracks()
-        self.current_track = self.tracks["FS_June2020"]
+        self.current_track = self.tracks["reinvent_base"]
 
         self.log = None
         self.filtered_episodes = None

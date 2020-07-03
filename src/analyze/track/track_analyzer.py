@@ -14,6 +14,12 @@ class TrackAnalyzer:
         self.action_space = None
         self.action_space_filter = None
 
+    def uses_graph_canvas(self):
+        return False
+
+    def uses_track_graphics(self):
+        return True
+
     def take_control(self):
 
         for widget in self.control_frame.winfo_children():

@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from src.analyze.track.trackanalyzer import TrackAnalyzer
+from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
 
 

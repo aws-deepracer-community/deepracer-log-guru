@@ -2,6 +2,7 @@ import tkinter as tk
 from os import chdir
 
 from src.analyze.track.analyze_convergence import AnalyzeConvergence
+from src.analyze.graph.analyze_graph_example import AnalyzeGraphExample
 
 import src.configuration.personal_configuration as config
 import src.secret_sauce.glue.glue as ss
@@ -14,7 +15,11 @@ from src.main.view_manager import ViewManager
 from src.tracks.tracks import get_all_tracks
 from src.ui.menu_bar import MenuBar
 from src.ui.status_frame import StatusFrame
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
+DEFAULT_CANVAS_WIDTH = 800
+DEFAULT_CANVAS_HEIGHT = 500
 
 class MainApp(tk.Frame):
     def __init__(self, root):
@@ -23,6 +28,7 @@ class MainApp(tk.Frame):
         #
 
         super().__init__(root)
+
 
         #
         # Initialise all internal settings not related to UI components
@@ -45,13 +51,14 @@ class MainApp(tk.Frame):
 
         chdir(config.LOG_DIRECTORY)
 
+
         #
-        # Create the high level UI components (the canvas, control frame and status frame)
+        # Create the simple high level UI components (the canvas, control frame and status frame)
         #
 
         self.status_frame = StatusFrame(self)
 
-        self.track_canvas = tk.Canvas(self, bg="black", width=700, height=500)
+        self.track_canvas = tk.Canvas(self, bg="black", width=DEFAULT_CANVAS_WIDTH, height=DEFAULT_CANVAS_HEIGHT)
         self.track_canvas.bind("<Configure>", self.redraw)
         self.track_canvas.bind("<Button-1>", self.left_button_pressed_on_track_canvas)
         self.track_canvas.bind("<Left>", self.left_or_down_key_pressed_on_track_canvas)
@@ -61,6 +68,18 @@ class MainApp(tk.Frame):
 
         self.control_frame = tk.Frame(root)
 
+
+        #
+        # Create the graph plotting UI components using the magic of matplotlib
+        #
+
+        graph_figure = Figure(figsize=(5, 4), dpi=100)
+        matplotlib_canvas = FigureCanvasTkAgg(graph_figure, master=self)
+        matplotlib_canvas.draw()
+        self.graph_canvas = matplotlib_canvas.get_tk_widget()
+        self.graph_canvas.config(width=DEFAULT_CANVAS_WIDTH, height=DEFAULT_CANVAS_HEIGHT)
+
+
         #
         # Create the various "analyzers" and let them take control of the contents of the high level UI components
         #
@@ -68,6 +87,7 @@ class MainApp(tk.Frame):
         self.track_graphics = TrackGraphics(self.track_canvas)
         self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.control_frame)
         self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.control_frame)
+        self.analyze_graph_example = AnalyzeGraphExample(self.redraw, graph_figure, self.control_frame)
 
         self.analyzer = self.analyze_route
         self.all_analyzers = [self.analyze_route, self.analyze_convergence]
@@ -79,14 +99,13 @@ class MainApp(tk.Frame):
         else:
             self.secret_analyzers = None
 
+
         #
         # Define the layout of the high level UI components
         #
 
-        self.status_frame.pack(side=tk.BOTTOM)
-        self.track_canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.control_frame.pack(side=tk.RIGHT)
-        self.pack(fill=tk.BOTH, expand=True)
+        self.layout_ui_for_track_analyzer()
+
 
         #
         # Configure the rest of the application window and then make it appear
@@ -95,11 +114,24 @@ class MainApp(tk.Frame):
         self.master.title("Deep Racer Guru")
         self.menu_bar = MenuBar(root, self, False)
 
+
         #
         # All done, so display main window now
         #
 
         self.update()
+
+    def layout_ui_for_track_analyzer(self):
+        self.status_frame.pack(side=tk.BOTTOM)
+        self.track_canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.control_frame.pack(side=tk.RIGHT)
+        self.pack(fill=tk.BOTH, expand=True)
+
+    def layout_ui_for_graph_analyzer(self):
+        self.status_frame.pack(side=tk.BOTTOM)
+        self.graph_canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.control_frame.pack(side=tk.RIGHT)
+        self.pack(fill=tk.BOTH, expand=True)
 
     def menu_callback_switch_track(self, new_track):
         self.log = None
@@ -118,6 +150,14 @@ class MainApp(tk.Frame):
         self.redraw()
 
     def switch_analyzer(self, new_analyzer):
+
+        if new_analyzer.uses_graph_canvas() and not self.analyzer.uses_graph_canvas():
+            self.track_canvas.pack_forget()
+            self.layout_ui_for_graph_analyzer()
+        elif new_analyzer.uses_track_graphics() and not self.analyzer.uses_track_graphics():
+            self.graph_canvas.pack_forget()
+            self.layout_ui_for_track_analyzer()
+
         self.analyzer = new_analyzer
         self.analyzer.set_track(self.current_track)
         self.analyzer.set_filtered_episodes(self.filtered_episodes)
@@ -130,6 +170,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_route(self):
         self.switch_analyzer(self.analyze_route)
+
+    def menu_callback_analyze_graph_example(self):
+        self.switch_analyzer(self.analyze_graph_example)
 
     def callback_open_this_file(self, file_name):
         # print("Loading ...", file_name)

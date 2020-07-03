@@ -1,7 +1,7 @@
 import tkinter as tk
 
 import src.secret_sauce.glue.glue as ss
-from src.analyze.track.trackanalyzer import TrackAnalyzer
+from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
 
 COLOUR_SCHEME_REWARD_20 = 0

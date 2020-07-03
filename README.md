@@ -11,6 +11,8 @@ Make sure you have the following Python libraries:
 * json
 * os
 * traceback
+* numpy
+* matplotlib
 
 Setup an AWS *shared credentials file*, as per:
 * https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#shared-credentials-file

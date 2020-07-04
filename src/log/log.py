@@ -64,9 +64,9 @@ class Log:
 
         assert not saved_events
 
-        for i, e in enumerate(episode_events[:-2]):
-            self.episodes.append(Episode(i, e, "CRAP TRACK"))
-
+        for i, e in enumerate(episode_events[:-1]):
+            iteration = i // self.log_meta.hyper.episodes_between_training
+            self.episodes.append(Episode(i, iteration, e))
 
 
     def analyze_episode_details(self):

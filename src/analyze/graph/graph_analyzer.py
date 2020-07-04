@@ -1,14 +1,18 @@
 import tkinter as tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+
 
 class GraphAnalyzer:
 
-    def __init__(self, guru_parent_redraw, graph_figure :Figure, control_frame :tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg, control_frame :tk.Frame):
         self.guru_parent_redraw = guru_parent_redraw
-        self.graph_figure = graph_figure
+        self.matplotlib_canvas = matplotlib_canvas
+        self.graph_figure :Figure = matplotlib_canvas.figure
         self.control_frame = control_frame
 
         self.filtered_episodes = None
+        self.all_episodes = None
         self.action_space = None
         self.action_space_filter = None
 
@@ -31,6 +35,10 @@ class GraphAnalyzer:
         # Change of track is not relevant to graphs, so simply ignore it
         pass
 
+    def set_all_episodes(self, all_episodes):
+        self.all_episodes = all_episodes
+        self.warning_all_episodes_changed()
+
     def set_filtered_episodes(self, filtered_episodes):
         self.filtered_episodes = filtered_episodes
         self.warning_filtered_episodes_changed()
@@ -50,6 +58,9 @@ class GraphAnalyzer:
 
         self.add_plots()
 
+        self.matplotlib_canvas.draw()
+
+
     def add_plots(self):
         # You *MUST* override this
         pass
@@ -59,6 +70,11 @@ class GraphAnalyzer:
         pass
 
     def warning_filtered_episodes_changed(self):
+        # You MIGHT override this to manage cached or pre-calculated data structures
+        # Do not override to redraw() since Guru already calls redraw() at the right times!
+        pass
+
+    def warning_all_episodes_changed(self):
         # You MIGHT override this to manage cached or pre-calculated data structures
         # Do not override to redraw() since Guru already calls redraw() at the right times!
         pass

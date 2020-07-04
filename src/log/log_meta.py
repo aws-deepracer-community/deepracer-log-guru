@@ -19,6 +19,7 @@ class LogMeta:
         def __init__(self):
             self.episode_count = 0
             self.success_count = 0
+            self.iteration_count = 0
 
             self.average_percent_complete = 0.0
 
@@ -32,6 +33,7 @@ class LogMeta:
 
         def display_for_debug(self):
             print("    Episode count = ", self.episode_count)
+            print("    Interation count = ", self.iteration_count)
             print("    Success count = ", self.success_count)
             print("    Success percent = ", round(self.success_count / self.episode_count * 100))
 

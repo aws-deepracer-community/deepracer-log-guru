@@ -33,6 +33,10 @@ class TrackAnalyzer:
         self.current_track = current_track
         self.warning_track_changed()
 
+    def set_all_episodes(self, all_episodes):
+        # Does nothing because this is currently only relevant to graph analyzers
+        pass
+
     def set_filtered_episodes(self, filtered_episodes):
         self.filtered_episodes = filtered_episodes
         self.warning_filtered_episodes_changed()

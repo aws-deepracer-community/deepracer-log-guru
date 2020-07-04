@@ -3,6 +3,7 @@ from src.log.log_meta import LogMeta
 def analyze_episode_details(episodes, log_meta :LogMeta):
 
     log_meta.episode_stats.episode_count = len(episodes)
+    log_meta.episode_stats.iteration_count = episodes[-1].iteration + 1
 
     total_success_steps = 0
     total_success_distance = 0.0

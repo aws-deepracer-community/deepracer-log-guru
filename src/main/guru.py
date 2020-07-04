@@ -1,11 +1,14 @@
 import tkinter as tk
 from os import chdir
 
-from src.analyze.track.analyze_convergence import AnalyzeConvergence
-from src.analyze.graph.analyze_graph_example import AnalyzeGraphExample
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 import src.configuration.personal_configuration as config
 import src.secret_sauce.glue.glue as ss
+
+from src.analyze.track.analyze_convergence import AnalyzeConvergence
+from src.analyze.graph.analyze_graph_example import AnalyzeGraphExample
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.track.analyze_route import AnalyzeRoute
 from src.episode.episode_filter import EpisodeFilter
@@ -15,8 +18,7 @@ from src.main.view_manager import ViewManager
 from src.tracks.tracks import get_all_tracks
 from src.ui.menu_bar import MenuBar
 from src.ui.status_frame import StatusFrame
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
+
 
 DEFAULT_CANVAS_WIDTH = 800
 DEFAULT_CANVAS_HEIGHT = 500
@@ -75,7 +77,6 @@ class MainApp(tk.Frame):
 
         graph_figure = Figure(figsize=(5, 4), dpi=100)
         matplotlib_canvas = FigureCanvasTkAgg(graph_figure, master=self)
-        matplotlib_canvas.draw()
         self.graph_canvas = matplotlib_canvas.get_tk_widget()
         self.graph_canvas.config(width=DEFAULT_CANVAS_WIDTH, height=DEFAULT_CANVAS_HEIGHT)
 
@@ -87,10 +88,15 @@ class MainApp(tk.Frame):
         self.track_graphics = TrackGraphics(self.track_canvas)
         self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.control_frame)
         self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.control_frame)
-        self.analyze_graph_example = AnalyzeGraphExample(self.redraw, graph_figure, self.control_frame)
+        self.analyze_graph_example = AnalyzeGraphExample(self.redraw, matplotlib_canvas, self.control_frame)
+
+        self.all_analyzers = [
+            self.analyze_route,
+            self.analyze_convergence,
+            self.analyze_graph_example
+        ]
 
         self.analyzer = self.analyze_route
-        self.all_analyzers = [self.analyze_route, self.analyze_convergence]
         self.analyzer.set_track(self.current_track)
         self.analyzer.take_control()
 
@@ -145,7 +151,8 @@ class MainApp(tk.Frame):
             v.set_track(new_track)
 
         self.analyzer.set_track(self.current_track)
-        self.analyzer.set_filtered_episodes(self.filtered_episodes)
+        self.analyzer.set_filtered_episodes(None)
+        self.analyzer.set_all_episodes(None)
 
         self.redraw()
 
@@ -161,6 +168,10 @@ class MainApp(tk.Frame):
         self.analyzer = new_analyzer
         self.analyzer.set_track(self.current_track)
         self.analyzer.set_filtered_episodes(self.filtered_episodes)
+        if self.log:
+            self.analyzer.set_all_episodes(self.log.episodes)
+        else:
+            self.analyzer.set_all_episodes(None)
         self.analyzer.take_control()
 
         self.redraw()
@@ -214,10 +225,9 @@ class MainApp(tk.Frame):
 
         for v in self.all_analyzers:
             v.set_filtered_episodes(self.filtered_episodes)
+            v.set_all_episodes(self.log.episodes)
 
         self.status_frame.change_episodes(len(self.log.episodes), len(self.filtered_episodes))
-
-        self.analyzer.set_filtered_episodes(self.filtered_episodes)
 
         self.redraw()
 

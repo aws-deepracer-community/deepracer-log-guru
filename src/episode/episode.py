@@ -7,11 +7,11 @@ from src.analyze.util.visitor import VisitorMap
 
 class Episode:
 
-    def __init__(self, id, events, track):
+    def __init__(self, id, iteration, events):
 
         self.events = events
-        self.track = track
         self.id = id
+        self.iteration = iteration
 
         first_event = events[0]
         last_event = events[-1]
@@ -103,12 +103,3 @@ class Episode:
                 visitor_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self)
 
             previous = e
-
-
-
-def get_episodes_from_all_events(all_events, track=None):
-    episodes = []
-    for i, e in enumerate(all_events):
-        episodes.append(Episode(i, e, track))
-
-    return episodes

@@ -8,7 +8,7 @@ import src.configuration.personal_configuration as config
 import src.secret_sauce.glue.glue as ss
 
 from src.analyze.track.analyze_convergence import AnalyzeConvergence
-from src.analyze.graph.analyze_graph_example import AnalyzeGraphExample
+from src.analyze.graph.analyze_training_progress import AnalyzeTrainingProgress
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.track.analyze_route import AnalyzeRoute
 from src.episode.episode_filter import EpisodeFilter
@@ -88,12 +88,12 @@ class MainApp(tk.Frame):
         self.track_graphics = TrackGraphics(self.track_canvas)
         self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.control_frame)
         self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.control_frame)
-        self.analyze_graph_example = AnalyzeGraphExample(self.redraw, matplotlib_canvas, self.control_frame)
+        self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.control_frame)
 
         self.all_analyzers = [
             self.analyze_route,
             self.analyze_convergence,
-            self.analyze_graph_example
+            self.analyze_training_progress
         ]
 
         self.analyzer = self.analyze_route
@@ -153,6 +153,7 @@ class MainApp(tk.Frame):
         self.analyzer.set_track(self.current_track)
         self.analyzer.set_filtered_episodes(None)
         self.analyzer.set_all_episodes(None)
+        self.analyzer.set_log_meta(None)
 
         self.redraw()
 
@@ -170,8 +171,10 @@ class MainApp(tk.Frame):
         self.analyzer.set_filtered_episodes(self.filtered_episodes)
         if self.log:
             self.analyzer.set_all_episodes(self.log.episodes)
+            self.analyzer.set_log_meta(self.log.log_meta)
         else:
             self.analyzer.set_all_episodes(None)
+
         self.analyzer.take_control()
 
         self.redraw()
@@ -182,8 +185,8 @@ class MainApp(tk.Frame):
     def menu_callback_analyze_route(self):
         self.switch_analyzer(self.analyze_route)
 
-    def menu_callback_analyze_graph_example(self):
-        self.switch_analyzer(self.analyze_graph_example)
+    def menu_callback_analyze_training_progress(self):
+        self.switch_analyzer(self.analyze_training_progress)
 
     def callback_open_this_file(self, file_name):
         # print("Loading ...", file_name)
@@ -226,6 +229,7 @@ class MainApp(tk.Frame):
         for v in self.all_analyzers:
             v.set_filtered_episodes(self.filtered_episodes)
             v.set_all_episodes(self.log.episodes)
+            v.set_log_meta(self.log.log_meta)
 
         self.status_frame.change_episodes(len(self.log.episodes), len(self.filtered_episodes))
 

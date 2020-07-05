@@ -1,4 +1,6 @@
 import pickle
+import numpy as np
+
 import src.log.parse as parse
 
 from src.episode.episode import Episode
@@ -77,8 +79,11 @@ class Log:
         total_success_distance = 0.0
         total_percent_complete = 0.0
 
+        reward_list = []
+
         for e in self.episodes:
             total_percent_complete += e.percent_complete
+            reward_list.append(e.total_reward)
 
             if e.lap_complete:
                 self.log_meta.episode_stats.success_count += 1
@@ -97,6 +102,12 @@ class Log:
 
                 if self.log_meta.episode_stats.worst_distance < e.distance_travelled:
                     self.log_meta.episode_stats.worst_distance = e.distance_travelled
+
+        if reward_list:
+            r = np.array(reward_list)
+            self.log_meta.episode_stats.best_reward = np.max(r)
+            self.log_meta.episode_stats.average_reward = np.mean(r)
+            self.log_meta.episode_stats.worst_reward = np.min(r)
 
         if self.log_meta.episode_stats.success_count > 0:
             self.log_meta.episode_stats.average_steps = int(

@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 from src.action_space.action import MAX_POSSIBLE_ACTIONS
 from src.action_space.action_space_filter import ActionSpaceFilter
@@ -24,13 +25,16 @@ class Episode:
         self.distance_travelled = self.get_distance_travelled()
         self.time_taken = last_event.time - first_event.time
         self.lap_time = 100 / last_event.progress * self.time_taken
-        self.total_reward = self.get_total_reward()
-        self.average_reward = self.total_reward / self.step_count
+
+        self.rewards = self.get_list_of_rewards()
+        self.total_reward = self.rewards.sum()
+        self.average_reward = self.rewards.mean()
 
         self.action_frequency = self.get_action_frequency()
 
         self.peak_track_speed = 0
         self.set_track_speed_on_events()
+
 
     def get_distance_travelled(self):
 
@@ -65,6 +69,12 @@ class Episode:
         for e in self.events:
             total_reward += e.reward
         return total_reward
+
+    def get_list_of_rewards(self):
+        list_of_rewards = []
+        for e in self.events:
+            list_of_rewards.append(e.reward)
+        return np.array(list_of_rewards)
 
     def get_action_frequency(self):
         action_frequency = [0] * MAX_POSSIBLE_ACTIONS

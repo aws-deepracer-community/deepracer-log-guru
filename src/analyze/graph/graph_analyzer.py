@@ -1,6 +1,7 @@
 import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+from src.log.log_meta import LogMeta
 
 
 class GraphAnalyzer:
@@ -38,6 +39,9 @@ class GraphAnalyzer:
     def set_all_episodes(self, all_episodes):
         self.all_episodes = all_episodes
         self.warning_all_episodes_changed()
+
+    def set_log_meta(self, log_meta :LogMeta):
+        self.log_meta = log_meta
 
     def set_filtered_episodes(self, filtered_episodes):
         self.filtered_episodes = filtered_episodes

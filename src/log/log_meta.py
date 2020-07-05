@@ -31,6 +31,10 @@ class LogMeta:
             self.average_distance = 0.0
             self.worst_distance = 0.0
 
+            self.best_reward = 0.0
+            self.average_reward = 0.0
+            self.worst_reward = 0.0
+
         def display_for_debug(self):
             print("    Episode count = ", self.episode_count)
             print("    Interation count = ", self.iteration_count)

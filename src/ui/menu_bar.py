@@ -18,10 +18,12 @@ class MenuBar():
 
         self.add_file_menu()
         self.add_track_menu()
+
         if file_is_open:
             self.add_episode_menu()
             self.add_action_menu()
-        self.add_analyze_menu()
+            self.add_analyze_menu()
+
         self.add_view_menu()
         self.add_secret_sauce_menu()
         self.add_admin_menu()
@@ -72,7 +74,7 @@ class MenuBar():
         menu.add_command(label="Convergence", command=self.main_app.menu_callback_analyze_convergence)
         menu.add_command(label="Route", command=self.main_app.menu_callback_analyze_route)
         menu.add_separator()
-        menu.add_command(label="Example Graph", command=self.main_app.menu_callback_analyze_graph_example)
+        menu.add_command(label="Training Progress", command=self.main_app.menu_callback_analyze_training_progress)
 
         self.menubar.add_cascade(label="Analyze", menu=menu)
 

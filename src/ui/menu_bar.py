@@ -72,6 +72,7 @@ class MenuBar():
     def add_analyze_menu(self):
         menu = Menu(self.menubar, tearoff=0)
         menu.add_command(label="Convergence", command=self.main_app.menu_callback_analyze_convergence)
+        menu.add_command(label="Favourite Speed", command=self.main_app.menu_callback_analyze_favourite_speed)
         menu.add_command(label="Route", command=self.main_app.menu_callback_analyze_route)
         menu.add_separator()
         menu.add_command(label="Training Progress", command=self.main_app.menu_callback_analyze_training_progress)

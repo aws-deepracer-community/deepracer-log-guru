@@ -9,6 +9,8 @@ import src.secret_sauce.glue.glue as ss
 
 from src.analyze.track.analyze_convergence import AnalyzeConvergence
 from src.analyze.graph.analyze_training_progress import AnalyzeTrainingProgress
+from src.analyze.track.analyze_favourite_speed import AnalyzeFavouriteSpeed
+
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.track.analyze_route import AnalyzeRoute
 from src.episode.episode_filter import EpisodeFilter
@@ -88,11 +90,13 @@ class MainApp(tk.Frame):
         self.track_graphics = TrackGraphics(self.track_canvas)
         self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.control_frame)
         self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.control_frame)
+        self.analyze_favourite_speed = AnalyzeFavouriteSpeed(self.redraw, self.track_graphics, self.control_frame)
         self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.control_frame)
 
         self.all_analyzers = [
             self.analyze_route,
             self.analyze_convergence,
+            self.analyze_favourite_speed,
             self.analyze_training_progress
         ]
 
@@ -181,6 +185,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_convergence(self):
         self.switch_analyzer(self.analyze_convergence)
+
+    def menu_callback_analyze_favourite_speed(self):
+        self.switch_analyzer(self.analyze_favourite_speed)
 
     def menu_callback_analyze_route(self):
         self.switch_analyzer(self.analyze_route)

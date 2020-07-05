@@ -98,10 +98,13 @@ class Episode:
         return event, index
 
     def apply_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter):
+        self.apply_speed_to_visitor_map(visitor_map, skip_count, action_space_filter, is_any_speed)
+
+    def apply_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
         previous = self.events[0]
         for e in self.events:
 
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken) and is_correct_speed(e.speed):
 
                 visitor_map.visit(e.x, e.y, self)
 
@@ -113,3 +116,6 @@ class Episode:
                 visitor_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self)
 
             previous = e
+
+def is_any_speed(speed):
+    return True

@@ -1,4 +1,5 @@
 from src.action_space.action import MAX_POSSIBLE_ACTIONS
+from src.action_space.action_util import *
 
 class ActionSpaceFilter:
 
@@ -25,21 +26,21 @@ class ActionSpaceFilter:
         self.action_on = [False] * MAX_POSSIBLE_ACTIONS
 
         for action in self.action_space:
-            if action is not None and action.speed > 3:
+            if action is not None and is_high_speed(action.speed):
                 self.action_on[action.index] = True
 
     def set_filter_medium_speed(self):
         self.action_on = [False] * MAX_POSSIBLE_ACTIONS
 
         for action in self.action_space:
-            if action is not None and 2 <= action.speed <= 3:
+            if action is not None and is_medium_speed(action.speed):
                 self.action_on[action.index] = True
 
     def set_filter_low_speed(self):
         self.action_on = [False] * MAX_POSSIBLE_ACTIONS
 
         for action in self.action_space:
-            if action is not None and action.speed < 2:
+            if action is not None and is_low_speed(action.speed):
                 self.action_on[action.index] = True
 
     def set_filter_straight(self):

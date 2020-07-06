@@ -120,7 +120,7 @@ class MenuBar():
         self.menubar.add_cascade(label="Admin", menu=menu)
 
     def fetch_file(self):
-        FetchFileDialog(self.main_app, "Fetch File")
+        FetchFileDialog(self.main_app)
 
     def open_file(self):
         OpenFileDialog(self.main_app, "Open File")
@@ -138,7 +138,7 @@ def refresh_all_log_meta():
     for f in os.listdir(os.curdir):
         if f.endswith(".log"):
             log = Log()
-            log.parse(f, "No description!")
+            log.parse(f)
             log.save()
 
     messagebox.showinfo("Refresh All Log Meta", "Refresh succeeded!")

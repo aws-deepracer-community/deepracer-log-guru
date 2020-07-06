@@ -30,8 +30,8 @@ class Dialog(Toplevel):
 
         self.protocol("WM_DELETE_WINDOW", self.cancel)
 
-        #self.geometry("+%d+%d" % (parent.winfo_rootx(),
-        #                          parent.winfo_rooty()))
+        self.geometry("+%d+%d" % (parent.winfo_rootx() + 100,
+                                  parent.winfo_rooty() + 100))
 
         self.initial_focus.focus_set()
 

@@ -32,37 +32,41 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
     def build_control_frame(self, control_frame):
 
+        episodes_group = tk.LabelFrame(control_frame, text="Episodes", padx=5, pady=5)
+        episodes_group.grid(column=0, row=0, pady=5, padx=5)
+
         tk.Checkbutton(
-            control_frame, text="All",
+            episodes_group, text="All",
             variable=self.show_all,
             command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
 
         tk.Checkbutton(
-            control_frame, text="Filtered",
+            episodes_group, text="Filtered",
             variable=self.show_filtered,
             command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
 
+        stats_group = tk.LabelFrame(control_frame, text="Stats", padx=5, pady=5)
+        stats_group.grid(column=0, row=1, pady=5, padx=5)
+
         tk.Checkbutton(
-            control_frame, text="Mean",
+            stats_group, text="Mean",
             variable=self.show_mean,
+            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
+
+        tk.Checkbutton(
+            stats_group, text="Median",
+            variable=self.show_median,
+            command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
+
+        tk.Checkbutton(
+            stats_group, text="Best",
+            variable=self.show_best,
             command=self.guru_parent_redraw).grid(column=0, row=2, pady=5, padx=5)
 
         tk.Checkbutton(
-            control_frame, text="Median",
-            variable=self.show_median,
-            command=self.guru_parent_redraw).grid(column=0, row=3, pady=5, padx=5)
-
-        tk.Checkbutton(
-            control_frame, text="Best",
-            variable=self.show_best,
-            command=self.guru_parent_redraw).grid(column=0, row=4, pady=5, padx=5)
-
-        tk.Checkbutton(
-            control_frame, text="Worst",
+            stats_group, text="Worst",
             variable=self.show_worst,
-            command=self.guru_parent_redraw).grid(column=0, row=5, pady=5, padx=5)
-
-
+            command=self.guru_parent_redraw).grid(column=0, row=3, pady=5, padx=5)
 
 
     def add_plots(self):

@@ -1,5 +1,5 @@
 
-from tkinter import Label, Entry, StringVar, BooleanVar, IntVar, Radiobutton, Checkbutton, W, LEFT
+from tkinter import Label, LabelFrame, Entry, StringVar, BooleanVar, IntVar, Radiobutton, Checkbutton, W, E, LEFT
 from src.ui.dialog import Dialog
 from src.episode.episode_filter import EpisodeFilter
 
@@ -34,44 +34,65 @@ class EpisodeFilterDialog(Dialog):
 
     def body(self, master):
 
+        #
+
+        start_group = LabelFrame(master, text="Start", padx=5, pady=5)
+        start_group.grid(column=0, row=0, pady=5, padx=5, sticky=W)
+
         Checkbutton(
-            master, text="From Start Line Only",
+            start_group, text="From Start Line Only",
             variable=self.filter_from_start_line).grid(column=0, row=0, pady=5, padx=5, columnspan=2)
 
+        #
+
+        episode_stat_group = LabelFrame(master, text="Episode Stat", padx=5, pady=5)
+        episode_stat_group.grid(column=0, row=1, pady=5, padx=5, sticky=W)
+
         Checkbutton(
-            master, text="Complete Laps",
+            episode_stat_group, text="Complete Laps",
             variable=self.filter_complete_laps).grid(column=0, row=1, pady=5, padx=5, columnspan=2)
 
-        Label(master, text="Steps <=").grid(column=0, row=2, pady=5, padx=5)
+        Label(episode_stat_group, text="Steps <=").grid(column=0, row=2, pady=5, padx=5, sticky=E)
         default = Entry(
-            master, textvariable=self.filter_max_steps).grid(column=1, row=2, pady=5, padx=5)
+            episode_stat_group, textvariable=self.filter_max_steps).grid(column=1, row=2, pady=5, padx=5)
 
-        Label(master, text="Percent Complete >=").grid(column=0, row=3, pady=5, padx=5)
+        Label(episode_stat_group, text="Percent Complete >=").grid(column=0, row=3, pady=5, padx=5, sticky=E)
         Entry(
-            master, textvariable=self.filter_min_percent).grid(column=1, row=3, pady=5, padx=5)
+            episode_stat_group, textvariable=self.filter_min_percent).grid(column=1, row=3, pady=5, padx=5)
 
-        Label(master, text="Avg Reward >=").grid(column=0, row=4, pady=5, padx=5)
+        Label(episode_stat_group, text="Avg Reward >=").grid(column=0, row=4, pady=5, padx=5, sticky=E)
         Entry(
-            master, textvariable=self.filter_min_average_reward).grid(column=1, row=4, pady=5, padx=5)
+            episode_stat_group, textvariable=self.filter_min_average_reward).grid(column=1, row=4, pady=5, padx=5)
 
-        Label(master, text="Peak Track Speed >=").grid(column=0, row=5, pady=5, padx=5)
+        Label(episode_stat_group, text="Peak Track Speed >=").grid(column=0, row=5, pady=5, padx=5, sticky=E)
         Entry(
-            master, textvariable=self.filter_peak_track_speed).grid(column=1, row=5, pady=5, padx=5)
+            episode_stat_group, textvariable=self.filter_peak_track_speed).grid(column=1, row=5, pady=5, padx=5)
 
-        Label(master, text="Waypoint Reward ...").grid(column=0, row=6, pady=5, padx=5)
-        Label(master, text="Waypoint=").grid(column=0, row=7, pady=5, padx=5)
-        Label(master, text="Reward>=").grid(column=1, row=7, pady=5, padx=5)
-        Entry(
-            master, textvariable=self.filter_specific_waypoint_id).grid(column=0, row=8, pady=5, padx=5)
-        Entry(
-            master, textvariable=self.filter_specific_waypoint_min_reward).grid(column=1, row=8, pady=5, padx=5)
+        #
 
+        waypoint_group = LabelFrame(master, text="Waypoint", padx=5, pady=5)
+        waypoint_group.grid(column=0, row=2, pady=5, padx=5, sticky=W)
 
-        Label(master, text="Completed Section ...").grid(column=0, row=9, pady=5, padx=5)
+        Label(waypoint_group, text="Waypoint Id").grid(column=0, row=0, pady=5, padx=5, sticky=E)
         Entry(
-            master, textvariable=self.filter_complete_section_start).grid(column=0, row=10, pady=5, padx=5)
+            waypoint_group, textvariable=self.filter_specific_waypoint_id).grid(column=1, row=0, pady=5, padx=5)
+
+        Label(waypoint_group, text="Reward >=").grid(column=0, row=1, pady=5, padx=5, sticky=E)
         Entry(
-            master, textvariable=self.filter_complete_section_finish).grid(column=1, row=10, pady=5, padx=5)
+            waypoint_group, textvariable=self.filter_specific_waypoint_min_reward).grid(column=1, row=1, pady=5, padx=5)
+
+        #
+
+        completed_section_group = LabelFrame(master, text="Completed Section", padx=5, pady=5)
+        completed_section_group.grid(column=0, row=3, pady=5, padx=5, sticky=W)
+
+        Label(completed_section_group, text="Start Waypoint Id").grid(column=0, row=0, pady=5, padx=5, sticky=E)
+        Entry(
+            completed_section_group, textvariable=self.filter_complete_section_start).grid(column=1, row=0, pady=5, padx=5)
+
+        Label(completed_section_group, text="Finish Waypoint Id").grid(column=0, row=1, pady=5, padx=5, sticky=E)
+        Entry(
+            completed_section_group, textvariable=self.filter_complete_section_finish).grid(column=1, row=1, pady=5, padx=5)
 
         return default    # Returns widget to have initial focus
 

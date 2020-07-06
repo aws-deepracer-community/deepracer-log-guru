@@ -27,10 +27,9 @@ class Log:
         self.log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
         self.parse_episode_events()
 
-    def parse(self, log_file_name, description):
+    def parse(self, log_file_name):
         self.log_file_name = log_file_name
         self.meta_file_name = log_file_name + META_FILE_SUFFIX
-        self.log_meta.user_description = description
 
         self.parse_intro_events()
         self.parse_episode_events()

@@ -6,7 +6,6 @@ class LogMeta:
         self.hyper = LogMeta.HyperMeta()
         self.episode_stats = LogMeta.EpisodeStats()
 
-        self.user_description = ""
         self.model_name = ""
 
         self.world_name = ""
@@ -75,7 +74,6 @@ class LogMeta:
 
     def display_for_debug(self):
 
-        print("Description = ", self.user_description)
         print("Model name = ", self.model_name)
 
         print("World name = ", self.world_name)

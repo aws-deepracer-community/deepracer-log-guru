@@ -18,8 +18,8 @@ class PleaseWaitDialog(Toplevel):
 
         self.protocol("WM_DELETE_WINDOW", self.destroy)
 
-        # self.geometry("+%d+%d" % (parent.winfo_rootx()+50,
-        #                           parent.winfo_rooty()+50))
+        self.geometry("+%d+%d" % (parent.winfo_rootx()+100,
+                                  parent.winfo_rooty()+100))
 
         self.update()
 

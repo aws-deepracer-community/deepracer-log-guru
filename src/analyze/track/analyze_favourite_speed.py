@@ -28,20 +28,26 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
             variable=self.skip_starts,
             command=self.checkbutton_press_skip_starts).grid(column=0, row=0, pady=5, padx=5)
 
-        tk.Radiobutton(control_frame, text="3 cm", variable=self.granularity, value=3,
+        granularity_group = tk.LabelFrame(control_frame, text="Granularity", padx=5, pady=5)
+        granularity_group.grid(column=0, row=1, pady=5, padx=5)
+
+        tk.Radiobutton(granularity_group, text="3 cm", variable=self.granularity, value=3,
                        command=self.chosen_new_granularity).grid(column=0, row=1, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="5 cm", variable=self.granularity, value=5,
+        tk.Radiobutton(granularity_group, text="5 cm", variable=self.granularity, value=5,
                        command=self.chosen_new_granularity).grid(column=0, row=2, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="10 cm", variable=self.granularity, value=10,
+        tk.Radiobutton(granularity_group, text="10 cm", variable=self.granularity, value=10,
                        command=self.chosen_new_granularity).grid(column=0, row=3, pady=5, padx=5)
         self.granularity.set(5)
 
-        tk.Radiobutton(control_frame, text="5+ visits", variable=self.threshold, value=5,
-                       command=self.chosen_new_threshold).grid(column=0, row=4, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="10+ visits", variable=self.threshold, value=10,
-                       command=self.chosen_new_threshold).grid(column=0, row=5, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="20+ visits", variable=self.threshold, value=20,
-                       command=self.chosen_new_threshold).grid(column=0, row=6, pady=5, padx=5)
+        threshold_group = tk.LabelFrame(control_frame, text="Threshold", padx=5, pady=5)
+        threshold_group.grid(column=0, row=2, pady=5, padx=5)
+
+        tk.Radiobutton(threshold_group, text="5+ visits", variable=self.threshold, value=5,
+                       command=self.chosen_new_threshold).grid(column=0, row=0, pady=5, padx=5)
+        tk.Radiobutton(threshold_group, text="10+ visits", variable=self.threshold, value=10,
+                       command=self.chosen_new_threshold).grid(column=0, row=1, pady=5, padx=5)
+        tk.Radiobutton(threshold_group, text="20+ visits", variable=self.threshold, value=20,
+                       command=self.chosen_new_threshold).grid(column=0, row=2, pady=5, padx=5)
         self.threshold.set(10)
 
     def redraw(self):

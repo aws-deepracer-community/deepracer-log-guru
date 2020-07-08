@@ -270,7 +270,7 @@ class MainApp(tk.Frame):
 
     def menu_callback_episodes_complete_laps(self):
         self.episode_filter.reset()
-        self.episode_filter.set_filter_complete_laps(True)
+        self.episode_filter.set_filter_min_percent(100)
         self.reapply_episode_filter()
 
     def menu_callback_episodes_fast_laps(self):
@@ -278,13 +278,13 @@ class MainApp(tk.Frame):
         target_steps = round((es.average_steps + es.best_steps) / 2)
 
         self.episode_filter.reset()
-        self.episode_filter.set_filter_complete_laps(True)
+        self.episode_filter.set_filter_min_percent(100)
         self.episode_filter.set_filter_max_steps(target_steps)
         self.reapply_episode_filter()
 
     def menu_callback_episodes_complete_laps_from_start(self):
         self.episode_filter.reset()
-        self.episode_filter.set_filter_complete_laps(True)
+        self.episode_filter.set_filter_min_percent(100)
         self.episode_filter.set_filter_from_start_line(True)
         self.reapply_episode_filter()
 

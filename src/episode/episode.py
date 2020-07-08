@@ -16,10 +16,16 @@ class Episode:
 
         first_event = events[0]
         last_event = events[-1]
+        second_to_last_event = events[-2]
 
-        self.lap_complete = last_event.status == "lap_complete"
+        if last_event.status == "lap_complete":
+            self.lap_complete = True
+            self.percent_complete = 100
+        else:
+            self.lap_complete = False
+            self.percent_complete = second_to_last_event.progress
+
         self.step_count = len(events)
-        self.percent_complete = last_event.progress
         self.is_real_start = first_event.closest_waypoint_index <= 1
 
         self.distance_travelled = self.get_distance_travelled()

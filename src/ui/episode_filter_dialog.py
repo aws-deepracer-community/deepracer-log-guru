@@ -1,12 +1,12 @@
 
-from tkinter import Label, LabelFrame, Entry, StringVar, BooleanVar, IntVar, Radiobutton, Checkbutton, W, E, LEFT
+from tkinter import Label, LabelFrame, Entry, Button, StringVar, BooleanVar, Checkbutton, W, E, ACTIVE
 from src.ui.dialog import Dialog
 from src.episode.episode_filter import EpisodeFilter
 
 class EpisodeFilterDialog(Dialog):
     def __init__(self, parent):
 
-        self.episode_filter:EpisodeFilter = parent.episode_filter
+        self.episode_filter :EpisodeFilter = parent.episode_filter
 
         self.filter_from_start_line = BooleanVar(value=self.episode_filter.filter_from_start_line)
         self.filter_max_steps = make_nullable_var(self.episode_filter.filter_max_steps)
@@ -29,10 +29,14 @@ class EpisodeFilterDialog(Dialog):
 
     def body(self, master):
 
+        reset_button = Button(master, text="Reset to All", width=15, command=self.reset_to_all, default=ACTIVE)
+        reset_button.grid(column=0, row=0, pady=5, padx=5, sticky=W)
+
+
         #
 
         start_group = LabelFrame(master, text="Start", padx=5, pady=5)
-        start_group.grid(column=0, row=0, pady=5, padx=5, sticky=W)
+        start_group.grid(column=0, row=1, pady=5, padx=5, sticky=W)
 
         Checkbutton(
             start_group, text="From Start Line Only",
@@ -41,7 +45,7 @@ class EpisodeFilterDialog(Dialog):
         #
 
         episode_stat_group = LabelFrame(master, text="Episode Stat", padx=5, pady=5)
-        episode_stat_group.grid(column=0, row=1, pady=5, padx=5, sticky=W)
+        episode_stat_group.grid(column=0, row=2, pady=5, padx=5, sticky=W)
 
         Label(episode_stat_group, text="Steps <=").grid(column=0, row=2, pady=5, padx=5, sticky=E)
         default = Entry(
@@ -66,7 +70,7 @@ class EpisodeFilterDialog(Dialog):
         #
 
         waypoint_group = LabelFrame(master, text="Waypoint", padx=5, pady=5)
-        waypoint_group.grid(column=0, row=2, pady=5, padx=5, sticky=W)
+        waypoint_group.grid(column=0, row=3, pady=5, padx=5, sticky=W)
 
         Label(waypoint_group, text="Waypoint Id").grid(column=0, row=0, pady=5, padx=5, sticky=E)
         Entry(
@@ -81,7 +85,7 @@ class EpisodeFilterDialog(Dialog):
         #
 
         completed_section_group = LabelFrame(master, text="Completed Section", padx=5, pady=5)
-        completed_section_group.grid(column=0, row=3, pady=5, padx=5, sticky=W)
+        completed_section_group.grid(column=0, row=4, pady=5, padx=5, sticky=W)
 
         Label(completed_section_group, text="Start Waypoint Id").grid(column=0, row=0, pady=5, padx=5, sticky=E)
         Entry(
@@ -116,6 +120,22 @@ class EpisodeFilterDialog(Dialog):
 
     def validate(self):
         return True
+
+    def reset_to_all(self):
+        self.episode_filter.reset()
+
+        self.filter_from_start_line.set(False)
+        self.filter_max_steps.set("")
+        self.filter_min_percent.set("")
+        self.filter_min_average_reward.set("")
+        self.filter_peak_track_speed.set("")
+
+        self.filter_specific_waypoint_id.set("")
+        self.filter_specific_waypoint_min_reward.set("")
+
+        self.filter_complete_section_start.set("")
+        self.filter_complete_section_finish.set("")
+
 
 def make_nullable_var(initial_value):
     if initial_value is not None:

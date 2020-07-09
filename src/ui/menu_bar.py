@@ -76,6 +76,7 @@ class MenuBar():
         menu.add_command(label="Route", command=self.main_app.menu_callback_analyze_route)
         menu.add_separator()
         menu.add_command(label="Training Progress", command=self.main_app.menu_callback_analyze_training_progress)
+        menu.add_command(label="Lap Time Reward", command=self.main_app.menu_callback_analyze_lap_time_reward)
 
         self.menubar.add_cascade(label="Analyze", menu=menu)
 

@@ -2,6 +2,8 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from src.log.log_meta import LogMeta
+from matplotlib import style as mpl_style
+
 
 
 class GraphAnalyzer:
@@ -16,6 +18,9 @@ class GraphAnalyzer:
         self.all_episodes = None
         self.action_space = None
         self.action_space_filter = None
+
+        mpl_style.use("seaborn")
+        self.graph_figure.patch.set_facecolor('lightgrey')
 
     def uses_graph_canvas(self):
         return True

@@ -30,11 +30,12 @@ class Episode:
 
         self.distance_travelled = self.get_distance_travelled()
         self.time_taken = last_event.time - first_event.time
-        self.lap_time = 100 / last_event.progress * self.time_taken
+        self.lap_time = 100 / last_event.progress * self.time_taken  # predicted
 
         self.rewards = self.get_list_of_rewards()
         self.total_reward = self.rewards.sum()
         self.average_reward = self.rewards.mean()
+        self.lap_reward = 100 / last_event.progress * self.total_reward  # predicted
 
         self.action_frequency = self.get_action_frequency()
 

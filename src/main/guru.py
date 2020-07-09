@@ -11,6 +11,7 @@ from src.analyze.track.analyze_convergence import AnalyzeConvergence
 from src.analyze.graph.analyze_training_progress import AnalyzeTrainingProgress
 from src.analyze.track.analyze_favourite_speed import AnalyzeFavouriteSpeed
 from src.analyze.graph.analyze_lap_time_reward import AnalyzeLapTimeReward
+from src.analyze.graph.analyze_reward_distribution import AnalyzeRewardDistribution
 
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.track.analyze_route import AnalyzeRoute
@@ -94,13 +95,15 @@ class MainApp(tk.Frame):
         self.analyze_favourite_speed = AnalyzeFavouriteSpeed(self.redraw, self.track_graphics, self.control_frame)
         self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.control_frame)
         self.analyze_lap_time_reward = AnalyzeLapTimeReward(self.redraw, matplotlib_canvas, self.control_frame)
+        self.analyze_reward_distribution = AnalyzeRewardDistribution(self.redraw, matplotlib_canvas, self.control_frame)
 
         self.all_analyzers = [
             self.analyze_route,
             self.analyze_convergence,
             self.analyze_favourite_speed,
             self.analyze_training_progress,
-            self.analyze_lap_time_reward
+            self.analyze_lap_time_reward,
+            self.analyze_reward_distribution
         ]
 
         self.analyzer = self.analyze_route
@@ -200,6 +203,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_lap_time_reward(self):
         self.switch_analyzer(self.analyze_lap_time_reward)
+
+    def menu_callback_analyze_reward_distribution(self):
+        self.switch_analyzer(self.analyze_reward_distribution)
 
     def callback_open_this_file(self, file_name):
         # print("Loading ...", file_name)

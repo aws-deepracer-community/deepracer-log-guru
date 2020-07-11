@@ -3,6 +3,7 @@ import tkinter as tk
 import src.secret_sauce.glue.glue as ss
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
+from src.ui.log_event_info_window import LogEventInfoWindow
 
 COLOUR_SCHEME_REWARD_20 = 0
 COLOUR_SCHEME_REWARD_100 = 1
@@ -23,12 +24,14 @@ class AnalyzeRoute(TrackAnalyzer):
         self.chosen_route_index = 0
 
         self.chosen_event = None
-        chosen_event_index = -1
 
         self.colour_scheme = tk.IntVar()
 
         self.smoothness_alternate = False
         self.smoothness_current = False
+
+        self.floating_window = None
+
 
     def build_control_frame(self, control_frame):
 
@@ -106,6 +109,12 @@ class AnalyzeRoute(TrackAnalyzer):
             self.track_graphics.plot_ring_highlight((self.chosen_event.x, self.chosen_event.y), 6, "orange", 2)
 
     def display_info_about_chosen_event(self):
+
+        if not self.floating_window or self.floating_window.winfo_exists() == 0:
+            self.floating_window = LogEventInfoWindow(self.track_graphics.canvas)
+
+        self.floating_window.show_event(self.chosen_event)
+
         print("-------------")
         print("Waypoint = #", self.chosen_event.closest_waypoint_index)
         print("Reward = ", self.chosen_event.reward)

@@ -11,7 +11,8 @@ COLOUR_SCHEME_TRACK_SPEED = 2
 COLOUR_SCHEME_ACTION_SPEED = 3
 COLOUR_SCHEME_SMOOTHNESS = 4
 COLOUR_SCHEME_STRAIGHTNESS = 5
-COLOUR_SCHEME_NONE = 6
+COLOUR_SCHEME_PER_SECOND = 6
+COLOUR_SCHEME_NONE = 7
 
 
 class AnalyzeRoute(TrackAnalyzer):
@@ -32,6 +33,8 @@ class AnalyzeRoute(TrackAnalyzer):
 
         self.floating_window = None
 
+        self.increased_dot_size = 1
+
 
     def build_control_frame(self, control_frame):
 
@@ -47,25 +50,29 @@ class AnalyzeRoute(TrackAnalyzer):
                        command=self.guru_parent_redraw).grid(column=0, row=4, pady=5, padx=5)
         tk.Radiobutton(control_frame, text="Straightness", variable=self.colour_scheme, value=COLOUR_SCHEME_STRAIGHTNESS,
                        command=self.guru_parent_redraw).grid(column=0, row=5, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="None", variable=self.colour_scheme, value=COLOUR_SCHEME_NONE,
+        tk.Radiobutton(control_frame, text="Per Second", variable=self.colour_scheme, value=COLOUR_SCHEME_PER_SECOND,
                        command=self.guru_parent_redraw).grid(column=0, row=6, pady=5, padx=5)
+        tk.Radiobutton(control_frame, text="None", variable=self.colour_scheme, value=COLOUR_SCHEME_NONE,
+                       command=self.guru_parent_redraw).grid(column=0, row=7, pady=5, padx=5)
 
         self.colour_scheme.set(COLOUR_SCHEME_NONE)
 
+
+
         next_button = tk.Button(control_frame, height=2, text="Next")
         next_button["command"] = self.button_press_next
-        next_button.grid(column=0, row=7, pady=5, padx=5)
+        next_button.grid(column=0, row=8, pady=5, padx=5)
 
         previous_button = tk.Button(control_frame, height=2, text="Previous")
         previous_button["command"] = self.button_press_previous
-        previous_button.grid(column=0, row=8, pady=5, padx=5)
+        previous_button.grid(column=0, row=9, pady=5, padx=5)
 
         first_button = tk.Button(control_frame, height=2, text="First")
         first_button["command"] = self.button_press_first
-        first_button.grid(column=0, row=9, pady=5, padx=5)
+        first_button.grid(column=0, row=10, pady=5, padx=5)
 
         self.episode_info = tk.Label(control_frame, text="#None")
-        self.episode_info.grid(column=0, row=10, pady=20)
+        self.episode_info.grid(column=0, row=11, pady=20)
 
     def left_button_pressed(self, track_point):
         if self.filtered_episodes:
@@ -106,7 +113,7 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def draw_chosen_event_(self):
         if self.chosen_event:
-            self.track_graphics.plot_ring_highlight((self.chosen_event.x, self.chosen_event.y), 6, "orange", 2)
+            self.track_graphics.plot_ring_highlight((self.chosen_event.x, self.chosen_event.y), 6 + self.increased_dot_size, "orange", 2)
 
     def display_info_about_chosen_event(self):
 
@@ -114,15 +121,6 @@ class AnalyzeRoute(TrackAnalyzer):
             self.floating_window = LogEventInfoWindow(self.track_graphics.canvas)
 
         self.floating_window.show_event(self.chosen_event)
-
-        print("-------------")
-        print("Waypoint = #", self.chosen_event.closest_waypoint_index)
-        print("Reward = ", self.chosen_event.reward)
-        print("Action = ", self.chosen_event.speed, "m/s   turning", self.chosen_event.steering_angle, "degrees")
-
-        if self.chosen_event.debug_log:
-            print("Debug Output:")
-            print(self.chosen_event.debug_log)
 
         if ss.SHOW_SS:
             print("Secret Sauce:")
@@ -183,6 +181,8 @@ class AnalyzeRoute(TrackAnalyzer):
             plot_event_method = self.colour_scheme_straightness
         elif self.colour_scheme.get() == COLOUR_SCHEME_NONE:
             plot_event_method = self.colour_scheme_none
+        elif self.colour_scheme.get() == COLOUR_SCHEME_PER_SECOND:
+            plot_event_method = self.colour_scheme_per_second
         else:
             print("OOOPS - unknown colour scheme!")
             return
@@ -195,11 +195,11 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_reward_100(self, event, previous_event):
         if event.reward >= 1000:
-            self.track_graphics.plot_dot((event.x, event.y), 4, "white")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "white")
         elif event.reward >= 100:
-            self.track_graphics.plot_dot((event.x, event.y), 3, "blue")
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "blue")
         elif event.reward >= 50:
-            self.track_graphics.plot_dot((event.x, event.y), 3, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "green")
         elif event.reward >= 10:
             self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
         else:
@@ -207,11 +207,11 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_reward_20(self, event, previous_event):
         if event.reward >= 100:
-            self.track_graphics.plot_dot((event.x, event.y), 4, "white")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "white")
         elif event.reward >= 20:
-            self.track_graphics.plot_dot((event.x, event.y), 3, "blue")
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "blue")
         elif event.reward >= 10:
-            self.track_graphics.plot_dot((event.x, event.y), 3, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "green")
         elif event.reward >= 1:
             self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
         else:
@@ -219,21 +219,21 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_track_speed(self, event, previous_event):
         if event.track_speed >= 3.5:
-            self.track_graphics.plot_dot((event.x, event.y), 4, "white")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "white")
         elif event.track_speed >= 3:
-            self.track_graphics.plot_dot((event.x, event.y), 3, "blue")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "blue")
         elif event.track_speed >= 2.5:
-            self.track_graphics.plot_dot((event.x, event.y), 3, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "green")
         elif event.track_speed >= 1.8:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
+            self.track_graphics.plot_dot((event.x, event.y), 2, "yellow")
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
     def colour_scheme_action_speed(self, event, previous_event):
         if event.speed >= 3:
-            self.track_graphics.plot_dot((event.x, event.y), 4, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "green")
         elif event.speed >= 2:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
+            self.track_graphics.plot_dot((event.x, event.y), 2, "yellow")
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
@@ -242,10 +242,10 @@ class AnalyzeRoute(TrackAnalyzer):
             if self.smoothness_alternate:
                 colour = "green"
             else:
-                colour = "blue"
+                colour = "purple"
 
-            self.track_graphics.plot_dot((event.x, event.y), 3, colour)
-            self.track_graphics.plot_dot((previous_event.x, previous_event.y), 3, colour)
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, colour)
+            self.track_graphics.plot_dot((previous_event.x, previous_event.y), 3 + self.increased_dot_size, colour)
             self.smoothness_current = True
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
@@ -255,12 +255,20 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_straightness(self, event, previous_event):
         if abs(event.steering_angle) < 0.1:
-            self.track_graphics.plot_dot((event.x, event.y), 4, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "green")
         elif abs(event.steering_angle) < 10.1:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
+            self.track_graphics.plot_dot((event.x, event.y), 1, "orange")
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
     def colour_scheme_none(self, event, previous_event):
-        self.track_graphics.plot_dot((event.x, event.y), 2, "green")
+        self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "green")
+
+    def colour_scheme_per_second(self, event, previous_event):
+        if int(event.time_elapsed) % 2 == 0:
+            colour = "green"
+        else:
+            colour = "purple"
+
+        self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, colour)
 

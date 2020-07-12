@@ -398,7 +398,17 @@ class MainApp(tk.Frame):
         self.view_manager.set_analyze_back()
         self.redraw()
 
+    def menu_callback_annotations_front(self):
+        self.view_manager.set_annotations_front()
+        self.redraw()
 
+    def menu_callback_annotations_back(self):
+        self.view_manager.set_annotations_back()
+        self.redraw()
+
+    def menu_callback_annotations_off(self):
+        self.view_manager.set_annotations_off()
+        self.redraw()
 
 
 root = tk.Tk()

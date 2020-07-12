@@ -1,4 +1,5 @@
 from src.tracks.track import Track
+import src.configuration.personal_track_annotations as config
 
 
 # Other people might want to change/personalize this value
@@ -22,6 +23,9 @@ class RogerRacewayTrack(Track):
 
         # Divide track into sections
         self.track_section_dividers = [0]
+
+        # Grab the optional personal annotations from the special annotations configuration file
+        self.annotations = config.roger_raceway_annotations
 
         # Now the track definition info - as given to the reward function
         self.track_width = 0.914

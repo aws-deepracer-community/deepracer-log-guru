@@ -1,4 +1,5 @@
 from src.tracks.track import Track
+import src.configuration.personal_track_annotations as config
 
 # TODO - check whether waypoints end is correct or not ************ although not important now
 
@@ -28,6 +29,9 @@ class Reinvent2018Track(Track):
 
         # Divide track into sections
         self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
+
+        # Grab the optional personal annotations from the special annotations configuration file
+        self.annotations = config.reinvent_2018_annotations
 
         # Now the track definition info - as given to the reward function
         self.track_width = 0.60

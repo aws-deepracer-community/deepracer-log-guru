@@ -1,4 +1,5 @@
 from src.tracks.track import Track
+import src.configuration.personal_track_annotations as config
 
 
 
@@ -27,6 +28,9 @@ class Baadal2020Track(Track):
 
         # Divide track into sections
         self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
+
+        # Grab the optional personal annotations from the special annotations configuration file
+        self.annotations = config.baadal_2020_annotations
 
         # Now the track definition info - as given to the reward function
         self.track_width = 1.07

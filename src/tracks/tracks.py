@@ -10,7 +10,7 @@ from src.tracks.roger_raceway_track import RogerRacewayTrack
 def get_all_tracks():
     tracks = {}
 
-    for t in [ RogerRacewayTrack(), FumiakiLoop2020Track(), ChampionshipCup2019Track(), SummitRacewayTrack(), Reinvent2018Track(), Sola2020Track(), Baadal2020Track(), Barcelona2020Track() ]:
+    for t in [ Reinvent2018Track(), ChampionshipCup2019Track(), RogerRacewayTrack(), FumiakiLoop2020Track(), SummitRacewayTrack(), Sola2020Track(), Baadal2020Track(), Barcelona2020Track() ]:
         t.prepare()
         tracks[t.world_name] = t
 

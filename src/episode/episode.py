@@ -41,6 +41,8 @@ class Episode:
 
         self.peak_track_speed = 0
         self.set_track_speed_on_events()
+        self.set_reward_total_on_events()
+        self.set_time_elapsed_on_events()
 
 
     def get_distance_travelled(self):
@@ -70,6 +72,17 @@ class Episode:
                     self.peak_track_speed = e.track_speed
 
             previous = e
+
+    def set_reward_total_on_events(self):
+        reward_total = 0.0
+        for e in self.events:
+            reward_total += e.reward
+            e.reward_total = reward_total
+
+    def set_time_elapsed_on_events(self):
+        start_time = self.events[0].time
+        for e in self.events:
+            e.time_elapsed = e.time - start_time
 
     def get_total_reward(self):
         total_reward = 0

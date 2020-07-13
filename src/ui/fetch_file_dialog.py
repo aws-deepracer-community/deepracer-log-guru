@@ -32,6 +32,9 @@ class FetchFileDialog(Dialog):
         try:
             stream_full_name = self.stream_name.get()
 
+            if stream_full_name.endswith("\n"):
+                stream_full_name = stream_full_name[:-1]
+
             prefix = stream_full_name.split("/", 1)[0]
             log_file_name = prefix + "_" + self.radio_button_value.get() + ".log"
 

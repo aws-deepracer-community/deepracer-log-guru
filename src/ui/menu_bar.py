@@ -122,7 +122,7 @@ class MenuBar():
 
     def add_admin_menu(self):
         menu = Menu(self.menubar, tearoff=0)
-        menu.add_command(label="Refresh All Log Meta", command=refresh_all_log_meta)
+        menu.add_command(label="Re-calculate Log Meta", command=refresh_all_log_meta)
 
         self.menubar.add_cascade(label="Admin", menu=menu)
 

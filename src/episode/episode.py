@@ -16,12 +16,15 @@ class Episode:
 
         first_event = events[0]
         last_event = events[-1]
-        second_to_last_event = events[-2]
 
         if last_event.status == "lap_complete":
             self.lap_complete = True
             self.percent_complete = 100
+        elif len(events) == 1:
+            self.lap_complete = False
+            self.percent_complete = last_event.progress
         else:
+            second_to_last_event = events[-2]
             self.lap_complete = False
             self.percent_complete = second_to_last_event.progress
 

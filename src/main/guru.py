@@ -13,6 +13,7 @@ from src.analyze.track.analyze_favourite_speed import AnalyzeFavouriteSpeed
 from src.analyze.graph.analyze_lap_time_reward import AnalyzeLapTimeReward
 from src.analyze.graph.analyze_reward_distribution import AnalyzeRewardDistribution
 from src.analyze.graph.analyze_common_rewards import AnalyzeCommonRewards
+from src.analyze.graph.analyze_rewards_per_waypoint import AnalyzeRewardsPerWaypoint
 
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.track.analyze_route import AnalyzeRoute
@@ -98,6 +99,8 @@ class MainApp(tk.Frame):
         self.analyze_lap_time_reward = AnalyzeLapTimeReward(self.redraw, matplotlib_canvas, self.control_frame)
         self.analyze_reward_distribution = AnalyzeRewardDistribution(self.redraw, matplotlib_canvas, self.control_frame)
         self.analyze_common_rewards = AnalyzeCommonRewards(self.redraw, matplotlib_canvas, self.control_frame)
+        self.analyze_rewards_per_waypoint = AnalyzeRewardsPerWaypoint(self.redraw, matplotlib_canvas, self.control_frame)
+
 
         self.all_analyzers = [
             self.analyze_route,
@@ -106,7 +109,8 @@ class MainApp(tk.Frame):
             self.analyze_training_progress,
             self.analyze_lap_time_reward,
             self.analyze_reward_distribution,
-            self.analyze_common_rewards
+            self.analyze_common_rewards,
+            self.analyze_rewards_per_waypoint
         ]
 
         self.analyzer = self.analyze_route
@@ -212,6 +216,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_common_rewards(self):
         self.switch_analyzer(self.analyze_common_rewards)
+
+    def menu_callback_analyze_rewards_per_waypoint(self):
+        self.switch_analyzer(self.analyze_rewards_per_waypoint)
 
     def callback_open_this_file(self, file_name):
         # print("Loading ...", file_name)

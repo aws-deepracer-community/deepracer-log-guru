@@ -14,6 +14,7 @@ class GraphAnalyzer:
         self.graph_figure :Figure = matplotlib_canvas.figure
         self.control_frame = control_frame
 
+        self.current_track = None
         self.filtered_episodes = None
         self.all_episodes = None
         self.action_space = None
@@ -38,8 +39,8 @@ class GraphAnalyzer:
         self.control_frame.pack(side=tk.RIGHT)
 
     def set_track(self, current_track):
-        # Change of track is not relevant to graphs, so simply ignore it
-        pass
+        self.current_track = current_track
+        self.warning_track_changed()
 
     def set_all_episodes(self, all_episodes):
         self.all_episodes = all_episodes
@@ -76,6 +77,11 @@ class GraphAnalyzer:
 
     def build_control_frame(self, control_frame):
         # You *MUST* override this
+        pass
+
+    def warning_track_changed(self):
+        # You MIGHT override this to manage cached or pre-calculated data structures
+        # Do not override to redraw() since Guru already calls redraw() at the right times!
         pass
 
     def warning_filtered_episodes_changed(self):

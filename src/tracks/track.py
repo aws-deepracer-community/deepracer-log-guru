@@ -1,5 +1,7 @@
 import math
 
+import src.utils.geometry as geometry
+
 from src.analyze.util.visitor import VisitorMap
 from src.graphics.track_graphics import TrackGraphics
 from src.graphics.track_annotations import Annotation
@@ -120,9 +122,9 @@ class Track:
     def calculate_distances(self):
         previous = self.drawing_points[-1]
         for p in self.drawing_points:
-            self.measured_left_distance += self.get_distance_between_points(previous.left, p.left)
-            self.measured_middle_distance += self.get_distance_between_points(previous.middle, p.middle)
-            self.measured_right_distance += self.get_distance_between_points(previous.right, p.right)
+            self.measured_left_distance += geometry.get_distance_between_points(previous.left, p.left)
+            self.measured_middle_distance += geometry.get_distance_between_points(previous.middle, p.middle)
+            self.measured_right_distance += geometry.get_distance_between_points(previous.right, p.right)
             previous = p
 
     def calculate_range_of_coordinates(self):
@@ -176,10 +178,10 @@ class Track:
         previous_right = self.drawing_points[-1].right
 
         for p in self.drawing_points:
-            if self.get_distance_between_points(previous_left, p.left) > 0.08:
+            if geometry.get_distance_between_points(previous_left, p.left) > 0.08:
                 track_graphics.plot_line(previous_left, p.left, 3, colour)
                 previous_left = p.left
-            if self.get_distance_between_points(previous_right, p.right) > 0.08:
+            if geometry.get_distance_between_points(previous_right, p.right) > 0.08:
                 track_graphics.plot_line(previous_right, p.right, 3, colour)
                 previous_right = p.right
 
@@ -244,14 +246,42 @@ class Track:
                 colour)
             y += 1
 
-    def get_distance_between_points(self, first, second):
-        (x1, y1) = first
-        (x2, y2) = second
 
-        x_diff = x2 - x1
-        y_diff = y2 - y1
 
-        return math.sqrt(x_diff * x_diff + y_diff * y_diff)
+    def get_position_of_point_relative_to_waypoint(self, point, waypoint_id):
+        dp = self.drawing_points[waypoint_id]
+
+        left_distance = geometry.get_distance_between_points(point, dp.left)
+        right_distance = geometry.get_distance_between_points(point, dp.right)
+
+        if abs(left_distance - right_distance) < 0.001:
+            return "C"
+        elif left_distance < right_distance:
+            return "L"
+        else:
+            return "R"
+
+    def get_bearing_and_distance_to_next_waypoint(self, waypoint_id):
+        this_point = self.drawing_points[waypoint_id].middle
+
+        if waypoint_id >= len(self.drawing_points) - 1:
+            next_point = self.drawing_points[0].middle
+        else:
+            next_point = self.drawing_points[waypoint_id + 1].middle
+
+        bearing = 0
+        distance = geometry.get_distance_between_points(this_point, next_point)
+        bearing = geometry.get_bearing_between_points(this_point, next_point)
+
+        return bearing, distance
+
+    def get_bearing_and_distance_from_previous_waypoint(self, waypoint_id):
+        previous_id = waypoint_id - 1
+        if previous_id < 0:
+            previous_id = len(self.drawing_points) - 1
+
+        return self.get_bearing_and_distance_to_next_waypoint(previous_id)
+
 
     class DrawingPoint:
         def __init__(self, left, middle, right, is_divider, is_center, section):

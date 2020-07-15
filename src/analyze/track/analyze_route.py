@@ -152,7 +152,7 @@ class AnalyzeRoute(TrackAnalyzer):
         if not self.floating_window or self.floating_window.winfo_exists() == 0:
             self.floating_window = LogEventInfoWindow(self.track_graphics.canvas)
 
-        self.floating_window.show_event(self.chosen_event)
+        self.floating_window.show_event(self.chosen_event, self.current_track)
 
         if ss.SHOW_SS:
             print("Secret Sauce:")

@@ -1,5 +1,8 @@
 import tkinter as tk
+
 from src.event.event_meta import Event
+from src.tracks.track import Track
+
 from src.action_space.action_util import is_right_turn, is_left_turn
 from src.utils.formatting import get_pretty_small_float, get_pretty_large_integer
 
@@ -82,20 +85,23 @@ class LogEventInfoWindow(tk.Toplevel):
         tk.Label(parent_frame, textvariable=tk_variable).grid(row=row, column=1, pady=5, padx=5, sticky=tk.W)
 
 
-    def show_event(self, event :Event):
+    def show_event(self, event :Event, track :Track):
+
+        (next_bearing, next_distance) = track.get_bearing_and_distance_to_next_waypoint(event.closest_waypoint_index)
+        (prev_bearing, prev_distance) = track.get_bearing_and_distance_from_previous_waypoint(event.closest_waypoint_index)
 
         self.waypoint_id.set(str(event.closest_waypoint_index))
-        self.waypoint_bearing_to_next.set("")
-        self.waypoint_distance_to_next.set("")
-        self.waypoint_bearing_from_previous.set("")
-        self.waypoint_distance_from_previous.set("")
+        self.waypoint_bearing_to_next.set(str(round(next_bearing)))
+        self.waypoint_distance_to_next.set(str(round(next_distance, 2)) + " m")
+        self.waypoint_bearing_from_previous.set(str(round(prev_bearing)))
+        self.waypoint_distance_from_previous.set(str(round(prev_distance, 2)) + " m")
 
         self.state_progress.set(str(round(event.progress, 1)) + "  %")
         self.state_time.set(str(round(event.time_elapsed, 1)) + "  secs")
         self.state_step.set(str(event.step))
         self.state_track_speed.set(str(round(event.track_speed, 1)) + "  m/s")
-        self.state_bearing.set(str(round(event.heading, 1)) + "  degrees")
-        self.state_side.set("")
+        self.state_bearing.set(str(round(event.heading)))
+        self.state_side.set(track.get_position_of_point_relative_to_waypoint((event.x, event.y), event.closest_waypoint_index))
         self.state_distance_from_centre.set("")
         self.state_all_wheels_on_track.set(str(event.all_wheels_on_track))
 

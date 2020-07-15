@@ -7,6 +7,7 @@ from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 
+MIN_PERCENT_FOR_GOOD_PREDICTION = 3
 
 class AnalyzeLapTimeReward(GraphAnalyzer):
 
@@ -181,7 +182,7 @@ def get_plot_data_for_total_reward_predictions(episodes):
     plot_reward = []
 
     for e in episodes:
-        if not e.lap_complete:
+        if not e.lap_complete and e.percent_complete >= MIN_PERCENT_FOR_GOOD_PREDICTION:
             plot_time.append(e.lap_time)
             plot_reward.append(e.lap_reward)
 
@@ -196,7 +197,7 @@ def get_plot_data_for_average_reward_predictions(episodes):
     plot_reward = []
 
     for e in episodes:
-        if not e.lap_complete:
+        if not e.lap_complete and e.percent_complete >= MIN_PERCENT_FOR_GOOD_PREDICTION:
             plot_time.append(e.lap_time)
             plot_reward.append(e.average_reward)
 

@@ -64,7 +64,7 @@ class OpenFileDialog(Dialog):
         self.bind("<Return>", self.cancel)
         self.bind("<Escape>", self.cancel)
 
-        box.pack()
+        box.pack(pady=5)
 
     def apply(self):
         pass

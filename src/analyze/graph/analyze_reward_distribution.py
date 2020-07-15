@@ -45,14 +45,18 @@ class AnalyzeRewardDistribution(GraphAnalyzer):
     def plot_for_total_reward(self, axes :Axes):
         # Plot data
 
-        add_plot_for_total_reward(axes, "All", self.all_episodes, "C1")
+        (plot_data_all) = get_plot_data_for_total_reward(self.all_episodes)
 
         if self.filtered_episodes and self.show_filtered.get():
-            add_plot_for_total_reward(axes, "Filtered", self.filtered_episodes, "C2")
+            (plot_data_filtered) = get_plot_data_for_total_reward(self.filtered_episodes)
+            axes.hist([plot_data_all, plot_data_filtered], density=True, label=["All", "Filtered"], color=["C1", "C2"])
+        else:
+            axes.hist(plot_data_all, label="All", color="C1")
 
         # Format the plot
         axes.set_title("Total Reward per Episode")
         axes.set_xlabel("Reward")
+        axes.get_yaxis().set_ticklabels([])
 
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
@@ -60,14 +64,18 @@ class AnalyzeRewardDistribution(GraphAnalyzer):
     def plot_for_average_reward(self, axes: Axes):
         # Plot data
 
-        add_plot_for_average_reward(axes, "All", self.all_episodes, "C1")
+        (plot_data_all) = get_plot_data_for_average_reward(self.all_episodes)
 
         if self.filtered_episodes and self.show_filtered.get():
-            add_plot_for_average_reward(axes, "Filtered", self.filtered_episodes, "C2")
+            (plot_data_filtered) = get_plot_data_for_average_reward(self.filtered_episodes)
+            axes.hist([plot_data_all, plot_data_filtered], density=True, label=["All", "Filtered"], color=["C1", "C2"])
+        else:
+            axes.hist(plot_data_all, label="All", color="C1")
 
         # Format the plot
         axes.set_title("Average Reward per Episode")
         axes.set_xlabel("Reward")
+        axes.get_yaxis().set_ticklabels([])
 
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
@@ -75,14 +83,18 @@ class AnalyzeRewardDistribution(GraphAnalyzer):
     def plot_for_reward_per_step(self, axes: Axes):
         # Plot data
 
-        add_plot_for_reward_per_step(axes, "All", self.all_episodes, "C1")
+        (plot_data_all) = get_plot_data_for_reward_per_step(self.all_episodes)
 
         if self.filtered_episodes and self.show_filtered.get():
-            add_plot_for_reward_per_step(axes, "Filtered", self.filtered_episodes, "C2")
+            (plot_data_filtered) = get_plot_data_for_reward_per_step(self.filtered_episodes)
+            axes.hist([plot_data_all, plot_data_filtered], density=True,  label=["All","Filtered"], color=["C1","C2"])
+        else:
+            axes.hist(plot_data_all, label="All", color="C1")
 
         # Format the plot
         axes.set_title("Reward per Step")
         axes.set_xlabel("Reward")
+        axes.get_yaxis().set_ticklabels([])
 
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
@@ -134,9 +146,7 @@ def get_plot_data_for_reward_per_step(episodes):
 
     return np.array(plot_reward)
 
-def add_plot_for_reward_per_step(axes :Axes, label, episodes, colour):
-    (plot_data) = get_plot_data_for_reward_per_step(episodes)
-    axes.hist(plot_data, label=label, color=colour)
+
 
 
 

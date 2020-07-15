@@ -7,6 +7,8 @@ from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 
+ROUNDING_EXACT = "Exact"
+ROUNDING_INTEGER = "Integer"
 
 class AnalyzeCommonRewards(GraphAnalyzer):
 
@@ -14,10 +16,19 @@ class AnalyzeCommonRewards(GraphAnalyzer):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
+        self.rounding = tk.StringVar()
+        self.rounding.set(ROUNDING_EXACT)
 
 
     def build_control_frame(self, control_frame):
-        pass
+        rounding_group = tk.LabelFrame(control_frame, text="Rounding", padx=5, pady=5)
+        rounding_group.grid(column=0, row=0, pady=5, padx=5, sticky=tk.W)
+
+        tk.Radiobutton(rounding_group, text=ROUNDING_EXACT, variable=self.rounding, value=ROUNDING_EXACT,
+                       command=self.guru_parent_redraw).grid(column=0, row=0, pady=2, padx=5)
+        tk.Radiobutton(rounding_group, text=ROUNDING_INTEGER, variable=self.rounding, value=ROUNDING_INTEGER,
+                       command=self.guru_parent_redraw).grid(column=0, row=1, pady=2, padx=5)
+
 
     def add_plots(self):
         if not self.all_episodes:
@@ -34,8 +45,10 @@ class AnalyzeCommonRewards(GraphAnalyzer):
     def plot_common_rewards(self, axes :Axes, episodes, label, colour):
         # Plot data
 
+        round_to_integer = self.rounding.get() == ROUNDING_INTEGER
+
         if episodes:
-            add_plot_for_common_rewards(axes, episodes, colour)
+            add_plot_for_common_rewards(axes, episodes, colour, round_to_integer)
 
         # Format the plot
         axes.set_title("Most Frequent Reward Per Step\n(" + label + " Episodes)")
@@ -50,13 +63,16 @@ def get_list_of_empty_lists(size):
     return new_list
 
 
-def get_plot_data_for_common_rewards(episodes):
+def get_plot_data_for_common_rewards(episodes, round_to_integer):
 
     all_step_rewards = []
 
     for e in episodes:
         for v in e.events:
-            all_step_rewards.append(v.reward)
+            if round_to_integer:
+                all_step_rewards.append(round(v.reward))
+            else:
+                all_step_rewards.append(v.reward)
 
     unique_rewards, unique_counts = np.unique(np.array(all_step_rewards), return_counts=True)
 
@@ -73,8 +89,8 @@ def get_plot_data_for_common_rewards(episodes):
 
     return plot_rewards, plot_counts
 
-def add_plot_for_common_rewards(axes :Axes, episodes, colour):
-    (plot_rewards, plot_counts) = get_plot_data_for_common_rewards(episodes)
+def add_plot_for_common_rewards(axes :Axes, episodes, colour, round_to_integer):
+    (plot_rewards, plot_counts) = get_plot_data_for_common_rewards(episodes, round_to_integer)
 
     y_pos = np.arange(len(plot_counts))
 

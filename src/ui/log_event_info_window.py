@@ -1,5 +1,7 @@
 import tkinter as tk
 from src.event.event_meta import Event
+from src.action_space.action_util import is_right_turn, is_left_turn
+from src.utils.formatting import get_pretty_small_float, get_pretty_large_integer
 
 class LogEventInfoWindow(tk.Toplevel):
 
@@ -15,11 +17,11 @@ class LogEventInfoWindow(tk.Toplevel):
         reward_frame = tk.LabelFrame(self, text="Reward")
         debug_frame = tk.LabelFrame(self, text="Log File Debug")
 
-        waypoint_frame.grid(row=0, column=2, rowspan=2, pady=5, padx=5, sticky=tk.NW)
-        state_frame.grid(row=0, column=1, rowspan=2, pady=5, padx=5, sticky=tk.NW)
-        action_frame.grid(row=1, column=0, pady=5, padx=5, sticky=tk.NW)
-        reward_frame.grid(row=0, column=0, pady=5, padx=5, sticky=tk.NW)
-        debug_frame.grid(row=2, column=0, columnspan=3, pady=5, padx=5, sticky=tk.NW)
+        waypoint_frame.grid(row=0, column=2, rowspan=2, pady=5, padx=5, sticky=tk.NW+tk.E)
+        state_frame.grid(row=0, column=1, rowspan=2, pady=5, padx=5, sticky=tk.NW+tk.E)
+        action_frame.grid(row=1, column=0, pady=5, padx=5, sticky=tk.NW+tk.E)
+        reward_frame.grid(row=0, column=0, pady=5, padx=5, sticky=tk.NW+tk.E)
+        debug_frame.grid(row=2, column=0, columnspan=3, pady=5, padx=5, sticky=tk.NW+tk.E)
 
         self.waypoint_id = tk.StringVar()
         self.waypoint_bearing_to_next = tk.StringVar()
@@ -98,13 +100,13 @@ class LogEventInfoWindow(tk.Toplevel):
         self.state_all_wheels_on_track.set(str(event.all_wheels_on_track))
 
         self.action_id.set(str(event.action_taken))
-        self.action_steering.set(str(event.steering_angle) + "  degrees")
+        self.action_steering.set(get_formatted_steering(event.steering_angle))
         self.action_speed.set(str(event.speed) + "  m/s")
         self.action_sequence.set("")
 
         self.reward_value.set(str(round(event.reward, 5)))
         self.reward_rank.set("")
-        self.reward_total.set(str(round(event.reward_total, 5)))
+        self.reward_total.set(get_pretty_large_integer(event.reward_total))
 
         if event.debug_log:
             self.debug_output.set(event.debug_log)
@@ -112,3 +114,11 @@ class LogEventInfoWindow(tk.Toplevel):
             self.debug_output.set("")
 
         self.lift()
+
+def get_formatted_steering(steering_angle):
+    if is_right_turn(steering_angle):
+        return "RIGHT " + get_pretty_small_float(abs(steering_angle), 30, 1)
+    elif is_left_turn(steering_angle):
+        return "LEFT " + get_pretty_small_float(abs(steering_angle), 30, 1)
+    else:
+        return "AHEAD"

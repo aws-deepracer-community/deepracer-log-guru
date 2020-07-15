@@ -14,6 +14,10 @@ COLOUR_SCHEME_STRAIGHTNESS = 5
 COLOUR_SCHEME_PER_SECOND = 6
 COLOUR_SCHEME_NONE = 7
 
+BLOB_SIZE_SMALL = "Small"
+BLOB_SIZE_MEDIUM = "Medium"
+BLOB_SIZE_LARGE = "Large"
+
 
 class AnalyzeRoute(TrackAnalyzer):
 
@@ -27,52 +31,67 @@ class AnalyzeRoute(TrackAnalyzer):
         self.chosen_event = None
 
         self.colour_scheme = tk.IntVar()
+        self.colour_scheme.set(COLOUR_SCHEME_NONE)
 
         self.smoothness_alternate = False
         self.smoothness_current = False
 
         self.floating_window = None
 
-        self.increased_dot_size = 1
+        self.blob_size = tk.StringVar()
+        self.blob_size.set(BLOB_SIZE_MEDIUM)
 
 
     def build_control_frame(self, control_frame):
 
-        tk.Radiobutton(control_frame, text="Reward 20", variable=self.colour_scheme, value=COLOUR_SCHEME_REWARD_20,
-                       command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="Reward 100", variable=self.colour_scheme, value=COLOUR_SCHEME_REWARD_100,
-                       command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="Track Speed", variable=self.colour_scheme, value=COLOUR_SCHEME_TRACK_SPEED,
-                       command=self.guru_parent_redraw).grid(column=0, row=2, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="Action Speed", variable=self.colour_scheme, value=COLOUR_SCHEME_ACTION_SPEED,
-                       command=self.guru_parent_redraw).grid(column=0, row=3, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="Smoothness", variable=self.colour_scheme, value=COLOUR_SCHEME_SMOOTHNESS,
-                       command=self.guru_parent_redraw).grid(column=0, row=4, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="Straightness", variable=self.colour_scheme, value=COLOUR_SCHEME_STRAIGHTNESS,
-                       command=self.guru_parent_redraw).grid(column=0, row=5, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="Per Second", variable=self.colour_scheme, value=COLOUR_SCHEME_PER_SECOND,
-                       command=self.guru_parent_redraw).grid(column=0, row=6, pady=5, padx=5)
-        tk.Radiobutton(control_frame, text="None", variable=self.colour_scheme, value=COLOUR_SCHEME_NONE,
-                       command=self.guru_parent_redraw).grid(column=0, row=7, pady=5, padx=5)
+        colour_schema_group = tk.LabelFrame(control_frame, text="Colour Scheme", padx=5, pady=5)
+        colour_schema_group.grid(column=0, row=0, pady=5, padx=5, sticky=tk.W+tk.E)
 
-        self.colour_scheme.set(COLOUR_SCHEME_NONE)
+        tk.Radiobutton(colour_schema_group, text="Reward 20", variable=self.colour_scheme, value=COLOUR_SCHEME_REWARD_20,
+                       command=self.guru_parent_redraw).grid(column=0, row=0, pady=2, padx=5)
+        tk.Radiobutton(colour_schema_group, text="Reward 100", variable=self.colour_scheme, value=COLOUR_SCHEME_REWARD_100,
+                       command=self.guru_parent_redraw).grid(column=0, row=1, pady=2, padx=5)
+        tk.Radiobutton(colour_schema_group, text="Track Speed", variable=self.colour_scheme, value=COLOUR_SCHEME_TRACK_SPEED,
+                       command=self.guru_parent_redraw).grid(column=0, row=2, pady=2, padx=5)
+        tk.Radiobutton(colour_schema_group, text="Action Speed", variable=self.colour_scheme, value=COLOUR_SCHEME_ACTION_SPEED,
+                       command=self.guru_parent_redraw).grid(column=0, row=3, pady=2, padx=5)
+        tk.Radiobutton(colour_schema_group, text="Smoothness", variable=self.colour_scheme, value=COLOUR_SCHEME_SMOOTHNESS,
+                       command=self.guru_parent_redraw).grid(column=0, row=4, pady=2, padx=5)
+        tk.Radiobutton(colour_schema_group, text="Straightness", variable=self.colour_scheme, value=COLOUR_SCHEME_STRAIGHTNESS,
+                       command=self.guru_parent_redraw).grid(column=0, row=5, pady=2, padx=5)
+        tk.Radiobutton(colour_schema_group, text="Per Second", variable=self.colour_scheme, value=COLOUR_SCHEME_PER_SECOND,
+                       command=self.guru_parent_redraw).grid(column=0, row=6, pady=2, padx=5)
+        tk.Radiobutton(colour_schema_group, text="None", variable=self.colour_scheme, value=COLOUR_SCHEME_NONE,
+                       command=self.guru_parent_redraw).grid(column=0, row=7, pady=2, padx=5)
 
+        #######
 
+        format_group = tk.LabelFrame(control_frame, text="Format", padx=5, pady=5)
+        format_group.grid(column=0, row=1, pady=5, padx=5, sticky=tk.W+tk.E)
 
-        next_button = tk.Button(control_frame, height=2, text="Next")
-        next_button["command"] = self.button_press_next
-        next_button.grid(column=0, row=8, pady=5, padx=5)
+        tk.Label(format_group, text="Blob size").grid(column=0, row=0, pady=5, padx=5, sticky=tk.W)
+        tk.OptionMenu(format_group, self.blob_size, BLOB_SIZE_SMALL, BLOB_SIZE_MEDIUM, BLOB_SIZE_LARGE,
+                      command=self.redraw_new_blob_size).grid(column=0, row=1, pady=5, padx=5, sticky=tk.W)
 
-        previous_button = tk.Button(control_frame, height=2, text="Previous")
+        #######
+
+        episode_group = tk.LabelFrame(control_frame, text="Episode", padx=5, pady=5)
+        episode_group.grid(column=0, row=2, pady=5, padx=5, sticky=tk.W+tk.E)
+
+        previous_button = tk.Button(episode_group, height=2, text="<<")
         previous_button["command"] = self.button_press_previous
-        previous_button.grid(column=0, row=9, pady=5, padx=5)
+        previous_button.grid(column=0, row=0, pady=5, padx=3)
 
-        first_button = tk.Button(control_frame, height=2, text="First")
+        next_button = tk.Button(episode_group, height=2, text=">>")
+        next_button["command"] = self.button_press_next
+        next_button.grid(column=1, row=0, pady=5, padx=3)
+
+        first_button = tk.Button(episode_group, height=2, text="First")
         first_button["command"] = self.button_press_first
-        first_button.grid(column=0, row=10, pady=5, padx=5)
+        first_button.grid(column=2, row=0, pady=5, padx=3)
 
-        self.episode_info = tk.Label(control_frame, text="#None")
-        self.episode_info.grid(column=0, row=11, pady=20)
+        self.episode_info = tk.Label(episode_group, text="No episode")
+        self.episode_info.grid(column=0, row=1, columnspan=3, pady=3)
 
     def left_button_pressed(self, track_point):
         if self.filtered_episodes:
@@ -111,9 +130,22 @@ class AnalyzeRoute(TrackAnalyzer):
         self.draw_episode(self.filtered_episodes[self.chosen_route_index])
         self.draw_chosen_event_()
 
+    def get_increased_blob_size(self):
+        if self.blob_size.get() == BLOB_SIZE_SMALL:
+            return 0
+        elif self.blob_size.get() == BLOB_SIZE_MEDIUM:
+            return 1
+        elif self.blob_size.get() == BLOB_SIZE_LARGE:
+            return 2
+
+    def redraw_new_blob_size(self, new_value):
+        self.guru_parent_redraw()
+        self.draw_chosen_event_()
+
     def draw_chosen_event_(self):
         if self.chosen_event:
-            self.track_graphics.plot_ring_highlight((self.chosen_event.x, self.chosen_event.y), 6 + self.increased_dot_size, "orange", 2)
+            self.track_graphics.plot_ring_highlight((self.chosen_event.x, self.chosen_event.y),
+                                                    6 + self.get_increased_blob_size(), "orange", 2)
 
     def display_info_about_chosen_event(self):
 
@@ -151,21 +183,11 @@ class AnalyzeRoute(TrackAnalyzer):
 
 
     def draw_episode(self, episode):
-        freq_str = ""
-
-        # Want to display this better in its own window etc.
-        #for i, f in enumerate(episode.action_frequency):
-        #    action = self.action_space[i]
-        #    if action is not None:
-        #        freq_str += self.action_space[i].get_readable_with_index() + " x " + str(f) + "\n"
-
 
         average_speed = round(episode.distance_travelled / episode.time_taken, 1)
         self.episode_info.configure(text="# " + str(episode.id) + "\n" +
                                          str(round(episode.lap_time, 1)) + " secs\n" +
-                                         str(average_speed) + " m/s\n" +
-                                         str(round(episode.peak_track_speed, 1)) + " m/s\n" +
-                                         str(round(episode.average_reward)) + " avg\n" + freq_str)
+                                         str(average_speed) + " m/s")
 
         if self.colour_scheme.get() == COLOUR_SCHEME_TRACK_SPEED:
             plot_event_method = self.colour_scheme_track_speed
@@ -195,11 +217,11 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_reward_100(self, event, previous_event):
         if event.reward >= 1000:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "white")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "white")
         elif event.reward >= 100:
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "blue")
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "blue")
         elif event.reward >= 50:
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "green")
         elif event.reward >= 10:
             self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
         else:
@@ -207,11 +229,11 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_reward_20(self, event, previous_event):
         if event.reward >= 100:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "white")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "white")
         elif event.reward >= 20:
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "blue")
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "blue")
         elif event.reward >= 10:
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "green")
         elif event.reward >= 1:
             self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
         else:
@@ -219,11 +241,11 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_track_speed(self, event, previous_event):
         if event.track_speed >= 3.5:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "white")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "white")
         elif event.track_speed >= 3:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "blue")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "blue")
         elif event.track_speed >= 2.5:
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "green")
         elif event.track_speed >= 1.8:
             self.track_graphics.plot_dot((event.x, event.y), 2, "yellow")
         else:
@@ -231,7 +253,7 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_action_speed(self, event, previous_event):
         if event.speed >= 3:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "green")
         elif event.speed >= 2:
             self.track_graphics.plot_dot((event.x, event.y), 2, "yellow")
         else:
@@ -244,8 +266,8 @@ class AnalyzeRoute(TrackAnalyzer):
             else:
                 colour = "purple"
 
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, colour)
-            self.track_graphics.plot_dot((previous_event.x, previous_event.y), 3 + self.increased_dot_size, colour)
+            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), colour)
+            self.track_graphics.plot_dot((previous_event.x, previous_event.y), 3 + self.get_increased_blob_size(), colour)
             self.smoothness_current = True
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
@@ -255,14 +277,14 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_straightness(self, event, previous_event):
         if abs(event.steering_angle) < 0.1:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.increased_dot_size, "green")
+            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "green")
         elif abs(event.steering_angle) < 10.1:
             self.track_graphics.plot_dot((event.x, event.y), 1, "orange")
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
     def colour_scheme_none(self, event, previous_event):
-        self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, "green")
+        self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "green")
 
     def colour_scheme_per_second(self, event, previous_event):
         if int(event.time_elapsed) % 2 == 0:
@@ -270,5 +292,5 @@ class AnalyzeRoute(TrackAnalyzer):
         else:
             colour = "purple"
 
-        self.track_graphics.plot_dot((event.x, event.y), 3 + self.increased_dot_size, colour)
+        self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), colour)
 

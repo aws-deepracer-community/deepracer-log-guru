@@ -106,8 +106,6 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         # Format the plot
         axes.set_title("Total Reward")
         axes.set_xlabel("Training Iteration")
-        axes.xaxis.set_major_locator(MultipleLocator(5))
-        axes.xaxis.set_minor_locator(MultipleLocator(1))
 
         if self.log_meta:
             best = self.log_meta.episode_stats.best_reward
@@ -147,8 +145,6 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         axes.set_xlabel("Training Iteration")
         axes.set_ybound(0, 105)
         axes.yaxis.set_major_formatter(PercentFormatter())
-        axes.xaxis.set_major_locator(MultipleLocator(5))
-        axes.xaxis.set_minor_locator(MultipleLocator(1))
 
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)

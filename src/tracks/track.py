@@ -269,7 +269,6 @@ class Track:
         else:
             next_point = self.drawing_points[waypoint_id + 1].middle
 
-        bearing = 0
         distance = geometry.get_distance_between_points(this_point, next_point)
         bearing = geometry.get_bearing_between_points(this_point, next_point)
 

@@ -6,6 +6,8 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
+from src.utils.lists import get_list_of_empty_lists
+
 
 ROUNDING_EXACT = "Exact"
 ROUNDING_INTEGER = "Integer"
@@ -53,14 +55,6 @@ class AnalyzeCommonRewards(GraphAnalyzer):
         # Format the plot
         axes.set_title("Most Frequent Reward Per Step\n(" + label + " Episodes)")
         axes.set_xlabel("Count")
-
-
-# Ugly but using * operator gives a list of the same list (by reference) instead of unique lists
-def get_list_of_empty_lists(size):
-    new_list = []
-    for i in range(0, size):
-        new_list.append([])
-    return new_list
 
 
 def get_plot_data_for_common_rewards(episodes, round_to_integer):

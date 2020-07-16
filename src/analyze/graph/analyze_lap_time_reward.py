@@ -6,6 +6,8 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
+from src.utils.lists import get_list_of_empty_lists
+
 
 MIN_PERCENT_FOR_GOOD_PREDICTION = 3
 
@@ -154,17 +156,6 @@ class AnalyzeLapTimeReward(GraphAnalyzer):
 
     def is_fixed_scale(self):
         return self.scale_type.get() == FIXED_SCALE
-
-
-
-
-
-# Ugly but using * operator gives a list of the same list (by reference) instead of unique lists
-def get_list_of_empty_lists(size):
-    new_list = []
-    for i in range(0, size):
-        new_list.append([])
-    return new_list
 
 
 def get_plot_data_for_total_reward(episodes):

@@ -1,4 +1,4 @@
 
-LOG_DIRECTORY = "C:\\Users\\whatever"
+LOG_DIRECTORY = "C:\\Users\\david\\deep_racer_logs"
 
-AWS_PROFILE_NAME = "your_profile_name"
+AWS_PROFILE_NAME = "adfs"

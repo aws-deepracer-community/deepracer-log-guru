@@ -8,6 +8,7 @@ from matplotlib.ticker import PercentFormatter
 from matplotlib.ticker import MultipleLocator
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
+from src.utils.lists import get_list_of_empty_lists
 
 FIXED_SCALE = "Fixed"
 DYNAMIC_SCALE = "Dynamic"
@@ -172,13 +173,6 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
     def is_fixed_scale(self):
         return self.scale_type.get() == FIXED_SCALE
 
-
-# Ugly but using * operator gives a list of the same list (by reference) instead of unique lists
-def get_list_of_empty_lists(size):
-    new_list = []
-    for i in range(0, size):
-        new_list.append([])
-    return new_list
 
 
 def get_plot_data_iteration_vs_total_reward(episodes, stat_method):

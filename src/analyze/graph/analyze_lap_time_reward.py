@@ -9,6 +9,10 @@ from src.analyze.graph.graph_analyzer import GraphAnalyzer
 
 MIN_PERCENT_FOR_GOOD_PREDICTION = 3
 
+FIXED_SCALE = "Fixed"
+DYNAMIC_SCALE = "Dynamic"
+
+
 class AnalyzeLapTimeReward(GraphAnalyzer):
 
     def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg, control_frame :tk.Frame):
@@ -20,6 +24,8 @@ class AnalyzeLapTimeReward(GraphAnalyzer):
         self.show_filtered_predictions = tk.BooleanVar()
 
         self.show_filtered.set(True)
+
+        self.scale_type = tk.StringVar(value=FIXED_SCALE)
 
         self.min_time = None
         self.max_time = None
@@ -50,6 +56,20 @@ class AnalyzeLapTimeReward(GraphAnalyzer):
             variable=self.show_filtered_predictions,
             command=self.guru_parent_redraw).grid(column=0, row=2, pady=5, padx=5)
 
+        scale_group = tk.LabelFrame(control_frame, text="Scale", padx=5, pady=5)
+        scale_group.grid(column=0, row=2, pady=5, padx=5)
+
+        tk.Radiobutton(
+            scale_group, text=FIXED_SCALE,
+            variable=self.scale_type,
+            value=FIXED_SCALE,
+            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
+
+        tk.Radiobutton(
+            scale_group, text=DYNAMIC_SCALE,
+            variable=self.scale_type,
+            value=DYNAMIC_SCALE,
+            command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
 
     def add_plots(self):
         if not self.all_episodes:
@@ -81,11 +101,11 @@ class AnalyzeLapTimeReward(GraphAnalyzer):
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
-        xborder = get_axis_border(self.min_time, self.max_time)
-        axes.set_xbound(self.min_time - xborder, self.max_time + xborder)
-
-        yborder = get_axis_border(self.min_total_reward, self.max_total_reward)
-        axes.set_ybound(self.min_total_reward - yborder, self.max_total_reward + yborder)
+        if self.is_fixed_scale():
+            xborder = get_axis_border(self.min_time, self.max_time)
+            axes.set_xbound(self.min_time - xborder, self.max_time + xborder)
+            yborder = get_axis_border(self.min_total_reward, self.max_total_reward)
+            axes.set_ybound(self.min_total_reward - yborder, self.max_total_reward + yborder)
 
     def plot_for_average_reward(self, axes: Axes):
         # Plot data
@@ -106,12 +126,11 @@ class AnalyzeLapTimeReward(GraphAnalyzer):
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
-
-        xborder = get_axis_border(self.min_time, self.max_time)
-        axes.set_xbound(self.min_time - xborder, self.max_time + xborder)
-
-        yborder = get_axis_border(self.min_average_reward, self.max_average_reward)
-        axes.set_ybound(self.min_average_reward - yborder, self.max_average_reward + yborder)
+        if self.is_fixed_scale():
+            xborder = get_axis_border(self.min_time, self.max_time)
+            axes.set_xbound(self.min_time - xborder, self.max_time + xborder)
+            yborder = get_axis_border(self.min_average_reward, self.max_average_reward)
+            axes.set_ybound(self.min_average_reward - yborder, self.max_average_reward + yborder)
 
     def warning_all_episodes_changed(self):
         if not self.all_episodes:
@@ -132,6 +151,10 @@ class AnalyzeLapTimeReward(GraphAnalyzer):
 
         self.min_total_reward = np.min(plot_total_reward)
         self.max_total_reward = np.max(plot_total_reward)
+
+    def is_fixed_scale(self):
+        return self.scale_type.get() == FIXED_SCALE
+
 
 
 

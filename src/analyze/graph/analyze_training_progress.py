@@ -9,6 +9,8 @@ from matplotlib.ticker import MultipleLocator
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 
+FIXED_SCALE = "Fixed"
+DYNAMIC_SCALE = "Dynamic"
 
 class AnalyzeTrainingProgress(GraphAnalyzer):
 
@@ -27,6 +29,8 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self.show_filtered.set(True)
         self.show_mean.set(True)
         self.show_best.set(True)
+
+        self.scale_type = tk.StringVar(value=FIXED_SCALE)
 
 
 
@@ -68,6 +72,20 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
             variable=self.show_worst,
             command=self.guru_parent_redraw).grid(column=0, row=3, pady=5, padx=5)
 
+        scale_group = tk.LabelFrame(control_frame, text="Scale", padx=5, pady=5)
+        scale_group.grid(column=0, row=2, pady=5, padx=5)
+
+        tk.Radiobutton(
+            scale_group, text=FIXED_SCALE,
+            variable=self.scale_type,
+            value=FIXED_SCALE,
+            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
+
+        tk.Radiobutton(
+            scale_group, text=DYNAMIC_SCALE,
+            variable=self.scale_type,
+            value=DYNAMIC_SCALE,
+            command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
 
     def add_plots(self):
         if not self.all_episodes:
@@ -107,7 +125,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         axes.set_title("Total Reward")
         axes.set_xlabel("Training Iteration")
 
-        if self.log_meta:
+        if self.log_meta and self.is_fixed_scale():
             best = self.log_meta.episode_stats.best_reward
             worst = self.log_meta.episode_stats.worst_reward
             if best != worst:
@@ -143,12 +161,16 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         # Format the plot
         axes.set_title("Track Completion")
         axes.set_xlabel("Training Iteration")
-        axes.set_ybound(0, 105)
         axes.yaxis.set_major_formatter(PercentFormatter())
+
+        if self.is_fixed_scale():
+            axes.set_ybound(0, 105)
 
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
+    def is_fixed_scale(self):
+        return self.scale_type.get() == FIXED_SCALE
 
 
 # Ugly but using * operator gives a list of the same list (by reference) instead of unique lists

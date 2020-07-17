@@ -20,7 +20,13 @@ class OpenFileDialog(Dialog):
                     model_names.append(model_name)
                     model_files[model_name] = f
 
-        row = 0
+        self.place_in_grid(0, 3, tk.Label(master, text="Episodes"))
+        self.place_in_grid(0, 4, tk.Label(master, text="Average\nProgress", justify=tk.RIGHT))
+        self.place_in_grid(0, 5, tk.Label(master, text="Full Laps"))
+        self.place_in_grid(0, 6, tk.Label(master, text="Best Full Lap\n(Steps)", justify=tk.RIGHT))
+        self.place_in_grid(0, 7, tk.Label(master, text="Avg Full Lap\n(Steps)", justify=tk.RIGHT))
+
+        row = 1
 
         for model_name in sorted(model_names):
             f = model_files[model_name]
@@ -39,10 +45,10 @@ class OpenFileDialog(Dialog):
             self.place_in_grid(row, 1, tk.Label(master, text=log.log_meta.race_type))
             self.place_in_grid(row, 2, tk.Label(master, text=log.log_meta.job_type))
             self.place_in_grid(row, 3, tk.Label(master, text=log.log_meta.episode_stats.episode_count))
-            self.place_in_grid(row, 4, tk.Label(master, text=log.log_meta.episode_stats.best_steps))
-            self.place_in_grid(row, 5, tk.Label(master, text=log.log_meta.episode_stats.average_steps))
-            self.place_in_grid(row, 6, tk.Label(master, text=progress_percent))
-            self.place_in_grid(row, 7, tk.Label(master, text=success_percent))
+            self.place_in_grid(row, 4, tk.Label(master, text=progress_percent))
+            self.place_in_grid(row, 5, tk.Label(master, text=success_percent))
+            self.place_in_grid(row, 6, tk.Label(master, text=log.log_meta.episode_stats.best_steps))
+            self.place_in_grid(row, 7, tk.Label(master, text=log.log_meta.episode_stats.average_steps))
 
 
             #
@@ -58,7 +64,7 @@ class OpenFileDialog(Dialog):
         self.bind("<Return>", self.cancel)
         self.bind("<Escape>", self.cancel)
 
-        box.pack()
+        box.pack(pady=5)
 
     def apply(self):
         pass
@@ -67,7 +73,7 @@ class OpenFileDialog(Dialog):
         return True
 
     def place_in_grid(self, row, column, widget):
-        widget.grid(row=row, column=column, sticky=tk.W, padx=10, pady=5)
+        widget.grid(row=row, column=column, sticky=tk.E, padx=10, pady=5)
 
     def callback_open_file(self, file_name):
         self.cancel()

@@ -1,36 +1,52 @@
 import math
-from src.graphics.track_graphics import TrackGraphics
-from src.analyze.visitor import VisitorMap
+import numpy as np
+
 from src.action_space.action import MAX_POSSIBLE_ACTIONS
 from src.action_space.action_space_filter import ActionSpaceFilter
+from src.analyze.util.visitor import VisitorMap
 
 
 class Episode:
 
-    def __init__(self, id, events, track):
+    def __init__(self, id, iteration, events):
 
         self.events = events
-        self.track = track
         self.id = id
+        self.iteration = iteration
 
         first_event = events[0]
         last_event = events[-1]
 
-        self.lap_complete = last_event.status == "lap_complete"
+        if last_event.status == "lap_complete":
+            self.lap_complete = True
+            self.percent_complete = 100
+        elif len(events) == 1:
+            self.lap_complete = False
+            self.percent_complete = last_event.progress
+        else:
+            second_to_last_event = events[-2]
+            self.lap_complete = False
+            self.percent_complete = second_to_last_event.progress
+
         self.step_count = len(events)
-        self.percent_complete = last_event.progress
         self.is_real_start = first_event.closest_waypoint_index <= 1
 
         self.distance_travelled = self.get_distance_travelled()
         self.time_taken = last_event.time - first_event.time
-        self.lap_time = 100 / last_event.progress * self.time_taken
-        self.total_reward = self.get_total_reward()
-        self.average_reward = self.total_reward / self.step_count
+        self.lap_time = 100 / last_event.progress * self.time_taken  # predicted
+
+        self.rewards = self.get_list_of_rewards()
+        self.total_reward = self.rewards.sum()
+        self.average_reward = self.rewards.mean()
+        self.lap_reward = 100 / last_event.progress * self.total_reward  # predicted
 
         self.action_frequency = self.get_action_frequency()
 
         self.peak_track_speed = 0
         self.set_track_speed_on_events()
+        self.set_reward_total_on_events()
+        self.set_time_elapsed_on_events()
+
 
     def get_distance_travelled(self):
 
@@ -60,11 +76,28 @@ class Episode:
 
             previous = e
 
+    def set_reward_total_on_events(self):
+        reward_total = 0.0
+        for e in self.events:
+            reward_total += e.reward
+            e.reward_total = reward_total
+
+    def set_time_elapsed_on_events(self):
+        start_time = self.events[0].time
+        for e in self.events:
+            e.time_elapsed = e.time - start_time
+
     def get_total_reward(self):
         total_reward = 0
         for e in self.events:
             total_reward += e.reward
         return total_reward
+
+    def get_list_of_rewards(self):
+        list_of_rewards = []
+        for e in self.events:
+            list_of_rewards.append(e.reward)
+        return np.array(list_of_rewards)
 
     def get_action_frequency(self):
         action_frequency = [0] * MAX_POSSIBLE_ACTIONS
@@ -88,10 +121,13 @@ class Episode:
         return event, index
 
     def apply_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter):
+        self.apply_speed_to_visitor_map(visitor_map, skip_count, action_space_filter, is_any_speed)
+
+    def apply_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
         previous = self.events[0]
         for e in self.events:
 
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken) and is_correct_speed(e.speed):
 
                 visitor_map.visit(e.x, e.y, self)
 
@@ -104,11 +140,5 @@ class Episode:
 
             previous = e
 
-
-
-def get_episodes_from_all_events(all_events, track=None):
-    episodes = []
-    for i, e in enumerate(all_events):
-        episodes.append(Episode(i, e, track))
-
-    return episodes
+def is_any_speed(speed):
+    return True

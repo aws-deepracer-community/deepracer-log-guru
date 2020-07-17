@@ -18,10 +18,12 @@ class MenuBar():
 
         self.add_file_menu()
         self.add_track_menu()
+
         if file_is_open:
             self.add_episode_menu()
             self.add_action_menu()
-        self.add_analyze_menu()
+            self.add_analyze_menu()
+
         self.add_view_menu()
         self.add_secret_sauce_menu()
         self.add_admin_menu()
@@ -64,13 +66,24 @@ class MenuBar():
         menu.add_command(label="Waypoints - Small", command=self.main_app.menu_callback_waypoints_small)
         menu.add_command(label="Waypoints - Micro", command=self.main_app.menu_callback_waypoints_micro)
         menu.add_command(label="Waypoints - Off", command=self.main_app.menu_callback_waypoints_off)
+        menu.add_separator()
+        menu.add_command(label="Annotations - Front", command=self.main_app.menu_callback_annotations_front)
+        menu.add_command(label="Annotations - Back", command=self.main_app.menu_callback_annotations_back)
+        menu.add_command(label="Annotations - Off", command=self.main_app.menu_callback_annotations_off)
 
         self.menubar.add_cascade(label="View", menu=menu)
 
     def add_analyze_menu(self):
         menu = Menu(self.menubar, tearoff=0)
         menu.add_command(label="Convergence", command=self.main_app.menu_callback_analyze_convergence)
+        menu.add_command(label="Favourite Speed", command=self.main_app.menu_callback_analyze_favourite_speed)
         menu.add_command(label="Route", command=self.main_app.menu_callback_analyze_route)
+        menu.add_separator()
+        menu.add_command(label="Training Progress", command=self.main_app.menu_callback_analyze_training_progress)
+        menu.add_command(label="Lap Time Reward", command=self.main_app.menu_callback_analyze_lap_time_reward)
+        menu.add_command(label="Reward Distribution", command=self.main_app.menu_callback_analyze_reward_distribution)
+        menu.add_command(label="Common Rewards", command=self.main_app.menu_callback_analyze_common_rewards)
+        menu.add_command(label="Rewards per Waypoint", command=self.main_app.menu_callback_analyze_rewards_per_waypoint)
 
         self.menubar.add_cascade(label="Analyze", menu=menu)
 
@@ -110,12 +123,12 @@ class MenuBar():
 
     def add_admin_menu(self):
         menu = Menu(self.menubar, tearoff=0)
-        menu.add_command(label="Refresh All Log Meta", command=refresh_all_log_meta)
+        menu.add_command(label="Re-calculate Log Meta", command=refresh_all_log_meta)
 
         self.menubar.add_cascade(label="Admin", menu=menu)
 
     def fetch_file(self):
-        FetchFileDialog(self.main_app, "Fetch File")
+        FetchFileDialog(self.main_app)
 
     def open_file(self):
         OpenFileDialog(self.main_app, "Open File")
@@ -133,7 +146,7 @@ def refresh_all_log_meta():
     for f in os.listdir(os.curdir):
         if f.endswith(".log"):
             log = Log()
-            log.parse(f, "No description!")
+            log.parse(f)
             log.save()
 
     messagebox.showinfo("Refresh All Log Meta", "Refresh succeeded!")

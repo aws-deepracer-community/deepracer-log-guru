@@ -1,7 +1,10 @@
 import math
-from src.analyze.visitor import VisitorMap
 
+import src.utils.geometry as geometry
+
+from src.analyze.util.visitor import VisitorMap
 from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_annotations import Annotation
 
 DISPLAY_BORDER = 0.3
 
@@ -19,6 +22,7 @@ class Track:
         self.track_section_dividers = []
         self.track_width = 0
         self.track_waypoints = []
+        self.annotations = []
 
         # Fields that we will populate automatically
         self.drawing_points = []
@@ -118,9 +122,9 @@ class Track:
     def calculate_distances(self):
         previous = self.drawing_points[-1]
         for p in self.drawing_points:
-            self.measured_left_distance += self.get_distance_between_points(previous.left, p.left)
-            self.measured_middle_distance += self.get_distance_between_points(previous.middle, p.middle)
-            self.measured_right_distance += self.get_distance_between_points(previous.right, p.right)
+            self.measured_left_distance += geometry.get_distance_between_points(previous.left, p.left)
+            self.measured_middle_distance += geometry.get_distance_between_points(previous.middle, p.middle)
+            self.measured_right_distance += geometry.get_distance_between_points(previous.right, p.right)
             previous = p
 
     def calculate_range_of_coordinates(self):
@@ -168,52 +172,16 @@ class Track:
         track_graphics.set_track_area(self.min_x - DISPLAY_BORDER, self.min_y - DISPLAY_BORDER, self.max_x + DISPLAY_BORDER, self.max_y + DISPLAY_BORDER)
 
 
-
-
-
-
-    def OLD_draw_for_frequency_analysis(self, track_graphics, colour):
-
-        track_graphics.plot_line(self.drawing_points[0].left, self.drawing_points[0].right, 3, colour)
-        self._draw_edges(track_graphics, colour)
-        for p in self.drawing_points:
-            if p.is_divider:
-                track_graphics.plot_line(p.left, p.right, 3, colour)
-
-    def OLD_draw_for_route_plotting(self, track_graphics :TrackGraphics, colour):
-        track_graphics.plot_line(self.drawing_points[0].left, self.drawing_points[0].right, 3, colour)
-        self.draw_track_edges(track_graphics, colour)
-
-        for (i, p) in enumerate(self.drawing_points):
-            if i % 10 == 0:
-                size = 4
-            else:
-                size = 2
-            track_graphics.plot_dot(p.middle, size, colour)
-
-            if p.is_divider:
-                track_graphics.plot_line(p.left, p.right, 3, colour)
-
-            if p.is_center:
-                # self._plot_label(track_graphics, p.middle, p.section, 30)
-                pass   # NOT WORKING VERY WELL AT CHOOSING GOOD POSITION
-
-    def OLD_plot_label(self, track_graphics :TrackGraphics, point, text, size):
-        off_track_point = self.get_target_point((self.mid_x, self.mid_y), point, -180, 1.5 * self.track_width)
-        track_graphics.plot_text(off_track_point, text, size)
-
-
-
     def draw_track_edges(self, track_graphics, colour):
 
         previous_left = self.drawing_points[-1].left
         previous_right = self.drawing_points[-1].right
 
         for p in self.drawing_points:
-            if self.get_distance_between_points(previous_left, p.left) > 0.08:
+            if geometry.get_distance_between_points(previous_left, p.left) > 0.08:
                 track_graphics.plot_line(previous_left, p.left, 3, colour)
                 previous_left = p.left
-            if self.get_distance_between_points(previous_right, p.right) > 0.08:
+            if geometry.get_distance_between_points(previous_right, p.right) > 0.08:
                 track_graphics.plot_line(previous_right, p.right, 3, colour)
                 previous_right = p.right
 
@@ -231,6 +199,31 @@ class Track:
                 track_graphics.plot_dot(p.middle, major_size, colour)
             else:
                 track_graphics.plot_dot(p.middle, minor_size, colour)
+
+    def draw_annotations(self, track_graphics):
+        for a in self.annotations:
+            p = self.get_annotation_start_point(a)
+            a.draw_from_point(p, track_graphics)
+
+    def get_annotation_start_point(self, annotation: Annotation):
+        points = self.drawing_points[annotation.waypoint_id]
+
+        if annotation.distance_from_centre == 0:
+            return points.middle
+
+        if annotation.side == "L":
+            (side_x, side_y) = points.left
+        else:
+            (side_x, side_y) = points.right
+
+        side_fraction = annotation.distance_from_centre / self.track_width * 2
+        ( start_x, start_y ) = points.middle
+
+        x = start_x + (side_x - start_x) * side_fraction
+        y = start_y + (side_y - start_y) * side_fraction
+
+        return x, y
+
 
     def draw_grid(self, track_graphics, colour):
         x = self.min_x
@@ -253,14 +246,41 @@ class Track:
                 colour)
             y += 1
 
-    def get_distance_between_points(self, first, second):
-        (x1, y1) = first
-        (x2, y2) = second
 
-        x_diff = x2 - x1
-        y_diff = y2 - y1
 
-        return math.sqrt(x_diff * x_diff + y_diff * y_diff)
+    def get_position_of_point_relative_to_waypoint(self, point, waypoint_id):
+        dp = self.drawing_points[waypoint_id]
+
+        left_distance = geometry.get_distance_between_points(point, dp.left)
+        right_distance = geometry.get_distance_between_points(point, dp.right)
+
+        if abs(left_distance - right_distance) < 0.001:
+            return "C"
+        elif left_distance < right_distance:
+            return "L"
+        else:
+            return "R"
+
+    def get_bearing_and_distance_to_next_waypoint(self, waypoint_id):
+        this_point = self.drawing_points[waypoint_id].middle
+
+        if waypoint_id >= len(self.drawing_points) - 1:
+            next_point = self.drawing_points[0].middle
+        else:
+            next_point = self.drawing_points[waypoint_id + 1].middle
+
+        distance = geometry.get_distance_between_points(this_point, next_point)
+        bearing = geometry.get_bearing_between_points(this_point, next_point)
+
+        return bearing, distance
+
+    def get_bearing_and_distance_from_previous_waypoint(self, waypoint_id):
+        previous_id = waypoint_id - 1
+        if previous_id < 0:
+            previous_id = len(self.drawing_points) - 1
+
+        return self.get_bearing_and_distance_to_next_waypoint(previous_id)
+
 
     class DrawingPoint:
         def __init__(self, left, middle, right, is_divider, is_center, section):

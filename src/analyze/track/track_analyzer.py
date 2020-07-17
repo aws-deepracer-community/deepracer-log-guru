@@ -2,7 +2,7 @@ import tkinter as tk
 
 from src.graphics.track_graphics import TrackGraphics
 
-class Analyzer:
+class TrackAnalyzer:
 
     def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame):
         self.guru_parent_redraw = guru_parent_redraw
@@ -13,6 +13,12 @@ class Analyzer:
         self.filtered_episodes = None
         self.action_space = None
         self.action_space_filter = None
+
+    def uses_graph_canvas(self):
+        return False
+
+    def uses_track_graphics(self):
+        return True
 
     def take_control(self):
 
@@ -26,6 +32,14 @@ class Analyzer:
     def set_track(self, current_track):
         self.current_track = current_track
         self.warning_track_changed()
+
+    def set_all_episodes(self, all_episodes):
+        # Does nothing because this is currently only relevant to graph analyzers
+        pass
+
+    def set_log_meta(self, log_meta):
+        # Does nothing because this is currently only relevant to graph analyzers
+        pass
 
     def set_filtered_episodes(self, filtered_episodes):
         self.filtered_episodes = filtered_episodes

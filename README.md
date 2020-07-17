@@ -1,6 +1,15 @@
 # deep_racer_guru
 Analysis tool for AWS Deep Racer logs
 
+### NEW: Upgrading to Latest Version 1.1.0
+
+If you are completely new, then skip this section. Go to "Before You Start"
+
+If you have already used version 1.0.0 and wish to upgrade to the improved 1.1.0 (highly recommended!) then please note the following upgrade instructions:
+* Download additional Python libraries: *numpy* and *matplotlib*
+* Run the tool, and go to the Admin menu and choose "Re-calculate Log Meta"
+* It should now work fine, with many new analysis options for you to explore
+
 
 ### Before You Start
 Make sure you have the following Python libraries:
@@ -11,6 +20,8 @@ Make sure you have the following Python libraries:
 * json
 * os
 * traceback
+* numpy
+* matplotlib
 
 Setup an AWS *shared credentials file*, as per:
 * https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#shared-credentials-file

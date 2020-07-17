@@ -1,4 +1,6 @@
 import pickle
+import numpy as np
+
 import src.log.parse as parse
 
 from src.episode.episode import Episode
@@ -25,10 +27,9 @@ class Log:
         self.log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
         self.parse_episode_events()
 
-    def parse(self, log_file_name, description):
+    def parse(self, log_file_name):
         self.log_file_name = log_file_name
         self.meta_file_name = log_file_name + META_FILE_SUFFIX
-        self.log_meta.user_description = description
 
         self.parse_intro_events()
         self.parse_episode_events()
@@ -64,9 +65,9 @@ class Log:
 
         assert not saved_events
 
-        for i, e in enumerate(episode_events[:-2]):
-            self.episodes.append(Episode(i, e, "CRAP TRACK"))
-
+        for i, e in enumerate(episode_events[:-1]):
+            iteration = i // self.log_meta.hyper.episodes_between_training
+            self.episodes.append(Episode(i, iteration, e))
 
 
     def analyze_episode_details(self):
@@ -77,8 +78,11 @@ class Log:
         total_success_distance = 0.0
         total_percent_complete = 0.0
 
+        reward_list = []
+
         for e in self.episodes:
             total_percent_complete += e.percent_complete
+            reward_list.append(e.total_reward)
 
             if e.lap_complete:
                 self.log_meta.episode_stats.success_count += 1
@@ -97,6 +101,12 @@ class Log:
 
                 if self.log_meta.episode_stats.worst_distance < e.distance_travelled:
                     self.log_meta.episode_stats.worst_distance = e.distance_travelled
+
+        if reward_list:
+            r = np.array(reward_list)
+            self.log_meta.episode_stats.best_reward = np.max(r)
+            self.log_meta.episode_stats.average_reward = np.mean(r)
+            self.log_meta.episode_stats.worst_reward = np.min(r)
 
         if self.log_meta.episode_stats.success_count > 0:
             self.log_meta.episode_stats.average_steps = int(

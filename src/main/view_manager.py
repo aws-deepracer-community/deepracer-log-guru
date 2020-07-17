@@ -14,8 +14,9 @@ class ViewManager:
 
         self.waypoints_on = True
         self.grid_on = True
+        self.annotations_on = False
 
-        self.drawing_order = [ "G", "A", "T"]
+        self.drawing_order = [ "G", "A", "T", "N" ]
 
         self.set_track_colour_blue()
         self.set_waypoint_sizes_micro()
@@ -73,6 +74,19 @@ class ViewManager:
         self.drawing_order.remove("A")
         self.drawing_order.insert(0, "A")
 
+    def set_annotations_front(self):
+        self.annotations_on = True
+        self.drawing_order.remove("N")
+        self.drawing_order.append("N")
+
+    def set_annotations_back(self):
+        self.annotations_on = True
+        self.drawing_order.remove("N")
+        self.drawing_order.insert(0, "N")
+
+    def set_annotations_off(self):
+        self.annotations_on = False
+
     def redraw(self, current_track :Track, track_graphics, analyzer):
         track_graphics.reset_to_blank()
 
@@ -91,3 +105,7 @@ class ViewManager:
 
             if do == "A":
                 analyzer.redraw()
+
+            if do == "N" and self.annotations_on:
+                current_track.draw_annotations(track_graphics)
+

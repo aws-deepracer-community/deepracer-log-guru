@@ -75,6 +75,32 @@ class VisitorMap:
                     s += str(w) + " "
             print(s)
 
+def multi_draw(track_graphics :TrackGraphics, visitors, colours, threshold):
+    assert len(colours) == len(visitors)
+    assert threshold >= 1
+
+    min_x = visitors[0].min_x
+    min_y = visitors[0].min_y
+    granularity = visitors[0].granularity
+
+
+    for yy in range(0, len(visitors[0].visits)):
+        for xx in range(0, len(visitors[0].visits[0])):
+            visits = []
+            for v in range(0, len(visitors)):
+                visits.append(visitors[v].visits[yy][xx])
+
+            if sum(visits) >= threshold:
+                target = max(visits)
+                colour = ""
+                for i, v in enumerate(visits):
+                    if v >= target:
+                        colour = colours[i]
+
+                x = min_x + granularity * xx
+                y = min_y + granularity * yy
+
+                track_graphics.plot_box(x, y, x + granularity, y + granularity, colour)
 
 def test_it():
     map = VisitorMap(1, 1, 5.99, 7.99, 0.5)

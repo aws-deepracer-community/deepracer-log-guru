@@ -1,4 +1,6 @@
 
-LOG_DIRECTORY = "C:\\Users\\your\\directory\\path"
+# Replace both of these variables with your own settings
 
-AWS_PROFILE_NAME = "your_profile_name"
+LOG_DIRECTORY = "C:\\Users\\david\\deep_racer_logs"
+
+AWS_PROFILE_NAME = "xxxxx"

@@ -22,4 +22,6 @@ class Event:
 
         # Data added separately (everything above comes direct from the log, whereas this is calculated by us ...
         self.track_speed = 0
+        self.reward_total = 0.0
+        self.time_elapsed = 0.0
 

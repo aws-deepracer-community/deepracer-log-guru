@@ -31,8 +31,6 @@ class AnalyzeRoute(TrackAnalyzer):
 
         self.episode_selector = episode_selector
 
-        # self.chosen_route_index = 0
-
         self.chosen_event = None
 
         self.colour_scheme = tk.IntVar()
@@ -80,8 +78,8 @@ class AnalyzeRoute(TrackAnalyzer):
 
         #######
 
-        new_episode_selector_label_frame = self.episode_selector.get_label_frame(control_frame, self.callback_selected_episode_changed)
-        new_episode_selector_label_frame.grid(column=0, row=3, pady=5, padx=5, sticky=tk.W+tk.E)
+        episode_selector_frame = self.episode_selector.get_label_frame(control_frame, self.callback_selected_episode_changed)
+        episode_selector_frame.grid(column=0, row=3, pady=5, padx=5, sticky=tk.W+tk.E)
 
 
     def left_button_pressed(self, track_point):

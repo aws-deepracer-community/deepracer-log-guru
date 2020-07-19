@@ -31,7 +31,6 @@ class Episode:
         self.step_count = len(events)
         self.is_real_start = first_event.closest_waypoint_index <= 1
 
-        self.distance_travelled = self.get_distance_travelled()
         self.time_taken = last_event.time - first_event.time
         self.lap_time = 100 / last_event.progress * self.time_taken  # predicted
 
@@ -46,35 +45,35 @@ class Episode:
         self.set_track_speed_on_events()
         self.set_reward_total_on_events()
         self.set_time_elapsed_on_events()
+        self.set_total_distance_travelled_on_events()
+
+        # This must be after set_total_distance_travelled_on_events() - which is just above
+        self.distance_travelled = self.get_distance_travelled()
+
 
 
     def get_distance_travelled(self):
 
-        distance = 0.0
-        previous = self.events[0]
-        for e in self.events:
-            x_diff = e.x - previous.x
-            y_diff = e.y - previous.y
-            distance += math.sqrt(x_diff * x_diff + y_diff * y_diff)
-            previous = e
-
-        return distance
+        if self.events:
+            return self.events[-1].total_distance_travelled
+        else:
+            return 0
 
     def set_track_speed_on_events(self):
-        previous = self.events[0]
+        previous = [self.events[0]] * 7
         for e in self.events:
-            x_diff = e.x - previous.x
-            y_diff = e.y - previous.y
+            x_diff = e.x - previous[0].x
+            y_diff = e.y - previous[0].y
             distance = math.sqrt(x_diff * x_diff + y_diff * y_diff)
-            time_taken = e.time - previous.time
+            time_taken = e.time - previous[0].time
 
-            if (time_taken) > 0:
+            if time_taken > 0:
                 e.track_speed = distance / time_taken
 
                 if e.track_speed > self.peak_track_speed:
                     self.peak_track_speed = e.track_speed
 
-            previous = e
+            previous = previous[1:] + [e]
 
     def set_reward_total_on_events(self):
         reward_total = 0.0
@@ -86,6 +85,18 @@ class Episode:
         start_time = self.events[0].time
         for e in self.events:
             e.time_elapsed = e.time - start_time
+
+    def set_total_distance_travelled_on_events(self):
+        distance = 0.0
+        previous = self.events[0]
+
+        for e in self.events:
+            x_diff = e.x - previous.x
+            y_diff = e.y - previous.y
+            distance += math.sqrt(x_diff * x_diff + y_diff * y_diff)
+            e.total_distance_travelled = distance
+            previous = e
+
 
     def get_total_reward(self):
         total_reward = 0

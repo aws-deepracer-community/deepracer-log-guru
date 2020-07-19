@@ -14,6 +14,7 @@ from src.analyze.graph.analyze_lap_time_reward import AnalyzeLapTimeReward
 from src.analyze.graph.analyze_reward_distribution import AnalyzeRewardDistribution
 from src.analyze.graph.analyze_common_rewards import AnalyzeCommonRewards
 from src.analyze.graph.analyze_rewards_per_waypoint import AnalyzeRewardsPerWaypoint
+from src.analyze.graph.analyze_episode_speed import AnalyzeEpisodeSpeed
 
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.track.analyze_route import AnalyzeRoute
@@ -102,6 +103,7 @@ class MainApp(tk.Frame):
         self.analyze_reward_distribution = AnalyzeRewardDistribution(self.redraw, matplotlib_canvas, self.control_frame)
         self.analyze_common_rewards = AnalyzeCommonRewards(self.redraw, matplotlib_canvas, self.control_frame)
         self.analyze_rewards_per_waypoint = AnalyzeRewardsPerWaypoint(self.redraw, matplotlib_canvas, self.control_frame)
+        self.analyze_episode_speed = AnalyzeEpisodeSpeed(self.redraw, matplotlib_canvas, self.control_frame, self.episode_selector)
 
 
         self.all_analyzers = [
@@ -112,7 +114,8 @@ class MainApp(tk.Frame):
             self.analyze_lap_time_reward,
             self.analyze_reward_distribution,
             self.analyze_common_rewards,
-            self.analyze_rewards_per_waypoint
+            self.analyze_rewards_per_waypoint,
+            self.analyze_episode_speed
         ]
 
         for v in self.all_analyzers:
@@ -218,19 +221,14 @@ class MainApp(tk.Frame):
     def menu_callback_analyze_rewards_per_waypoint(self):
         self.switch_analyzer(self.analyze_rewards_per_waypoint)
 
+    def menu_callback_analyze_episode_speed(self):
+        self.switch_analyzer(self.analyze_episode_speed)
+
     def callback_open_this_file(self, file_name):
-        # print("Loading ...", file_name)
-
         redraw_menu_afterwards = not self.log
-
-        # self.visitor_map = None      OOPS LEFT BEHIND?!?!
 
         self.log = Log()
         self.log.load_all(file_name)
-
-        # Commented out now for public usage
-        # self.log.log_meta.display_for_debug()
-        # print("Loaded", file_name)
 
         self.status_frame.change_model_name(self.log.log_meta.model_name)
         self.apply_new_action_space()

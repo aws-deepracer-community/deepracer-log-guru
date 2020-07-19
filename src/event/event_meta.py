@@ -24,4 +24,5 @@ class Event:
         self.track_speed = 0
         self.reward_total = 0.0
         self.time_elapsed = 0.0
+        self.total_distance_travelled = 0.0
 

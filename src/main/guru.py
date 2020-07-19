@@ -24,6 +24,7 @@ from src.main.view_manager import ViewManager
 from src.tracks.tracks import get_all_tracks
 from src.ui.menu_bar import MenuBar
 from src.ui.status_frame import StatusFrame
+from src.analyze.selector.episode_selector import EpisodeSelector
 
 
 DEFAULT_CANVAS_WIDTH = 800
@@ -51,6 +52,7 @@ class MainApp(tk.Frame):
         self.episode_filter = EpisodeFilter()
         self.view_manager = ViewManager()
         self.action_space_filter = ActionSpaceFilter()
+        self.episode_selector = EpisodeSelector()
 
 
         #
@@ -92,7 +94,7 @@ class MainApp(tk.Frame):
         #
 
         self.track_graphics = TrackGraphics(self.track_canvas)
-        self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.control_frame)
+        self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.control_frame, self.episode_selector)
         self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.control_frame)
         self.analyze_favourite_speed = AnalyzeFavouriteSpeed(self.redraw, self.track_graphics, self.control_frame)
         self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.control_frame)
@@ -113,8 +115,10 @@ class MainApp(tk.Frame):
             self.analyze_rewards_per_waypoint
         ]
 
+        for v in self.all_analyzers:
+            v.set_track(self.current_track)
+
         self.analyzer = self.analyze_route
-        self.analyzer.set_track(self.current_track)
         self.analyzer.take_control()
 
         if ss.SHOW_SS:
@@ -167,6 +171,8 @@ class MainApp(tk.Frame):
         for v in self.all_analyzers:
             v.set_track(new_track)
 
+        self.episode_selector.set_filtered_episodes(None)
+
         self.analyzer.set_track(self.current_track)
         self.analyzer.set_filtered_episodes(None)
         self.analyzer.set_all_episodes(None)
@@ -184,14 +190,6 @@ class MainApp(tk.Frame):
             self.layout_ui_for_track_analyzer()
 
         self.analyzer = new_analyzer
-        self.analyzer.set_track(self.current_track)
-        self.analyzer.set_filtered_episodes(self.filtered_episodes)
-        if self.log:
-            self.analyzer.set_all_episodes(self.log.episodes)
-            self.analyzer.set_log_meta(self.log.log_meta)
-        else:
-            self.analyzer.set_all_episodes(None)
-
         self.analyzer.take_control()
 
         self.redraw()
@@ -257,6 +255,8 @@ class MainApp(tk.Frame):
 
     def reapply_episode_filter(self):
         self.filtered_episodes = self.episode_filter.get_filtered_episodes()
+
+        self.episode_selector.set_filtered_episodes(self.filtered_episodes)
 
         for v in self.all_analyzers:
             v.set_filtered_episodes(self.filtered_episodes)

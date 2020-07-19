@@ -4,6 +4,8 @@ import src.secret_sauce.glue.glue as ss
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
 from src.ui.log_event_info_window import LogEventInfoWindow
+from src.analyze.selector.episode_selector import EpisodeSelector
+
 
 COLOUR_SCHEME_REWARD_20 = 0
 COLOUR_SCHEME_REWARD_100 = 1
@@ -22,11 +24,14 @@ BLOB_SIZE_LARGE = "Large"
 class AnalyzeRoute(TrackAnalyzer):
 
 
-    def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame):
+    def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics,
+                 control_frame :tk.Frame, episode_selector :EpisodeSelector):
 
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
-        self.chosen_route_index = 0
+        self.episode_selector = episode_selector
+
+        # self.chosen_route_index = 0
 
         self.chosen_event = None
 
@@ -75,45 +80,33 @@ class AnalyzeRoute(TrackAnalyzer):
 
         #######
 
-        episode_group = tk.LabelFrame(control_frame, text="Episode", padx=5, pady=5)
-        episode_group.grid(column=0, row=2, pady=5, padx=5, sticky=tk.W+tk.E)
+        new_episode_selector_label_frame = self.episode_selector.get_label_frame(control_frame, self.callback_selected_episode_changed)
+        new_episode_selector_label_frame.grid(column=0, row=3, pady=5, padx=5, sticky=tk.W+tk.E)
 
-        previous_button = tk.Button(episode_group, height=2, text="<<")
-        previous_button["command"] = self.button_press_previous
-        previous_button.grid(column=0, row=0, pady=5, padx=3)
-
-        next_button = tk.Button(episode_group, height=2, text=">>")
-        next_button["command"] = self.button_press_next
-        next_button.grid(column=1, row=0, pady=5, padx=3)
-
-        first_button = tk.Button(episode_group, height=2, text="First")
-        first_button["command"] = self.button_press_first
-        first_button.grid(column=2, row=0, pady=5, padx=3)
-
-        self.episode_info = tk.Label(episode_group, text="No episode")
-        self.episode_info.grid(column=0, row=1, columnspan=3, pady=3)
 
     def left_button_pressed(self, track_point):
-        if self.filtered_episodes:
-            (self.chosen_event, self.chosen_event_index) = self.filtered_episodes[self.chosen_route_index].get_closest_event_to_point(track_point)
+        episode = self.episode_selector.get_selected_episode()
+
+        if episode:
+            (self.chosen_event, self.chosen_event_index) = episode.get_closest_event_to_point(track_point)
             self.draw_chosen_event_()
             self.display_info_about_chosen_event()
 
     def go_backwards(self, track_point):
-        episode_events = self.filtered_episodes[self.chosen_route_index].events
+        episode = self.episode_selector.get_selected_episode()
 
-        if self.filtered_episodes and self.chosen_event and self.chosen_event_index > 0:
-            self.chosen_event_index -= 1
-            self.chosen_event = episode_events[self.chosen_event_index]
-            self.draw_chosen_event_()
-            self.display_info_about_chosen_event()
+        if episode and self.chosen_event and self.chosen_event_index > 0:
+                self.chosen_event_index -= 1
+                self.chosen_event = episode.events[self.chosen_event_index]
+                self.draw_chosen_event_()
+                self.display_info_about_chosen_event()
 
     def go_forwards(self, track_point):
-        episode_events = self.filtered_episodes[self.chosen_route_index].events
+        episode = self.episode_selector.get_selected_episode()
 
-        if self.filtered_episodes and self.chosen_event and self.chosen_event_index < len(episode_events) - 1:
+        if episode and self.chosen_event and self.chosen_event_index < len(episode.events) - 1:
             self.chosen_event_index += 1
-            self.chosen_event = episode_events[self.chosen_event_index]
+            self.chosen_event = episode.events[self.chosen_event_index]
             self.draw_chosen_event_()
             self.display_info_about_chosen_event()
 
@@ -122,12 +115,7 @@ class AnalyzeRoute(TrackAnalyzer):
         if not self.filtered_episodes:
             return
 
-        if self.chosen_route_index >= len(self.filtered_episodes):
-            self.chosen_route_index = 0
-        elif self.chosen_route_index < 0:
-            self.chosen_route_index = len(self.filtered_episodes) - 1
-
-        self.draw_episode(self.filtered_episodes[self.chosen_route_index])
+        self.draw_episode(self.episode_selector.get_selected_episode())
         self.draw_chosen_event_()
 
     def get_increased_blob_size(self):
@@ -159,35 +147,16 @@ class AnalyzeRoute(TrackAnalyzer):
             print(ss.get_info_about_event(self.current_track, self.chosen_event))
 
     def warning_track_changed(self):
-        self.chosen_route_index = 0
         self.chosen_event = None
 
     def warning_filtered_episodes_changed(self):
-        self.chosen_route_index = 0
         self.chosen_event = None
 
-    def button_press_next(self):
-        self.chosen_route_index += 1
+    def callback_selected_episode_changed(self):
         self.chosen_event = None
         self.guru_parent_redraw()
-
-    def button_press_previous(self):
-        self.chosen_route_index -= 1
-        self.chosen_event = None
-        self.guru_parent_redraw()
-
-    def button_press_first(self):
-        self.chosen_route_index = 0
-        self.chosen_event = None
-        self.guru_parent_redraw()
-
 
     def draw_episode(self, episode):
-
-        average_speed = round(episode.distance_travelled / episode.time_taken, 1)
-        self.episode_info.configure(text="# " + str(episode.id) + "\n" +
-                                         str(round(episode.lap_time, 1)) + " secs\n" +
-                                         str(average_speed) + " m/s")
 
         if self.colour_scheme.get() == COLOUR_SCHEME_TRACK_SPEED:
             plot_event_method = self.colour_scheme_track_speed

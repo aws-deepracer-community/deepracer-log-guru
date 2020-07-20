@@ -50,10 +50,6 @@ class AnalyzeEpisodeSpeed(GraphAnalyzer):
 
     def add_plots(self):
         axes :Axes = self.graph_figure.add_subplot()
-        self.plot_speeds(axes)
-
-
-    def plot_speeds(self, axes :Axes):
 
         # Plot the data
 

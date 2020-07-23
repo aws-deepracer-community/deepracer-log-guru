@@ -70,11 +70,11 @@ class AnalyzeRoute(TrackAnalyzer):
         #######
 
         format_group = tk.LabelFrame(control_frame, text="Format", padx=5, pady=5)
-        format_group.grid(column=0, row=1, pady=5, padx=5, sticky=tk.W+tk.E)
+        format_group.grid(column=0, row=1, pady=2, padx=5, sticky=tk.W+tk.E)
 
-        tk.Label(format_group, text="Blob size").grid(column=0, row=0, pady=5, padx=5, sticky=tk.W)
+        tk.Label(format_group, text="Blob size").grid(column=0, row=0, pady=2, padx=5, sticky=tk.W)
         tk.OptionMenu(format_group, self.blob_size, BLOB_SIZE_SMALL, BLOB_SIZE_MEDIUM, BLOB_SIZE_LARGE,
-                      command=self.redraw_new_blob_size).grid(column=0, row=1, pady=5, padx=5, sticky=tk.W)
+                      command=self.redraw_new_blob_size).grid(column=0, row=1, pady=2, padx=5, sticky=tk.W)
 
         #######
 
@@ -132,6 +132,9 @@ class AnalyzeRoute(TrackAnalyzer):
         if self.chosen_event:
             self.track_graphics.plot_ring_highlight((self.chosen_event.x, self.chosen_event.y),
                                                     6 + self.get_increased_blob_size(), "orange", 2)
+
+            self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
+                                                self.chosen_event.heading, 2, 1, "orange")
 
     def display_info_about_chosen_event(self):
 

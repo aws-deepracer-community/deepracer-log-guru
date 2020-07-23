@@ -42,6 +42,7 @@ class Episode:
         self.lap_reward = 100 / last_event.progress * self.total_reward  # predicted
 
         self.action_frequency = self.get_action_frequency()
+        self.repeated_action_percent = self.get_repeated_action_percent()
 
         self.peak_track_speed = 0
         self.set_track_speed_on_events()
@@ -49,8 +50,9 @@ class Episode:
         self.set_time_elapsed_on_events()
         self.set_total_distance_travelled_on_events()
 
-        # This must be after set_total_distance_travelled_on_events() - which is just above
+        # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
+        self.flying_start_speed = self.get_track_speed_after_seconds(1)
 
 
 
@@ -60,6 +62,25 @@ class Episode:
             return self.events[-1].total_distance_travelled
         else:
             return 0
+
+    def get_track_speed_after_seconds(self, seconds):
+        for e in self.events:
+            if e.time_elapsed >= seconds:
+                return e.track_speed
+
+    def get_repeated_action_percent(self):
+        if not self.events or len(self.events) < 2 or self.percent_complete < 100:
+            return 0
+
+        previous_action_taken = self.events[0].action_taken
+        count = 0
+
+        for e in self.events[1:]:
+            if e.action_taken == previous_action_taken:
+                count += 1
+            previous_action_taken = e.action_taken
+
+        return 100 * count / len(self.events)
 
     def set_track_speed_on_events(self):
         previous = [self.events[0]] * 7

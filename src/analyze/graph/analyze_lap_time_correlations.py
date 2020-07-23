@@ -16,7 +16,9 @@ AXIS_PEAK_TRACK_SPEED = 2
 AXIS_STARTING_POINT = 3
 AXIS_AVERAGE_REWARD = 4
 AXIS_TOTAL_REWARD = 5
-AXIS_STRAIGHTNESS = 6
+AXIS_SMOOTHNESS = 6
+AXIS_ITERATION = 7
+AXIS_FLYING_START = 8
 
 
 
@@ -31,6 +33,8 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         self.show_filtered = tk.BooleanVar(value="True")
 
         self.correlation_tk_var = tk.IntVar(value = AXIS_DISTANCE)
+
+        self.swap_axes = tk.BooleanVar()
 
 
     def build_control_frame(self, control_frame):
@@ -54,22 +58,39 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         axis_group.grid(column=0, row=2, pady=5, padx=5)
 
         tk.Radiobutton(axis_group, text="Total Distance", variable=self.correlation_tk_var,
-            value=AXIS_DISTANCE, command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
+            value=AXIS_DISTANCE, command=self.guru_parent_redraw).grid(column=0, row=0, pady=2, padx=5)
 
         tk.Radiobutton(axis_group, text="Peak Track Speed", variable=self.correlation_tk_var,
-                       value=AXIS_PEAK_TRACK_SPEED, command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
+                       value=AXIS_PEAK_TRACK_SPEED, command=self.guru_parent_redraw).grid(column=0, row=1, pady=2, padx=5)
 
         tk.Radiobutton(axis_group, text="Starting Point", variable=self.correlation_tk_var,
-                       value=AXIS_STARTING_POINT, command=self.guru_parent_redraw).grid(column=0, row=2, pady=5, padx=5)
+                       value=AXIS_STARTING_POINT, command=self.guru_parent_redraw).grid(column=0, row=2, pady=2, padx=5)
 
         tk.Radiobutton(axis_group, text="Average Reward", variable=self.correlation_tk_var,
-                       value=AXIS_AVERAGE_REWARD, command=self.guru_parent_redraw).grid(column=0, row=3, pady=5, padx=5)
+                       value=AXIS_AVERAGE_REWARD, command=self.guru_parent_redraw).grid(column=0, row=3, pady=2, padx=5)
 
         tk.Radiobutton(axis_group, text="Total Reward", variable=self.correlation_tk_var,
-                       value=AXIS_TOTAL_REWARD, command=self.guru_parent_redraw).grid(column=0, row=4, pady=5, padx=5)
+                       value=AXIS_TOTAL_REWARD, command=self.guru_parent_redraw).grid(column=0, row=4, pady=2, padx=5)
 
-        # tk.Radiobutton(axis_group, text="Straightness", variable=self.correlation_tk_var,
-        #                value=AXIS_STRAIGHTNESS, command=self.guru_parent_redraw).grid(column=0, row=5, pady=5, padx=5)
+        tk.Radiobutton(axis_group, text="Smoothness", variable=self.correlation_tk_var,
+                       value=AXIS_SMOOTHNESS, command=self.guru_parent_redraw).grid(column=0, row=5, pady=2, padx=5)
+
+        tk.Radiobutton(axis_group, text="Training Iteration", variable=self.correlation_tk_var,
+                       value=AXIS_ITERATION, command=self.guru_parent_redraw).grid(column=0, row=6, pady=2, padx=5)
+
+        tk.Radiobutton(axis_group, text="Flying Start", variable=self.correlation_tk_var,
+                       value=AXIS_FLYING_START, command=self.guru_parent_redraw).grid(column=0, row=7, pady=2, padx=5)
+
+        ######
+
+        format_group = tk.LabelFrame(control_frame, text="Format", padx=5, pady=5)
+        format_group.grid(column=0, row=3, pady=5, padx=5)
+
+        tk.Checkbutton(
+            format_group, text="Swap Axes",
+            variable=self.swap_axes,
+            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
+
 
     def add_plots(self):
         axes: Axes = self.graph_figure.add_subplot()
@@ -99,10 +120,19 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
             plot_y = get_plot_data_averge_rewards(episodes)
         if self.correlation_tk_var.get() == AXIS_TOTAL_REWARD:
             plot_y = get_plot_data_total_rewards(episodes)
+        if self.correlation_tk_var.get() == AXIS_SMOOTHNESS:
+            plot_y = get_plot_data_repeats(episodes)
+        if self.correlation_tk_var.get() == AXIS_ITERATION:
+            plot_y = get_plot_data_iterations(episodes)
+        if self.correlation_tk_var.get() == AXIS_FLYING_START:
+            plot_y = get_plot_data_flying_starts(episodes)
 
         plot_x = get_plot_data_lap_times(episodes)
 
-        axes.plot(plot_x, plot_y, "o", color=colour, label=label)
+        if self.swap_axes.get():
+            axes.plot(plot_y, plot_x, "o", color=colour, label=label)
+        else:
+            axes.plot(plot_x, plot_y, "o", color=colour, label=label)
 
     def format_axes(self, axes :Axes):
 
@@ -124,10 +154,24 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         if self.correlation_tk_var.get() == AXIS_TOTAL_REWARD:
             general_title = "Total Reward"
             axis_label = general_title
+        if self.correlation_tk_var.get() == AXIS_SMOOTHNESS:
+            general_title = "Repeat Action Percent"
+            axis_label = general_title
+        if self.correlation_tk_var.get() == AXIS_ITERATION:
+            general_title = "Training Iteration"
+            axis_label = general_title
+        if self.correlation_tk_var.get() == AXIS_FLYING_START:
+            general_title = "Track Speed At One Second"
+            axis_label = general_title
 
         axes.set_title("Lap Time Correlated With " + general_title)
-        axes.set_xlabel("Lap Time / Seconds")
-        axes.set_ylabel(axis_label)
+
+        if self.swap_axes.get():
+            axes.set_ylabel("Lap Time / Seconds")
+            axes.set_xlabel(axis_label)
+        else:
+            axes.set_xlabel("Lap Time / Seconds")
+            axes.set_ylabel(axis_label)
 
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
@@ -187,3 +231,31 @@ def get_plot_data_total_rewards(episodes: list):
             rewards.append(e.total_reward)
 
     return np.array(rewards)
+
+def get_plot_data_repeats(episodes: list):
+    repeats = []
+
+    for e in episodes:
+        if e.lap_complete:
+            repeats.append(e.repeated_action_percent)
+
+    return np.array(repeats)
+
+def get_plot_data_iterations(episodes: list):
+    iterations = []
+
+    for e in episodes:
+        if e.lap_complete:
+            iterations.append(e.iteration)
+
+    return np.array(iterations)
+
+def get_plot_data_flying_starts(episodes: list):
+    starts = []
+
+    for e in episodes:
+        if e.lap_complete:
+            starts.append(e.flying_start_speed)
+
+    return np.array(starts)
+

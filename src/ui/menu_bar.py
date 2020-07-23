@@ -91,6 +91,9 @@ class MenuBar():
         menu.add_separator()
 
         menu.add_command(label="Lap Time Correlations", command=self.main_app.menu_callback_analyze_lap_time_correlations)
+
+        menu.add_separator()
+
         menu.add_command(label="Lap Time Reward", command=self.main_app.menu_callback_analyze_lap_time_reward)
         menu.add_command(label="Reward Distribution", command=self.main_app.menu_callback_analyze_reward_distribution)
         menu.add_command(label="Common Rewards", command=self.main_app.menu_callback_analyze_common_rewards)
@@ -135,6 +138,8 @@ class MenuBar():
     def add_admin_menu(self):
         menu = Menu(self.menubar, tearoff=0)
         menu.add_command(label="Re-calculate Log Meta", command=refresh_all_log_meta)
+        menu.add_command(label="View Log File Info", command=self.main_app.menu_callback_view_log_file_info)
+
 
         self.menubar.add_cascade(label="Admin", menu=menu)
 

@@ -1,5 +1,6 @@
 from src.tracks.track import Track
 from src.graphics.track_graphics import TrackGraphics
+from src.episode.episode_filter import EpisodeFilter
 
 COLOUR_GREY = "Grey30"
 COLOUR_BLUE = "Blue"
@@ -87,7 +88,7 @@ class ViewManager:
     def set_annotations_off(self):
         self.annotations_on = False
 
-    def redraw(self, current_track :Track, track_graphics, analyzer):
+    def redraw(self, current_track :Track, track_graphics, analyzer, episode_filter: EpisodeFilter):
         track_graphics.reset_to_blank()
 
         current_track.configure_track_graphics(track_graphics)
@@ -98,7 +99,10 @@ class ViewManager:
 
             if do == "T":
                 current_track.draw_track_edges(track_graphics, self.track_colour)
-                # current_track.draw_section_dividers(track_graphics, self.track_colour)
+                if episode_filter.filter_complete_section:
+                    (start, finish) = episode_filter.filter_complete_section
+                    current_track.draw_section_highlight(track_graphics, self.track_colour, start, finish)
+
                 current_track.draw_starting_line(track_graphics, self.track_colour)
                 if self.waypoints_on:
                     current_track.draw_waypoints(track_graphics, self.track_colour, self.waypoint_minor_size, self.waypoint_major_size)

@@ -27,6 +27,7 @@ from src.tracks.tracks import get_all_tracks
 from src.ui.menu_bar import MenuBar
 from src.ui.status_frame import StatusFrame
 from src.analyze.selector.episode_selector import EpisodeSelector
+from src.ui.view_log_file_info import ViewLogFileInfo
 
 
 DEFAULT_CANVAS_WIDTH = 800
@@ -273,7 +274,7 @@ class MainApp(tk.Frame):
 
     def redraw(self, event=None):
 
-        self.view_manager.redraw(self.current_track, self.track_graphics, self.analyzer)
+        self.view_manager.redraw(self.current_track, self.track_graphics, self.analyzer, self.episode_filter)
 
     def left_button_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)
@@ -420,6 +421,10 @@ class MainApp(tk.Frame):
     def menu_callback_annotations_off(self):
         self.view_manager.set_annotations_off()
         self.redraw()
+
+    def menu_callback_view_log_file_info(self):
+        if self.log:
+            ViewLogFileInfo(self, self.log)
 
 
 root = tk.Tk()

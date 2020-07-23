@@ -82,13 +82,18 @@ class Track:
                 left = self.get_target_point(previous, w, 90, self.track_width / 2)
                 right = self.get_target_point(previous, w, -90, self.track_width / 2)
 
+                left_outer = self.get_target_point(previous, w, 90, self.track_width / 2 + 0.08)
+                right_outer = self.get_target_point(previous, w, -90, self.track_width / 2 + 0.08)
+
                 is_divider = ( i in self.track_section_dividers)
                 is_center = ( i in section_centers )
 
                 if is_divider:
                     section = chr(ord(section) + 1)
 
-                self.drawing_points.append(Track.DrawingPoint(left, w, right, is_divider, is_center, section))
+                self.drawing_points.append(Track.DrawingPoint(left, w, right,
+                                                              left_outer, right_outer,
+                                                              is_divider, is_center, section))
                 previous = w
 
                 self.consider_new_point_in_area(left)
@@ -184,6 +189,24 @@ class Track:
             if geometry.get_distance_between_points(previous_right, p.right) > 0.08:
                 track_graphics.plot_line(previous_right, p.right, 3, colour)
                 previous_right = p.right
+
+    def draw_section_highlight(self, track_graphics, colour, start, finish):
+
+        previous_left = self.drawing_points[start].left_outer
+        previous_right = self.drawing_points[start].right_outer
+
+        if finish >= start:
+            highlight_points = self.drawing_points[start+1:finish]
+        else:
+            highlight_points = self.drawing_points[start:] + self.drawing_points[:finish+1]
+
+        for p in highlight_points:
+            if geometry.get_distance_between_points(previous_left, p.left_outer) > 0.08:
+                track_graphics.plot_line(previous_left, p.left_outer, 5, colour)
+                previous_left = p.left_outer
+            if geometry.get_distance_between_points(previous_right, p.right_outer) > 0.08:
+                track_graphics.plot_line(previous_right, p.right_outer, 5, colour)
+                previous_right = p.right_outer
 
     def draw_starting_line(self, track_graphics, colour):
         track_graphics.plot_line(self.drawing_points[0].left, self.drawing_points[0].right, 3, colour)
@@ -283,10 +306,12 @@ class Track:
 
 
     class DrawingPoint:
-        def __init__(self, left, middle, right, is_divider, is_center, section):
+        def __init__(self, left, middle, right, left_outer, right_outer, is_divider, is_center, section):
             self.left = left
             self.middle = middle
             self.right = right
+            self.left_outer = left_outer
+            self.right_outer = right_outer
             self.is_divider = is_divider
             self.is_center = is_center
             self.section = section

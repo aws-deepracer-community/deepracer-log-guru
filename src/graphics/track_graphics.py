@@ -9,6 +9,8 @@ class TrackGraphics:
         self.max_y = 0
 
         self.ring_highlight_widget = None
+        self.angle_line_highlight_widget = None
+
 
     def reset_to_blank(self):
         self.canvas.delete("all")
@@ -49,7 +51,7 @@ class TrackGraphics:
         x2 = (x2 - self.min_x) * self.scale
         y2 = (self.max_y - y2) * self.scale
 
-        self.canvas.create_line(x, y, x2, y2, fill=fill_colour, width=width)
+        return self.canvas.create_line(x, y, x2, y2, fill=fill_colour, width=width)
 
     def plot_angle_line(self, start_point, heading, distance, width, fill_colour):
         (x, y) = start_point
@@ -60,7 +62,8 @@ class TrackGraphics:
         y2 = y + math.sin(radians_to_target) * distance
 
         end_point = (x2, y2)
-        self.plot_line(start_point, end_point, width, fill_colour)
+
+        return self.plot_line(start_point, end_point, width, fill_colour)
 
     def plot_text(self, point, text_string, font_size):
         (x, y) = point
@@ -95,3 +98,11 @@ class TrackGraphics:
 
         self.ring_highlight_widget = self.canvas.create_oval(
             x - r, y - r, x + r, y + r, fill="", width=line_width, outline=colour)
+
+    def plot_angle_line_highlight(self, start_point, heading, distance, width, fill_colour):
+
+        if self.angle_line_highlight_widget:
+            self.canvas.delete(self.angle_line_highlight_widget)
+
+        self.angle_line_highlight_widget = self.plot_angle_line(start_point, heading, distance, width, fill_colour)
+

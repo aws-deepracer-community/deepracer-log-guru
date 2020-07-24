@@ -5,6 +5,8 @@ class EpisodeFilter:
         self.filter_max_steps = None
         self.filter_min_percent = None
         self.filter_complete_section = None
+        self.filter_complete_section_time = None
+        self.filter_complete_section_steps = None
         self.filter_min_average_reward = None
         self.filter_peak_track_speed = None
         self.filter_specific_waypoint_id = None
@@ -17,6 +19,8 @@ class EpisodeFilter:
         self.filter_max_steps = None
         self.filter_min_percent = None
         self.filter_complete_section = None
+        self.filter_complete_section_time = None
+        self.filter_complete_section_steps = None
         self.filter_min_average_reward = None
         self.filter_peak_track_speed = None
         self.filter_specific_waypoint_id = None
@@ -34,7 +38,10 @@ class EpisodeFilter:
     def set_filter_min_average_reward(self, min_reward: int):
         self.filter_min_average_reward = min_reward
 
-    def set_filter_complete_section(self, start_waypoint_id, finish_waypoint_id):
+    def set_filter_complete_section_and_time(self, start_waypoint_id, finish_waypoint_id, optional_time, optional_steps):
+        self.filter_complete_section_time = optional_time
+        self.filter_complete_section_steps = optional_steps
+
         if start_waypoint_id is not None and finish_waypoint_id is not None:
             self.filter_complete_section = (start_waypoint_id, finish_waypoint_id)
         elif start_waypoint_id is not None:
@@ -58,7 +65,7 @@ class EpisodeFilter:
     def set_all_episodes(self, all_episodes):
         self.all_episodes = all_episodes
 
-    def get_filtered_episodes(self):
+    def get_filtered_episodes(self, track):
         if not self.all_episodes:
             return None
 
@@ -69,7 +76,7 @@ class EpisodeFilter:
                     if self.filter_min_percent is None or e.percent_complete >= self.filter_min_percent:
                         if self.filter_min_average_reward is None or e.average_reward >= self.filter_min_average_reward:
                             if self.filter_peak_track_speed is None or e.peak_track_speed >= self.filter_peak_track_speed:
-                                if self.matches_complete_section_filter(e):
+                                if self.matches_complete_section_filter(e, track):
                                     if self.matches_specific_waypoint_reward_filter(e):
                                         result.append(e)
 
@@ -86,25 +93,23 @@ class EpisodeFilter:
 
         return False
 
-    def matches_complete_section_filter(self, episode):
+    def matches_complete_section_filter(self, episode, track):
         if not self.filter_complete_section:
             return True
 
         (start, finish) = self.filter_complete_section
 
-        actual_start = episode.events[0].closest_waypoint_index
-        actual_finish = episode.events[-1].closest_waypoint_index
+        if not episode.finishes_section(start, finish):
+            return False
 
-        # This logic is only for finish >= start    # the opposite is TODO (i.e. crosing start line)
-        assert(finish >= start)
-
-        if actual_start <= start and actual_finish >= finish:
+        if not self.filter_complete_section_time and not self.filter_complete_section_steps:
             return True
 
-        if actual_finish >= finish and actual_start > actual_finish:
-            return True
+        events = episode.get_section_start_and_finish_events(start, finish, track)
 
-        if actual_start > actual_finish and actual_start <= start:
-            return True
+        (start_event, finish_event) = events
 
-        return False
+        time_ok = not self.filter_complete_section_time or finish_event.time - start_event.time <= self.filter_complete_section_time
+        steps_ok = not self.filter_complete_section_steps or finish_event.step - start_event.step <= self.filter_complete_section_steps
+
+        return time_ok and steps_ok

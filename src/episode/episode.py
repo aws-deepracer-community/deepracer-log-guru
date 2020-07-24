@@ -5,6 +5,8 @@ from src.action_space.action import MAX_POSSIBLE_ACTIONS
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.util.visitor import VisitorMap
 
+from src.tracks.track import Track
+
 
 
 
@@ -173,6 +175,78 @@ class Episode:
                 visitor_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self)
 
             previous = e
+
+    def finishes_section(self, start, finish):
+        actual_start = self.events[0].closest_waypoint_index
+        actual_finish = self.events[-1].closest_waypoint_index
+
+        if finish >= start:
+            if self.lap_complete:
+                if actual_start < start or actual_start > finish:
+                    return True
+
+            if actual_start < start and actual_finish > finish:
+                return True
+
+            if actual_start > actual_finish and actual_finish > finish:
+                return True
+
+            if actual_start > actual_finish and actual_start < start:
+                return True
+            else:
+                return False
+        else:
+            # Finish is before start, so basically it means the section crosses the start line
+            if self.lap_complete:
+                if finish < actual_start < start:
+                    return True
+
+            if actual_start > actual_finish and finish < actual_start < start and actual_finish > finish:
+                return True
+            else:
+                # I believe no more logic needed here ?!?!?!?!
+                return False
+
+
+    def get_section_start_and_finish_events(self, start, finish, track :Track):
+        if not self.finishes_section(start, finish):
+            return None
+
+        start_event = None
+        finish_event = None
+
+        start_dist = 9999
+        finish_dist = 9999
+
+        for e in self.events:
+            if not finish_event and are_close_waypoint_ids(e.closest_waypoint_index, start, track):
+                (x2, y2) = track.track_waypoints[start]
+                dist = (x2 - e.x) * (x2 - e.x) + (y2 - e.y) * (y2 - e.y)
+                if dist < start_dist:
+                    start_dist = dist
+                    start_event = e
+            if start_event and are_close_waypoint_ids(e.closest_waypoint_index, finish, track):
+                (x2, y2) = track.track_waypoints[finish]
+                dist = (x2 - e.x) * (x2 - e.x) + (y2 - e.y) * (y2 - e.y)
+                if dist < finish_dist:
+                    finish_dist = dist
+                    finish_event = e
+
+        if finish_event:
+            return start_event, finish_event
+        else:
+            return None
+
+
+
+def are_close_waypoint_ids(id1, id2, track :Track):
+    if abs(id1 - id2) <= 2:
+        return True
+
+    if max(id1, id2) >= len(track.track_waypoints) - 1 and min(id1, id2) <= 2:
+        return True
+    else:
+        return False
 
 def is_any_speed(speed):
     return True

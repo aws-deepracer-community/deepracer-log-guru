@@ -23,6 +23,8 @@ class EpisodeFilterDialog(Dialog):
             (start, finish) = (None, None)
         self.filter_complete_section_start = make_nullable_var(start)
         self.filter_complete_section_finish = make_nullable_var(finish)
+        self.filter_complete_section_time = make_nullable_var(self.episode_filter.filter_complete_section_time)
+        self.filter_complete_section_steps = make_nullable_var(self.episode_filter.filter_complete_section_steps)
 
 
         super().__init__(parent, "Episode Filter")
@@ -70,7 +72,7 @@ class EpisodeFilterDialog(Dialog):
         #
 
         waypoint_group = LabelFrame(master, text="Waypoint", padx=5, pady=5)
-        waypoint_group.grid(column=0, row=3, pady=5, padx=5, sticky=W)
+        waypoint_group.grid(column=1, row=1, pady=5, padx=5, sticky=W)
 
         Label(waypoint_group, text="Waypoint Id").grid(column=0, row=0, pady=5, padx=5, sticky=E)
         Entry(
@@ -85,7 +87,7 @@ class EpisodeFilterDialog(Dialog):
         #
 
         completed_section_group = LabelFrame(master, text="Completed Section", padx=5, pady=5)
-        completed_section_group.grid(column=0, row=4, pady=5, padx=5, sticky=W)
+        completed_section_group.grid(column=1, row=2, pady=5, padx=5, sticky=W)
 
         Label(completed_section_group, text="Start Waypoint Id").grid(column=0, row=0, pady=5, padx=5, sticky=E)
         Entry(
@@ -96,6 +98,17 @@ class EpisodeFilterDialog(Dialog):
         Entry(
             completed_section_group, textvariable=self.filter_complete_section_finish,
             validate="key", validatecommand=self.validate_waypoint_id).grid(column=1, row=1, pady=5, padx=5)
+
+        Label(completed_section_group, text="Time (secs) <=").grid(column=0, row=2, pady=5, padx=5, sticky=E)
+        Entry(
+            completed_section_group, textvariable=self.filter_complete_section_time,
+            validate="key", validatecommand=self.validate_simple_float).grid(column=1, row=2, pady=5, padx=5)
+
+        Label(completed_section_group, text="Steps <=").grid(column=0, row=3, pady=5, padx=5, sticky=E)
+        Entry(
+            completed_section_group, textvariable=self.filter_complete_section_steps,
+            validate="key", validatecommand=self.validate_positive_integer).grid(column=1, row=3, pady=5, padx=5)
+
 
         return default    # Returns widget to have initial focus
 
@@ -112,9 +125,11 @@ class EpisodeFilterDialog(Dialog):
             get_nullable_int_entry(self.filter_specific_waypoint_id),
             get_nullable_float_entry(self.filter_specific_waypoint_min_reward))
 
-        self.episode_filter.set_filter_complete_section(
+        self.episode_filter.set_filter_complete_section_and_time(
             get_nullable_int_entry(self.filter_complete_section_start),
-            get_nullable_int_entry(self.filter_complete_section_finish))
+            get_nullable_int_entry(self.filter_complete_section_finish),
+            get_nullable_float_entry(self.filter_complete_section_time),
+            get_nullable_int_entry(self.filter_complete_section_steps))
 
         self.parent.reapply_episode_filter()
 
@@ -135,6 +150,8 @@ class EpisodeFilterDialog(Dialog):
 
         self.filter_complete_section_start.set("")
         self.filter_complete_section_finish.set("")
+        self.filter_complete_section_time.set("")
+        self.filter_complete_section_steps.set("")
 
 
 def make_nullable_var(initial_value):

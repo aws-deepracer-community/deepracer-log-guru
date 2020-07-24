@@ -91,6 +91,7 @@ class MenuBar():
         menu.add_separator()
 
         menu.add_command(label="Lap Time Correlations", command=self.main_app.menu_callback_analyze_lap_time_correlations)
+        menu.add_command(label="Section Time Correlations", command=self.main_app.menu_callback_analyze_section_time_correlations)
 
         menu.add_separator()
 

@@ -14,10 +14,10 @@ class Dialog(Toplevel):
         self.transient(parent)
 
         # Register our own special validation options for text entry
-        self.validate_waypoint_id = (self.register(self.on_validate_waypoint_id), '%P')
-        self.validate_positive_integer = (self.register(self.on_validate_positive_integer), '%P')
-        self.validate_whole_percent = (self.register(self.on_validate_whole_percent), '%P')
-        self.validate_simple_float = (self.register(self.on_validate_simple_float), '%P')
+        self.validate_waypoint_id = (self.register(on_validate_waypoint_id), '%P')
+        self.validate_positive_integer = (self.register(on_validate_positive_integer), '%P')
+        self.validate_whole_percent = (self.register(on_validate_whole_percent), '%P')
+        self.validate_simple_float = (self.register(on_validate_simple_float), '%P')
 
         if title:
             self.title(title)
@@ -39,8 +39,8 @@ class Dialog(Toplevel):
 
         self.protocol("WM_DELETE_WINDOW", self.cancel)
 
-        self.geometry("+%d+%d" % (parent.winfo_rootx() + 100,
-                                  parent.winfo_rooty() + 100))
+        self.geometry("+%d+%d" % (parent.winfo_rootx() + 50,
+                                  parent.winfo_rooty() + 50))
 
         self.initial_focus.focus_set()
 
@@ -110,14 +110,14 @@ class Dialog(Toplevel):
     # Implement our own special validation options for text entry
     #
 
-    def on_validate_waypoint_id(self, new_value):
-        return len(new_value) <= 3 and re.fullmatch('\d*', new_value) is not None
+def on_validate_waypoint_id(new_value):
+    return len(new_value) <= 3 and re.fullmatch('\d*', new_value) is not None
 
-    def on_validate_positive_integer(self, new_value):
-        return len(new_value) <= 6 and re.fullmatch('[1-9]\d*', new_value) is not None or new_value == ""
+def on_validate_positive_integer(new_value):
+    return len(new_value) <= 6 and re.fullmatch('[1-9]\d*', new_value) is not None or new_value == ""
 
-    def on_validate_whole_percent(self, new_value):
-        return (len(new_value) <= 2 and re.fullmatch('\d*', new_value) is not None) or new_value == "100"
+def on_validate_whole_percent(new_value):
+    return (len(new_value) <= 2 and re.fullmatch('\d*', new_value) is not None) or new_value == "100"
 
-    def on_validate_simple_float(self, new_value):
-        return re.fullmatch('[-]{0,1}\d*[.]{0,1}\d*', new_value) is not None
+def on_validate_simple_float(new_value):
+    return re.fullmatch('[-]{0,1}\d*[.]{0,1}\d*', new_value) is not None

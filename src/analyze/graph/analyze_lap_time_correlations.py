@@ -1,6 +1,6 @@
 import tkinter as tk
 import numpy as np
-
+from scipy import stats
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.gridspec import GridSpec
@@ -129,10 +129,29 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         plot_x = get_plot_data_lap_times(episodes)
 
+        # Calculate linear regression line through the points
+
+        slope, intercept, r, p, std_err = stats.linregress(plot_x, plot_y)
+        def linear_line(x):
+            return slope * x + intercept
+        if abs(r) > 0.25:
+            slope_y = list(map(linear_line, plot_x))
+            r_label = "R = " + str(round(r, 2))
+        else:
+            (slope_y, r_label) = (None, None)
+
+
+        # Finally plot the data we have gathered
+
         if self.swap_axes.get():
             axes.plot(plot_y, plot_x, "o", color=colour, label=label)
+            if slope_y:
+                axes.plot(slope_y, plot_x, color=colour, label=r_label)
         else:
             axes.plot(plot_x, plot_y, "o", color=colour, label=label)
+            if slope_y:
+                axes.plot(plot_x, slope_y, color=colour, label=r_label)
+
 
     def format_axes(self, axes :Axes):
 

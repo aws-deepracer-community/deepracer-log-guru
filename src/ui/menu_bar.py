@@ -95,7 +95,7 @@ class MenuBar():
 
         menu.add_separator()
 
-        menu.add_command(label="Lap Time Reward", command=self.main_app.menu_callback_analyze_lap_time_reward)
+        menu.add_command(label="Lap Time Predictor", command=self.main_app.menu_callback_analyze_lap_time_reward)
         menu.add_command(label="Reward Distribution", command=self.main_app.menu_callback_analyze_reward_distribution)
         menu.add_command(label="Common Rewards", command=self.main_app.menu_callback_analyze_common_rewards)
         menu.add_command(label="Rewards per Waypoint", command=self.main_app.menu_callback_analyze_rewards_per_waypoint)

@@ -1,5 +1,6 @@
 import tkinter as tk
 import numpy as np
+from scipy import stats
 
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -15,7 +16,7 @@ from src.ui.dialog import on_validate_waypoint_id
 
 AXIS_DISTANCE = 1
 AXIS_PEAK_TRACK_SPEED = 2
-AXIS_STARTING_POINT = 3
+AXIS_LAP_TIME = 3
 AXIS_AVERAGE_REWARD = 4
 AXIS_TOTAL_REWARD = 5
 AXIS_SMOOTHNESS = 6
@@ -91,8 +92,8 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
         # tk.Radiobutton(axis_group, text="Peak Track Speed", variable=self.correlation_tk_var,
         #                value=AXIS_PEAK_TRACK_SPEED, command=self.guru_parent_redraw).grid(column=0, row=1, pady=2, padx=5)
         #
-        # tk.Radiobutton(axis_group, text="Starting Point", variable=self.correlation_tk_var,
-        #                value=AXIS_STARTING_POINT, command=self.guru_parent_redraw).grid(column=0, row=2, pady=2, padx=5)
+        tk.Radiobutton(axis_group, text="Lap Time", variable=self.correlation_tk_var,
+                       value=AXIS_LAP_TIME, command=self.guru_parent_redraw).grid(column=0, row=2, pady=2, padx=5)
         #
         # tk.Radiobutton(axis_group, text="Average Reward", variable=self.correlation_tk_var,
         #                value=AXIS_AVERAGE_REWARD, command=self.guru_parent_redraw).grid(column=0, row=3, pady=2, padx=5)
@@ -120,7 +121,7 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
             command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
 
         tk.Checkbutton(
-            format_group, text="Count Steps",
+            format_group, text="Show Steps",
             variable=self.count_steps,
             command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
 
@@ -144,6 +145,8 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
         start = int(self.section_start_tk_var.get())
         finish = int(self.section_finish_tk_var.get())
 
+        complete_laps_only = (self.correlation_tk_var.get() == AXIS_LAP_TIME)
+
 
         plot_y = []
 
@@ -151,28 +154,54 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
         #     plot_y = get_plot_data_distances(episodes)
         # if self.correlation_tk_var.get() == AXIS_PEAK_TRACK_SPEED:
         #     plot_y = get_plot_data_peak_speeds(episodes)
-        # if self.correlation_tk_var.get() == AXIS_STARTING_POINT:
-        #     plot_y = get_plot_data_starting_points(episodes)
+
+        if self.correlation_tk_var.get() == AXIS_LAP_TIME:
+            if self.count_steps.get():
+                plot_y = get_plot_data_lap_steps(episodes, start, finish)
+            else:
+                plot_y = get_plot_data_lap_times(episodes, start, finish)
+
         # if self.correlation_tk_var.get() == AXIS_AVERAGE_REWARD:
         #     plot_y = get_plot_data_averge_rewards(episodes)
         # if self.correlation_tk_var.get() == AXIS_TOTAL_REWARD:
         #     plot_y = get_plot_data_total_rewards(episodes)
         # if self.correlation_tk_var.get() == AXIS_SMOOTHNESS:
         #     plot_y = get_plot_data_repeats(episodes)
+
         if self.correlation_tk_var.get() == AXIS_ITERATION:
             plot_y = get_plot_data_iterations(episodes, start, finish)
+
         # if self.correlation_tk_var.get() == AXIS_FLYING_START:
         #     plot_y = get_plot_data_flying_starts(episodes)
 
         if self.count_steps.get():
-            plot_x = get_plot_data_section_steps(episodes, start, finish, self.current_track)
+            plot_x = get_plot_data_section_steps(episodes, start, finish, self.current_track, complete_laps_only)
         else:
-            plot_x = get_plot_data_section_times(episodes, start, finish, self.current_track)
+            plot_x = get_plot_data_section_times(episodes, start, finish, self.current_track, complete_laps_only)
+
+        # Calculate linear regression line through the points
+
+        slope, intercept, r, p, std_err = stats.linregress(plot_x, plot_y)
+
+        def linear_line(x):
+            return slope * x + intercept
+
+        if abs(r) > 0.25:
+            slope_y = list(map(linear_line, plot_x))
+            r_label = "R = " + str(round(r, 2))
+        else:
+            (slope_y, r_label) = (None, None)
+
+        # Finally plot the data we have gathered
 
         if self.swap_axes.get():
             axes.plot(plot_y, plot_x, "o", color=colour, label=label)
+            if slope_y:
+                axes.plot(slope_y, plot_x, color=colour, label=r_label)
         else:
             axes.plot(plot_x, plot_y, "o", color=colour, label=label)
+            if slope_y:
+                axes.plot(plot_x, slope_y, color=colour, label=r_label)
 
     def format_axes(self, axes :Axes):
 
@@ -185,9 +214,13 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
         if self.correlation_tk_var.get() == AXIS_PEAK_TRACK_SPEED:
             general_title = "Peak Track Speed"
             axis_label = "Peak Speed / metres per second"
-        if self.correlation_tk_var.get() == AXIS_STARTING_POINT:
-            general_title = "Starting Point"
-            axis_label = "Start Waypoint Id"
+        if self.correlation_tk_var.get() == AXIS_LAP_TIME:
+            if self.count_steps.get():
+                general_title = "Complete Lap Steps"
+                axis_label = "Complete Lap Steps"
+            else:
+                general_title = "Complete Lap Time"
+                axis_label = "Complete Lap Time"
         if self.correlation_tk_var.get() == AXIS_AVERAGE_REWARD:
             general_title = "Average Reward Per Step"
             axis_label = general_title
@@ -223,29 +256,27 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
 
 
 
-
-
-def get_plot_data_section_times(episodes: list, start, finish, track):
+def get_plot_data_section_times(episodes: list, start, finish, track, complete_laps_only):
     section_times = []
 
     for e in episodes:
-        if e.finishes_section(start, finish):
-            events = e.get_section_start_and_finish_events(start, finish, track)
-            (start_event, finish_event) = events
-            section_times.append(finish_event.time - start_event.time)
+        if e.lap_complete or not complete_laps_only:
+            if e.finishes_section(start, finish):
+                events = e.get_section_start_and_finish_events(start, finish, track)
+                (start_event, finish_event) = events
+                section_times.append(finish_event.time - start_event.time)
 
     return np.array(section_times)
 
-def get_plot_data_section_steps(episodes: list, start, finish, track):
+def get_plot_data_section_steps(episodes: list, start, finish, track, complete_laps_only):
     section_steps = []
 
     for e in episodes:
-        if e.finishes_section(start, finish):
-            events = e.get_section_start_and_finish_events(start, finish, track)
-            (start_event, finish_event) = events
-            section_steps.append(finish_event.step - start_event.step)
-
-            print(e.id, start_event.step, finish_event.step)
+        if e.lap_complete or not complete_laps_only:
+            if e.finishes_section(start, finish):
+                events = e.get_section_start_and_finish_events(start, finish, track)
+                (start_event, finish_event) = events
+                section_steps.append(finish_event.step - start_event.step)
 
     return np.array(section_steps)
 
@@ -257,4 +288,22 @@ def get_plot_data_iterations(episodes: list, start, finish):
             iterations.append(e.iteration)
 
     return np.array(iterations)
+
+def get_plot_data_lap_times(episodes: list, start, finish):
+    lap_times = []
+
+    for e in episodes:
+        if e.lap_complete and e.finishes_section(start, finish):
+            lap_times.append(e.time_taken)
+
+    return np.array(lap_times)
+
+def get_plot_data_lap_steps(episodes: list, start, finish):
+    lap_steps = []
+
+    for e in episodes:
+        if e.lap_complete and e.finishes_section(start, finish):
+            lap_steps.append(e.step_count)
+
+    return np.array(lap_steps)
 

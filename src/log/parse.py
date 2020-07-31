@@ -19,9 +19,14 @@ PARAM_WORLD_NAME = "WORLD_NAME"
 PARAM_RACE_TYPE = "RACE_TYPE"
 PARAM_JOB_TYPE = "JOB_TYPE"
 
-MISC_MODEL_NAME = "Successfully downloaded model metadata from model-metadata/"
+MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-metadata/"
+MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
+MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
+
 MISC_ACTION_SPACE = "Loaded action space from file: "
 
+EVALUATION_REWARD_START = "## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = "
+EVALUATION_PROGRESSES_START = "Number of evaluations: "
 
 def parse_intro_event(str, log_meta :LogMeta):
     if contains_hyper(str, HYPER_BATCH_SIZE):
@@ -54,9 +59,14 @@ def parse_intro_event(str, log_meta :LogMeta):
     if contains_parameter(str, PARAM_JOB_TYPE):
         log_meta.job_type = get_parameter_string_value(str, PARAM_JOB_TYPE)
 
-    if str.startswith(MISC_MODEL_NAME):
+    if str.startswith(MISC_MODEL_NAME_OLD_LOGS):
         log_meta.model_name = str.split("/")[1]
-        # print("FOUND MODEL NAME:", log_meta.model_name)
+
+    if str.startswith(MISC_MODEL_NAME_NEW_LOGS_A) and not str.startswith(MISC_MODEL_NAME_OLD_LOGS):
+        log_meta.model_name = str.split("/")[2]
+
+    if str.startswith(MISC_MODEL_NAME_NEW_LOGS_B):
+        log_meta.model_name = str.split("/")[2]
 
     if str.startswith(MISC_ACTION_SPACE):
         raw_actions = str[len(MISC_ACTION_SPACE):].replace("'", "\"")
@@ -66,16 +76,14 @@ def parse_intro_event(str, log_meta :LogMeta):
             new_action = Action(a["index"], a["speed"], a["steering_angle"])
             log_meta.action_space[a["index"]] = new_action
 
-            #print("DEBUG", new_action.get_readable_with_index())
 
-
-def parse_episode_event(str, episodes, saved_events, saved_debug):
+def parse_episode_event(input, episodes, saved_events, saved_debug):
     assert len(saved_events) < 20
 
     if not episodes:
         episodes.append([])
 
-    str = str.split("\n", 1)[0]
+    input = input.split("\n", 1)[0]
 
     (episode,
      step,
@@ -92,7 +100,7 @@ def parse_episode_event(str, episodes, saved_events, saved_debug):
      closest_waypoint_index,
      track_length,
      time,
-     status) = str[14:].split(",")
+     status) = input[14:].split(",")
 
     event_meta = Event()
 
@@ -119,7 +127,9 @@ def parse_episode_event(str, episodes, saved_events, saved_debug):
         return
 
     assert event_meta.episode == len(episodes) - 1
-    assert event_meta.step == len(episodes[-1]) + 1
+
+    if event_meta.step != len(episodes[-1]) + 1:
+        print("WARNING - something wrong near step " + str(event_meta.step) + " of episode " + str(len(episodes) - 1))
 
     episodes[-1].append(event_meta)
     if event_meta.job_completed:
@@ -136,6 +146,30 @@ def parse_episode_event(str, episodes, saved_events, saved_debug):
                 if s.job_completed:
                     episodes.append([])
                 break
+
+def parse_evaluation_reward_info(str):
+    if str.startswith(EVALUATION_REWARD_START):
+        return float(str[len(EVALUATION_REWARD_START):])
+    else:
+        return None
+
+def parse_evaluation_progress_info(str):
+    if str.startswith(EVALUATION_PROGRESSES_START):
+        info = str[len(EVALUATION_PROGRESSES_START):]
+        count = int(info.split(" ")[0])
+
+        progresses_as_strings = info[:-2].split("[")[1].split(",")
+        progresses = []
+        for p in progresses_as_strings:
+            progresses.append(float(p))
+
+        assert count == len(progresses)
+
+        return count, progresses
+    else:
+        return None, None
+
+
 
 
 # Parse hyper parameters

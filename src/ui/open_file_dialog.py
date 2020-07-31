@@ -1,24 +1,13 @@
 import tkinter as tk
 from src.ui.dialog import Dialog
-from src.log.log import Log
+from src.log.log import Log, get_model_info_for_open_model_dialog
 import os
 
 
 class OpenFileDialog(Dialog):
 
     def body(self, master):
-        model_names = []
-        model_files = {}
-
-        for f in os.listdir(os.curdir):
-            if f.endswith(".meta"):
-                log = Log()
-                log.load_meta(f)
-
-                if log.log_meta.world_name == self.parent.current_track.world_name:
-                    model_name = log.log_meta.model_name
-                    model_names.append(model_name)
-                    model_files[model_name] = f
+        model_files, model_names = get_model_info_for_open_model_dialog(self.parent.current_track)
 
         self.place_in_grid(0, 3, tk.Label(master, text="Episodes"))
         self.place_in_grid(0, 4, tk.Label(master, text="Average\nProgress", justify=tk.RIGHT))
@@ -54,6 +43,7 @@ class OpenFileDialog(Dialog):
             #
 
             row += 1
+
 
 
     def buttonbox(self):

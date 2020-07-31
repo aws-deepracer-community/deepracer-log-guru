@@ -1,12 +1,17 @@
 import pickle
 import numpy as np
+import os
+
 
 import src.log.parse as parse
 
 from src.episode.episode import Episode
 from src.log.log_meta import LogMeta
 
+
 META_FILE_SUFFIX = ".meta"
+LOG_FILE_SUFFIX = ".log"
+
 
 class Log:
     def __init__(self):
@@ -53,6 +58,7 @@ class Log:
         saved_events = []
         intro = True
         saved_debug = ""
+        evaluation_rewards = []
 
         with open(self.log_file_name, "r") as file:
             for str in file:
@@ -61,7 +67,19 @@ class Log:
                     parse.parse_episode_event(str, episode_events, saved_events, saved_debug)
                     saved_debug = ""
                 elif not intro:
-                    saved_debug += str
+                    evaluation_reward = parse.parse_evaluation_reward_info(str)
+                    evaluation_count, evaluation_progresses = parse.parse_evaluation_progress_info(str)
+
+                    if evaluation_reward:
+                        evaluation_rewards.append(evaluation_reward)
+                    elif evaluation_count and evaluation_progresses:
+                        assert evaluation_count == len(evaluation_rewards)
+                        # for i in range(0, evaluation_count):
+                        #    print(evaluation_rewards[i], evaluation_progresses[i])
+                        # print("-------------------------")
+                        evaluation_rewards = []
+                    else:
+                        saved_debug += str
 
         assert not saved_events
 
@@ -115,3 +133,42 @@ class Log:
 
         if self.log_meta.episode_stats.episode_count > 0:
             self.log_meta.episode_stats.average_percent_complete = total_percent_complete / self.log_meta.episode_stats.episode_count
+
+def refresh_all_log_meta():
+    for f in os.listdir(os.curdir):
+        if f.endswith(LOG_FILE_SUFFIX):
+            log = Log()
+            log.parse(f)
+            log.save()
+
+def import_new_logs(log_files):
+    for f in log_files:
+        log = Log()
+        log.parse(f)
+        log.save()
+
+def get_model_info_for_open_model_dialog(track):
+    model_names = []
+    model_files = {}
+    for f in os.listdir(os.curdir):
+        if f.endswith(META_FILE_SUFFIX):
+            log = Log()
+            log.load_meta(f)
+
+            if log.log_meta.world_name == track.world_name:
+                model_name = log.log_meta.model_name
+                model_names.append(model_name)
+                model_files[model_name] = f
+    return model_files, model_names
+
+def get_possible_new_model_log_files():
+    new_log_files = []
+
+    all_files = os.listdir(os.curdir)
+    for f in all_files:
+        if f.endswith(LOG_FILE_SUFFIX):
+            expected_meta = f + META_FILE_SUFFIX
+            if not expected_meta in all_files:
+                new_log_files.append(f)
+
+    return new_log_files

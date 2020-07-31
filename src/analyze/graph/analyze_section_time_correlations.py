@@ -174,6 +174,9 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
         # if self.correlation_tk_var.get() == AXIS_FLYING_START:
         #     plot_y = get_plot_data_flying_starts(episodes)
 
+        if not plot_y.any():
+            return
+
         if self.count_steps.get():
             plot_x = get_plot_data_section_steps(episodes, start, finish, self.current_track, complete_laps_only)
         else:

@@ -1,12 +1,12 @@
 from tkinter import Menu, messagebox
-from src.ui.fetch_file_dialog import FetchFileDialog
+
 from src.ui.open_file_dialog import OpenFileDialog
+from src.ui.new_files_dialog import NewFilesDialog
 from src.ui.episode_filter_dialog import EpisodeFilterDialog
 from src.ui.action_filter_dialog import ActionSpaceFilterDialog
 
 import src.secret_sauce.glue.glue as ss
-import os
-from src.log.log import Log
+import src.log.log as log
 
 
 class MenuBar():
@@ -40,7 +40,7 @@ class MenuBar():
 
     def add_file_menu(self):
         menu = Menu(self.menubar, tearoff=0)
-        menu.add_command(label="Fetch", command=self.fetch_file)
+        menu.add_command(label="New", command=self.new_files)
         menu.add_command(label="Open", command=self.open_file)
         menu.add_separator()
         menu.add_command(label="Exit", command=self.root.quit)
@@ -95,7 +95,7 @@ class MenuBar():
 
         menu.add_separator()
 
-        menu.add_command(label="Lap Time Reward", command=self.main_app.menu_callback_analyze_lap_time_reward)
+        menu.add_command(label="Lap Time Predictor", command=self.main_app.menu_callback_analyze_lap_time_reward)
         menu.add_command(label="Reward Distribution", command=self.main_app.menu_callback_analyze_reward_distribution)
         menu.add_command(label="Common Rewards", command=self.main_app.menu_callback_analyze_common_rewards)
         menu.add_command(label="Rewards per Waypoint", command=self.main_app.menu_callback_analyze_rewards_per_waypoint)
@@ -144,8 +144,8 @@ class MenuBar():
 
         self.menubar.add_cascade(label="Admin", menu=menu)
 
-    def fetch_file(self):
-        FetchFileDialog(self.main_app)
+    def new_files(self):
+        NewFilesDialog(self.main_app)
 
     def open_file(self):
         OpenFileDialog(self.main_app, "Open File")
@@ -160,10 +160,5 @@ class MenuBar():
         ActionSpaceFilterDialog(self.main_app)
 
 def refresh_all_log_meta():
-    for f in os.listdir(os.curdir):
-        if f.endswith(".log"):
-            log = Log()
-            log.parse(f)
-            log.save()
-
+    log.refresh_all_log_meta()
     messagebox.showinfo("Refresh All Log Meta", "Refresh succeeded!")

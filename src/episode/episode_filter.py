@@ -11,6 +11,7 @@ class EpisodeFilter:
         self.filter_peak_track_speed = None
         self.filter_specific_waypoint_id = None
         self.filter_specific_waypoint_min_reward = None
+        self.filter_quarters = [ True, True, True, True ]
 
         self.all_episodes = None
 
@@ -25,6 +26,8 @@ class EpisodeFilter:
         self.filter_peak_track_speed = None
         self.filter_specific_waypoint_id = None
         self.filter_specific_waypoint_min_reward = None
+        self.filter_quarters = [ True, True, True, True ]
+
 
     def set_filter_from_start_line(self, setting :bool):
         self.filter_from_start_line = setting
@@ -37,6 +40,9 @@ class EpisodeFilter:
 
     def set_filter_min_average_reward(self, min_reward: int):
         self.filter_min_average_reward = min_reward
+
+    def set_filter_quarters(self, q1: bool, q2: bool, q3: bool, q4: bool):
+        self.filter_quarters = [ q1, q2, q3, q4 ]
 
     def set_filter_complete_section_and_time(self, start_waypoint_id, finish_waypoint_id, optional_time, optional_steps):
         self.filter_complete_section_time = optional_time
@@ -71,14 +77,15 @@ class EpisodeFilter:
 
         result = []
         for e in self.all_episodes:
-            if e.is_real_start or not self.filter_from_start_line:
-                if self.filter_max_steps is None or e.step_count <= self.filter_max_steps:
-                    if self.filter_min_percent is None or e.percent_complete >= self.filter_min_percent:
-                        if self.filter_min_average_reward is None or e.average_reward >= self.filter_min_average_reward:
-                            if self.filter_peak_track_speed is None or e.peak_track_speed >= self.filter_peak_track_speed:
-                                if self.matches_complete_section_filter(e, track):
-                                    if self.matches_specific_waypoint_reward_filter(e):
-                                        result.append(e)
+            if self.filter_quarters[e.quarter - 1]:
+                if e.is_real_start or not self.filter_from_start_line:
+                    if self.filter_max_steps is None or e.step_count <= self.filter_max_steps:
+                        if self.filter_min_percent is None or e.percent_complete >= self.filter_min_percent:
+                            if self.filter_min_average_reward is None or e.average_reward >= self.filter_min_average_reward:
+                                if self.filter_peak_track_speed is None or e.peak_track_speed >= self.filter_peak_track_speed:
+                                    if self.matches_complete_section_filter(e, track):
+                                        if self.matches_specific_waypoint_reward_filter(e):
+                                            result.append(e)
 
         return result
 

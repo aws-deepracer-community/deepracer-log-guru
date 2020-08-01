@@ -344,6 +344,26 @@ class MainApp(tk.Frame):
         self.episode_filter.set_filter_min_percent(50)
         self.reapply_episode_filter()
 
+    def menu_callback_episodes_q1(self):
+        self.episode_filter.reset()
+        self.episode_filter.set_filter_quarters(True, False, False, False)
+        self.reapply_episode_filter()
+
+    def menu_callback_episodes_q2(self):
+        self.episode_filter.reset()
+        self.episode_filter.set_filter_quarters(False, True, False, False)
+        self.reapply_episode_filter()
+
+    def menu_callback_episodes_q3(self):
+        self.episode_filter.reset()
+        self.episode_filter.set_filter_quarters(False, False, True, False)
+        self.reapply_episode_filter()
+
+    def menu_callback_episodes_q4(self):
+        self.episode_filter.reset()
+        self.episode_filter.set_filter_quarters(False, False, False, True)
+        self.reapply_episode_filter()
+
     def menu_callback_actions_all(self):
         self.action_space_filter.set_filter_all()
         self.reapply_action_space_filter()

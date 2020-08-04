@@ -27,4 +27,6 @@ baadal_2020_annotations = []
 
 barcelona_annotations = []
 
+yun_speedway_annotations = []
+
 

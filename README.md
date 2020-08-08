@@ -1,7 +1,7 @@
 # deep_racer_guru
 Analysis tool for AWS Deep Racer logs
 
-### NEW: Upgrading to Latest Version 1.2.0
+### NEW: Upgrading to Latest Version 1.2.0 / 1.2.1
 
 If you are completely new, then skip this section. Go to "Before You Start"
 

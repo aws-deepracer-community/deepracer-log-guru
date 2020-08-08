@@ -26,6 +26,10 @@ class EpisodeFilterDialog(Dialog):
         self.filter_complete_section_time = make_nullable_var(self.episode_filter.filter_complete_section_time)
         self.filter_complete_section_steps = make_nullable_var(self.episode_filter.filter_complete_section_steps)
 
+        self.filter_q1 = BooleanVar(value=self.episode_filter.filter_quarters[0])
+        self.filter_q2 = BooleanVar(value=self.episode_filter.filter_quarters[1])
+        self.filter_q3 = BooleanVar(value=self.episode_filter.filter_quarters[2])
+        self.filter_q4 = BooleanVar(value=self.episode_filter.filter_quarters[3])
 
         super().__init__(parent, "Episode Filter")
 
@@ -46,8 +50,26 @@ class EpisodeFilterDialog(Dialog):
 
         #
 
+        iteration_group = LabelFrame(master, text="Iteration", padx=5, pady=5)
+        iteration_group.grid(column=0, row=2, pady=5, padx=5, sticky=W, columnspan=4)
+
+        Checkbutton(
+            iteration_group, text="Q1",
+            variable=self.filter_q1).grid(column=0, row=0, pady=5, padx=5)
+        Checkbutton(
+            iteration_group, text="Q2",
+            variable=self.filter_q2).grid(column=1, row=0, pady=5, padx=5)
+        Checkbutton(
+            iteration_group, text="Q3",
+            variable=self.filter_q3).grid(column=2, row=0, pady=5, padx=5)
+        Checkbutton(
+            iteration_group, text="Q4",
+            variable=self.filter_q4).grid(column=3, row=0, pady=5, padx=5)
+
+        #
+
         episode_stat_group = LabelFrame(master, text="Episode Stat", padx=5, pady=5)
-        episode_stat_group.grid(column=0, row=2, pady=5, padx=5, sticky=W)
+        episode_stat_group.grid(column=0, row=3, pady=5, padx=5, sticky=W)
 
         Label(episode_stat_group, text="Steps <=").grid(column=0, row=2, pady=5, padx=5, sticky=E)
         default = Entry(
@@ -72,7 +94,7 @@ class EpisodeFilterDialog(Dialog):
         #
 
         waypoint_group = LabelFrame(master, text="Waypoint", padx=5, pady=5)
-        waypoint_group.grid(column=1, row=1, pady=5, padx=5, sticky=W)
+        waypoint_group.grid(column=1, row=1, pady=5, padx=5, sticky=W, rowspan=2)
 
         Label(waypoint_group, text="Waypoint Id").grid(column=0, row=0, pady=5, padx=5, sticky=E)
         Entry(
@@ -87,7 +109,7 @@ class EpisodeFilterDialog(Dialog):
         #
 
         completed_section_group = LabelFrame(master, text="Completed Section", padx=5, pady=5)
-        completed_section_group.grid(column=1, row=2, pady=5, padx=5, sticky=W)
+        completed_section_group.grid(column=1, row=3, pady=5, padx=5, sticky=W)
 
         Label(completed_section_group, text="Start Waypoint Id").grid(column=0, row=0, pady=5, padx=5, sticky=E)
         Entry(
@@ -130,6 +152,8 @@ class EpisodeFilterDialog(Dialog):
             get_nullable_int_entry(self.filter_complete_section_finish),
             get_nullable_float_entry(self.filter_complete_section_time),
             get_nullable_int_entry(self.filter_complete_section_steps))
+
+        self.episode_filter.set_filter_quarters(self.filter_q1.get(), self.filter_q2.get(), self.filter_q3.get(), self.filter_q4.get())
 
         self.parent.reapply_episode_filter()
 

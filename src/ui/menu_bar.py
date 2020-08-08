@@ -116,6 +116,11 @@ class MenuBar():
         menu.add_command(label="33% complete", command=self.main_app.menu_callback_episodes_min_percent_33)
         menu.add_command(label="50% complete", command=self.main_app.menu_callback_episodes_min_percent_50)
         menu.add_separator()
+        menu.add_command(label="Q1", command=self.main_app.menu_callback_episodes_q1)
+        menu.add_command(label="Q2", command=self.main_app.menu_callback_episodes_q2)
+        menu.add_command(label="Q3", command=self.main_app.menu_callback_episodes_q3)
+        menu.add_command(label="Q4", command=self.main_app.menu_callback_episodes_q4)
+        menu.add_separator()
         menu.add_command(label="More ...", command=self.open_episode_filter_dialog)
 
         self.menubar.add_cascade(label="Episodes", menu=menu)

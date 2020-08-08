@@ -56,6 +56,8 @@ class Episode:
         self.distance_travelled = self.get_distance_travelled()
         self.flying_start_speed = self.get_track_speed_after_seconds(1)
 
+        # THIS VARIABLE IS ASSIGNED RETROSPECTIVELY AFTER THE Log CLASS HAS LOADED ALL EPISODES
+        self.quarter = None
 
 
     def get_distance_travelled(self):
@@ -83,6 +85,10 @@ class Episode:
             previous_action_taken = e.action_taken
 
         return 100 * count / len(self.events)
+
+    def set_quarter(self, quarter: int):
+        assert 1 <= quarter <= 4
+        self.quarter = quarter
 
     def set_track_speed_on_events(self):
         previous = [self.events[0]] * 7

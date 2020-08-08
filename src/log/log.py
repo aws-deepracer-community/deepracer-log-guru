@@ -31,6 +31,7 @@ class Log:
         self.load_meta(meta_file_name)
         self.log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
         self.parse_episode_events()
+        self.divide_episodes_into_quarters()
 
     def parse(self, log_file_name):
         self.log_file_name = log_file_name
@@ -133,6 +134,38 @@ class Log:
 
         if self.log_meta.episode_stats.episode_count > 0:
             self.log_meta.episode_stats.average_percent_complete = total_percent_complete / self.log_meta.episode_stats.episode_count
+
+    def divide_episodes_into_quarters(self):
+        total_iterations = self.episodes[-1].iteration + 1
+
+        if total_iterations < 4:
+            self.divide_episodes_into_quarters_ignoring_iteration()
+        else:
+            for e in self.episodes:
+                if e.iteration <= round(total_iterations * 0.25) - 1:
+                    e.set_quarter(1)
+                elif e.iteration <= round(total_iterations * 0.5) - 1:
+                    e.set_quarter(2)
+                elif e.iteration <= round(total_iterations * 0.75) - 1:
+                    e.set_quarter(3)
+                else:
+                    e.set_quarter(4)
+
+    def divide_episodes_into_quarters_ignoring_iteration(self):
+        e: Episode = None
+
+        total_episodes = len(self.episodes)
+
+        for e in self.episodes:
+            if e.id <= round(total_episodes * 0.25) - 1:
+                e.set_quarter(1)
+            elif e.id <= round(total_episodes * 0.5) - 1:
+                e.set_quarter(2)
+            elif e.id <= round(total_episodes * 0.75) - 1:
+                e.set_quarter(3)
+            else:
+                e.set_quarter(4)
+
 
 def refresh_all_log_meta():
     for f in os.listdir(os.curdir):

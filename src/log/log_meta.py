@@ -59,7 +59,7 @@ class LogMeta:
             self.discount_factor = 0.0
             self.loss_type = ""
             self.learning_rate = 0
-            self.episodes_between_training = 0
+            self.episodes_per_training_iteration = 0
             self.epochs = 0
 
         def display_for_debug(self):
@@ -68,7 +68,7 @@ class LogMeta:
             print("    Discount factor = ", self.discount_factor)
             print("    Loss type = ", self.loss_type)
             print("    Learning rate = ", self.learning_rate)
-            print("    Episodes between training = ", self.episodes_between_training)
+            print("    Episodes per training iteration = ", self.episodes_per_training_iteration)
             print("    Epochs = ", self.epochs)
 
 

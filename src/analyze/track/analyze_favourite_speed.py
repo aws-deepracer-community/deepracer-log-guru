@@ -11,15 +11,19 @@ HIGH_VISITOR_MAP = 0
 MEDIUM_VISITOR_MAP = 1
 LOW_VISITOR_MAP = 2
 
+ACTION_SPEED = 0
+TRACK_SPEED = 1
+
 class AnalyzeFavouriteSpeed(TrackAnalyzer):
 
     def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
         self.visitor_maps = None
-        self.skip_starts = tk.BooleanVar()
-        self.granularity = tk.IntVar()
-        self.threshold = tk.IntVar()
+        self.skip_starts = tk.BooleanVar(value=True)
+        self.granularity = tk.IntVar(value=5)
+        self.threshold = tk.IntVar(value=10)
+        self.speed_choice = tk.IntVar(value=ACTION_SPEED)
 
     def build_control_frame(self, control_frame):
 
@@ -37,7 +41,6 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
                        command=self.chosen_new_granularity).grid(column=0, row=2, pady=5, padx=5)
         tk.Radiobutton(granularity_group, text="10 cm", variable=self.granularity, value=10,
                        command=self.chosen_new_granularity).grid(column=0, row=3, pady=5, padx=5)
-        self.granularity.set(5)
 
         threshold_group = tk.LabelFrame(control_frame, text="Threshold", padx=5, pady=5)
         threshold_group.grid(column=0, row=2, pady=5, padx=5)
@@ -48,7 +51,14 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
                        command=self.chosen_new_threshold).grid(column=0, row=1, pady=5, padx=5)
         tk.Radiobutton(threshold_group, text="20+ visits", variable=self.threshold, value=20,
                        command=self.chosen_new_threshold).grid(column=0, row=2, pady=5, padx=5)
-        self.threshold.set(10)
+
+        speed_group = tk.LabelFrame(control_frame, text="Speed", padx=5, pady=5)
+        speed_group.grid(column=0, row=3, pady=5, padx=5)
+
+        tk.Radiobutton(speed_group, text="Action", variable=self.speed_choice, value=ACTION_SPEED,
+                       command=self.chosen_new_speed).grid(column=0, row=0, pady=5, padx=5)
+        tk.Radiobutton(speed_group, text="Track", variable=self.speed_choice, value=TRACK_SPEED,
+                       command=self.chosen_new_speed).grid(column=0, row=1, pady=5, padx=5)
 
     def redraw(self):
         if self.skip_starts.get():
@@ -62,9 +72,14 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
                 for i in range(0, 3):
                     self.visitor_maps.append(self.current_track.get_visitor_map(self.granularity.get() / 100))
                 for e in self.filtered_episodes:
-                    e.apply_speed_to_visitor_map(self.visitor_maps[HIGH_VISITOR_MAP], skip, self.action_space_filter, is_high_speed)
-                    e.apply_speed_to_visitor_map(self.visitor_maps[MEDIUM_VISITOR_MAP], skip, self.action_space_filter, is_medium_speed)
-                    e.apply_speed_to_visitor_map(self.visitor_maps[LOW_VISITOR_MAP], skip, self.action_space_filter, is_low_speed)
+                    if self.speed_choice.get() == ACTION_SPEED:
+                        apply_to_visitor_map = e.apply_action_speed_to_visitor_map
+                    else:
+                        apply_to_visitor_map = e.apply_track_speed_to_visitor_map
+
+                    apply_to_visitor_map(self.visitor_maps[HIGH_VISITOR_MAP], skip, self.action_space_filter, is_high_speed)
+                    apply_to_visitor_map(self.visitor_maps[MEDIUM_VISITOR_MAP], skip, self.action_space_filter, is_medium_speed)
+                    apply_to_visitor_map(self.visitor_maps[LOW_VISITOR_MAP], skip, self.action_space_filter, is_low_speed)
 
             colours = [ "", "", "" ]
             colours[HIGH_VISITOR_MAP] = "green"
@@ -87,6 +102,10 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
         self.guru_parent_redraw()
 
     def chosen_new_granularity(self):
+        self.visitor_maps = None
+        self.guru_parent_redraw()
+
+    def chosen_new_speed(self):
         self.visitor_maps = None
         self.guru_parent_redraw()
 

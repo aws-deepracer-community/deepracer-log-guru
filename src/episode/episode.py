@@ -163,24 +163,33 @@ class Episode:
         return event, index
 
     def apply_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter):
-        self.apply_speed_to_visitor_map(visitor_map, skip_count, action_space_filter, is_any_speed)
-
-    def apply_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
         previous = self.events[0]
         for e in self.events:
-
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken) and is_correct_speed(e.speed):
-
-                visitor_map.visit(e.x, e.y, self)
-
-                x_diff = e.x - previous.x
-                y_diff = e.y - previous.y
-
-                visitor_map.visit(e.x - 0.25 * x_diff, e.y - 0.25 * y_diff, self)
-                visitor_map.visit(e.x - 0.50 * x_diff, e.y - 0.50 * y_diff, self)
-                visitor_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self)
-
+            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+                self.apply_event_to_visitor_map_(e, previous, visitor_map)
             previous = e
+
+    def apply_action_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
+        previous = self.events[0]
+        for e in self.events:
+            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken) and is_correct_speed(e.speed):
+                self.apply_event_to_visitor_map_(e, previous, visitor_map)
+            previous = e
+
+    def apply_track_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
+        previous = self.events[0]
+        for e in self.events:
+            if e.step >= skip_count and is_correct_speed(e.track_speed):
+                self.apply_event_to_visitor_map_(e, previous, visitor_map)
+            previous = e
+
+    def apply_event_to_visitor_map_(self, e, previous, visitor_map):
+        visitor_map.visit(e.x, e.y, self)
+        x_diff = e.x - previous.x
+        y_diff = e.y - previous.y
+        visitor_map.visit(e.x - 0.25 * x_diff, e.y - 0.25 * y_diff, self)
+        visitor_map.visit(e.x - 0.50 * x_diff, e.y - 0.50 * y_diff, self)
+        visitor_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self)
 
     def finishes_section(self, start, finish):
         actual_start = self.events[0].closest_waypoint_index
@@ -254,7 +263,5 @@ def are_close_waypoint_ids(id1, id2, track :Track):
     else:
         return False
 
-def is_any_speed(speed):
-    return True
 
 

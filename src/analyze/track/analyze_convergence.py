@@ -10,9 +10,9 @@ class AnalyzeConvergence(TrackAnalyzer):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
         self.visitor_map = None
-        self.skip_starts = tk.BooleanVar()
-        self.granularity = tk.IntVar()
-        self.extra_bright = tk.BooleanVar()
+        self.skip_starts = tk.BooleanVar(value=True)
+        self.granularity = tk.IntVar(value=3)
+        self.extra_bright = tk.BooleanVar(value=False)
 
     def build_control_frame(self, control_frame):
 
@@ -35,8 +35,6 @@ class AnalyzeConvergence(TrackAnalyzer):
                        command=self.chosen_new_granularity).grid(column=0, row=1, pady=5, padx=5)
         tk.Radiobutton(granularity_group, text="10 cm", variable=self.granularity, value=10,
                        command=self.chosen_new_granularity).grid(column=0, row=2, pady=5, padx=5)
-        self.granularity.set(3)
-
 
     def redraw(self):
         if self.skip_starts.get():

@@ -87,6 +87,7 @@ class MenuBar():
         menu.add_separator()
 
         menu.add_command(label="Training Progress", command=self.main_app.menu_callback_analyze_training_progress)
+        menu.add_command(label="Quarterly Results", command=self.main_app.menu_callback_analyze_quarterly_results)
 
         menu.add_separator()
 

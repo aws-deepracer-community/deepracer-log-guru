@@ -111,6 +111,7 @@ class Episode:
         for e in self.events:
             reward_total += e.reward
             e.reward_total = reward_total
+            e.average_reward_so_far = reward_total / e.step
 
     def set_time_elapsed_on_events(self):
         start_time = self.events[0].time
@@ -127,13 +128,6 @@ class Episode:
             distance += math.sqrt(x_diff * x_diff + y_diff * y_diff)
             e.total_distance_travelled = distance
             previous = e
-
-
-    def get_total_reward(self):
-        total_reward = 0
-        for e in self.events:
-            total_reward += e.reward
-        return total_reward
 
     def get_list_of_rewards(self):
         list_of_rewards = []

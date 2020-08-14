@@ -4,7 +4,7 @@ from src.event.event_meta import Event
 from src.tracks.track import Track
 
 from src.action_space.action_util import is_right_turn, is_left_turn
-from src.utils.formatting import get_pretty_small_float, get_pretty_large_integer
+from src.utils.formatting import get_pretty_small_float, get_pretty_large_float, get_pretty_large_integer
 
 class LogEventInfoWindow(tk.Toplevel):
 
@@ -67,11 +67,11 @@ class LogEventInfoWindow(tk.Toplevel):
         self.make_label_and_value(action_frame, 3, "Sequence", self.action_sequence)
 
         self.reward_value = tk.StringVar()
-        self.reward_rank = tk.StringVar()
+        self.reward_average = tk.StringVar()
         self.reward_total = tk.StringVar()
 
         self.make_label_and_value(reward_frame, 0, "Reward", self.reward_value)
-        self.make_label_and_value(reward_frame, 1, "Rank", self.reward_rank)
+        self.make_label_and_value(reward_frame, 1, "Average so far", self.reward_average)
         self.make_label_and_value(reward_frame, 2, "Total so far", self.reward_total)
 
         self.debug_output = tk.StringVar()
@@ -110,8 +110,8 @@ class LogEventInfoWindow(tk.Toplevel):
         self.action_speed.set(str(event.speed) + "  m/s")
         self.action_sequence.set("")
 
-        self.reward_value.set(str(round(event.reward, 5)))
-        self.reward_rank.set("")
+        self.reward_value.set(get_pretty_large_float(round(event.reward, 5)))
+        self.reward_average.set(get_pretty_large_integer(event.average_reward_so_far))
         self.reward_total.set(get_pretty_large_integer(event.reward_total))
 
         if event.debug_log:

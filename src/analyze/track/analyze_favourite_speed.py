@@ -41,6 +41,8 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
                        command=self.chosen_new_granularity).grid(column=0, row=2, pady=5, padx=5)
         tk.Radiobutton(granularity_group, text="10 cm", variable=self.granularity, value=10,
                        command=self.chosen_new_granularity).grid(column=0, row=3, pady=5, padx=5)
+        tk.Radiobutton(granularity_group, text="20 cm", variable=self.granularity, value=20,
+                       command=self.chosen_new_granularity).grid(column=0, row=4, pady=5, padx=5)
 
         threshold_group = tk.LabelFrame(control_frame, text="Threshold", padx=5, pady=5)
         threshold_group.grid(column=0, row=2, pady=5, padx=5)

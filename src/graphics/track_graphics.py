@@ -83,6 +83,17 @@ class TrackGraphics:
 
         self.canvas.create_rectangle(x, y, x2, y2, fill=colour, width=0)
 
+    def plot_polygon(self, points, colour):
+
+        points_as_array = []
+        for p in points:
+            (x, y) = p
+            points_as_array.append((x - self.min_x) * self.scale)
+            points_as_array.append((self.max_y - y) * self.scale)
+
+        self.canvas.create_polygon(points_as_array, fill=colour, width=2)
+
+
     def get_real_point_for_widget_location(self, x, y):
 
         return (x / self.scale) + self.min_x, self.max_y - (y / self.scale)
@@ -105,4 +116,3 @@ class TrackGraphics:
             self.canvas.delete(self.angle_line_highlight_widget)
 
         self.angle_line_highlight_widget = self.plot_angle_line(start_point, heading, distance, width, fill_colour)
-

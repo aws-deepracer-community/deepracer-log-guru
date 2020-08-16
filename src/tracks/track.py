@@ -4,7 +4,7 @@ import src.utils.geometry as geometry
 
 from src.analyze.util.visitor import VisitorMap
 from src.graphics.track_graphics import TrackGraphics
-from src.graphics.track_annotations import Annotation
+from src.graphics.track_annotations import PointAnnotation
 
 DISPLAY_BORDER = 0.3
 
@@ -225,28 +225,7 @@ class Track:
 
     def draw_annotations(self, track_graphics):
         for a in self.annotations:
-            p = self.get_annotation_start_point(a)
-            a.draw_from_point(p, track_graphics)
-
-    def get_annotation_start_point(self, annotation: Annotation):
-        points = self.drawing_points[annotation.waypoint_id]
-
-        if annotation.distance_from_centre == 0:
-            return points.middle
-
-        if annotation.side == "L":
-            (side_x, side_y) = points.left
-        else:
-            (side_x, side_y) = points.right
-
-        side_fraction = annotation.distance_from_centre / self.track_width * 2
-        ( start_x, start_y ) = points.middle
-
-        x = start_x + (side_x - start_x) * side_fraction
-        y = start_y + (side_y - start_y) * side_fraction
-
-        return x, y
-
+            a.draw(track_graphics, self.drawing_points, self.track_width)
 
     def draw_grid(self, track_graphics, colour):
         x = self.min_x

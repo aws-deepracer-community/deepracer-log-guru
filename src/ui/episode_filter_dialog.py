@@ -31,6 +31,8 @@ class EpisodeFilterDialog(Dialog):
         self.filter_q3 = BooleanVar(value=self.episode_filter.filter_quarters[2])
         self.filter_q4 = BooleanVar(value=self.episode_filter.filter_quarters[3])
 
+        self.filter_debug_contains = make_nullable_var(self.episode_filter.filter_debug_contains)
+
         super().__init__(parent, "Episode Filter")
 
     def body(self, master):
@@ -41,12 +43,16 @@ class EpisodeFilterDialog(Dialog):
 
         #
 
-        start_group = LabelFrame(master, text="Start", padx=5, pady=5)
-        start_group.grid(column=0, row=1, pady=5, padx=5, sticky=W)
+        misc_group = LabelFrame(master, text="Miscellaneous", padx=5, pady=5)
+        misc_group.grid(column=0, row=1, pady=5, padx=5, sticky=W)
 
         Checkbutton(
-            start_group, text="From Start Line Only",
-            variable=self.filter_from_start_line).grid(column=0, row=0, pady=5, padx=5, columnspan=2)
+            misc_group, text="From Start Line Only",
+            variable=self.filter_from_start_line).grid(column=0, row=0, pady=5, padx=5, columnspan=2, sticky=E)
+
+        Label(misc_group, text="Debug contains").grid(column=0, row=1, pady=5, padx=5, sticky=E)
+        Entry(
+            misc_group, textvariable=self.filter_debug_contains).grid(column=1, row=1, pady=5, padx=5)
 
         #
 
@@ -154,6 +160,7 @@ class EpisodeFilterDialog(Dialog):
             get_nullable_int_entry(self.filter_complete_section_steps))
 
         self.episode_filter.set_filter_quarters(self.filter_q1.get(), self.filter_q2.get(), self.filter_q3.get(), self.filter_q4.get())
+        self.episode_filter.set_filter_debug_contains(self.filter_debug_contains.get())
 
         self.parent.reapply_episode_filter()
 
@@ -176,6 +183,8 @@ class EpisodeFilterDialog(Dialog):
         self.filter_complete_section_finish.set("")
         self.filter_complete_section_time.set("")
         self.filter_complete_section_steps.set("")
+
+        self.filter_debug_contains.set("")
 
 
 def make_nullable_var(initial_value):

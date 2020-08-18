@@ -246,6 +246,12 @@ class Episode:
         else:
             return None
 
+    def does_debug_contain(self, search_string):
+        for e in self.events:
+            if search_string in e.debug_log:
+                return True
+
+        return False
 
 
 def are_close_waypoint_ids(id1, id2, track :Track):

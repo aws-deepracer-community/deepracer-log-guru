@@ -32,8 +32,8 @@ from src.analyze.selector.episode_selector import EpisodeSelector
 from src.ui.view_log_file_info import ViewLogFileInfo
 
 
-DEFAULT_CANVAS_WIDTH = 800
-DEFAULT_CANVAS_HEIGHT = 500
+DEFAULT_CANVAS_WIDTH = 900
+DEFAULT_CANVAS_HEIGHT = 600
 
 class MainApp(tk.Frame):
     def __init__(self, root):

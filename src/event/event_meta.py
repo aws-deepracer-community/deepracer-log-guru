@@ -17,13 +17,17 @@ class Event:
         self.closest_waypoint_index = 0
         self.time = 0.0
         self.status = ""
+        self.track_length = 0.0
 
         self.debug_log = ""
 
         # Data added separately (everything above comes direct from the log, whereas this is calculated by us ...
-        self.track_speed = 0
+        self.track_speed = 0.0
+        self.progress_speed = 0.0
         self.reward_total = 0.0
         self.average_reward_so_far = 0.0
         self.time_elapsed = 0.0
         self.total_distance_travelled = 0.0
+        self.skew = 0.0
+        self.true_bearing = 0.0
 

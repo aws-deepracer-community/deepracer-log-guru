@@ -122,6 +122,7 @@ def parse_episode_event(input, episodes, saved_events, saved_debug):
     event_meta.closest_waypoint_index = int(closest_waypoint_index)
     event_meta.time = float(time)
     event_meta.status = status
+    event_meta.track_length = float(track_length)
 
     event_meta.debug_log = saved_debug
 

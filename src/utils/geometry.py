@@ -15,3 +15,15 @@ def get_bearing_between_points(start, finish):
 
     direction_in_radians = math.atan2(finish_y - start_y, finish_x - start_x)
     return math.degrees(direction_in_radians)
+
+def get_angle_in_proper_range(angle):
+    if angle >= 180:
+        return angle - 360
+    elif angle <= -180:
+        return 360 + angle
+    else:
+        return angle
+
+def get_turn_between_directions(current, required):
+    difference = required - current
+    return get_angle_in_proper_range(difference)

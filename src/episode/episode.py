@@ -4,6 +4,7 @@ import numpy as np
 from src.action_space.action import MAX_POSSIBLE_ACTIONS
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.util.visitor import VisitorMap
+from src.utils.geometry import get_bearing_between_points, get_turn_between_directions
 
 from src.tracks.track import Track
 
@@ -48,9 +49,11 @@ class Episode:
 
         self.peak_track_speed = 0
         self.set_track_speed_on_events()
+        self.set_progress_speed_on_events()
         self.set_reward_total_on_events()
         self.set_time_elapsed_on_events()
         self.set_total_distance_travelled_on_events()
+        self.set_true_bearin_and_skew_on_events()
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -105,6 +108,29 @@ class Episode:
                     self.peak_track_speed = e.track_speed
 
             previous = previous[1:] + [e]
+
+    def set_progress_speed_on_events(self):
+        previous = [self.events[0]] * 7
+        for e in self.events:
+            progress_gain = e.progress - previous[0].progress
+            time_taken = e.time - previous[0].time
+
+            if time_taken > 0:
+                e.progress_speed = progress_gain / 100 * e.track_length / time_taken
+
+            previous = previous[1:] + [e]
+
+    def set_true_bearin_and_skew_on_events(self):
+        previous_event = self.events[0]
+        self.events[0].skew = 0.0
+
+        for e in self.events[1:]:
+            previous_location = (previous_event.x, previous_event.y)
+            current_location = (e.x, e.y)
+            e.true_bearing = get_bearing_between_points(previous_location, current_location)
+            e.skew = get_turn_between_directions(e.heading, e.true_bearing)
+            previous_event = e
+
 
     def set_reward_total_on_events(self):
         reward_total = 0.0

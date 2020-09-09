@@ -16,6 +16,7 @@ from src.analyze.graph.analyze_reward_distribution import AnalyzeRewardDistribut
 from src.analyze.graph.analyze_common_rewards import AnalyzeCommonRewards
 from src.analyze.graph.analyze_rewards_per_waypoint import AnalyzeRewardsPerWaypoint
 from src.analyze.graph.analyze_episode_speed import AnalyzeEpisodeSpeed
+from src.analyze.graph.analyze_episode_skew import AnalyzeEpisodeSkew
 from src.analyze.graph.analyze_lap_time_correlations import AnalyzeLapTimeCorrelations
 from src.analyze.graph.analyze_section_time_correlations import AnalyzeSectionTimeCorrelations
 
@@ -109,6 +110,7 @@ class MainApp(tk.Frame):
         self.analyze_common_rewards = AnalyzeCommonRewards(self.redraw, matplotlib_canvas, self.control_frame)
         self.analyze_rewards_per_waypoint = AnalyzeRewardsPerWaypoint(self.redraw, matplotlib_canvas, self.control_frame)
         self.analyze_episode_speed = AnalyzeEpisodeSpeed(self.redraw, matplotlib_canvas, self.control_frame, self.episode_selector)
+        self.analyze_episode_skew = AnalyzeEpisodeSkew(self.redraw, matplotlib_canvas, self.control_frame, self.episode_selector)
         self.analyze_lap_time_correlations = AnalyzeLapTimeCorrelations(self.redraw, matplotlib_canvas, self.control_frame)
         self.analyze_section_time_correlations = AnalyzeSectionTimeCorrelations(self.redraw, matplotlib_canvas, self.control_frame)
 
@@ -124,6 +126,7 @@ class MainApp(tk.Frame):
             self.analyze_common_rewards,
             self.analyze_rewards_per_waypoint,
             self.analyze_episode_speed,
+            self.analyze_episode_skew,
             self.analyze_lap_time_correlations,
             self.analyze_section_time_correlations
         ]
@@ -236,6 +239,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_episode_speed(self):
         self.switch_analyzer(self.analyze_episode_speed)
+
+    def menu_callback_analyze_episode_skew(self):
+        self.switch_analyzer(self.analyze_episode_skew)
 
     def menu_callback_analyze_lap_time_correlations(self):
         self.switch_analyzer(self.analyze_lap_time_correlations)

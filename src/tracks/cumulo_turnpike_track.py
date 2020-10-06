@@ -24,7 +24,7 @@ class CumuloTurnpikeTrack(Track):
         self.track_section_dividers = [0]
 
         # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.yun_speedway_annotations
+        self.annotations = config.cumulo_turnpike_annotations
 
         # Now the track definition info - as given to the reward function
         self.track_width = 1.066
@@ -231,5 +231,3 @@ class CumuloTurnpikeTrack(Track):
             (-1.9698514938354492, -5.183574676513672), (-2.106602966785431, -5.24640154838562),
             (-2.2433555126190186, -5.3092265129089355)
         ]
-
-        super()

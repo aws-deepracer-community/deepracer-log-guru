@@ -9,9 +9,6 @@ import src.configuration.personal_track_annotations as config
 PRIVATE_DESCRIPTION = "Summit Raceway Dec 2019 Virtual Race"
 
 
-# virtual_race_name = "AWS Summit Raceway"
-# virtual_race_result = (13, 489, 11.662, 5.619, 8.851, 9.371, 10.793)
-
 class SummitRacewayTrack(Track):
     def __init__(self):
         super().__init__()
@@ -187,6 +184,3 @@ class SummitRacewayTrack(Track):
             [4.8060386180877686, 0.18362654745578766],
             [4.654654026031494, 0.18250980973243713]
         ]
-
-        super()
-

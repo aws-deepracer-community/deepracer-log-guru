@@ -8,12 +8,15 @@ from src.tracks.fumiaki_loop_2020_track import FumiakiLoop2020Track
 from src.tracks.roger_raceway_track import RogerRacewayTrack
 from src.tracks.yun_speedway_track import YunSpeedwayTrack
 from src.tracks.cumulo_turnpike_track import CumuloTurnpikeTrack
+from src.tracks.stratus_loop_2020_track import StratusLoop2020Track
+
 
 
 def get_all_tracks():
     tracks = {}
 
-    for t in [ Reinvent2018Track(), ChampionshipCup2019Track(), CumuloTurnpikeTrack(), YunSpeedwayTrack(),
+    for t in [ Reinvent2018Track(), ChampionshipCup2019Track(), StratusLoop2020Track(),
+               CumuloTurnpikeTrack(), YunSpeedwayTrack(),
                RogerRacewayTrack(), FumiakiLoop2020Track(), SummitRacewayTrack(),
                Sola2020Track(), Baadal2020Track(), Barcelona2020Track() ]:
         t.prepare()

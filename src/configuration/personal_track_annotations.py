@@ -3,6 +3,8 @@ from src.graphics.track_annotations import Dot, Line, Cone, Route, RoutePoint
 # Annotate each track with your personal indications for best route etc.
 # Copy the syntax from the example shown here for the original DeepRacer track
 
+
+
 reinvent_2018_annotations = [
     Dot(7, "L", 0, "green"),
     Dot(7, "L", 0.1, "yellow"),
@@ -18,6 +20,10 @@ reinvent_2018_annotations = [
         RoutePoint(12, "L", 0.1, "R", 0.25),
         RoutePoint(13, "L", 0.01, "R", 0.3)
     ])
+
+    # 160 to 145    from wp 25
+
+
 
 
 ]
@@ -38,4 +44,6 @@ barcelona_annotations = []
 
 yun_speedway_annotations = []
 
+cumulo_turnpike_annotations = []
 
+stratus_loop_annotations = []

@@ -6,8 +6,7 @@ import src.configuration.personal_track_annotations as config
 # Other people might want to change/personalize these values
 
 PRIVATE_DESCRIPTION = "Baadal - April 2020"
-#PRIVATE_SECTION_DIVIDERS = [8,11,17,23,30,34,40,43,44,46,50,56,58,63,68,74,76,90,95,98,102,107,114,120,125,129,133,139,144,154,158]
-PRIVATE_SECTION_DIVIDERS = [17,23,28,33, 90, 95, 101, 120, 125, 126, 132]
+PRIVATE_SECTION_DIVIDERS = []
 
 
 class Baadal2020Track(Track):
@@ -298,6 +297,3 @@ class Baadal2020Track(Track):
             [-5.562634944915774, 4.073376059532163],
             [-5.66000294685364, 3.958880424499509]
         ]
-
-
-

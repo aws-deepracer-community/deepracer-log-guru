@@ -4,11 +4,14 @@ class StatusFrame(tk.Frame):
     def __init__(self, root):
         super().__init__(root)
 
-        tk.Label(self, text="Model:", font=("", 12)).grid(column=0, row=0, sticky=tk.E)
-        tk.Label(self, text="Episode(s):", font=("", 12)).grid(column=0, row=1, sticky=tk.E)
+        inner_frame = tk.Frame(self)
+        inner_frame.pack()
 
-        self.model_label = tk.Label(self, text="None", font=("", 12))
-        self.episodes_label = tk.Label(self, text="None", font=("", 12))
+        tk.Label(inner_frame, text="Model:", font=("", 12)).grid(column=0, row=0, sticky=tk.E)
+        tk.Label(inner_frame, text="Episode(s):", font=("", 12)).grid(column=0, row=1, sticky=tk.E)
+
+        self.model_label = tk.Label(inner_frame, text="None", font=("", 12))
+        self.episodes_label = tk.Label(inner_frame, text="None", font=("", 12))
 
         self.model_label.grid(column=1, row=0, sticky=tk.W)
         self.episodes_label.grid(column=1, row=1, sticky=tk.W)

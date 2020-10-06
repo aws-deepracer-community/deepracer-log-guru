@@ -151,6 +151,14 @@ class MainApp(tk.Frame):
 
 
         #
+        # Special spacer on the righthand side of the controls to allow for some analysis views being wider
+        # We'll lock-in the width afterwards
+        #
+
+        tk.Label(self.control_frame, text="  ").grid(column=10, row=0)
+
+
+        #
         # Configure the rest of the application window and then make it appear
         #
 
@@ -164,16 +172,28 @@ class MainApp(tk.Frame):
 
         self.update()
 
+
+        #
+        # And now lock-in the sizes of the control and status frames so switches between views will be smooth
+        #
+
+        self.control_frame.pack_propagate(0)
+        self.control_frame.grid_propagate(0)
+
+        self.status_frame.pack_propagate(0)
+        self.status_frame.grid_propagate(0)
+
+
     def layout_ui_for_track_analyzer(self):
-        self.status_frame.pack(side=tk.BOTTOM)
+        self.status_frame.pack(fill=tk.BOTH, side=tk.BOTTOM)
         self.track_canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.control_frame.pack(side=tk.RIGHT)
+        self.control_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
         self.pack(fill=tk.BOTH, expand=True)
 
     def layout_ui_for_graph_analyzer(self):
-        self.status_frame.pack(side=tk.BOTTOM)
+        self.status_frame.pack(fill=tk.BOTH, side=tk.BOTTOM)
         self.graph_canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-        self.control_frame.pack(side=tk.RIGHT)
+        self.control_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
         self.pack(fill=tk.BOTH, expand=True)
 
     def menu_callback_switch_track(self, new_track):

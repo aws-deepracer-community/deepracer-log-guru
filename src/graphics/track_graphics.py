@@ -8,8 +8,8 @@ class TrackGraphics:
         self.min_x = 0
         self.max_y = 0
 
-        self.ring_highlight_widget = None
-        self.angle_line_highlight_widget = None
+        self.ring_highlight_widgets = []
+        self.angle_line_highlight_widgets = []
 
 
     def reset_to_blank(self):
@@ -100,19 +100,17 @@ class TrackGraphics:
 
     def plot_ring_highlight(self, point, r, colour, line_width):
 
-        if self.ring_highlight_widget:
-            self.canvas.delete(self.ring_highlight_widget)
-
         (x, y) = point
         x = (x - self.min_x) * self.scale
         y = (self.max_y - y) * self.scale
 
-        self.ring_highlight_widget = self.canvas.create_oval(
-            x - r, y - r, x + r, y + r, fill="", width=line_width, outline=colour)
+        self.ring_highlight_widgets.append(self.canvas.create_oval(
+            x - r, y - r, x + r, y + r, fill="", width=line_width, outline=colour))
 
     def plot_angle_line_highlight(self, start_point, heading, distance, width, fill_colour):
 
-        if self.angle_line_highlight_widget:
-            self.canvas.delete(self.angle_line_highlight_widget)
+        self.angle_line_highlight_widgets.append(self.plot_angle_line(start_point, heading, distance, width, fill_colour))
 
-        self.angle_line_highlight_widget = self.plot_angle_line(start_point, heading, distance, width, fill_colour)
+    def remove_highlights(self):
+        for w in self.ring_highlight_widgets + self.angle_line_highlight_widgets:
+            self.canvas.delete(w)

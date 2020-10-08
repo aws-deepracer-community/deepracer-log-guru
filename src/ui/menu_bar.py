@@ -70,6 +70,12 @@ class MenuBar():
         menu.add_command(label="Annotations - Front", command=self.main_app.menu_callback_annotations_front)
         menu.add_command(label="Annotations - Back", command=self.main_app.menu_callback_annotations_back)
         menu.add_command(label="Annotations - Off", command=self.main_app.menu_callback_annotations_off)
+        menu.add_separator()
+        menu.add_command(label="Heading - On", command=self.main_app.menu_callback_heading_on)
+        menu.add_command(label="Heading - Off", command=self.main_app.menu_callback_heading_off)
+        menu.add_separator()
+        menu.add_command(label="True Bearing - On", command=self.main_app.menu_callback_true_bearing_on)
+        menu.add_command(label="True Bearing - Off", command=self.main_app.menu_callback_true_bearing_off)
 
         self.menubar.add_cascade(label="View", menu=menu)
 

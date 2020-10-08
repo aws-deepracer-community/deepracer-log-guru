@@ -44,6 +44,9 @@ class AnalyzeRoute(TrackAnalyzer):
         self.blob_size = tk.StringVar()
         self.blob_size.set(BLOB_SIZE_MEDIUM)
 
+        self.show_heading = False
+        self.show_true_bearing = False
+
 
     def build_control_frame(self, control_frame):
 
@@ -129,12 +132,23 @@ class AnalyzeRoute(TrackAnalyzer):
         self.draw_chosen_event_()
 
     def draw_chosen_event_(self):
+        self.track_graphics.remove_highlights()
+
         if self.chosen_event:
+            if self.show_heading:
+                self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
+                                                    self.chosen_event.heading, 2, 2, "orange")
+            if self.show_true_bearing:
+                self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
+                                                              self.chosen_event.true_bearing, 2, 2, "purple")
+                self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
+                                                              self.chosen_event.true_bearing + 180, 2, 2, "purple")
+            if self.show_heading:
+                self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
+                                                    self.chosen_event.heading, 2, 2, "orange")
+
             self.track_graphics.plot_ring_highlight((self.chosen_event.x, self.chosen_event.y),
                                                     6 + self.get_increased_blob_size(), "orange", 2)
-
-            self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
-                                                self.chosen_event.heading, 2, 1, "orange")
 
     def display_info_about_chosen_event(self):
 
@@ -263,4 +277,12 @@ class AnalyzeRoute(TrackAnalyzer):
             colour = "purple"
 
         self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), colour)
+
+    def set_show_heading(self, setting :bool):
+        self.show_heading = setting
+        self.draw_chosen_event_()
+
+    def set_show_true_bearing(self, setting :bool):
+        self.show_true_bearing = setting
+        self.draw_chosen_event_()
 

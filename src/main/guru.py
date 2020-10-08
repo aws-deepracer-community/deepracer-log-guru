@@ -475,6 +475,18 @@ class MainApp(tk.Frame):
         self.view_manager.set_annotations_off()
         self.redraw()
 
+    def menu_callback_heading_on(self):
+        self.analyze_route.set_show_heading(True)
+
+    def menu_callback_heading_off(self):
+        self.analyze_route.set_show_heading(False)
+
+    def menu_callback_true_bearing_on(self):
+        self.analyze_route.set_show_true_bearing(True)
+
+    def menu_callback_true_bearing_off(self):
+        self.analyze_route.set_show_true_bearing(False)
+
     def menu_callback_view_log_file_info(self):
         if self.log:
             ViewLogFileInfo(self, self.log)

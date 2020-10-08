@@ -30,10 +30,10 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
         tk.Checkbutton(
             control_frame, text="Skip Starts",
             variable=self.skip_starts,
-            command=self.checkbutton_press_skip_starts).grid(column=0, row=0, pady=5, padx=5)
+            command=self.checkbutton_press_skip_starts).pack()
 
         granularity_group = tk.LabelFrame(control_frame, text="Granularity", padx=5, pady=5)
-        granularity_group.grid(column=0, row=1, pady=5, padx=5)
+        granularity_group.pack()
 
         tk.Radiobutton(granularity_group, text="3 cm", variable=self.granularity, value=3,
                        command=self.chosen_new_granularity).grid(column=0, row=1, pady=5, padx=5)
@@ -45,7 +45,7 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
                        command=self.chosen_new_granularity).grid(column=0, row=4, pady=5, padx=5)
 
         threshold_group = tk.LabelFrame(control_frame, text="Threshold", padx=5, pady=5)
-        threshold_group.grid(column=0, row=2, pady=5, padx=5)
+        threshold_group.pack()
 
         tk.Radiobutton(threshold_group, text="5+ visits", variable=self.threshold, value=5,
                        command=self.chosen_new_threshold).grid(column=0, row=0, pady=5, padx=5)
@@ -55,7 +55,7 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
                        command=self.chosen_new_threshold).grid(column=0, row=2, pady=5, padx=5)
 
         speed_group = tk.LabelFrame(control_frame, text="Speed", padx=5, pady=5)
-        speed_group.grid(column=0, row=3, pady=5, padx=5)
+        speed_group.pack()
 
         tk.Radiobutton(speed_group, text="Action", variable=self.speed_choice, value=ACTION_SPEED,
                        command=self.chosen_new_speed).grid(column=0, row=0, pady=5, padx=5)

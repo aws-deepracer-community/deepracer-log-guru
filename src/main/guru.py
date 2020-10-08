@@ -83,6 +83,7 @@ class MainApp(tk.Frame):
         self.track_canvas.bind("<Down>", self.left_or_down_key_pressed_on_track_canvas)
 
         self.control_frame = tk.Frame(root)
+        self.inner_control_frame = tk.Frame(self.control_frame)
 
 
         #
@@ -100,19 +101,19 @@ class MainApp(tk.Frame):
         #
 
         self.track_graphics = TrackGraphics(self.track_canvas)
-        self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.control_frame, self.episode_selector)
-        self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.control_frame)
-        self.analyze_favourite_speed = AnalyzeFavouriteSpeed(self.redraw, self.track_graphics, self.control_frame)
-        self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.control_frame)
-        self.analyze_quarterly_results = AnalyzeQuarterlyResults(self.redraw, matplotlib_canvas, self.control_frame)
-        self.analyze_lap_time_reward = AnalyzeLapTimeReward(self.redraw, matplotlib_canvas, self.control_frame)
-        self.analyze_reward_distribution = AnalyzeRewardDistribution(self.redraw, matplotlib_canvas, self.control_frame)
-        self.analyze_common_rewards = AnalyzeCommonRewards(self.redraw, matplotlib_canvas, self.control_frame)
-        self.analyze_rewards_per_waypoint = AnalyzeRewardsPerWaypoint(self.redraw, matplotlib_canvas, self.control_frame)
-        self.analyze_episode_speed = AnalyzeEpisodeSpeed(self.redraw, matplotlib_canvas, self.control_frame, self.episode_selector)
-        self.analyze_episode_skew = AnalyzeEpisodeSkew(self.redraw, matplotlib_canvas, self.control_frame, self.episode_selector)
-        self.analyze_lap_time_correlations = AnalyzeLapTimeCorrelations(self.redraw, matplotlib_canvas, self.control_frame)
-        self.analyze_section_time_correlations = AnalyzeSectionTimeCorrelations(self.redraw, matplotlib_canvas, self.control_frame)
+        self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.inner_control_frame, self.episode_selector)
+        self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.inner_control_frame)
+        self.analyze_favourite_speed = AnalyzeFavouriteSpeed(self.redraw, self.track_graphics, self.inner_control_frame)
+        self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_quarterly_results = AnalyzeQuarterlyResults(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_lap_time_reward = AnalyzeLapTimeReward(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_reward_distribution = AnalyzeRewardDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_common_rewards = AnalyzeCommonRewards(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_rewards_per_waypoint = AnalyzeRewardsPerWaypoint(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_episode_speed = AnalyzeEpisodeSpeed(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
+        self.analyze_episode_skew = AnalyzeEpisodeSkew(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
+        self.analyze_lap_time_correlations = AnalyzeLapTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_section_time_correlations = AnalyzeSectionTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
 
 
         self.all_analyzers = [
@@ -138,7 +139,7 @@ class MainApp(tk.Frame):
         self.analyzer.take_control()
 
         if ss.SHOW_SS:
-            self.secret_analyzers = ss.get_secret_analyzers(self.redraw, self.track_graphics, self.control_frame)
+            self.secret_analyzers = ss.get_secret_analyzers(self.redraw, self.track_graphics, self.inner_control_frame)
         else:
             self.secret_analyzers = None
 
@@ -148,14 +149,6 @@ class MainApp(tk.Frame):
         #
 
         self.layout_ui_for_track_analyzer()
-
-
-        #
-        # Special spacer on the righthand side of the controls to allow for some analysis views being wider
-        # We'll lock-in the width afterwards
-        #
-
-        tk.Label(self.control_frame, text="  ").grid(column=10, row=0)
 
 
         #
@@ -188,12 +181,14 @@ class MainApp(tk.Frame):
         self.status_frame.pack(fill=tk.BOTH, side=tk.BOTTOM)
         self.track_canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
         self.control_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
+        self.inner_control_frame.pack()
         self.pack(fill=tk.BOTH, expand=True)
 
     def layout_ui_for_graph_analyzer(self):
         self.status_frame.pack(fill=tk.BOTH, side=tk.BOTTOM)
         self.graph_canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
         self.control_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
+        self.inner_control_frame.pack()
         self.pack(fill=tk.BOTH, expand=True)
 
     def menu_callback_switch_track(self, new_track):

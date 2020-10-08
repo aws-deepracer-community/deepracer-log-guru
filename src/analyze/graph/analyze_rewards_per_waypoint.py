@@ -26,7 +26,7 @@ class AnalyzeRewardsPerWaypoint(GraphAnalyzer):
 
     def build_control_frame(self, control_frame):
         episodes_group = tk.LabelFrame(control_frame, text="Episodes", padx=5, pady=5)
-        episodes_group.grid(column=0, row=0, pady=5, padx=5)
+        episodes_group.pack()
 
         tk.Checkbutton(
             episodes_group, text="All",
@@ -39,7 +39,7 @@ class AnalyzeRewardsPerWaypoint(GraphAnalyzer):
             command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
 
         stats_group = tk.LabelFrame(control_frame, text="Stats", padx=5, pady=5)
-        stats_group.grid(column=0, row=1, pady=5, padx=5)
+        stats_group.pack()
 
         tk.Checkbutton(
             stats_group, text="Mean",

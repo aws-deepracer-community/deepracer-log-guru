@@ -48,7 +48,7 @@ class AnalyzeRoute(TrackAnalyzer):
     def build_control_frame(self, control_frame):
 
         colour_schema_group = tk.LabelFrame(control_frame, text="Colour Scheme", padx=5, pady=5)
-        colour_schema_group.grid(column=0, row=0, pady=5, padx=5, sticky=tk.W+tk.E)
+        colour_schema_group.pack()
 
         tk.Radiobutton(colour_schema_group, text="Reward 20", variable=self.colour_scheme, value=COLOUR_SCHEME_REWARD_20,
                        command=self.guru_parent_redraw).grid(column=0, row=0, pady=2, padx=5)
@@ -70,7 +70,7 @@ class AnalyzeRoute(TrackAnalyzer):
         #######
 
         format_group = tk.LabelFrame(control_frame, text="Format", padx=5, pady=5)
-        format_group.grid(column=0, row=1, pady=2, padx=5, sticky=tk.W+tk.E)
+        format_group.pack()
 
         tk.Label(format_group, text="Blob size").grid(column=0, row=0, pady=2, padx=5, sticky=tk.W)
         tk.OptionMenu(format_group, self.blob_size, BLOB_SIZE_SMALL, BLOB_SIZE_MEDIUM, BLOB_SIZE_LARGE,
@@ -79,7 +79,7 @@ class AnalyzeRoute(TrackAnalyzer):
         #######
 
         episode_selector_frame = self.episode_selector.get_label_frame(control_frame, self.callback_selected_episode_changed)
-        episode_selector_frame.grid(column=0, row=3, pady=5, padx=5, sticky=tk.W+tk.E)
+        episode_selector_frame.pack()
 
 
     def left_button_pressed(self, track_point):

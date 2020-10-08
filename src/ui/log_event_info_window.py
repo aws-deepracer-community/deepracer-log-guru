@@ -27,16 +27,18 @@ class LogEventInfoWindow(tk.Toplevel):
         debug_frame.grid(row=2, column=0, columnspan=3, pady=5, padx=5, sticky=tk.NW+tk.E)
 
         self.waypoint_id = tk.StringVar()
+        self.waypoint_lap_position = tk.StringVar()
         self.waypoint_bearing_to_next = tk.StringVar()
         self.waypoint_distance_to_next = tk.StringVar()
         self.waypoint_bearing_from_previous = tk.StringVar()
         self.waypoint_distance_from_previous = tk.StringVar()
 
         self.make_label_and_value(waypoint_frame, 0, "Waypoint", self.waypoint_id)
-        self.make_label_and_value(waypoint_frame, 1, "Bearing to Next", self.waypoint_bearing_to_next)
-        self.make_label_and_value(waypoint_frame, 2, "Distance to Next", self.waypoint_distance_to_next)
-        self.make_label_and_value(waypoint_frame, 3, "Bearing from Previous", self.waypoint_bearing_from_previous)
-        self.make_label_and_value(waypoint_frame, 4, "Distance from Previous", self.waypoint_distance_from_previous)
+        self.make_label_and_value(waypoint_frame, 1, "Lap Position", self.waypoint_lap_position)
+        self.make_label_and_value(waypoint_frame, 2, "Bearing to Next", self.waypoint_bearing_to_next)
+        self.make_label_and_value(waypoint_frame, 3, "Distance to Next", self.waypoint_distance_to_next)
+        self.make_label_and_value(waypoint_frame, 4, "Bearing from Previous", self.waypoint_bearing_from_previous)
+        self.make_label_and_value(waypoint_frame, 5, "Distance from Previous", self.waypoint_distance_from_previous)
 
         self.state_progress = tk.StringVar()
         self.state_time = tk.StringVar()
@@ -97,6 +99,7 @@ class LogEventInfoWindow(tk.Toplevel):
         (prev_bearing, prev_distance) = track.get_bearing_and_distance_from_previous_waypoint(event.closest_waypoint_index)
 
         self.waypoint_id.set(str(event.closest_waypoint_index))
+        self.waypoint_lap_position.set(str(round(track.percent_from_race_start[event.closest_waypoint_index], 1)) + "  %")
         self.waypoint_bearing_to_next.set(str(round(next_bearing)))
         self.waypoint_distance_to_next.set(str(round(next_distance, 2)) + " m")
         self.waypoint_bearing_from_previous.set(str(round(prev_bearing)))

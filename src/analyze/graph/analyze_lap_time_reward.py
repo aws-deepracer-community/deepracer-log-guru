@@ -41,7 +41,7 @@ class AnalyzeLapTimeReward(GraphAnalyzer):
     def build_control_frame(self, control_frame):
 
         episodes_group = tk.LabelFrame(control_frame, text="Episodes", padx=5, pady=5)
-        episodes_group.grid(column=0, row=0, pady=5, padx=5)
+        episodes_group.pack()
 
         tk.Checkbutton(
             episodes_group, text="All",
@@ -59,7 +59,7 @@ class AnalyzeLapTimeReward(GraphAnalyzer):
             command=self.guru_parent_redraw).grid(column=0, row=2, pady=5, padx=5)
 
         scale_group = tk.LabelFrame(control_frame, text="Scale", padx=5, pady=5)
-        scale_group.grid(column=0, row=2, pady=5, padx=5)
+        scale_group.pack()
 
         tk.Radiobutton(
             scale_group, text=FIXED_SCALE,

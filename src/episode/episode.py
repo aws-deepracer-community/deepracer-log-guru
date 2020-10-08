@@ -62,6 +62,12 @@ class Episode:
         # THIS VARIABLE IS ASSIGNED RETROSPECTIVELY AFTER THE Log CLASS HAS LOADED ALL EPISODES
         self.quarter = None
 
+    def get_starting_position_as_percent_from_race_start(self, track :Track):
+        first_event_percent = track.percent_from_race_start[self.events[0].closest_waypoint_index]
+
+        #  5 is magic number because there are 20 evenly spaced start points, i.e. every 5% round the track
+        return round(first_event_percent / 5) * 5
+
 
     def get_distance_travelled(self):
 

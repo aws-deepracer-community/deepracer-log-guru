@@ -26,6 +26,7 @@ class Track:
 
         # Fields that we will populate automatically
         self.drawing_points = []
+        self.percent_from_race_start = []
         self.measured_left_distance = 0.0
         self.measured_middle_distance = 0.0
         self.measured_right_distance = 0.0
@@ -131,6 +132,14 @@ class Track:
             self.measured_middle_distance += geometry.get_distance_between_points(previous.middle, p.middle)
             self.measured_right_distance += geometry.get_distance_between_points(previous.right, p.right)
             previous = p
+
+        previous = self.drawing_points[0]
+        progress_distance = 0.0
+        for p in self.drawing_points:
+            progress_distance += geometry.get_distance_between_points(previous.middle, p.middle)
+            self.percent_from_race_start.append(round(progress_distance / self.measured_middle_distance * 100, 2))
+            previous = p
+
 
     def calculate_range_of_coordinates(self):
         (self.min_x, self.min_y) = self.drawing_points[0].middle

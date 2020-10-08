@@ -19,15 +19,15 @@ class AnalyzeConvergence(TrackAnalyzer):
         tk.Checkbutton(
             control_frame, text="Skip Starts",
             variable=self.skip_starts,
-            command=self.checkbutton_press_skip_starts).grid(column=0, row=0, pady=5, padx=5)
+            command=self.checkbutton_press_skip_starts).pack()
 
         tk.Checkbutton(
             control_frame, text="Extra Bright",
             variable=self.extra_bright,
-            command=self.checkbutton_press_extra_bright).grid(column=0, row=1, pady=5, padx=5)
+            command=self.checkbutton_press_extra_bright).pack()
 
         granularity_group = tk.LabelFrame(control_frame, text="Granularity", padx=5, pady=5)
-        granularity_group.grid(column=0, row=2, pady=5, padx=5)
+        granularity_group.pack()
 
         tk.Radiobutton(granularity_group, text="3 cm", variable=self.granularity, value=3,
                        command=self.chosen_new_granularity).grid(column=0, row=0, pady=5, padx=5)

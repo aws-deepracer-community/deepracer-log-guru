@@ -25,7 +25,12 @@ class TrackAnalyzer:
         for widget in self.control_frame.winfo_children():
             widget.destroy()
 
+        #spacer = tk.Label(self.control_frame, text="                                              ")
+        #spacer.pack()
+
         self.build_control_frame(self.control_frame)
+
+        tk.Label(self.control_frame, text="                                              ").pack()
 
         self.control_frame.pack(side=tk.RIGHT)
 

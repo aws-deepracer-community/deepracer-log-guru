@@ -22,7 +22,7 @@ class AnalyzeEpisodeSkew(GraphAnalyzer):
 
     def build_control_frame(self, control_frame):
         episode_selector_frame = self.episode_selector.get_label_frame(control_frame, self.guru_parent_redraw)
-        episode_selector_frame.grid(column=0, row=1, pady=5, padx=5, sticky=tk.W + tk.E)
+        episode_selector_frame.pack()
 
     def add_plots(self):
         axes :Axes = self.graph_figure.add_subplot()
@@ -40,15 +40,14 @@ class AnalyzeEpisodeSkew(GraphAnalyzer):
         plot_y_track_speeds = get_plot_data_track_speeds(episode)
 
 
-        axes.plot(plot_x, plot_y_skew, color="C2", label="Track Speed", linewidth=3)
+        axes.plot(plot_x, plot_y_skew, color="C2", label="Skew", linewidth=3)
 
         # Setup formatting
         axes.set_title("Skew for Episode #" + str(episode.id))
         axes.set_xlabel("Step")
         axes.set_ylabel("Skew (degrees)")
+        axes.set_ybound(-20, 20)
 
-        if axes.has_data():
-            axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
 
 def get_plot_data_steps(episode :Episode):

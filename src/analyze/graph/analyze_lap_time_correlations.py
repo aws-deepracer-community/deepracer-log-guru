@@ -19,6 +19,7 @@ AXIS_TOTAL_REWARD = 5
 AXIS_SMOOTHNESS = 6
 AXIS_ITERATION = 7
 AXIS_FLYING_START = 8
+AXIS_MAX_SKEW = 9
 
 
 
@@ -81,6 +82,9 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         tk.Radiobutton(axis_group, text="Flying Start", variable=self.correlation_tk_var,
                        value=AXIS_FLYING_START, command=self.guru_parent_redraw).grid(column=0, row=7, pady=2, padx=5)
 
+        tk.Radiobutton(axis_group, text="Max Skew", variable=self.correlation_tk_var,
+                       value=AXIS_MAX_SKEW, command=self.guru_parent_redraw).grid(column=0, row=8, pady=2, padx=5)
+
         ######
 
         format_group = tk.LabelFrame(control_frame, text="Format", padx=5, pady=5)
@@ -126,6 +130,8 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
             plot_y = get_plot_data_iterations(episodes)
         if self.correlation_tk_var.get() == AXIS_FLYING_START:
             plot_y = get_plot_data_flying_starts(episodes)
+        if self.correlation_tk_var.get() == AXIS_MAX_SKEW:
+            plot_y = get_plot_data_max_skew(episodes)
 
         plot_x = get_plot_data_lap_times(episodes)
 
@@ -181,6 +187,9 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
             axis_label = general_title
         if self.correlation_tk_var.get() == AXIS_FLYING_START:
             general_title = "Track Speed At One Second"
+            axis_label = general_title
+        if self.correlation_tk_var.get() == AXIS_MAX_SKEW:
+            general_title = "Maximum Skew"
             axis_label = general_title
 
         axes.set_title("Lap Time Correlated With " + general_title)
@@ -277,4 +286,13 @@ def get_plot_data_flying_starts(episodes: list):
             starts.append(e.flying_start_speed)
 
     return np.array(starts)
+
+def get_plot_data_max_skew(episodes: list):
+    skews = []
+
+    for e in episodes:
+        if e.lap_complete:
+            skews.append(e.max_skew)
+
+    return np.array(skews)
 

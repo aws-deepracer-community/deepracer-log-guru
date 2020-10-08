@@ -13,6 +13,8 @@ class EpisodeFilterDialog(Dialog):
         self.filter_min_percent = make_nullable_var(self.episode_filter.filter_min_percent)
         self.filter_min_average_reward = make_nullable_var(self.episode_filter.filter_min_average_reward)
         self.filter_peak_track_speed = make_nullable_var(self.episode_filter.filter_peak_track_speed)
+        self.filter_max_skew = make_nullable_var(self.episode_filter.filter_max_skew)
+
 
         self.filter_specific_waypoint_id = make_nullable_var(self.episode_filter.filter_specific_waypoint_id)
         self.filter_specific_waypoint_min_reward = make_nullable_var(self.episode_filter.filter_specific_waypoint_min_reward)
@@ -97,6 +99,11 @@ class EpisodeFilterDialog(Dialog):
             episode_stat_group, textvariable=self.filter_peak_track_speed,
             validate="key", validatecommand=self.validate_simple_float).grid(column=1, row=5, pady=5, padx=5)
 
+        Label(episode_stat_group, text="Max Skew <=").grid(column=0, row=6, pady=5, padx=5, sticky=E)
+        Entry(
+            episode_stat_group, textvariable=self.filter_max_skew,
+            validate="key", validatecommand=self.validate_positive_integer).grid(column=1, row=6, pady=5, padx=5)
+
         #
 
         waypoint_group = LabelFrame(master, text="Waypoint", padx=5, pady=5)
@@ -148,6 +155,7 @@ class EpisodeFilterDialog(Dialog):
         self.episode_filter.filter_min_percent = get_nullable_int_entry(self.filter_min_percent)
         self.episode_filter.filter_min_average_reward = get_nullable_float_entry(self.filter_min_average_reward)
         self.episode_filter.filter_peak_track_speed = get_nullable_float_entry(self.filter_peak_track_speed)
+        self.episode_filter.filter_max_skew = get_nullable_int_entry(self.filter_max_skew)
 
         self.episode_filter.set_filter_specific_waypoint_reward(
             get_nullable_int_entry(self.filter_specific_waypoint_id),
@@ -175,6 +183,7 @@ class EpisodeFilterDialog(Dialog):
         self.filter_min_percent.set("")
         self.filter_min_average_reward.set("")
         self.filter_peak_track_speed.set("")
+        self.filter_max_skew.set("")
 
         self.filter_specific_waypoint_id.set("")
         self.filter_specific_waypoint_min_reward.set("")

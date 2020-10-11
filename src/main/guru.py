@@ -19,6 +19,7 @@ from src.analyze.graph.analyze_episode_speed import AnalyzeEpisodeSpeed
 from src.analyze.graph.analyze_episode_skew import AnalyzeEpisodeSkew
 from src.analyze.graph.analyze_lap_time_correlations import AnalyzeLapTimeCorrelations
 from src.analyze.graph.analyze_section_time_correlations import AnalyzeSectionTimeCorrelations
+from src.analyze.graph.analyze_complete_lap_percentage import AnalyzeCompleteLapPercentage
 
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.track.analyze_route import AnalyzeRoute
@@ -114,7 +115,7 @@ class MainApp(tk.Frame):
         self.analyze_episode_skew = AnalyzeEpisodeSkew(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
         self.analyze_lap_time_correlations = AnalyzeLapTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_section_time_correlations = AnalyzeSectionTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
-
+        self.analyze_complete_lap_percentage = AnalyzeCompleteLapPercentage(self.redraw, matplotlib_canvas, self.inner_control_frame)
 
         self.all_analyzers = [
             self.analyze_route,
@@ -129,7 +130,8 @@ class MainApp(tk.Frame):
             self.analyze_episode_speed,
             self.analyze_episode_skew,
             self.analyze_lap_time_correlations,
-            self.analyze_section_time_correlations
+            self.analyze_section_time_correlations,
+            self.analyze_complete_lap_percentage
         ]
 
         for v in self.all_analyzers:
@@ -264,6 +266,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_section_time_correlations(self):
         self.switch_analyzer(self.analyze_section_time_correlations)
+
+    def menu_callback_analyze_complete_lap_percentage(self):
+        self.switch_analyzer(self.analyze_complete_lap_percentage)
 
     def callback_open_this_file(self, file_name):
         redraw_menu_afterwards = not self.log

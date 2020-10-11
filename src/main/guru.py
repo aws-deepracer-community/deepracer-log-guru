@@ -208,6 +208,7 @@ class MainApp(tk.Frame):
         self.analyzer.set_filtered_episodes(None)
         self.analyzer.set_all_episodes(None)
         self.analyzer.set_log_meta(None)
+        self.analyzer.set_evaluation_phases(None)
 
         self.redraw()
 
@@ -300,6 +301,7 @@ class MainApp(tk.Frame):
             v.set_filtered_episodes(self.filtered_episodes)
             v.set_all_episodes(self.log.episodes)
             v.set_log_meta(self.log.log_meta)
+            v.set_evaluation_phases(self.log.evaluation_phases)
 
         self.status_frame.change_episodes(len(self.log.episodes), len(self.filtered_episodes))
 

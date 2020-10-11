@@ -13,10 +13,21 @@ META_FILE_SUFFIX = ".meta"
 LOG_FILE_SUFFIX = ".log"
 
 
+
+class EvaluationPhase:
+    def __init__(self, rewards, progresses):
+        assert len(rewards) == len(progresses)
+
+        self.length = len(rewards)
+        self.rewards = np.array(rewards)
+        self.progresses = np.array(progresses)
+
+
 class Log:
     def __init__(self):
         self.log_meta = LogMeta()
         self.episodes = []
+        self.evaluation_phases = []
         self.log_file_name = ""
         self.meta_file_name = ""
 
@@ -75,9 +86,7 @@ class Log:
                         evaluation_rewards.append(evaluation_reward)
                     elif evaluation_count and evaluation_progresses:
                         assert evaluation_count == len(evaluation_rewards)
-                        # for i in range(0, evaluation_count):
-                        #    print(evaluation_rewards[i], evaluation_progresses[i])
-                        # print("-------------------------")
+                        self.evaluation_phases.append(EvaluationPhase(evaluation_rewards, evaluation_progresses))
                         evaluation_rewards = []
                     else:
                         saved_debug += str
@@ -87,7 +96,6 @@ class Log:
         for i, e in enumerate(episode_events[:-1]):
             iteration = i // self.log_meta.hyper.episodes_between_training
             self.episodes.append(Episode(i, iteration, e))
-
 
     def analyze_episode_details(self):
 

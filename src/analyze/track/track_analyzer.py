@@ -43,6 +43,10 @@ class TrackAnalyzer:
         # Does nothing because this is currently only relevant to graph analyzers
         pass
 
+    def set_evaluation_phases(self, evaluation_phases):
+        # Does nothing because this is currently only relevant to graph analyzers
+        pass
+
     def set_filtered_episodes(self, filtered_episodes):
         self.filtered_episodes = filtered_episodes
         self.warning_filtered_episodes_changed()

@@ -19,6 +19,8 @@ class GraphAnalyzer:
         self.all_episodes = None
         self.action_space = None
         self.action_space_filter = None
+        self.log_meta = None
+        self.evaluation_phases = None
 
         mpl_style.use("seaborn")
         self.graph_figure.patch.set_facecolor('lightgrey')
@@ -50,6 +52,9 @@ class GraphAnalyzer:
 
     def set_log_meta(self, log_meta :LogMeta):
         self.log_meta = log_meta
+
+    def set_evaluation_phases(self, evaluation_phases):
+        self.evaluation_phases = evaluation_phases
 
     def set_filtered_episodes(self, filtered_episodes):
         self.filtered_episodes = filtered_episodes

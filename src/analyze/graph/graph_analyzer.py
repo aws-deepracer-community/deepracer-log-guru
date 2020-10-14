@@ -77,7 +77,6 @@ class GraphAnalyzer:
 
         self.matplotlib_canvas.draw()
 
-
     def add_plots(self):
         # You *MUST* override this
         pass

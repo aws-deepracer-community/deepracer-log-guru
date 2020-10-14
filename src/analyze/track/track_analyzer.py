@@ -13,6 +13,7 @@ class TrackAnalyzer:
         self.filtered_episodes = None
         self.action_space = None
         self.action_space_filter = None
+        self.evaluation_phases = None
 
     def uses_graph_canvas(self):
         return False
@@ -45,7 +46,7 @@ class TrackAnalyzer:
 
     def set_evaluation_phases(self, evaluation_phases):
         # Does nothing because this is currently only relevant to graph analyzers
-        pass
+        self.evaluation_phases = evaluation_phases
 
     def set_filtered_episodes(self, filtered_episodes):
         self.filtered_episodes = filtered_episodes

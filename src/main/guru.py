@@ -11,6 +11,7 @@ from src.analyze.track.analyze_convergence import AnalyzeConvergence
 from src.analyze.graph.analyze_training_progress import AnalyzeTrainingProgress
 from src.analyze.graph.analyze_quarterly_results import AnalyzeQuarterlyResults
 from src.analyze.track.analyze_favourite_speed import AnalyzeFavouriteSpeed
+from src.analyze.track.analyze_exit_points import AnalyzeExitPoints
 from src.analyze.graph.analyze_lap_time_reward import AnalyzeLapTimeReward
 from src.analyze.graph.analyze_reward_distribution import AnalyzeRewardDistribution
 from src.analyze.graph.analyze_common_rewards import AnalyzeCommonRewards
@@ -115,6 +116,7 @@ class MainApp(tk.Frame):
         self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.inner_control_frame, self.episode_selector)
         self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
         self.analyze_favourite_speed = AnalyzeFavouriteSpeed(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
+        self.analyze_exit_points = AnalyzeExitPoints(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_quarterly_results = AnalyzeQuarterlyResults(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_lap_time_reward = AnalyzeLapTimeReward(self.redraw, matplotlib_canvas, self.inner_control_frame)
@@ -131,6 +133,7 @@ class MainApp(tk.Frame):
             self.analyze_route,
             self.analyze_convergence,
             self.analyze_favourite_speed,
+            self.analyze_exit_points,
             self.analyze_training_progress,
             self.analyze_quarterly_results,
             self.analyze_lap_time_reward,
@@ -245,6 +248,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_favourite_speed(self):
         self.switch_analyzer(self.analyze_favourite_speed)
+
+    def menu_callback_analyze_exit_points(self):
+        self.switch_analyzer(self.analyze_exit_points)
 
     def menu_callback_analyze_route(self):
         self.switch_analyzer(self.analyze_route)

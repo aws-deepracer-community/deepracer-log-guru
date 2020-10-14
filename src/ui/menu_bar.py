@@ -152,14 +152,14 @@ class MenuBar():
 
     def add_admin_menu(self):
         menu = Menu(self.menubar, tearoff=0)
-        menu.add_command(label="Re-calculate Log Meta", command=refresh_all_log_meta)
+        menu.add_command(label="Re-calculate Log Meta", command=self.refresh_all_log_meta)
         menu.add_command(label="View Log File Info", command=self.main_app.menu_callback_view_log_file_info)
 
 
         self.menubar.add_cascade(label="Admin", menu=menu)
 
     def new_files(self):
-        NewFilesDialog(self.main_app)
+        NewFilesDialog(self.main_app, self.main_app.please_wait)
 
     def open_file(self):
         OpenFileDialog(self.main_app, "Open File")
@@ -173,6 +173,7 @@ class MenuBar():
     def open_action_space_filter_dialog(self):
         ActionSpaceFilterDialog(self.main_app)
 
-def refresh_all_log_meta():
-    log.refresh_all_log_meta()
-    messagebox.showinfo("Refresh All Log Meta", "Refresh succeeded!")
+    def refresh_all_log_meta(self):
+        log.refresh_all_log_meta(self.main_app.please_wait)
+        self.main_app.please_wait.stop()
+        messagebox.showinfo("Refresh All Log Meta", "Refresh succeeded!")

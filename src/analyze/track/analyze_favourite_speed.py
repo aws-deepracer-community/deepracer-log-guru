@@ -2,6 +2,8 @@ import tkinter as tk
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
+from src.ui.please_wait import PleaseWait
+
 
 from src.action_space.action_util import *
 
@@ -16,7 +18,7 @@ TRACK_SPEED = 1
 
 class AnalyzeFavouriteSpeed(TrackAnalyzer):
 
-    def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame):
+    def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame, please_wait :PleaseWait):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
         self.visitor_maps = None
@@ -24,6 +26,7 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
         self.granularity = tk.IntVar(value=5)
         self.threshold = tk.IntVar(value=10)
         self.speed_choice = tk.IntVar(value=ACTION_SPEED)
+        self.please_wait = please_wait
 
     def build_control_frame(self, control_frame):
 
@@ -63,31 +66,11 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
                        command=self.chosen_new_speed).grid(column=0, row=1, pady=5, padx=5)
 
     def redraw(self):
-        if self.skip_starts.get():
-            skip = 20
-        else:
-            skip = 0
-
-        if self.filtered_episodes:
-            if not self.visitor_maps:
-                self.visitor_maps = []
-                for i in range(0, 3):
-                    self.visitor_maps.append(self.current_track.get_visitor_map(self.granularity.get() / 100))
-                for e in self.filtered_episodes:
-                    if self.speed_choice.get() == ACTION_SPEED:
-                        apply_to_visitor_map = e.apply_action_speed_to_visitor_map
-                    else:
-                        apply_to_visitor_map = e.apply_track_speed_to_visitor_map
-
-                    apply_to_visitor_map(self.visitor_maps[HIGH_VISITOR_MAP], skip, self.action_space_filter, is_high_speed)
-                    apply_to_visitor_map(self.visitor_maps[MEDIUM_VISITOR_MAP], skip, self.action_space_filter, is_medium_speed)
-                    apply_to_visitor_map(self.visitor_maps[LOW_VISITOR_MAP], skip, self.action_space_filter, is_low_speed)
-
+        if self.filtered_episodes and self.visitor_maps:
             colours = [ "", "", "" ]
             colours[HIGH_VISITOR_MAP] = "green"
             colours[MEDIUM_VISITOR_MAP] = "yellow"
             colours[LOW_VISITOR_MAP] = "red"
-
             v.multi_draw(self.track_graphics, self.visitor_maps, colours, self.threshold.get())
 
     def warning_filtered_episodes_changed(self):
@@ -113,4 +96,28 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
 
     def chosen_new_threshold(self):
         self.guru_parent_redraw()
+
+    def recalculate(self):
+        if self.skip_starts.get():
+            skip = 20
+        else:
+            skip = 0
+
+        if self.filtered_episodes:
+            if not self.visitor_maps:
+                self.please_wait.start("Calculating")
+                self.visitor_maps = []
+                for i in range(0, 3):
+                    self.visitor_maps.append(self.current_track.get_visitor_map(self.granularity.get() / 100))
+                for i, e in enumerate(self.filtered_episodes):
+                    if self.speed_choice.get() == ACTION_SPEED:
+                        apply_to_visitor_map = e.apply_action_speed_to_visitor_map
+                    else:
+                        apply_to_visitor_map = e.apply_track_speed_to_visitor_map
+
+                    apply_to_visitor_map(self.visitor_maps[HIGH_VISITOR_MAP], skip, self.action_space_filter, is_high_speed)
+                    apply_to_visitor_map(self.visitor_maps[MEDIUM_VISITOR_MAP], skip, self.action_space_filter, is_medium_speed)
+                    apply_to_visitor_map(self.visitor_maps[LOW_VISITOR_MAP], skip, self.action_space_filter, is_low_speed)
+
+                    self.please_wait.set_progress((i+1) / len(self.filtered_episodes) * 100)
 

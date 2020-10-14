@@ -89,6 +89,8 @@ class ViewManager:
         self.annotations_on = False
 
     def redraw(self, current_track :Track, track_graphics, analyzer, episode_filter: EpisodeFilter):
+        analyzer.recalculate()
+
         track_graphics.reset_to_blank()
 
         current_track.configure_track_graphics(track_graphics)

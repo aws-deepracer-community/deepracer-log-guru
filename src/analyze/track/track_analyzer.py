@@ -67,6 +67,10 @@ class TrackAnalyzer:
         # You *MUST* override this
         pass
 
+    def recalculate(self):
+        # You MIGHT override this
+        pass
+
     def left_button_pressed(self, track_point):
         # You MIGHT override this
         pass

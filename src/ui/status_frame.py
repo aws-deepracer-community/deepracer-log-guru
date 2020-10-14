@@ -8,7 +8,7 @@ class StatusFrame(tk.Frame):
         inner_frame.pack()
 
         tk.Label(inner_frame, text="Model:", font=("", 12)).grid(column=0, row=0, sticky=tk.E)
-        tk.Label(inner_frame, text="Episode(s):", font=("", 12)).grid(column=0, row=1, sticky=tk.E)
+        tk.Label(inner_frame, text="Filtered Episode(s):", font=("", 12)).grid(column=0, row=1, sticky=tk.E)
 
         self.model_label = tk.Label(inner_frame, text="None", font=("", 12))
         self.episodes_label = tk.Label(inner_frame, text="None", font=("", 12))

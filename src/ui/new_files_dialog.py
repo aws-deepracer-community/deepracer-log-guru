@@ -2,13 +2,16 @@ import tkinter as tk
 import tkinter.messagebox
 
 from src.ui.dialog import Dialog
-from src.ui.please_wait import PleaseWaitDialog
+from src.ui.please_wait_OLD import PleaseWaitDialog
 from src.log.log import get_possible_new_model_log_files, import_new_logs
+from src.ui.please_wait import PleaseWait
 
 class NewFilesDialog(Dialog):
 
-    def __init__(self, parent):
+    def __init__(self, parent, please_wait :PleaseWait):
         self.new_log_files = get_possible_new_model_log_files()
+        self.please_wait = please_wait
+
         super().__init__(parent, "Import New Log Files")
 
     def body(self, master):
@@ -24,14 +27,13 @@ class NewFilesDialog(Dialog):
             tk.Label(master, text="No new log files were found").pack()
 
     def apply(self):
-        please_wait = PleaseWaitDialog(self.parent)
         try:
-            import_new_logs(self.new_log_files)
-            please_wait.destroy()
+            import_new_logs(self.new_log_files, self.please_wait)
         except:
-            please_wait.destroy()
+            self.please_wait.stop()
             tk.messagebox.showerror("Fetch File", "Unable to import all files")
         else:
+            self.please_wait.stop(0.2)
             tk.messagebox.showinfo("Fetch File", "Import succeeded")
             pass
 

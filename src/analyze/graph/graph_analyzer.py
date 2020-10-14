@@ -86,6 +86,10 @@ class GraphAnalyzer:
         # You *MUST* override this
         pass
 
+    def recalculate(self):
+        # You MIGHT override this
+        pass
+
     def warning_track_changed(self):
         # You MIGHT override this to manage cached or pre-calculated data structures
         # Do not override to redraw() since Guru already calls redraw() at the right times!

@@ -29,6 +29,7 @@ from src.log.log import Log
 from src.main.view_manager import ViewManager
 from src.tracks.tracks import get_all_tracks
 from src.ui.menu_bar import MenuBar
+from src.ui.please_wait import PleaseWait
 from src.ui.status_frame import StatusFrame
 from src.analyze.selector.episode_selector import EpisodeSelector
 from src.ui.view_log_file_info import ViewLogFileInfo
@@ -98,13 +99,22 @@ class MainApp(tk.Frame):
 
 
         #
+        # Initialize the "please wait" widget in the middle of each canvas
+        #
+
+        self.please_wait_track = PleaseWait(root, self.track_canvas)
+        self.please_wait_graph = PleaseWait(root, self.graph_canvas)
+        self.please_wait = self.please_wait_track
+
+
+        #
         # Create the various "analyzers" and let them take control of the contents of the high level UI components
         #
 
         self.track_graphics = TrackGraphics(self.track_canvas)
         self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.inner_control_frame, self.episode_selector)
-        self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.inner_control_frame)
-        self.analyze_favourite_speed = AnalyzeFavouriteSpeed(self.redraw, self.track_graphics, self.inner_control_frame)
+        self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
+        self.analyze_favourite_speed = AnalyzeFavouriteSpeed(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
         self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_quarterly_results = AnalyzeQuarterlyResults(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_lap_time_reward = AnalyzeLapTimeReward(self.redraw, matplotlib_canvas, self.inner_control_frame)
@@ -185,6 +195,7 @@ class MainApp(tk.Frame):
         self.control_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
         self.inner_control_frame.pack()
         self.pack(fill=tk.BOTH, expand=True)
+        self.please_wait = self.please_wait_track
 
     def layout_ui_for_graph_analyzer(self):
         self.status_frame.pack(fill=tk.BOTH, side=tk.BOTTOM)
@@ -192,6 +203,7 @@ class MainApp(tk.Frame):
         self.control_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
         self.inner_control_frame.pack()
         self.pack(fill=tk.BOTH, expand=True)
+        self.please_wait = self.please_wait_graph
 
     def menu_callback_switch_track(self, new_track):
         self.log = None
@@ -271,10 +283,11 @@ class MainApp(tk.Frame):
         self.switch_analyzer(self.analyze_complete_lap_percentage)
 
     def callback_open_this_file(self, file_name):
+
         redraw_menu_afterwards = not self.log
 
         self.log = Log()
-        self.log.load_all(file_name)
+        self.log.load_all(file_name, self.please_wait)
 
         self.status_frame.change_model_name(self.log.log_meta.model_name)
         self.apply_new_action_space()
@@ -313,8 +326,8 @@ class MainApp(tk.Frame):
         self.redraw()
 
     def redraw(self, event=None):
-
         self.view_manager.redraw(self.current_track, self.track_graphics, self.analyzer, self.episode_filter)
+        self.please_wait.stop()
 
     def left_button_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)

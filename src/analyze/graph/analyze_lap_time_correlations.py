@@ -11,6 +11,8 @@ from src.utils.lists import get_list_of_empty_lists
 
 from src.episode.episode import Episode
 
+from src.analyze.core.controls import EpisodeMultiControl
+
 AXIS_DISTANCE = 1
 AXIS_PEAK_TRACK_SPEED = 2
 AXIS_STARTING_POINT = 3
@@ -30,28 +32,16 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
-        self.show_all = tk.BooleanVar()
-        self.show_filtered = tk.BooleanVar(value="True")
-
         self.correlation_tk_var = tk.IntVar(value = AXIS_DISTANCE)
 
         self.swap_axes = tk.BooleanVar()
 
+        self.episode_control = EpisodeMultiControl(guru_parent_redraw, control_frame)
+
 
     def build_control_frame(self, control_frame):
 
-        episodes_group = tk.LabelFrame(control_frame, text="Episodes", padx=5, pady=5)
-        episodes_group.pack()
-
-        tk.Checkbutton(
-            episodes_group, text="All",
-            variable=self.show_all,
-            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
-
-        tk.Checkbutton(
-            episodes_group, text="Filtered",
-            variable=self.show_filtered,
-            command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
+        self.episode_control.add_to_control_frame()
 
         #####
 
@@ -99,10 +89,10 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
     def add_plots(self):
         axes: Axes = self.graph_figure.add_subplot()
 
-        if self.show_all.get():
+        if self.episode_control.show_all():
             self.plot_episodes(axes, self.all_episodes, "C1", "All")
 
-        if self.show_filtered.get():
+        if self.episode_control.show_filtered():
             self.plot_episodes(axes, self.filtered_episodes, "C2", "Filtered")
 
         self.format_axes(axes)

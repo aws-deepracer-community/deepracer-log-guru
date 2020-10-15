@@ -10,6 +10,9 @@ from matplotlib.ticker import MultipleLocator
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
 
+from src.analyze.core.controls import EpisodeMultiControl
+
+
 FIXED_SCALE = "Fixed"
 DYNAMIC_SCALE = "Dynamic"
 
@@ -19,18 +22,14 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
-        self.show_all = tk.BooleanVar()
-        self.show_filtered = tk.BooleanVar()
-        self.show_evaluations = tk.BooleanVar()
+        self.episode_control = EpisodeMultiControl(guru_parent_redraw, control_frame, True)
 
         self.show_mean = tk.BooleanVar()
         self.show_median = tk.BooleanVar()
         self.show_best = tk.BooleanVar()
         self.show_worst = tk.BooleanVar()
 
-        self.show_filtered.set(True)
         self.show_mean.set(True)
-        self.show_evaluations.set(True)
 
         self.scale_type = tk.StringVar(value=FIXED_SCALE)
 
@@ -38,23 +37,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
     def build_control_frame(self, control_frame):
 
-        episodes_group = tk.LabelFrame(control_frame, text="Episodes", padx=5, pady=5)
-        episodes_group.pack()
-
-        tk.Checkbutton(
-            episodes_group, text="All Episodes",
-            variable=self.show_all,
-            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
-
-        tk.Checkbutton(
-            episodes_group, text="Filtered Episodes",
-            variable=self.show_filtered,
-            command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
-
-        tk.Checkbutton(
-            episodes_group, text="Evaluations",
-            variable=self.show_evaluations,
-            command=self.guru_parent_redraw).grid(column=0, row=2, pady=5, padx=5)
+        self.episode_control.add_to_control_frame()
 
         stats_group = tk.LabelFrame(control_frame, text="Stats", padx=5, pady=5)
         stats_group.pack()
@@ -108,7 +91,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
     def create_plot_iteration_vs_total_reward(self, axes):
         # Plot data
 
-        if self.show_all.get():
+        if self.episode_control.show_all():
             if self.show_median.get():
                 add_plot_iteration_vs_total_reward(axes, "All - Median", self.all_episodes, np.median, "C5")
             if self.show_mean.get():
@@ -118,7 +101,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
             if self.show_worst.get():
                 add_plot_iteration_vs_total_reward(axes, "All - Worst", self.all_episodes, np.min, "C8")
 
-        if self.filtered_episodes and self.show_filtered.get():
+        if self.filtered_episodes and self.episode_control.show_filtered():
             if self.show_median.get():
                 add_plot_iteration_vs_total_reward(axes, "Filtered - Median", self.filtered_episodes, np.median, "C1")
             if self.show_mean.get():
@@ -128,7 +111,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
             if self.show_worst.get():
                 add_plot_iteration_vs_total_reward(axes, "Filtered - Worst", self.filtered_episodes, np.min, "C4")
 
-        if self.show_evaluations.get():
+        if self.episode_control.show_evaluations():
             if self.show_median.get():
                 add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Median", self.evaluation_phases, np.median, "C9")
             if self.show_mean.get():
@@ -155,7 +138,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
     def create_plot_iteration_vs_percent_complete(self, axes):
 
         # Plot data
-        if self.show_all.get():
+        if self.episode_control.show_all():
             if self.show_median.get():
                 add_plot_iteration_vs_percent_complete(axes, "All - Median", self.all_episodes, np.median, "C5")
             if self.show_mean.get():
@@ -165,7 +148,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
             if self.show_worst.get():
                 add_plot_iteration_vs_percent_complete(axes, "All - Worst", self.all_episodes, np.min, "C8")
 
-        if self.filtered_episodes and self.show_filtered.get():
+        if self.filtered_episodes and self.episode_control.show_filtered():
             if self.show_median.get():
                 add_plot_iteration_vs_percent_complete(axes, "Filtered - Median", self.filtered_episodes, np.median, "C1")
             if self.show_mean.get():
@@ -175,7 +158,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
             if self.show_worst.get():
                 add_plot_iteration_vs_percent_complete(axes, "Filtered - Worst", self.filtered_episodes, np.min, "C4")
 
-        if self.show_evaluations.get():
+        if self.episode_control.show_evaluations():
             if self.show_median.get():
                 add_plot_iteration_vs_evaluation_percent_complete(axes, "Evaluations - Median", self.evaluation_phases, np.median, "C9")
             if self.show_mean.get():

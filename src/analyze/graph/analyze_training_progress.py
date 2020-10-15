@@ -10,7 +10,7 @@ from matplotlib.ticker import MultipleLocator
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
 
-from src.analyze.core.controls import EpisodeMultiControl
+from src.analyze.core.controls import EpisodeCheckButtonControl
 
 
 FIXED_SCALE = "Fixed"

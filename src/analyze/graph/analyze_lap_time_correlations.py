@@ -11,7 +11,7 @@ from src.utils.lists import get_list_of_empty_lists
 
 from src.episode.episode import Episode
 
-from src.analyze.core.controls import EpisodeMultiControl
+from src.analyze.core.controls import EpisodeCheckButtonControl
 
 AXIS_DISTANCE = 1
 AXIS_PEAK_TRACK_SPEED = 2

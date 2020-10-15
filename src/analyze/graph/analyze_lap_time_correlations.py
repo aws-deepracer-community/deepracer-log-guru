@@ -36,7 +36,7 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         self.swap_axes = tk.BooleanVar()
 
-        self.episode_control = EpisodeMultiControl(guru_parent_redraw, control_frame)
+        self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame)
 
 
     def build_control_frame(self, control_frame):

@@ -22,7 +22,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
-        self.episode_control = EpisodeMultiControl(guru_parent_redraw, control_frame, True)
+        self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame, True)
 
         self.show_mean = tk.BooleanVar()
         self.show_median = tk.BooleanVar()

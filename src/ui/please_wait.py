@@ -19,7 +19,7 @@ class PleaseWait():
     def stop(self, pause_seconds=0):
         time.sleep(pause_seconds)
         self.remove_previous_widgets()
-        self.root.update()
+        self.canvas.update()
         self.percent_done = 0
         self.root.config(cursor="")
 
@@ -58,16 +58,13 @@ class PleaseWait():
             x, y, text=self.title,
             fill="Blue", font=("", 16)))
 
-        self.root.update()
+        self.canvas.update()
 
     def remove_previous_widgets(self):
         for w in self.widgets:
             self.canvas.delete(w)
 
         self.widgets = []
-
-
-
 
 
 

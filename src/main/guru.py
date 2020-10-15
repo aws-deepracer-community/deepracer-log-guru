@@ -178,6 +178,7 @@ class MainApp(tk.Frame):
         # All done, so display main window now
         #
 
+        self.already_drawing = False
         self.update()
 
 
@@ -332,8 +333,11 @@ class MainApp(tk.Frame):
         self.redraw()
 
     def redraw(self, event=None):
-        self.view_manager.redraw(self.current_track, self.track_graphics, self.analyzer, self.episode_filter)
-        self.please_wait.stop()
+        if not self.already_drawing:   # Nasty workaround to avoid multiple calls due to "please wait"
+            self.already_drawing = True
+            self.view_manager.redraw(self.current_track, self.track_graphics, self.analyzer, self.episode_filter)
+            self.please_wait.stop()
+            self.already_drawing = False
 
     def left_button_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)

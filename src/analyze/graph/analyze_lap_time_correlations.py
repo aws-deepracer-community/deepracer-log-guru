@@ -137,15 +137,15 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         # Calculate linear regression line through the points
 
-        slope, intercept, r, p, std_err = stats.linregress(plot_x, plot_y)
-        def linear_line(x):
-            return slope * x + intercept
-        if abs(r) > 0.25:
-            slope_y = list(map(linear_line, plot_x))
-            r_label = "R = " + str(round(r, 2))
-        else:
-            (slope_y, r_label) = (None, None)
+        (slope_y, r_label) = (None, None)
 
+        if len(plot_x) >= 2:
+            slope, intercept, r, p, std_err = stats.linregress(plot_x, plot_y)
+            def linear_line(x):
+                return slope * x + intercept
+            if abs(r) > 0.25:
+                slope_y = list(map(linear_line, plot_x))
+                r_label = "R = " + str(round(r, 2))
 
         # Finally plot the data we have gathered
 

@@ -1,19 +1,14 @@
 import tkinter as tk
 
 from src.graphics.track_graphics import TrackGraphics
+from src.analyze.core.analyzer import Analyzer
 
-class TrackAnalyzer:
+
+class TrackAnalyzer(Analyzer):
 
     def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame):
-        self.guru_parent_redraw = guru_parent_redraw
+        super().__init__(guru_parent_redraw, control_frame)
         self.track_graphics = track_graphics
-        self.control_frame = control_frame
-
-        self.current_track = None
-        self.filtered_episodes = None
-        self.action_space = None
-        self.action_space_filter = None
-        self.evaluation_phases = None
 
     def uses_graph_canvas(self):
         return False
@@ -21,56 +16,11 @@ class TrackAnalyzer:
     def uses_track_graphics(self):
         return True
 
-    def take_control(self):
+    ##########################
+    ### ABSTRACT INTERFACE ###
+    ##########################
 
-        for widget in self.control_frame.winfo_children():
-            widget.destroy()
-
-        self.build_control_frame(self.control_frame)
-
-        tk.Label(self.control_frame, text="                                                 ").pack()
-
-        self.control_frame.pack(side=tk.RIGHT)
-
-    def set_track(self, current_track):
-        self.current_track = current_track
-        self.warning_track_changed()
-
-    def set_all_episodes(self, all_episodes):
-        # Does nothing because this is currently only relevant to graph analyzers
-        pass
-
-    def set_log_meta(self, log_meta):
-        # Does nothing because this is currently only relevant to graph analyzers
-        pass
-
-    def set_evaluation_phases(self, evaluation_phases):
-        # Does nothing because this is currently only relevant to graph analyzers
-        self.evaluation_phases = evaluation_phases
-
-    def set_filtered_episodes(self, filtered_episodes):
-        self.filtered_episodes = filtered_episodes
-        self.warning_filtered_episodes_changed()
-
-    def set_action_space(self, action_space):
-        self.action_space = action_space
-        self.warning_action_space_changed()
-
-    def set_action_space_filter(self, action_space_filter):
-        self.action_space_filter = action_space_filter
-        self.warning_action_space_filter_changed()
-
-    def redraw(self):
-        # You *MUST* override this
-        pass
-
-    def build_control_frame(self, control_frame):
-        # You *MUST* override this
-        pass
-
-    def recalculate(self):
-        # You MIGHT override this
-        pass
+    # These are ADDITIONAL to the interface in Analyzer
 
     def left_button_pressed(self, track_point):
         # You MIGHT override this
@@ -82,25 +32,5 @@ class TrackAnalyzer:
 
     def go_forwards(self, track_point):
         # You MIGHT override this
-        pass
-
-    def warning_track_changed(self):
-        # You MIGHT override this to manage cached or pre-calculated data structures
-        # Do not override to redraw() since Guru already calls redraw() at the right times!
-        pass
-
-    def warning_filtered_episodes_changed(self):
-        # You MIGHT override this to manage cached or pre-calculated data structures
-        # Do not override to redraw() since Guru already calls redraw() at the right times!
-        pass
-
-    def warning_action_space_changed(self):
-        # You MIGHT override this to manage cached or pre-calculated data structures
-        # Do not override to redraw() since Guru already calls redraw() at the right times!
-        pass
-
-    def warning_action_space_filter_changed(self):
-        # You MIGHT override this to manage cached or pre-calculated data structures
-        # Do not override to redraw() since Guru already calls redraw() at the right times!
         pass
 

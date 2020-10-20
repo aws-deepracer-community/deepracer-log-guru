@@ -176,8 +176,6 @@ def get_data_percent_stat(episodes, stat_method):
     for i, ipc in enumerate(quarterly_percent_complete):
         if ipc:
             plot_data[i] = stat_method(np.array(ipc))
-        else:
-            plot_data[i] = np.nan
 
     return plot_data
 
@@ -191,7 +189,5 @@ def get_data_episode_reward_stat(episodes, stat_method):
     for i, ipc in enumerate(quarterly_total_rewards):
         if ipc:
             plot_data[i] = stat_method(np.array(ipc))
-        else:
-            plot_data[i] = np.nan
 
     return plot_data

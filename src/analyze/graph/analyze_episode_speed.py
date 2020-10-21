@@ -100,6 +100,9 @@ class AnalyzeEpisodeSpeed(GraphAnalyzer):
         axes.set_xlabel(axis_label)
         axes.set_ylabel("Speed")
 
+        if self.axis_tk_var.get() == AXIS_LAP_POSITION:
+            axes.set_xbound(0, 100)
+
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
 

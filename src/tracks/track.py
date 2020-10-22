@@ -185,7 +185,6 @@ class Track:
     def configure_track_graphics(self, track_graphics :TrackGraphics):
         track_graphics.set_track_area(self.min_x - DISPLAY_BORDER, self.min_y - DISPLAY_BORDER, self.max_x + DISPLAY_BORDER, self.max_y + DISPLAY_BORDER)
 
-
     def draw_track_edges(self, track_graphics, colour):
 
         previous_left = self.drawing_points[-1].left

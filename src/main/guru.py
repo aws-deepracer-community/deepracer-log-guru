@@ -85,9 +85,21 @@ class MainApp(tk.Frame):
         self.track_canvas.bind("<Right>", self.right_or_up_key_pressed_on_track_canvas)
         self.track_canvas.bind("<Down>", self.left_or_down_key_pressed_on_track_canvas)
 
+        self.track_canvas.bind("<Button-3>", self.right_button_pressed_on_track_canvas)
+        self.track_canvas.bind("<B3-Motion>", self.right_button_moved_on_track_canvas)
+        self.track_canvas.bind("<ButtonRelease-3>", self.right_button_released_on_track_canvas)
+
         self.control_frame = tk.Frame(root)
         self.inner_control_frame = tk.Frame(self.control_frame)
 
+
+        #
+        # Initialise variables to control the right mouse zoom-in feature over a canvas
+        #
+
+        self.zoom_start_x = None
+        self.zoom_start_y = None
+        self.zoom_widget = None
 
         #
         # Create the graph plotting UI components using the magic of matplotlib
@@ -113,6 +125,8 @@ class MainApp(tk.Frame):
         #
 
         self.track_graphics = TrackGraphics(self.track_canvas)
+        self.current_track.configure_track_graphics(self.track_graphics)
+
         self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.inner_control_frame, self.episode_selector)
         self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
         self.analyze_favourite_speed = AnalyzeFavouriteSpeed(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
@@ -227,6 +241,8 @@ class MainApp(tk.Frame):
         self.analyzer.set_all_episodes(None)
         self.analyzer.set_log_meta(None)
         self.analyzer.set_evaluation_phases(None)
+
+        self.view_manager.zoom_out()
 
         self.redraw()
 
@@ -343,6 +359,23 @@ class MainApp(tk.Frame):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)
         self.analyzer.left_button_pressed(track_point)
         self.track_canvas.focus_set() # Set focus so we will now receive keyboard events too
+
+    def right_button_pressed_on_track_canvas(self, event):
+        self.zoom_start_x = event.x
+        self.zoom_start_y = event.y
+
+    def right_button_moved_on_track_canvas(self, event):
+        if self.zoom_widget:
+            self.track_canvas.delete(self.zoom_widget)
+        self.zoom_widget = self.track_canvas.create_rectangle(
+            self.zoom_start_x, self.zoom_start_y, event.x, event.y, outline="blue", width=2, dash=(4, 4))
+
+    def right_button_released_on_track_canvas(self, event):
+        if self.zoom_widget:
+            self.track_canvas.delete(self.zoom_widget)
+            if self.zoom_start_x != event.x or self.zoom_start_y !=event.y:
+                self.view_manager.zoom_in(self.track_graphics, self.zoom_start_x, self.zoom_start_y, event.x, event.y)
+                self.redraw()
 
     def right_or_up_key_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)

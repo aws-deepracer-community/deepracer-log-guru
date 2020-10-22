@@ -108,9 +108,9 @@ class TrackGraphics:
             x - r, y - r, x + r, y + r, fill="", width=line_width, outline=colour))
 
     def plot_angle_line_highlight(self, start_point, heading, distance, width, fill_colour):
-
         self.angle_line_highlight_widgets.append(self.plot_angle_line(start_point, heading, distance, width, fill_colour))
 
     def remove_highlights(self):
         for w in self.ring_highlight_widgets + self.angle_line_highlight_widgets:
             self.canvas.delete(w)
+

@@ -49,6 +49,8 @@ class MenuBar():
 
     def add_view_menu(self):
         menu = Menu(self.menubar, tearoff=0)
+        menu.add_command(label="Zoom - In/Out", command=self.main_app.menu_callback_zoom_in_out)
+        menu.add_separator()
         menu.add_command(label="Grid - Front", command=self.main_app.menu_callback_grid_front)
         menu.add_command(label="Grid - Back", command=self.main_app.menu_callback_grid_back)
         menu.add_command(label="Grid - Off", command=self.main_app.menu_callback_grid_off)

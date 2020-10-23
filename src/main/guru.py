@@ -242,7 +242,7 @@ class MainApp(tk.Frame):
         self.analyzer.set_log_meta(None)
         self.analyzer.set_evaluation_phases(None)
 
-        self.view_manager.zoom_out()
+        self.view_manager.zoom_clear()
 
         self.redraw()
 
@@ -374,7 +374,7 @@ class MainApp(tk.Frame):
         if self.zoom_widget:
             self.track_canvas.delete(self.zoom_widget)
             if self.zoom_start_x != event.x or self.zoom_start_y !=event.y:
-                self.view_manager.zoom_in(self.track_graphics, self.zoom_start_x, self.zoom_start_y, event.x, event.y)
+                self.view_manager.zoom_set(self.track_graphics, self.zoom_start_x, self.zoom_start_y, event.x, event.y)
                 self.redraw()
 
     def right_or_up_key_pressed_on_track_canvas(self, event):
@@ -473,6 +473,10 @@ class MainApp(tk.Frame):
     def menu_callback_actions_straight(self):
         self.action_space_filter.set_filter_straight()
         self.reapply_action_space_filter()
+
+    def menu_callback_zoom_in_out(self):
+        self.view_manager.zoom_toggle()
+        self.redraw()
 
     def menu_callback_grid_front(self):
         self.view_manager.set_grid_front()

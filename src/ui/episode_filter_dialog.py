@@ -15,7 +15,6 @@ class EpisodeFilterDialog(Dialog):
         self.filter_peak_track_speed = make_nullable_var(self.episode_filter.filter_peak_track_speed)
         self.filter_max_skew = make_nullable_var(self.episode_filter.filter_max_skew)
 
-
         self.filter_specific_waypoint_id = make_nullable_var(self.episode_filter.filter_specific_waypoint_id)
         self.filter_specific_waypoint_min_reward = make_nullable_var(self.episode_filter.filter_specific_waypoint_min_reward)
 
@@ -192,6 +191,11 @@ class EpisodeFilterDialog(Dialog):
         self.filter_complete_section_finish.set("")
         self.filter_complete_section_time.set("")
         self.filter_complete_section_steps.set("")
+
+        self.filter_q1.set(True)
+        self.filter_q2.set(True)
+        self.filter_q3.set(True)
+        self.filter_q4.set(True)
 
         self.filter_debug_contains.set("")
 

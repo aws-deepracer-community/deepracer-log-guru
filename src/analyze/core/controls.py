@@ -68,7 +68,6 @@ class EpisodeRadioButtonControl(Control):
     SHOW_FILTERED = 2
     SHOW_EVALUATIONS = 3
 
-
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
         super().__init__(guru_parent_redraw, control_frame, "Episodes")
 
@@ -92,3 +91,38 @@ class EpisodeRadioButtonControl(Control):
 
     def show_evaluations(self):
         return self._show_what.get() == EpisodeRadioButtonControl.SHOW_EVALUATIONS
+
+
+class EpisodeAxisControl(Control):
+    AXIS_TIME = 1
+    AXIS_STEP = 2
+    AXIS_PROGRESS = 3
+    AXIS_DISTANCE = 4
+    AXIS_LAP_POSITION = 5
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Axis")
+
+        self._show_what = tk.IntVar(value=EpisodeAxisControl.AXIS_TIME)
+
+    def add_buttons(self):
+        self.add_radiobutton("Time", self._show_what, EpisodeAxisControl.AXIS_TIME)
+        self.add_radiobutton("Step", self._show_what, EpisodeAxisControl.AXIS_STEP)
+        self.add_radiobutton("Progress", self._show_what, EpisodeAxisControl.AXIS_PROGRESS)
+        self.add_radiobutton("Distance", self._show_what, EpisodeAxisControl.AXIS_DISTANCE)
+        self.add_radiobutton("Lap Position", self._show_what, EpisodeAxisControl.AXIS_LAP_POSITION)
+
+    def show_time(self):
+        return self._show_what.get() == EpisodeAxisControl.AXIS_TIME
+
+    def show_step(self):
+        return self._show_what.get() == EpisodeAxisControl.AXIS_STEP
+
+    def show_progress(self):
+        return self._show_what.get() == EpisodeAxisControl.AXIS_PROGRESS
+
+    def show_distance(self):
+        return self._show_what.get() == EpisodeAxisControl.AXIS_DISTANCE
+
+    def show_lap_position(self):
+        return self._show_what.get() == EpisodeAxisControl.AXIS_LAP_POSITION

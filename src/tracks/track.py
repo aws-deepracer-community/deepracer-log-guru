@@ -204,7 +204,7 @@ class Track:
         previous_right = self.drawing_points[start].right_outer
 
         if finish >= start:
-            highlight_points = self.drawing_points[start+1:finish]
+            highlight_points = self.drawing_points[start+1:finish+1]
         else:
             highlight_points = self.drawing_points[start:] + self.drawing_points[:finish+1]
 

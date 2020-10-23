@@ -79,15 +79,15 @@ class MainApp(tk.Frame):
 
         self.track_canvas = tk.Canvas(self, bg="black", width=DEFAULT_CANVAS_WIDTH, height=DEFAULT_CANVAS_HEIGHT)
         self.track_canvas.bind("<Configure>", self.redraw)
-        self.track_canvas.bind("<Button-1>", self.left_button_pressed_on_track_canvas)
+        self.track_canvas.bind("<Button-3>", self.right_button_pressed_on_track_canvas)
         self.track_canvas.bind("<Left>", self.left_or_down_key_pressed_on_track_canvas)
         self.track_canvas.bind("<Up>", self.right_or_up_key_pressed_on_track_canvas)
         self.track_canvas.bind("<Right>", self.right_or_up_key_pressed_on_track_canvas)
         self.track_canvas.bind("<Down>", self.left_or_down_key_pressed_on_track_canvas)
 
-        self.track_canvas.bind("<Button-3>", self.right_button_pressed_on_track_canvas)
-        self.track_canvas.bind("<B3-Motion>", self.right_button_moved_on_track_canvas)
-        self.track_canvas.bind("<ButtonRelease-3>", self.right_button_released_on_track_canvas)
+        self.track_canvas.bind("<Button-1>", self.left_button_pressed_on_track_canvas)
+        self.track_canvas.bind("<B1-Motion>", self.left_button_moved_on_track_canvas)
+        self.track_canvas.bind("<ButtonRelease-1>", self.left_button_released_on_track_canvas)
 
         self.control_frame = tk.Frame(root)
         self.inner_control_frame = tk.Frame(self.control_frame)
@@ -355,22 +355,22 @@ class MainApp(tk.Frame):
             self.please_wait.stop()
             self.already_drawing = False
 
-    def left_button_pressed_on_track_canvas(self, event):
+    def right_button_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)
         self.analyzer.left_button_pressed(track_point)
         self.track_canvas.focus_set() # Set focus so we will now receive keyboard events too
 
-    def right_button_pressed_on_track_canvas(self, event):
+    def left_button_pressed_on_track_canvas(self, event):
         self.zoom_start_x = event.x
         self.zoom_start_y = event.y
 
-    def right_button_moved_on_track_canvas(self, event):
+    def left_button_moved_on_track_canvas(self, event):
         if self.zoom_widget:
             self.track_canvas.delete(self.zoom_widget)
         self.zoom_widget = self.track_canvas.create_rectangle(
             self.zoom_start_x, self.zoom_start_y, event.x, event.y, outline="blue", width=2, dash=(4, 4))
 
-    def right_button_released_on_track_canvas(self, event):
+    def left_button_released_on_track_canvas(self, event):
         if self.zoom_widget:
             self.track_canvas.delete(self.zoom_widget)
             if self.zoom_start_x != event.x or self.zoom_start_y !=event.y:

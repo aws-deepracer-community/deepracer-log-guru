@@ -379,7 +379,7 @@ class MainApp(tk.Frame):
     def left_button_released_on_track_canvas(self, event):
         if self.zoom_widget:
             self.track_canvas.delete(self.zoom_widget)
-            if self.zoom_start_x != event.x or self.zoom_start_y !=event.y:
+            if self.zoom_start_x != event.x and self.zoom_start_y !=event.y:
                 self.view_manager.zoom_set(self.track_graphics, self.zoom_start_x, self.zoom_start_y, event.x, event.y)
                 self.redraw()
 

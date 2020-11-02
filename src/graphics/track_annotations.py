@@ -126,6 +126,14 @@ class RoutePoint:
         self.distance2 = distance2
         self.colour = colour
 
+class WorldDot(Annotation):
+    def __init__(self, x, y, colour):
+        self.x = x
+        self.y = y
+        self.colour = colour
+
+    def draw(self, track_graphics: TrackGraphics, track_drawing_points, track_width):
+        track_graphics.plot_dot((self.x, self.y), 4, self.colour)
 
 
 

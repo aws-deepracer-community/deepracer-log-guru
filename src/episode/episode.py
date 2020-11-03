@@ -37,12 +37,12 @@ class Episode:
         self.is_real_start = first_event.closest_waypoint_index <= 1
 
         self.time_taken = last_event.time - first_event.time
-        self.lap_time = 100 / last_event.progress * self.time_taken  # predicted
+        self.predicted_lap_time = 100 / last_event.progress * self.time_taken  # predicted
 
         self.rewards = self.get_list_of_rewards()
         self.total_reward = self.rewards.sum()
         self.average_reward = self.rewards.mean()
-        self.lap_reward = 100 / last_event.progress * self.total_reward  # predicted
+        self.predicted_lap_reward = 100 / last_event.progress * self.total_reward  # predicted
 
         self.action_frequency = self.get_action_frequency()
         self.repeated_action_percent = self.get_repeated_action_percent()

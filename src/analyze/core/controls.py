@@ -126,3 +126,41 @@ class EpisodeAxisControl(Control):
 
     def show_lap_position(self):
         return self._show_what.get() == EpisodeAxisControl.AXIS_LAP_POSITION
+
+
+
+class PredictionsControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Predictions")
+
+        self._show_predictions = tk.BooleanVar(value="False")
+
+
+    def add_buttons(self):
+
+        self.add_checkbutton("Show Predictions", self._show_predictions)
+
+    def show_predictions(self):
+        return self._show_predictions.get()
+
+
+class GraphFormatControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Format")
+
+        self._swap_axes = tk.BooleanVar(value="False")
+        self._show_trends = tk.BooleanVar(value="False")
+
+    def add_buttons(self):
+
+        self.add_checkbutton("Swap Axes", self._swap_axes)
+        self.add_checkbutton("Show Trends", self._show_trends)
+
+    def swap_axes(self):
+        return self._swap_axes.get()
+
+    def show_trends(self):
+        return self._show_trends.get()
+

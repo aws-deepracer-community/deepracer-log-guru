@@ -100,7 +100,7 @@ class EpisodeSelector:
 
             self.tk_episode_info_var_.set(
                 "# " + str(episode.id) + "\n" +
-                str(round(episode.lap_time, 1)) + " secs\n" +
+                str(round(episode.predicted_lap_time, 1)) + " secs\n" +
                 str(average_speed) + " m/s")
 
 

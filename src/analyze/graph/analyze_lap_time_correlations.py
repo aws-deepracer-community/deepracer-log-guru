@@ -3,15 +3,11 @@ import numpy as np
 from scipy import stats
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.gridspec import GridSpec
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
-from src.utils.lists import get_list_of_empty_lists
 
-from src.episode.episode import Episode
-
-from src.analyze.core.controls import EpisodeCheckButtonControl
+from src.analyze.core.controls import EpisodeCheckButtonControl, PredictionsControl, GraphFormatControl
 
 AXIS_DISTANCE = 1
 AXIS_PEAK_TRACK_SPEED = 2
@@ -34,14 +30,16 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         self.correlation_tk_var = tk.IntVar(value = AXIS_DISTANCE)
 
-        self.swap_axes = tk.BooleanVar()
-
         self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame)
+        self.predictions_control = PredictionsControl(guru_parent_redraw, control_frame)
+        self.format_control = GraphFormatControl(guru_parent_redraw, control_frame)
 
 
     def build_control_frame(self, control_frame):
 
         self.episode_control.add_to_control_frame()
+
+        self.predictions_control.add_to_control_frame()
 
         #####
 
@@ -77,74 +75,89 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         ######
 
-        format_group = tk.LabelFrame(control_frame, text="Format", padx=5, pady=5)
-        format_group.pack()
+        self.format_control.add_to_control_frame()
 
-        tk.Checkbutton(
-            format_group, text="Swap Axes",
-            variable=self.swap_axes,
-            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
 
 
     def add_plots(self):
         axes: Axes = self.graph_figure.add_subplot()
 
         if self.episode_control.show_all():
-            self.plot_episodes(axes, self.all_episodes, "C1", "All")
+            self.plot_episodes(axes, self.all_episodes, False, "C1", "All", "o")
+            if self.predictions_control.show_predictions():
+                self.plot_episodes(axes, self.all_episodes, True, "C3", "All - Predicted", ".")
 
         if self.episode_control.show_filtered():
-            self.plot_episodes(axes, self.filtered_episodes, "C2", "Filtered")
+            self.plot_episodes(axes, self.filtered_episodes, False, "C2", "Filtered", "o")
+            if self.predictions_control.show_predictions():
+                self.plot_episodes(axes, self.filtered_episodes, True, "C4", "Filtered - Predicted", ".")
 
         self.format_axes(axes)
 
-    def plot_episodes(self, axes: Axes, episodes: list, colour, label):
+    def plot_episodes(self, axes: Axes, episodes: list, make_predictions :bool, colour, label, shape):
 
         if not episodes:
             return
 
-        plot_y = []
+        if make_predictions:
+            if self.correlation_tk_var.get() == AXIS_TOTAL_REWARD:
+                plot_y = get_plot_data_total_rewards_predicted(episodes)
+            elif self.correlation_tk_var.get() == AXIS_STARTING_POINT:
+                plot_y = get_plot_data_starting_points_predicted(episodes)
+            elif self.correlation_tk_var.get() == AXIS_AVERAGE_REWARD:
+                plot_y = get_plot_data_average_rewards_predicted(episodes)
+            elif self.correlation_tk_var.get() == AXIS_ITERATION:
+                plot_y = get_plot_data_iterations_predicted(episodes)
+            else:
+                return
+        else:
+            if self.correlation_tk_var.get() == AXIS_DISTANCE:
+                plot_y = get_plot_data_distances(episodes)
+            elif self.correlation_tk_var.get() == AXIS_PEAK_TRACK_SPEED:
+                plot_y = get_plot_data_peak_speeds(episodes)
+            elif self.correlation_tk_var.get() == AXIS_STARTING_POINT:
+                plot_y = get_plot_data_starting_points(episodes)
+            elif self.correlation_tk_var.get() == AXIS_AVERAGE_REWARD:
+                plot_y = get_plot_data_average_rewards(episodes)
+            elif self.correlation_tk_var.get() == AXIS_TOTAL_REWARD:
+                plot_y = get_plot_data_total_rewards(episodes)
+            elif self.correlation_tk_var.get() == AXIS_SMOOTHNESS:
+                plot_y = get_plot_data_repeats(episodes)
+            elif self.correlation_tk_var.get() == AXIS_ITERATION:
+                plot_y = get_plot_data_iterations(episodes)
+            elif self.correlation_tk_var.get() == AXIS_FLYING_START:
+                plot_y = get_plot_data_flying_starts(episodes)
+            elif self.correlation_tk_var.get() == AXIS_MAX_SKEW:
+                plot_y = get_plot_data_max_skew(episodes)
+            else:
+                return
 
-        if self.correlation_tk_var.get() == AXIS_DISTANCE:
-            plot_y = get_plot_data_distances(episodes)
-        if self.correlation_tk_var.get() == AXIS_PEAK_TRACK_SPEED:
-            plot_y = get_plot_data_peak_speeds(episodes)
-        if self.correlation_tk_var.get() == AXIS_STARTING_POINT:
-            plot_y = get_plot_data_starting_points(episodes)
-        if self.correlation_tk_var.get() == AXIS_AVERAGE_REWARD:
-            plot_y = get_plot_data_averge_rewards(episodes)
-        if self.correlation_tk_var.get() == AXIS_TOTAL_REWARD:
-            plot_y = get_plot_data_total_rewards(episodes)
-        if self.correlation_tk_var.get() == AXIS_SMOOTHNESS:
-            plot_y = get_plot_data_repeats(episodes)
-        if self.correlation_tk_var.get() == AXIS_ITERATION:
-            plot_y = get_plot_data_iterations(episodes)
-        if self.correlation_tk_var.get() == AXIS_FLYING_START:
-            plot_y = get_plot_data_flying_starts(episodes)
-        if self.correlation_tk_var.get() == AXIS_MAX_SKEW:
-            plot_y = get_plot_data_max_skew(episodes)
+        if make_predictions:
+            plot_x = get_plot_data_lap_times_predicted(episodes)
+        else:
+            plot_x = get_plot_data_lap_times(episodes)
 
-        plot_x = get_plot_data_lap_times(episodes)
 
         # Calculate linear regression line through the points
 
         (slope_y, r_label) = (None, None)
-
-        if len(plot_x) >= 2:
-            slope, intercept, r, p, std_err = stats.linregress(plot_x, plot_y)
-            def linear_line(x):
-                return slope * x + intercept
-            if abs(r) > 0.25:
-                slope_y = list(map(linear_line, plot_x))
-                r_label = "R = " + str(round(r, 2))
+        if self.format_control.show_trends():
+            if len(plot_x) >= 3:
+                slope, intercept, r, p, std_err = stats.linregress(plot_x, plot_y)
+                def linear_line(x):
+                    return slope * x + intercept
+                if abs(r) > 0.25:
+                    slope_y = list(map(linear_line, plot_x))
+                    r_label = "R = " + str(round(r, 2))
 
         # Finally plot the data we have gathered
 
-        if self.swap_axes.get():
-            axes.plot(plot_y, plot_x, "o", color=colour, label=label)
+        if self.format_control.swap_axes():
+            axes.plot(plot_y, plot_x, shape, color=colour, label=label)
             if slope_y:
                 axes.plot(slope_y, plot_x, color=colour, label=r_label)
         else:
-            axes.plot(plot_x, plot_y, "o", color=colour, label=label)
+            axes.plot(plot_x, plot_y, shape, color=colour, label=label)
             if slope_y:
                 axes.plot(plot_x, slope_y, color=colour, label=r_label)
 
@@ -184,7 +197,7 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         axes.set_title("Lap Time Correlated With " + general_title)
 
-        if self.swap_axes.get():
+        if self.format_control.swap_axes():
             axes.set_ylabel("Lap Time / Seconds")
             axes.set_xlabel(axis_label)
         else:
@@ -223,6 +236,15 @@ def get_plot_data_lap_times(episodes: list):
 
     return np.array(lap_times)
 
+def get_plot_data_lap_times_predicted(episodes: list):
+    lap_times = []
+
+    for e in episodes:
+        if is_predicted_episode(e):
+            lap_times.append(e.predicted_lap_time)
+
+    return np.array(lap_times)
+
 def get_plot_data_starting_points(episodes: list):
     starts = []
 
@@ -232,11 +254,29 @@ def get_plot_data_starting_points(episodes: list):
 
     return np.array(starts)
 
-def get_plot_data_averge_rewards(episodes: list):
+def get_plot_data_starting_points_predicted(episodes: list):
+    starts = []
+
+    for e in episodes:
+        if is_predicted_episode(e):
+            starts.append(e.events[0].closest_waypoint_index)
+
+    return np.array(starts)
+
+def get_plot_data_average_rewards(episodes: list):
     rewards = []
 
     for e in episodes:
         if e.lap_complete:
+            rewards.append(e.average_reward)
+
+    return np.array(rewards)
+
+def get_plot_data_average_rewards_predicted(episodes: list):
+    rewards = []
+
+    for e in episodes:
+        if is_predicted_episode(e):
             rewards.append(e.average_reward)
 
     return np.array(rewards)
@@ -247,6 +287,15 @@ def get_plot_data_total_rewards(episodes: list):
     for e in episodes:
         if e.lap_complete:
             rewards.append(e.total_reward)
+
+    return np.array(rewards)
+
+def get_plot_data_total_rewards_predicted(episodes: list):
+    rewards = []
+
+    for e in episodes:
+        if is_predicted_episode(e):
+            rewards.append(e.predicted_lap_reward)
 
     return np.array(rewards)
 
@@ -264,6 +313,15 @@ def get_plot_data_iterations(episodes: list):
 
     for e in episodes:
         if e.lap_complete:
+            iterations.append(e.iteration)
+
+    return np.array(iterations)
+
+def get_plot_data_iterations_predicted(episodes: list):
+    iterations = []
+
+    for e in episodes:
+        if is_predicted_episode(e):
             iterations.append(e.iteration)
 
     return np.array(iterations)
@@ -286,3 +344,5 @@ def get_plot_data_max_skew(episodes: list):
 
     return np.array(skews)
 
+def is_predicted_episode(e):
+    return not e.lap_complete and e.percent_complete >= 5

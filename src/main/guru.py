@@ -12,7 +12,6 @@ from src.analyze.graph.analyze_training_progress import AnalyzeTrainingProgress
 from src.analyze.graph.analyze_quarterly_results import AnalyzeQuarterlyResults
 from src.analyze.track.analyze_favourite_speed import AnalyzeFavouriteSpeed
 from src.analyze.track.analyze_exit_points import AnalyzeExitPoints
-from src.analyze.graph.analyze_lap_time_reward import AnalyzeLapTimeReward
 from src.analyze.graph.analyze_reward_distribution import AnalyzeRewardDistribution
 from src.analyze.graph.analyze_common_rewards import AnalyzeCommonRewards
 from src.analyze.graph.analyze_rewards_per_waypoint import AnalyzeRewardsPerWaypoint
@@ -134,7 +133,6 @@ class MainApp(tk.Frame):
         self.analyze_exit_points = AnalyzeExitPoints(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_quarterly_results = AnalyzeQuarterlyResults(self.redraw, matplotlib_canvas, self.inner_control_frame)
-        self.analyze_lap_time_reward = AnalyzeLapTimeReward(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_reward_distribution = AnalyzeRewardDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_common_rewards = AnalyzeCommonRewards(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_rewards_per_waypoint = AnalyzeRewardsPerWaypoint(self.redraw, matplotlib_canvas, self.inner_control_frame)
@@ -152,7 +150,6 @@ class MainApp(tk.Frame):
             self.analyze_exit_points,
             self.analyze_training_progress,
             self.analyze_quarterly_results,
-            self.analyze_lap_time_reward,
             self.analyze_reward_distribution,
             self.analyze_common_rewards,
             self.analyze_rewards_per_waypoint,
@@ -280,9 +277,6 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_quarterly_results(self):
         self.switch_analyzer(self.analyze_quarterly_results)
-
-    def menu_callback_analyze_lap_time_reward(self):
-        self.switch_analyzer(self.analyze_lap_time_reward)
 
     def menu_callback_analyze_reward_distribution(self):
         self.switch_analyzer(self.analyze_reward_distribution)

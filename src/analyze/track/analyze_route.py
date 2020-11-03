@@ -5,6 +5,7 @@ from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
 from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.selector.episode_selector import EpisodeSelector
+from src.action_space.action_util import get_min_and_max_action_speeds
 
 
 COLOUR_SCHEME_REWARD_20 = 0
@@ -193,13 +194,16 @@ class AnalyzeRoute(TrackAnalyzer):
             print("OOOPS - unknown colour scheme!")
             return
 
+        (min_speed, max_speed) = get_min_and_max_action_speeds(self.action_space)
+        speed_range = max_speed - min_speed
+
         previous_event = episode.events[0]
         for e in episode.events[1:]:
             if self.action_space_filter.should_show_action(e.action_taken):
-                plot_event_method(e, previous_event)
+                plot_event_method(e, previous_event, max_speed, speed_range)
                 previous_event = e
 
-    def colour_scheme_reward_100(self, event, previous_event):
+    def colour_scheme_reward_100(self, event, previous_event, max_speed, speed_range):
         if event.reward >= 1000:
             self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "white")
         elif event.reward >= 100:
@@ -211,7 +215,7 @@ class AnalyzeRoute(TrackAnalyzer):
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
-    def colour_scheme_reward_20(self, event, previous_event):
+    def colour_scheme_reward_20(self, event, previous_event, max_speed, speed_range):
         if event.reward >= 100:
             self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "white")
         elif event.reward >= 20:
@@ -223,27 +227,27 @@ class AnalyzeRoute(TrackAnalyzer):
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
-    def colour_scheme_track_speed(self, event, previous_event):
-        if event.track_speed >= 3.5:
+    def colour_scheme_track_speed(self, event, previous_event, max_speed, speed_range):
+        if event.track_speed >= max_speed - 0.2 * speed_range:
             self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "white")
-        elif event.track_speed >= 3:
+        elif event.track_speed >= max_speed - 0.4 * speed_range:
             self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "blue")
-        elif event.track_speed >= 2.5:
+        elif event.track_speed >= max_speed - 0.6 * speed_range:
             self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "green")
-        elif event.track_speed >= 1.8:
+        elif event.track_speed >= max_speed - 0.8 * speed_range:
             self.track_graphics.plot_dot((event.x, event.y), 2, "yellow")
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
-    def colour_scheme_action_speed(self, event, previous_event):
-        if event.speed >= 3:
+    def colour_scheme_action_speed(self, event, previous_event, max_speed, speed_range):
+        if event.speed >= max_speed - 0.33 * speed_range:
             self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "green")
-        elif event.speed >= 2:
+        elif event.speed >= max_speed - 0.66 * speed_range:
             self.track_graphics.plot_dot((event.x, event.y), 2, "yellow")
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
-    def colour_scheme_smoothness(self, event, previous_event):
+    def colour_scheme_smoothness(self, event, previous_event, max_speed, speed_range):
         if event.action_taken == previous_event.action_taken:
             if self.smoothness_alternate:
                 colour = "green"
@@ -259,7 +263,7 @@ class AnalyzeRoute(TrackAnalyzer):
                 self.smoothness_current = False
                 self.smoothness_alternate = not self.smoothness_alternate
 
-    def colour_scheme_straightness(self, event, previous_event):
+    def colour_scheme_straightness(self, event, previous_event, max_speed, speed_range):
         if abs(event.steering_angle) < 0.1:
             self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "green")
         elif abs(event.steering_angle) < 10.1:
@@ -267,10 +271,10 @@ class AnalyzeRoute(TrackAnalyzer):
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
-    def colour_scheme_none(self, event, previous_event):
+    def colour_scheme_none(self, event, previous_event, max_speed, speed_range):
         self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "green")
 
-    def colour_scheme_per_second(self, event, previous_event):
+    def colour_scheme_per_second(self, event, previous_event, max_speed, speed_range):
         if int(event.time_elapsed) % 2 == 0:
             colour = "green"
         else:

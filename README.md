@@ -24,6 +24,21 @@ You will also need to install the following standard libraries using "pip":
 * matplotlib
 * scipy
 
+### Upgrade Instructions From Old Versions
+
+If upgrading from **1.2.0** or **1.2.1**
+* Edit src/configuration/personal_configuration.py which will be overwritten when you download the new version (see "Configure DRG", below)
+
+If upgrading from **1.1.0**
+* The list of required libraries has changed, see "Installation Notes" above
+* Edit src/configuration/personal_configuration.py which will be overwritten when you download the new version (see "Configure DRG", below)
+
+If upgrading from **1.0.0**
+* The list of required libraries has changed, see "Installation Notes" above
+* Edit src/configuration/personal_configuration.py which will be overwritten when you download the new version (see "Configure DRG", below)
+* Run the guru tool, and go to the Admin menu and choose "Re-calculate Log Meta"
+
+
 ## Getting Started
 
 ### Download Logs
@@ -31,18 +46,22 @@ You'll first need to download some log files as follows:
 * Go to the DeepRacer console and view the training info for a model
 * Click the "**Download logs**" button below the training graph 
 * Open the zip archive and locate the **robomaker** log file in the **logs/training** folder
+
 ![](./sample_pictures/find_correct_log_file.png)
+
 * Extract/save it locally
 * If you wish, repeat this process to download log file(s) for other model(s) too
 
 ### Configure DRG
 Tell DRG where you have saved your log files by editing:
 * src/configuration/personal_configuration.py
+
 ![](./sample_pictures/personal_config_file.png)
 
 ### Run DRG
 Run the main guru application class from here:
 * src/main/guru.py
+
 ![](./sample_pictures/how_to_run.png)
 
 ### Import Log Files
@@ -53,29 +72,6 @@ You must "Import" new log files before you can open them for analysis:
 ### Open Log Files
 * Use the Track menu to select the correct track
 * Now go to the **File -> Open** menu to choose from log files you have downloaded for that selected track
-
-
-## Archive - Upgrade Instructions for Older Versions
-
-### Upgrading to Previous Version 1.2.0 / 1.2.1
-
-If you are completely new, then skip this section. Go to "Before You Start"
-
-If you are already using version 1.0.0 or 1.1.0 then **you must upgrade if you want to import log files via the newly-improved AWS DeepRacer console**
-
-* Download additional Python library: *scipy*
-* If you did not previously upgrade to version 1.1.0 then follow those instructions too (see below ...)
-* Read the "Getting Started" section below for revised instructions how to import log files via the newly-improved AWS DeepRacer console
-
-Note: log files *already downloaded* are compatible with version 1.2.0 i.e. there is no need to download them again
-
-
-### Upgrading to Previous Version 1.1.0
-
-If you are still using version 1.0.0 and wish to upgrade to the improved 1.1.0 or other new releases, then please note the following upgrade instructions:
-* Download additional Python libraries: *numpy* and *matplotlib*
-* Run the guru tool, and go to the Admin menu and choose "Re-calculate Log Meta"
-* It should now work fine, with many new analysis options for you to explore
 
 
 

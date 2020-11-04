@@ -36,7 +36,7 @@ If upgrading from **1.1.0**
 If upgrading from **1.0.0**
 * The list of required libraries has changed, see "Installation Notes" above
 * Edit src/configuration/personal_configuration.py which will be overwritten when you download the new version (see "Configure DRG", below)
-* Run the guru tool, and go to the Admin menu and choose "Re-calculate Log Meta"
+* Run DRG, and go to the Admin menu and choose "Re-calculate Log Meta"
 
 
 ## Getting Started
@@ -59,7 +59,7 @@ Tell DRG where you have saved your log files by editing:
 ![](./sample_pictures/personal_config_file.png)
 
 ### Run DRG
-Run the main guru application class from here:
+Run the main DRG application class from here:
 * src/main/guru.py
 
 ![](./sample_pictures/how_to_run.png)

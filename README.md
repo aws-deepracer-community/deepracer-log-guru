@@ -1,29 +1,20 @@
 # deep_racer_guru
-Analysis tool for AWS Deep Racer logs
 
-### NEW: Upgrading to Latest Version 1.2.0 / 1.2.1
+## Introduction
 
-If you are completely new, then skip this section. Go to "Before You Start"
+Deep Racer Guru (DRG) is a graphical analysis tool for AWS Deep Racer logs.
 
-If you are already using version 1.0.0 or 1.1.0 then **you must upgrade if you want to import log files via the newly-improved AWS DeepRacer console**
+Its main purpose is to provide "out-of-the-box" analysis that can run locally on your own computer.
 
-* Download additional Python library: *scipy*
-* If you did not previously upgrade to version 1.1.0 then follow those instructions too (see below ...)
-* Read the "Getting Started" section below for revised instructions how to import log files via the newly-improved AWS DeepRacer console
+You don't have to write Python code. Simply download logs from the AWS Deep Racer console, and then use a GUI to see how your models are performing.
 
-Note: log files *already downloaded* are compatible with version 1.2.0 i.e. there is no need to download them again
+![](./sample_pictures/Collage.png)
 
+## Installation Notes
 
-### ARCHIVE: Upgrading to Previous Version 1.1.0
+DRG is written entirely in Python 3. It "should" work with any recent 3.x.x version of Python (I currently use version 3.8.3)
 
-If you are still using version 1.0.0 and wish to upgrade to the improved 1.1.0 or other new releases, then please note the following upgrade instructions:
-* Download additional Python libraries: *numpy* and *matplotlib*
-* Run the guru tool, and go to the Admin menu and choose "Re-calculate Log Meta"
-* It should now work fine, with many new analysis options for you to explore
-
-
-### Before You Start
-Make sure you have the following Python libraries:
+You will also need to install the following standard libraries using "pip":
 * tkinter
 * math
 * pickle
@@ -33,25 +24,58 @@ Make sure you have the following Python libraries:
 * matplotlib
 * scipy
 
-Personalize settings in this file:
-* src/configuration/personal_configuration.py
+### Upgrade Instructions From Old Versions
 
-### Getting Started
+If upgrading from **1.2.0** or **1.2.1**
+* Edit src/configuration/personal_configuration.py which will be overwritten when you download the new version (see "Configure DRG", below)
 
-Run the main guru application class from here:
-* src/main/guru.py
+If upgrading from **1.1.0**
+* The list of required libraries has changed, see "Installation Notes" above
+* Edit src/configuration/personal_configuration.py which will be overwritten when you download the new version (see "Configure DRG", below)
 
+If upgrading from **1.0.0**
+* The list of required libraries has changed, see "Installation Notes" above
+* Edit src/configuration/personal_configuration.py which will be overwritten when you download the new version (see "Configure DRG", below)
+* Run DRG, and go to the Admin menu and choose "Re-calculate Log Meta"
+
+
+## Getting Started
+
+### Download Logs
 You'll first need to download some log files as follows:
 * Go to the DeepRacer console and view the training info for a model
-* Scroll down to the "Resources" section
-* Click the "**Download RoboMaker logs**" button to download the **simulation** log file 
-* Save it in your log directory (the one you have configured in your personal_configuration.py file as above)
-* If you wish, repeat this process to download log file(s) for other model(s) too 
-* In the Deep Racer Guru application, go to the **File -> New** menu option
-* It will display a list of the new files, if it is correct then click OK to import them into the Guru
+* Click the "**Download logs**" button below the training graph 
+* Open the zip archive and locate the **robomaker** log file in the **logs/training** folder
 
-Then, you can open a log file as follows:
+![](./sample_pictures/find_correct_log_file.png)
+
+* Extract/save it locally
+* If you wish, repeat this process to download log file(s) for other model(s) too
+
+### Configure DRG
+Tell DRG where you have saved your log files by editing:
+* src/configuration/personal_configuration.py
+
+![](./sample_pictures/personal_config_file.png)
+
+### Run DRG
+Run the main DRG application class from here:
+* src/main/guru.py
+
+![](./sample_pictures/how_to_run.png)
+
+### Import Log Files
+You must "Import" new log files before you can open them for analysis:
+* In the Deep Racer Guru application, go to the **File -> New** menu option
+* It will display a list of the new files, if it is correct then click OK to import them into DRG
+
+### Open Log Files
 * Use the Track menu to select the correct track
 * Now go to the **File -> Open** menu to choose from log files you have downloaded for that selected track
+
+
+
+
+
 
 

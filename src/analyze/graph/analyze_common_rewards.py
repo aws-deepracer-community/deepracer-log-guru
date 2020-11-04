@@ -24,7 +24,7 @@ class AnalyzeCommonRewards(GraphAnalyzer):
 
     def build_control_frame(self, control_frame):
         rounding_group = tk.LabelFrame(control_frame, text="Rounding", padx=5, pady=5)
-        rounding_group.grid(column=0, row=0, pady=5, padx=5, sticky=tk.W)
+        rounding_group.pack()
 
         tk.Radiobutton(rounding_group, text=ROUNDING_EXACT, variable=self.rounding, value=ROUNDING_EXACT,
                        command=self.guru_parent_redraw).grid(column=0, row=0, pady=2, padx=5)

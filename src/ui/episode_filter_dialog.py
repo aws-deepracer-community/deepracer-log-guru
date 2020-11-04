@@ -13,6 +13,7 @@ class EpisodeFilterDialog(Dialog):
         self.filter_min_percent = make_nullable_var(self.episode_filter.filter_min_percent)
         self.filter_min_average_reward = make_nullable_var(self.episode_filter.filter_min_average_reward)
         self.filter_peak_track_speed = make_nullable_var(self.episode_filter.filter_peak_track_speed)
+        self.filter_max_skew = make_nullable_var(self.episode_filter.filter_max_skew)
 
         self.filter_specific_waypoint_id = make_nullable_var(self.episode_filter.filter_specific_waypoint_id)
         self.filter_specific_waypoint_min_reward = make_nullable_var(self.episode_filter.filter_specific_waypoint_min_reward)
@@ -31,6 +32,8 @@ class EpisodeFilterDialog(Dialog):
         self.filter_q3 = BooleanVar(value=self.episode_filter.filter_quarters[2])
         self.filter_q4 = BooleanVar(value=self.episode_filter.filter_quarters[3])
 
+        self.filter_debug_contains = make_nullable_var(self.episode_filter.filter_debug_contains)
+
         super().__init__(parent, "Episode Filter")
 
     def body(self, master):
@@ -41,12 +44,16 @@ class EpisodeFilterDialog(Dialog):
 
         #
 
-        start_group = LabelFrame(master, text="Start", padx=5, pady=5)
-        start_group.grid(column=0, row=1, pady=5, padx=5, sticky=W)
+        misc_group = LabelFrame(master, text="Miscellaneous", padx=5, pady=5)
+        misc_group.grid(column=0, row=1, pady=5, padx=5, sticky=W)
 
         Checkbutton(
-            start_group, text="From Start Line Only",
-            variable=self.filter_from_start_line).grid(column=0, row=0, pady=5, padx=5, columnspan=2)
+            misc_group, text="From Start Line Only",
+            variable=self.filter_from_start_line).grid(column=0, row=0, pady=5, padx=5, columnspan=2, sticky=E)
+
+        Label(misc_group, text="Debug contains").grid(column=0, row=1, pady=5, padx=5, sticky=E)
+        Entry(
+            misc_group, textvariable=self.filter_debug_contains).grid(column=1, row=1, pady=5, padx=5)
 
         #
 
@@ -90,6 +97,11 @@ class EpisodeFilterDialog(Dialog):
         Entry(
             episode_stat_group, textvariable=self.filter_peak_track_speed,
             validate="key", validatecommand=self.validate_simple_float).grid(column=1, row=5, pady=5, padx=5)
+
+        Label(episode_stat_group, text="Max Skew <=").grid(column=0, row=6, pady=5, padx=5, sticky=E)
+        Entry(
+            episode_stat_group, textvariable=self.filter_max_skew,
+            validate="key", validatecommand=self.validate_positive_integer).grid(column=1, row=6, pady=5, padx=5)
 
         #
 
@@ -142,6 +154,7 @@ class EpisodeFilterDialog(Dialog):
         self.episode_filter.filter_min_percent = get_nullable_int_entry(self.filter_min_percent)
         self.episode_filter.filter_min_average_reward = get_nullable_float_entry(self.filter_min_average_reward)
         self.episode_filter.filter_peak_track_speed = get_nullable_float_entry(self.filter_peak_track_speed)
+        self.episode_filter.filter_max_skew = get_nullable_int_entry(self.filter_max_skew)
 
         self.episode_filter.set_filter_specific_waypoint_reward(
             get_nullable_int_entry(self.filter_specific_waypoint_id),
@@ -154,6 +167,7 @@ class EpisodeFilterDialog(Dialog):
             get_nullable_int_entry(self.filter_complete_section_steps))
 
         self.episode_filter.set_filter_quarters(self.filter_q1.get(), self.filter_q2.get(), self.filter_q3.get(), self.filter_q4.get())
+        self.episode_filter.set_filter_debug_contains(self.filter_debug_contains.get())
 
         self.parent.reapply_episode_filter()
 
@@ -168,6 +182,7 @@ class EpisodeFilterDialog(Dialog):
         self.filter_min_percent.set("")
         self.filter_min_average_reward.set("")
         self.filter_peak_track_speed.set("")
+        self.filter_max_skew.set("")
 
         self.filter_specific_waypoint_id.set("")
         self.filter_specific_waypoint_min_reward.set("")
@@ -176,6 +191,13 @@ class EpisodeFilterDialog(Dialog):
         self.filter_complete_section_finish.set("")
         self.filter_complete_section_time.set("")
         self.filter_complete_section_steps.set("")
+
+        self.filter_q1.set(True)
+        self.filter_q2.set(True)
+        self.filter_q3.set(True)
+        self.filter_q4.set(True)
+
+        self.filter_debug_contains.set("")
 
 
 def make_nullable_var(initial_value):

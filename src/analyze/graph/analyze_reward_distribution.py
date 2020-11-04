@@ -23,7 +23,7 @@ class AnalyzeRewardDistribution(GraphAnalyzer):
     def build_control_frame(self, control_frame):
 
         episodes_group = tk.LabelFrame(control_frame, text="Episodes", padx=5, pady=5)
-        episodes_group.grid(column=0, row=0, pady=5, padx=5)
+        episodes_group.pack()
 
         tk.Checkbutton(
             episodes_group, text="Filtered",

@@ -8,7 +8,7 @@ import src.configuration.personal_track_annotations as config
 # Other people might want to change/personalize these values
 
 PRIVATE_DESCRIPTION = "The original DeepRacer track"
-PRIVATE_SECTION_DIVIDERS = [10, 26, 47, 54]
+PRIVATE_SECTION_DIVIDERS = []
 
 
 class Reinvent2018Track(Track):
@@ -107,6 +107,3 @@ class Reinvent2018Track(Track):
             [2.0400025449490777, 0.6828814442283201],
             [2.7500024542019887, 0.6831352757177762]
         ]
-
-
-

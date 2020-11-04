@@ -20,17 +20,7 @@ def get_pretty_small_float(number, max, decimal_places):
 def get_pretty_large_integer(number):
     return "{:,}".format(round(number))
 
+def get_pretty_large_float(number):
+    return "{:,}".format(number)
 
 
-
-#print("<<" + get_pretty_number_(9.9999, 30, 0) + ">>")
-#print("<<" + get_pretty_number_(10, 30, 0) + ">>")
-#print("<<" + get_pretty_number_(10.001, 30, 0) + ">>")
-
-#print("<<" + get_pretty_number_(9.9999, 30, 1) + ">>")
-#print("<<" + get_pretty_number_(10, 30, 1) + ">>")
-#print("<<" + get_pretty_number_(10.001, 30, 1) + ">>")
-#print("<<" + get_pretty_number_(10.101, 30, 1) + ">>")
-
-
-#print(round(20, 3))

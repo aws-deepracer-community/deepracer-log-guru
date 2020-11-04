@@ -49,6 +49,8 @@ class MenuBar():
 
     def add_view_menu(self):
         menu = Menu(self.menubar, tearoff=0)
+        menu.add_command(label="Zoom - In/Out", command=self.main_app.menu_callback_zoom_in_out)
+        menu.add_separator()
         menu.add_command(label="Grid - Front", command=self.main_app.menu_callback_grid_front)
         menu.add_command(label="Grid - Back", command=self.main_app.menu_callback_grid_back)
         menu.add_command(label="Grid - Off", command=self.main_app.menu_callback_grid_off)
@@ -70,6 +72,12 @@ class MenuBar():
         menu.add_command(label="Annotations - Front", command=self.main_app.menu_callback_annotations_front)
         menu.add_command(label="Annotations - Back", command=self.main_app.menu_callback_annotations_back)
         menu.add_command(label="Annotations - Off", command=self.main_app.menu_callback_annotations_off)
+        menu.add_separator()
+        menu.add_command(label="Heading - On", command=self.main_app.menu_callback_heading_on)
+        menu.add_command(label="Heading - Off", command=self.main_app.menu_callback_heading_off)
+        menu.add_separator()
+        menu.add_command(label="True Bearing - On", command=self.main_app.menu_callback_true_bearing_on)
+        menu.add_command(label="True Bearing - Off", command=self.main_app.menu_callback_true_bearing_off)
 
         self.menubar.add_cascade(label="View", menu=menu)
 
@@ -78,6 +86,8 @@ class MenuBar():
 
         menu.add_command(label="Episode Route", command=self.main_app.menu_callback_analyze_route)
         menu.add_command(label="Episode Speed", command=self.main_app.menu_callback_analyze_episode_speed)
+        menu.add_command(label="Episode Reward", command=self.main_app.menu_callback_analyze_episode_reward)
+        menu.add_command(label="Episode Skew", command=self.main_app.menu_callback_analyze_episode_skew)
 
         menu.add_separator()
 
@@ -87,6 +97,9 @@ class MenuBar():
         menu.add_separator()
 
         menu.add_command(label="Training Progress", command=self.main_app.menu_callback_analyze_training_progress)
+        menu.add_command(label="Quarterly Results", command=self.main_app.menu_callback_analyze_quarterly_results)
+        menu.add_command(label="Complete Lap Percentage", command=self.main_app.menu_callback_analyze_complete_lap_percentage)
+        menu.add_command(label="Track Exit Points", command=self.main_app.menu_callback_analyze_exit_points)
 
         menu.add_separator()
 
@@ -95,7 +108,6 @@ class MenuBar():
 
         menu.add_separator()
 
-        menu.add_command(label="Lap Time Predictor", command=self.main_app.menu_callback_analyze_lap_time_reward)
         menu.add_command(label="Reward Distribution", command=self.main_app.menu_callback_analyze_reward_distribution)
         menu.add_command(label="Common Rewards", command=self.main_app.menu_callback_analyze_common_rewards)
         menu.add_command(label="Rewards per Waypoint", command=self.main_app.menu_callback_analyze_rewards_per_waypoint)
@@ -143,14 +155,14 @@ class MenuBar():
 
     def add_admin_menu(self):
         menu = Menu(self.menubar, tearoff=0)
-        menu.add_command(label="Re-calculate Log Meta", command=refresh_all_log_meta)
+        menu.add_command(label="Re-calculate Log Meta", command=self.refresh_all_log_meta)
         menu.add_command(label="View Log File Info", command=self.main_app.menu_callback_view_log_file_info)
 
 
         self.menubar.add_cascade(label="Admin", menu=menu)
 
     def new_files(self):
-        NewFilesDialog(self.main_app)
+        NewFilesDialog(self.main_app, self.main_app.please_wait)
 
     def open_file(self):
         OpenFileDialog(self.main_app, "Open File")
@@ -164,6 +176,7 @@ class MenuBar():
     def open_action_space_filter_dialog(self):
         ActionSpaceFilterDialog(self.main_app)
 
-def refresh_all_log_meta():
-    log.refresh_all_log_meta()
-    messagebox.showinfo("Refresh All Log Meta", "Refresh succeeded!")
+    def refresh_all_log_meta(self):
+        log.refresh_all_log_meta(self.main_app.please_wait)
+        self.main_app.please_wait.stop()
+        messagebox.showinfo("Refresh All Log Meta", "Refresh succeeded!")

@@ -22,6 +22,13 @@ class ViewManager:
         self.set_track_colour_blue()
         self.set_waypoint_sizes_micro()
 
+        self.zoom_x = None
+        self.zoom_y = None
+        self.zoom_x2 = None
+        self.zoom_y2 = None
+
+        self.zoom_in = False
+
     def set_track_colour_grey(self):
         self.track_colour = COLOUR_GREY
 
@@ -89,9 +96,14 @@ class ViewManager:
         self.annotations_on = False
 
     def redraw(self, current_track :Track, track_graphics, analyzer, episode_filter: EpisodeFilter):
+        analyzer.recalculate()
+
         track_graphics.reset_to_blank()
 
-        current_track.configure_track_graphics(track_graphics)
+        if self.zoom_in and self.zoom_x:
+            track_graphics.set_track_area(self.zoom_x, self.zoom_y, self.zoom_x2, self.zoom_y2)
+        else:
+            current_track.configure_track_graphics(track_graphics)
 
         for do in self.drawing_order:
             if do == "G" and self.grid_on:
@@ -112,4 +124,28 @@ class ViewManager:
 
             if do == "N" and self.annotations_on:
                 current_track.draw_annotations(track_graphics)
+
+    def zoom_set(self, track_graphics, x, y, x2, y2):
+        real_x, real_y = track_graphics.get_real_point_for_widget_location(x, y)
+        real_x2, real_y2 = track_graphics.get_real_point_for_widget_location(x2, y2)
+
+        self.zoom_x = min(real_x, real_x2)
+        self.zoom_x2 = max(real_x, real_x2)
+        self.zoom_y = min(real_y, real_y2)
+        self.zoom_y2 = max(real_y, real_y2)
+
+        self.zoom_in = True
+
+    def zoom_toggle(self):
+        self.zoom_in = not self.zoom_in
+
+    def zoom_clear(self):
+        self.zoom_x = None
+        self.zoom_y = None
+        self.zoom_x2 = None
+        self.zoom_y2 = None
+
+        self.zoom_in = False
+
+
 

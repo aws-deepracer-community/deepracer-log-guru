@@ -50,7 +50,7 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
     def build_control_frame(self, control_frame):
 
         episodes_group = tk.LabelFrame(control_frame, text="Episodes", padx=5, pady=5)
-        episodes_group.grid(column=0, row=0, pady=5, padx=5)
+        episodes_group.pack()
 
         tk.Checkbutton(
             episodes_group, text="All",
@@ -65,7 +65,7 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
         #####
 
         section_group = tk.LabelFrame(control_frame, text="Section", padx=5, pady=5)
-        section_group.grid(column=0, row=1, pady=5, padx=5)
+        section_group.pack()
 
         tk.Label(section_group, text="Start").grid(column=0, row=1, pady=5, padx=5, sticky=tk.E)
         tk.Entry(
@@ -84,7 +84,7 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
         #####
 
         axis_group = tk.LabelFrame(control_frame, text="Correlate With", padx=5, pady=5)
-        axis_group.grid(column=0, row=2, pady=5, padx=5)
+        axis_group.pack()
 
         # tk.Radiobutton(axis_group, text="Total Distance", variable=self.correlation_tk_var,
         #     value=AXIS_DISTANCE, command=self.guru_parent_redraw).grid(column=0, row=0, pady=2, padx=5)
@@ -113,7 +113,7 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
         ######
 
         format_group = tk.LabelFrame(control_frame, text="Format", padx=5, pady=5)
-        format_group.grid(column=0, row=3, pady=5, padx=5)
+        format_group.pack()
 
         tk.Checkbutton(
             format_group, text="Swap Axes",

@@ -4,10 +4,11 @@ import numpy as np
 from src.action_space.action import MAX_POSSIBLE_ACTIONS
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.util.visitor import VisitorMap
+from src.utils.geometry import get_bearing_between_points, get_turn_between_directions
 
 from src.tracks.track import Track
 
-
+SKEW_SETTLING_PERIOD = 6
 
 
 class Episode:
@@ -36,21 +37,24 @@ class Episode:
         self.is_real_start = first_event.closest_waypoint_index <= 1
 
         self.time_taken = last_event.time - first_event.time
-        self.lap_time = 100 / last_event.progress * self.time_taken  # predicted
+        self.predicted_lap_time = 100 / last_event.progress * self.time_taken  # predicted
 
         self.rewards = self.get_list_of_rewards()
         self.total_reward = self.rewards.sum()
         self.average_reward = self.rewards.mean()
-        self.lap_reward = 100 / last_event.progress * self.total_reward  # predicted
+        self.predicted_lap_reward = 100 / last_event.progress * self.total_reward  # predicted
 
         self.action_frequency = self.get_action_frequency()
         self.repeated_action_percent = self.get_repeated_action_percent()
 
         self.peak_track_speed = 0
         self.set_track_speed_on_events()
+        self.set_progress_speed_on_events()
         self.set_reward_total_on_events()
         self.set_time_elapsed_on_events()
         self.set_total_distance_travelled_on_events()
+        self.max_skew = 0.0
+        self.set_true_bearing_and_skew_on_events()
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -58,6 +62,12 @@ class Episode:
 
         # THIS VARIABLE IS ASSIGNED RETROSPECTIVELY AFTER THE Log CLASS HAS LOADED ALL EPISODES
         self.quarter = None
+
+    def get_starting_position_as_percent_from_race_start(self, track :Track):
+        first_event_percent = track.percent_from_race_start[self.events[0].closest_waypoint_index]
+
+        #  5 is magic number because there are 20 evenly spaced start points, i.e. every 5% round the track
+        return round(first_event_percent / 5) * 5
 
 
     def get_distance_travelled(self):
@@ -106,11 +116,39 @@ class Episode:
 
             previous = previous[1:] + [e]
 
+    def set_progress_speed_on_events(self):
+        previous = [self.events[0]] * 7
+        for e in self.events:
+            progress_gain = e.progress - previous[0].progress
+            time_taken = e.time - previous[0].time
+
+            if time_taken > 0:
+                e.progress_speed = progress_gain / 100 * e.track_length / time_taken
+
+            previous = previous[1:] + [e]
+
+    def set_true_bearing_and_skew_on_events(self):
+
+        previous_event = self.events[0]
+        self.events[0].skew = 0.0
+        self.max_skew = 0.0
+
+        for e in self.events[1:]:
+            previous_location = (previous_event.x, previous_event.y)
+            current_location = (e.x, e.y)
+            e.true_bearing = get_bearing_between_points(previous_location, current_location)
+            e.skew = get_turn_between_directions(e.heading, e.true_bearing)
+            if e.step > SKEW_SETTLING_PERIOD:
+                self.max_skew = max(self.max_skew, abs(e.skew))
+            previous_event = e
+
+
     def set_reward_total_on_events(self):
         reward_total = 0.0
         for e in self.events:
             reward_total += e.reward
             e.reward_total = reward_total
+            e.average_reward_so_far = reward_total / e.step
 
     def set_time_elapsed_on_events(self):
         start_time = self.events[0].time
@@ -127,13 +165,6 @@ class Episode:
             distance += math.sqrt(x_diff * x_diff + y_diff * y_diff)
             e.total_distance_travelled = distance
             previous = e
-
-
-    def get_total_reward(self):
-        total_reward = 0
-        for e in self.events:
-            total_reward += e.reward
-        return total_reward
 
     def get_list_of_rewards(self):
         list_of_rewards = []
@@ -163,24 +194,33 @@ class Episode:
         return event, index
 
     def apply_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter):
-        self.apply_speed_to_visitor_map(visitor_map, skip_count, action_space_filter, is_any_speed)
-
-    def apply_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
         previous = self.events[0]
         for e in self.events:
-
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken) and is_correct_speed(e.speed):
-
-                visitor_map.visit(e.x, e.y, self)
-
-                x_diff = e.x - previous.x
-                y_diff = e.y - previous.y
-
-                visitor_map.visit(e.x - 0.25 * x_diff, e.y - 0.25 * y_diff, self)
-                visitor_map.visit(e.x - 0.50 * x_diff, e.y - 0.50 * y_diff, self)
-                visitor_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self)
-
+            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+                self.apply_event_to_visitor_map_(e, previous, visitor_map)
             previous = e
+
+    def apply_action_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
+        previous = self.events[0]
+        for e in self.events:
+            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken) and is_correct_speed(e.speed):
+                self.apply_event_to_visitor_map_(e, previous, visitor_map)
+            previous = e
+
+    def apply_track_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
+        previous = self.events[0]
+        for e in self.events:
+            if e.step >= skip_count and is_correct_speed(e.track_speed):
+                self.apply_event_to_visitor_map_(e, previous, visitor_map)
+            previous = e
+
+    def apply_event_to_visitor_map_(self, e, previous, visitor_map):
+        visitor_map.visit(e.x, e.y, self)
+        x_diff = e.x - previous.x
+        y_diff = e.y - previous.y
+        visitor_map.visit(e.x - 0.25 * x_diff, e.y - 0.25 * y_diff, self)
+        visitor_map.visit(e.x - 0.50 * x_diff, e.y - 0.50 * y_diff, self)
+        visitor_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self)
 
     def finishes_section(self, start, finish):
         actual_start = self.events[0].closest_waypoint_index
@@ -243,6 +283,12 @@ class Episode:
         else:
             return None
 
+    def does_debug_contain(self, search_string):
+        for e in self.events:
+            if search_string in e.debug_log:
+                return True
+
+        return False
 
 
 def are_close_waypoint_ids(id1, id2, track :Track):
@@ -254,7 +300,5 @@ def are_close_waypoint_ids(id1, id2, track :Track):
     else:
         return False
 
-def is_any_speed(speed):
-    return True
 
 

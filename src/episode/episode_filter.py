@@ -12,6 +12,8 @@ class EpisodeFilter:
         self.filter_specific_waypoint_id = None
         self.filter_specific_waypoint_min_reward = None
         self.filter_quarters = [ True, True, True, True ]
+        self.filter_debug_contains = None
+        self.filter_max_skew = None
 
         self.all_episodes = None
 
@@ -27,6 +29,8 @@ class EpisodeFilter:
         self.filter_specific_waypoint_id = None
         self.filter_specific_waypoint_min_reward = None
         self.filter_quarters = [ True, True, True, True ]
+        self.filter_debug_contains = None
+        self.filter_max_skew = None
 
 
     def set_filter_from_start_line(self, setting :bool):
@@ -68,6 +72,12 @@ class EpisodeFilter:
         else:
             self.filter_specific_waypoint_min_reward = None
 
+    def set_filter_debug_contains(self, debug_contains):
+        self.filter_debug_contains = debug_contains
+
+    def set_filter_max_skew(self, max_skew):
+        self.filter_max_skew = max_skew
+
     def set_all_episodes(self, all_episodes):
         self.all_episodes = all_episodes
 
@@ -83,9 +93,11 @@ class EpisodeFilter:
                         if self.filter_min_percent is None or e.percent_complete >= self.filter_min_percent:
                             if self.filter_min_average_reward is None or e.average_reward >= self.filter_min_average_reward:
                                 if self.filter_peak_track_speed is None or e.peak_track_speed >= self.filter_peak_track_speed:
-                                    if self.matches_complete_section_filter(e, track):
-                                        if self.matches_specific_waypoint_reward_filter(e):
-                                            result.append(e)
+                                    if self.filter_max_skew is None or e.max_skew <= self.filter_max_skew:
+                                        if self.matches_complete_section_filter(e, track):
+                                            if self.matches_specific_waypoint_reward_filter(e):
+                                                if self.filter_debug_contains is None or e.does_debug_contain(self.filter_debug_contains):
+                                                    result.append(e)
 
         return result
 

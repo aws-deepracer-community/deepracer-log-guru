@@ -72,9 +72,12 @@ def parse_intro_event(str, log_meta :LogMeta):
         raw_actions = str[len(MISC_ACTION_SPACE):].replace("'", "\"")
 
         actions = json.loads(raw_actions)
-        for a in actions:
-            new_action = Action(a["index"], a["speed"], a["steering_angle"])
-            log_meta.action_space[a["index"]] = new_action
+        for index, a in enumerate(actions):
+            if "index" in a:
+                assert a["index"] == index
+            new_action = Action(index, a["speed"], a["steering_angle"])
+            log_meta.action_space[index] = new_action
+
 
 
 def parse_episode_event(input, episodes, saved_events, saved_debug):
@@ -119,6 +122,7 @@ def parse_episode_event(input, episodes, saved_events, saved_debug):
     event_meta.closest_waypoint_index = int(closest_waypoint_index)
     event_meta.time = float(time)
     event_meta.status = status
+    event_meta.track_length = float(track_length)
 
     event_meta.debug_log = saved_debug
 

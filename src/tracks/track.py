@@ -4,7 +4,7 @@ import src.utils.geometry as geometry
 
 from src.analyze.util.visitor import VisitorMap
 from src.graphics.track_graphics import TrackGraphics
-from src.graphics.track_annotations import Annotation
+from src.graphics.track_annotations import PointAnnotation
 
 DISPLAY_BORDER = 0.3
 
@@ -26,6 +26,7 @@ class Track:
 
         # Fields that we will populate automatically
         self.drawing_points = []
+        self.percent_from_race_start = []
         self.measured_left_distance = 0.0
         self.measured_middle_distance = 0.0
         self.measured_right_distance = 0.0
@@ -132,6 +133,14 @@ class Track:
             self.measured_right_distance += geometry.get_distance_between_points(previous.right, p.right)
             previous = p
 
+        previous = self.drawing_points[0]
+        progress_distance = 0.0
+        for p in self.drawing_points:
+            progress_distance += geometry.get_distance_between_points(previous.middle, p.middle)
+            self.percent_from_race_start.append(round(progress_distance / self.measured_middle_distance * 100, 2))
+            previous = p
+
+
     def calculate_range_of_coordinates(self):
         (self.min_x, self.min_y) = self.drawing_points[0].middle
         self.max_x = self.min_x
@@ -176,7 +185,6 @@ class Track:
     def configure_track_graphics(self, track_graphics :TrackGraphics):
         track_graphics.set_track_area(self.min_x - DISPLAY_BORDER, self.min_y - DISPLAY_BORDER, self.max_x + DISPLAY_BORDER, self.max_y + DISPLAY_BORDER)
 
-
     def draw_track_edges(self, track_graphics, colour):
 
         previous_left = self.drawing_points[-1].left
@@ -196,7 +204,7 @@ class Track:
         previous_right = self.drawing_points[start].right_outer
 
         if finish >= start:
-            highlight_points = self.drawing_points[start+1:finish]
+            highlight_points = self.drawing_points[start+1:finish+1]
         else:
             highlight_points = self.drawing_points[start:] + self.drawing_points[:finish+1]
 
@@ -225,28 +233,7 @@ class Track:
 
     def draw_annotations(self, track_graphics):
         for a in self.annotations:
-            p = self.get_annotation_start_point(a)
-            a.draw_from_point(p, track_graphics)
-
-    def get_annotation_start_point(self, annotation: Annotation):
-        points = self.drawing_points[annotation.waypoint_id]
-
-        if annotation.distance_from_centre == 0:
-            return points.middle
-
-        if annotation.side == "L":
-            (side_x, side_y) = points.left
-        else:
-            (side_x, side_y) = points.right
-
-        side_fraction = annotation.distance_from_centre / self.track_width * 2
-        ( start_x, start_y ) = points.middle
-
-        x = start_x + (side_x - start_x) * side_fraction
-        y = start_y + (side_y - start_y) * side_fraction
-
-        return x, y
-
+            a.draw(track_graphics, self.drawing_points, self.track_width)
 
     def draw_grid(self, track_graphics, colour):
         x = self.min_x

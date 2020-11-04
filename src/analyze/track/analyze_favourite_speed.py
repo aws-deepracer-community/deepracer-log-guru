@@ -106,6 +106,9 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
         if self.filtered_episodes:
             if not self.visitor_maps:
                 self.please_wait.start("Calculating")
+                (min_speed, self.max_speed) = get_min_and_max_action_speeds(self.action_space)
+                self.speed_range = self.max_speed - min_speed
+
                 self.visitor_maps = []
                 for i in range(0, 3):
                     self.visitor_maps.append(self.current_track.get_visitor_map(self.granularity.get() / 100))
@@ -115,9 +118,18 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
                     else:
                         apply_to_visitor_map = e.apply_track_speed_to_visitor_map
 
-                    apply_to_visitor_map(self.visitor_maps[HIGH_VISITOR_MAP], skip, self.action_space_filter, is_high_speed)
-                    apply_to_visitor_map(self.visitor_maps[MEDIUM_VISITOR_MAP], skip, self.action_space_filter, is_medium_speed)
-                    apply_to_visitor_map(self.visitor_maps[LOW_VISITOR_MAP], skip, self.action_space_filter, is_low_speed)
+                    apply_to_visitor_map(self.visitor_maps[HIGH_VISITOR_MAP], skip, self.action_space_filter, self.is_high_speed)
+                    apply_to_visitor_map(self.visitor_maps[MEDIUM_VISITOR_MAP], skip, self.action_space_filter, self.is_medium_speed)
+                    apply_to_visitor_map(self.visitor_maps[LOW_VISITOR_MAP], skip, self.action_space_filter, self.is_low_speed)
 
                     self.please_wait.set_progress((i+1) / len(self.filtered_episodes) * 100)
+
+    def is_high_speed(self, speed):
+        return speed >= self.max_speed - 0.33 * self.speed_range
+
+    def is_medium_speed(self, speed):
+        return speed >= self.max_speed - 0.66 * self.speed_range
+
+    def is_low_speed(self, speed):
+        return speed < self.max_speed - 0.66 * self.speed_range
 

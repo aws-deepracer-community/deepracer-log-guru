@@ -1,5 +1,24 @@
 # deep_racer_guru
-Analysis tool for AWS Deep Racer logs
+
+### Introduction
+
+Deep Racer Guru (DRG) is a graphical analysis tool for AWS Deep Racer logs.
+
+Its main purpose is to provide "out-of-the-box" analysis that can run locally on your own computer.
+
+You don't have to write Python code. Simply download logs from the AWS Deep Racer console, and then use a GUI to see how your models are performing.
+
+### Example Output
+
+![Alt text](./sample_pictures/route_convergence.png)
+
+### Installation Notes
+
+todo
+
+
+
+
 
 ### NEW: Upgrading to Latest Version 1.2.0 / 1.2.1
 

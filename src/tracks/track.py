@@ -54,7 +54,7 @@ class Track:
         assert len(self.ui_name) > 5
         assert len(self.ui_description) > 10
         assert 10 < self.ui_length_in_m < 70
-        assert 70 < self.ui_width_in_cm < 110
+        assert 70 < self.ui_width_in_cm < 140
         assert self.ui_difficulty in ["Easy", "Medium", "Hard", "*NONE*"]
         assert len(self.private_description) > 10
         assert len(self.world_name) > 5

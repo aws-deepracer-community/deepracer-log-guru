@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Deep Racer Guru (DRG) is a graphical analysis tool for AWS Deep Racer logs.
+Deep Racer Guru (DRG) is an interactive detailed analysis tool for AWS Deep Racer logs.
 
 Its main purpose is to provide "out-of-the-box" analysis that can run locally on your own computer.
 
@@ -44,7 +44,7 @@ If upgrading from **1.0.0**
 ### Download Logs
 You'll first need to download some log files as follows:
 * Go to the DeepRacer console and view the training info for a model
-* Click the "**Download logs**" button below the training graph 
+* Click the "**Download logs**" button at the top of the training section 
 * Open the zip archive and locate the **robomaker** log file in the **logs/training** folder
 
 ![](./sample_pictures/find_correct_log_file.png)

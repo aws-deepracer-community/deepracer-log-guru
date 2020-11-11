@@ -23,7 +23,8 @@ MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-me
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
 MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
 
-MISC_ACTION_SPACE = "Loaded action space from file: "
+MISC_ACTION_SPACE_A = "Loaded action space from file: "
+MISC_ACTION_SPACE_B = "Action space from file: "
 
 EVALUATION_REWARD_START = "## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = "
 EVALUATION_PROGRESSES_START = "Number of evaluations: "
@@ -68,16 +69,22 @@ def parse_intro_event(str, log_meta :LogMeta):
     if str.startswith(MISC_MODEL_NAME_NEW_LOGS_B):
         log_meta.model_name = str.split("/")[2]
 
-    if str.startswith(MISC_ACTION_SPACE):
-        raw_actions = str[len(MISC_ACTION_SPACE):].replace("'", "\"")
+    if str.startswith(MISC_ACTION_SPACE_A):
+        parse_actions(str, log_meta, MISC_ACTION_SPACE_A)
 
-        actions = json.loads(raw_actions)
-        for index, a in enumerate(actions):
-            if "index" in a:
-                assert a["index"] == index
-            new_action = Action(index, a["speed"], a["steering_angle"])
-            log_meta.action_space[index] = new_action
+    if str.startswith(MISC_ACTION_SPACE_B):
+        parse_actions(str, log_meta, MISC_ACTION_SPACE_B)
 
+
+def parse_actions(str, log_meta :LogMeta, starts_with):
+    raw_actions = str[len(starts_with):].replace("'", "\"")
+
+    actions = json.loads(raw_actions)
+    for index, a in enumerate(actions):
+        if "index" in a:
+            assert a["index"] == index
+        new_action = Action(index, a["speed"], a["steering_angle"])
+        log_meta.action_space[index] = new_action
 
 
 def parse_episode_event(input, episodes, saved_events, saved_debug):

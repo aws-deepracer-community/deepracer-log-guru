@@ -58,3 +58,9 @@ cumulo_turnpike_annotations = []
 stratus_loop_annotations = []
 
 bowtie_annotations = []
+
+american_speedway_annotations = []
+
+asia_pacific_bay_loop_annotations = []
+
+european_seaside_circuit_annotations = []

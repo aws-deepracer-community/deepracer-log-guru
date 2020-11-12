@@ -222,7 +222,8 @@ class Episode:
         visitor_map.visit(e.x - 0.50 * x_diff, e.y - 0.50 * y_diff, self)
         visitor_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self)
 
-    def finishes_section(self, start, finish):
+    # Only "probably" because spinning can fool this simple logic
+    def probably_finishes_section_(self, start, finish):
         actual_start = self.events[0].closest_waypoint_index
         actual_finish = self.events[-1].closest_waypoint_index
 
@@ -255,7 +256,7 @@ class Episode:
 
 
     def get_section_start_and_finish_events(self, start, finish, track :Track):
-        if not self.finishes_section(start, finish):
+        if not self.probably_finishes_section_(start, finish):
             return None
 
         start_event = None

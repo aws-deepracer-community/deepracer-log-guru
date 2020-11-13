@@ -92,7 +92,7 @@ class Log:
                     evaluation_reward = parse.parse_evaluation_reward_info(str)
                     evaluation_count, evaluation_progresses = parse.parse_evaluation_progress_info(str)
 
-                    if evaluation_reward:
+                    if evaluation_reward != None:
                         evaluation_rewards.append(evaluation_reward)
                     elif evaluation_count and evaluation_progresses:
                         assert evaluation_count == len(evaluation_rewards)

@@ -136,7 +136,10 @@ class Episode:
         for e in self.events[1:]:
             previous_location = (previous_event.x, previous_event.y)
             current_location = (e.x, e.y)
-            e.true_bearing = get_bearing_between_points(previous_location, current_location)
+            if e.progress == previous_event.progress:   # Handle new AWS bug duplicating log entry position
+                e.true_bearing = previous_event.true_bearing
+            else:
+                e.true_bearing = get_bearing_between_points(previous_location, current_location)
             e.skew = get_turn_between_directions(e.heading, e.true_bearing)
             if e.step > SKEW_SETTLING_PERIOD:
                 self.max_skew = max(self.max_skew, abs(e.skew))

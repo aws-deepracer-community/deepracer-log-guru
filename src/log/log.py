@@ -88,11 +88,16 @@ class Log:
                     intro = False
                     parse.parse_episode_event(str, episode_events, saved_events, saved_debug)
                     saved_debug = ""
+                elif parse.EPISODE_STARTS_WITH in str and parse.SENT_SIGTERM in str:
+                    end_of_str = str[str.find(parse.EPISODE_STARTS_WITH):]
+                    intro = False
+                    parse.parse_episode_event(end_of_str, episode_events, saved_events, saved_debug)
+                    saved_debug = ""
                 elif not intro:
                     evaluation_reward = parse.parse_evaluation_reward_info(str)
                     evaluation_count, evaluation_progresses = parse.parse_evaluation_progress_info(str)
 
-                    if evaluation_reward:
+                    if evaluation_reward != None:
                         evaluation_rewards.append(evaluation_reward)
                     elif evaluation_count and evaluation_progresses:
                         assert evaluation_count == len(evaluation_rewards)

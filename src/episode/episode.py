@@ -136,7 +136,10 @@ class Episode:
         for e in self.events[1:]:
             previous_location = (previous_event.x, previous_event.y)
             current_location = (e.x, e.y)
-            e.true_bearing = get_bearing_between_points(previous_location, current_location)
+            if e.progress == previous_event.progress:   # Handle new AWS bug duplicating log entry position
+                e.true_bearing = previous_event.true_bearing
+            else:
+                e.true_bearing = get_bearing_between_points(previous_location, current_location)
             e.skew = get_turn_between_directions(e.heading, e.true_bearing)
             if e.step > SKEW_SETTLING_PERIOD:
                 self.max_skew = max(self.max_skew, abs(e.skew))
@@ -222,7 +225,8 @@ class Episode:
         visitor_map.visit(e.x - 0.50 * x_diff, e.y - 0.50 * y_diff, self)
         visitor_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self)
 
-    def finishes_section(self, start, finish):
+    # Only "probably" because spinning can fool this simple logic
+    def probably_finishes_section_(self, start, finish):
         actual_start = self.events[0].closest_waypoint_index
         actual_finish = self.events[-1].closest_waypoint_index
 
@@ -255,7 +259,7 @@ class Episode:
 
 
     def get_section_start_and_finish_events(self, start, finish, track :Track):
-        if not self.finishes_section(start, finish):
+        if not self.probably_finishes_section_(start, finish):
             return None
 
         start_event = None

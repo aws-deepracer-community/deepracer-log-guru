@@ -157,9 +157,9 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
 
         if self.correlation_tk_var.get() == AXIS_LAP_TIME:
             if self.count_steps.get():
-                plot_y = get_plot_data_lap_steps(episodes, start, finish)
+                plot_y = get_plot_data_lap_steps(episodes, start, finish, self.current_track)
             else:
-                plot_y = get_plot_data_lap_times(episodes, start, finish)
+                plot_y = get_plot_data_lap_times(episodes, start, finish, self.current_track)
 
         # if self.correlation_tk_var.get() == AXIS_AVERAGE_REWARD:
         #     plot_y = get_plot_data_averge_rewards(episodes)
@@ -169,7 +169,7 @@ class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
         #     plot_y = get_plot_data_repeats(episodes)
 
         if self.correlation_tk_var.get() == AXIS_ITERATION:
-            plot_y = get_plot_data_iterations(episodes, start, finish)
+            plot_y = get_plot_data_iterations(episodes, start, finish, self.current_track)
 
         # if self.correlation_tk_var.get() == AXIS_FLYING_START:
         #     plot_y = get_plot_data_flying_starts(episodes)
@@ -264,8 +264,8 @@ def get_plot_data_section_times(episodes: list, start, finish, track, complete_l
 
     for e in episodes:
         if e.lap_complete or not complete_laps_only:
-            if e.finishes_section(start, finish):
-                events = e.get_section_start_and_finish_events(start, finish, track)
+            events = e.get_section_start_and_finish_events(start, finish, track)
+            if events:
                 (start_event, finish_event) = events
                 section_times.append(finish_event.time - start_event.time)
 
@@ -276,36 +276,36 @@ def get_plot_data_section_steps(episodes: list, start, finish, track, complete_l
 
     for e in episodes:
         if e.lap_complete or not complete_laps_only:
-            if e.finishes_section(start, finish):
-                events = e.get_section_start_and_finish_events(start, finish, track)
+            events = e.get_section_start_and_finish_events(start, finish, track)
+            if events:
                 (start_event, finish_event) = events
                 section_steps.append(finish_event.step - start_event.step)
 
     return np.array(section_steps)
 
-def get_plot_data_iterations(episodes: list, start, finish):
+def get_plot_data_iterations(episodes: list, start, finish, track):
     iterations = []
 
     for e in episodes:
-        if e.finishes_section(start, finish):
+        if e.get_section_start_and_finish_events(start, finish, track):
             iterations.append(e.iteration)
 
     return np.array(iterations)
 
-def get_plot_data_lap_times(episodes: list, start, finish):
+def get_plot_data_lap_times(episodes: list, start, finish, track):
     lap_times = []
 
     for e in episodes:
-        if e.lap_complete and e.finishes_section(start, finish):
+        if e.lap_complete and e.get_section_start_and_finish_events(start, finish, track):
             lap_times.append(e.time_taken)
 
     return np.array(lap_times)
 
-def get_plot_data_lap_steps(episodes: list, start, finish):
+def get_plot_data_lap_steps(episodes: list, start, finish, track):
     lap_steps = []
 
     for e in episodes:
-        if e.lap_complete and e.finishes_section(start, finish):
+        if e.lap_complete and e.get_section_start_and_finish_events(start, finish, track):
             lap_steps.append(e.step_count)
 
     return np.array(lap_steps)

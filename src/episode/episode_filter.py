@@ -116,15 +116,14 @@ class EpisodeFilter:
         if not self.filter_complete_section:
             return True
 
-        (start, finish) = self.filter_complete_section
-
-        if not episode.finishes_section(start, finish):
-            return False
-
         if not self.filter_complete_section_time and not self.filter_complete_section_steps:
             return True
 
+        (start, finish) = self.filter_complete_section
+
         events = episode.get_section_start_and_finish_events(start, finish, track)
+        if not events:
+            return False
 
         (start_event, finish_event) = events
 

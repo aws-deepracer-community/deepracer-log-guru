@@ -27,13 +27,6 @@ class NewFilesDialog(Dialog):
             tk.Label(master, text="No new log files were found").pack()
 
     def apply(self):
-        try:
-            import_new_logs(self.new_log_files, self.please_wait)
-        except:
-            self.please_wait.stop()
-            tk.messagebox.showerror("Fetch File", "Unable to import all files")
-        else:
-            self.please_wait.stop(0.2)
-            tk.messagebox.showinfo("Fetch File", "Import succeeded")
-            pass
-
+        import_new_logs(self.new_log_files, self.please_wait)
+        self.please_wait.stop(0.2)
+        tk.messagebox.showinfo("Fetch File", "Import succeeded")

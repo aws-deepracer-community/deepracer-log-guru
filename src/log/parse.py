@@ -6,6 +6,7 @@ from src.log.log_meta import LogMeta
 from src.action_space.action import  Action
 
 EPISODE_STARTS_WITH = "SIM_TRACE_LOG"
+SENT_SIGTERM = "Sent SIGTERM"
 
 HYPER_BATCH_SIZE = "batch_size"
 HYPER_ENTROPY = "beta_entropy"
@@ -88,6 +89,10 @@ def parse_actions(str, log_meta :LogMeta, starts_with):
 
 
 def parse_episode_event(input, episodes, saved_events, saved_debug):
+
+    if len(saved_events) > 15:
+        print(input)
+
     assert len(saved_events) < 20
 
     if not episodes:
@@ -211,3 +216,4 @@ def contains_parameter(str, parameter_name):
 def get_parameter_string_value(str, parameter_name):
     chop_chars = len(parameter_name) + 6
     return str[chop_chars:].split("\n")[0]
+

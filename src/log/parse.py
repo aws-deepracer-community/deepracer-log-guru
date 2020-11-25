@@ -24,6 +24,14 @@ MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-me
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
 MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
 
+# For handling cloud, here are the example of cloud and non-cloud
+#   cloud       [s3] Successfully downloaded yaml file from s3 key DMH-Champ-Round1-OA-B-3/training-params.yaml
+#   non-cloud   [s3] Successfully downloaded yaml file from s3 key data-56b52007-8142-46cd-a9cc-370feb620f0c/models/Champ-Obj-Avoidance-03/sagemaker-robomaker-artifacts/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml to local ./custom_files/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml.
+
+MISC_MODEL_NAME_CLOUD_LOGS = "[s3] Successfully downloaded yaml file from s3 key"
+CLOUD_TRAINING_YAML_FILENAME = "training-params.yaml"
+
+
 MISC_ACTION_SPACE_A = "Loaded action space from file: "
 MISC_ACTION_SPACE_B = "Action space from file: "
 
@@ -61,14 +69,20 @@ def parse_intro_event(str, log_meta :LogMeta):
     if contains_parameter(str, PARAM_JOB_TYPE):
         log_meta.job_type = get_parameter_string_value(str, PARAM_JOB_TYPE)
 
-    if str.startswith(MISC_MODEL_NAME_OLD_LOGS):
-        log_meta.model_name = str.split("/")[1]
+    if log_meta.model_name == "":
+        if str.startswith(MISC_MODEL_NAME_OLD_LOGS):
+            log_meta.model_name = str.split("/")[1]
 
-    if str.startswith(MISC_MODEL_NAME_NEW_LOGS_A) and not str.startswith(MISC_MODEL_NAME_OLD_LOGS):
-        log_meta.model_name = str.split("/")[2]
+        if str.startswith(MISC_MODEL_NAME_NEW_LOGS_A) and not str.startswith(MISC_MODEL_NAME_OLD_LOGS):
+            log_meta.model_name = str.split("/")[2]
 
-    if str.startswith(MISC_MODEL_NAME_NEW_LOGS_B):
-        log_meta.model_name = str.split("/")[2]
+        if str.startswith(MISC_MODEL_NAME_NEW_LOGS_B):
+            log_meta.model_name = str.split("/")[2]
+
+        if str.startswith(MISC_MODEL_NAME_CLOUD_LOGS):
+            split_parts = str[len(MISC_MODEL_NAME_CLOUD_LOGS):].split("/")
+            if split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME):
+                log_meta.model_name = split_parts[0]
 
     if str.startswith(MISC_ACTION_SPACE_A):
         parse_actions(str, log_meta, MISC_ACTION_SPACE_A)

@@ -7,6 +7,7 @@ from src.action_space.action import  Action
 
 EPISODE_STARTS_WITH = "SIM_TRACE_LOG"
 SENT_SIGTERM = "Sent SIGTERM"
+STILL_EVALUATING = "Reset agent"
 
 HYPER_BATCH_SIZE = "batch_size"
 HYPER_ENTROPY = "beta_entropy"

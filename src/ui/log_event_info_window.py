@@ -127,7 +127,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.reward_total.set(get_pretty_large_integer(event.reward_total))
 
         if event.debug_log:
-            self.debug_output.set(event.debug_log)
+            self.debug_output.set(event.debug_log[:700])
         else:
             self.debug_output.set("")
 

@@ -103,6 +103,8 @@ class Log:
                         assert evaluation_count == len(evaluation_rewards)
                         self.evaluation_phases.append(EvaluationPhase(evaluation_rewards, evaluation_progresses))
                         evaluation_rewards = []
+                    elif str.startswith(parse.STILL_EVALUATING):
+                        saved_debug = ""    # Make sure debug info doesn't include any output from evaluation phase
                     else:
                         saved_debug += str
 

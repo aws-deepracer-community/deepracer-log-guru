@@ -13,11 +13,12 @@ SKEW_SETTLING_PERIOD = 6
 
 class Episode:
 
-    def __init__(self, id, iteration, events):
+    def __init__(self, id, iteration, events, object_locations):
 
         self.events = events
         self.id = id
         self.iteration = iteration
+        self.object_locations = object_locations
 
         first_event = events[0]
         last_event = events[-1]

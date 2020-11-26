@@ -32,9 +32,10 @@ MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
 MISC_MODEL_NAME_CLOUD_LOGS = "[s3] Successfully downloaded yaml file from s3 key"
 CLOUD_TRAINING_YAML_FILENAME = "training-params.yaml"
 
-
 MISC_ACTION_SPACE_A = "Loaded action space from file: "
 MISC_ACTION_SPACE_B = "Action space from file: "
+
+OBJECT_LOCATIONS = "DRG-OBJECTS:"
 
 EVALUATION_REWARD_START = "## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = "
 EVALUATION_PROGRESSES_START = "Number of evaluations: "
@@ -102,16 +103,23 @@ def parse_actions(str, log_meta :LogMeta, starts_with):
         new_action = Action(index, a["speed"], a["steering_angle"])
         log_meta.action_space[index] = new_action
 
+def parse_object_locations(str):
+    if str.startswith(OBJECT_LOCATIONS):
+        return json.loads(str[len(OBJECT_LOCATIONS):])
+    else:
+        return None
 
-def parse_episode_event(input, episodes, saved_events, saved_debug):
+
+def parse_episode_event(input, episode_events, episode_object_locations, saved_events, saved_debug, saved_object_locations):
 
     if len(saved_events) > 15:
         print(input)
 
     assert len(saved_events) < 20
 
-    if not episodes:
-        episodes.append([])
+    if not episode_events:
+        episode_events.append([])
+        episode_object_locations.append([])
 
     input = input.split("\n", 1)[0]
 
@@ -153,29 +161,35 @@ def parse_episode_event(input, episodes, saved_events, saved_debug):
 
     event_meta.debug_log = saved_debug
 
-    if event_meta.step > len(episodes[-1]) + 1 or event_meta.episode > len(episodes) - 1:
+    if event_meta.step > len(episode_events[-1]) + 1 or event_meta.episode > len(episode_events) - 1:
         saved_events.append(event_meta)
         return
 
-    assert event_meta.episode == len(episodes) - 1
+    assert event_meta.episode == len(episode_events) - 1
+    assert len(episode_events) == len(episode_object_locations)
 
-    if event_meta.step != len(episodes[-1]) + 1:
-        print("WARNING - something wrong near step " + str(event_meta.step) + " of episode " + str(len(episodes) - 1))
+    if event_meta.step != len(episode_events[-1]) + 1:
+        print("WARNING - something wrong near step " + str(event_meta.step) + " of episode " + str(len(episode_events) - 1))
 
-    episodes[-1].append(event_meta)
+    episode_events[-1].append(event_meta)
     if event_meta.job_completed:
-        episodes.append([])
+        episode_events.append([])
+        episode_object_locations.append([])
+
+    if saved_object_locations and not episode_object_locations[-1]:
+        episode_object_locations[-1] = saved_object_locations
 
     added = True
     while added:
         added = False
         for s in saved_events:
-            if s.step == len(episodes[-1]) + 1 and s.episode == len(episodes) - 1:
-                episodes[-1].append(s)
+            if s.step == len(episode_events[-1]) + 1 and s.episode == len(episode_events) - 1:
+                episode_events[-1].append(s)
                 saved_events.remove(s)
                 added = True
                 if s.job_completed:
-                    episodes.append([])
+                    episode_events.append([])
+                    episode_object_locations.append([])
                 break
 
 def parse_evaluation_reward_info(str):

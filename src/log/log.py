@@ -74,10 +74,12 @@ class Log:
 
     def parse_episode_events(self, please_wait :PleaseWait, min_progress_percent, mid_progress_percent, max_progress_percent):
         episode_events = []
+        episode_object_locations = []
         saved_events = []
         intro = True
         saved_debug = ""
         evaluation_rewards = []
+        saved_object_locations = None
 
         file_size = os.path.getsize(self.log_file_name)
         file_amount_read = 0
@@ -86,16 +88,19 @@ class Log:
             for str in file:
                 if str.startswith(parse.EPISODE_STARTS_WITH):
                     intro = False
-                    parse.parse_episode_event(str, episode_events, saved_events, saved_debug)
+                    parse.parse_episode_event(str, episode_events, episode_object_locations, saved_events, saved_debug, saved_object_locations)
                     saved_debug = ""
+                    saved_object_locations = None
                 elif parse.EPISODE_STARTS_WITH in str and parse.SENT_SIGTERM in str:
                     end_of_str = str[str.find(parse.EPISODE_STARTS_WITH):]
                     intro = False
-                    parse.parse_episode_event(end_of_str, episode_events, saved_events, saved_debug)
+                    parse.parse_episode_event(end_of_str, episode_events, episode_object_locations, saved_events, saved_debug, saved_object_locations)
                     saved_debug = ""
+                    saved_object_locations = None
                 elif not intro:
                     evaluation_reward = parse.parse_evaluation_reward_info(str)
                     evaluation_count, evaluation_progresses = parse.parse_evaluation_progress_info(str)
+                    object_locations = parse.parse_object_locations(str)
 
                     if evaluation_reward != None:
                         evaluation_rewards.append(evaluation_reward)
@@ -105,8 +110,18 @@ class Log:
                         evaluation_rewards = []
                     elif str.startswith(parse.STILL_EVALUATING):
                         saved_debug = ""    # Make sure debug info doesn't include any output from evaluation phase
+                        saved_object_locations = None
+                    elif object_locations:
+                        saved_object_locations = object_locations
                     else:
                         saved_debug += str
+                else:
+                    object_locations = parse.parse_object_locations(str)
+                    if object_locations:
+                        saved_object_locations = object_locations
+                        intro = False
+
+
 
                 file_amount_read += len(str)
                 percent_read = file_amount_read / file_size * 100
@@ -119,7 +134,7 @@ class Log:
 
         for i, e in enumerate(episode_events[:-1]):
             iteration = i // self.log_meta.hyper.episodes_between_training
-            self.episodes.append(Episode(i, iteration, e))
+            self.episodes.append(Episode(i, iteration, e, episode_object_locations[i]))
             please_wait.set_progress(
                 mid_progress_percent + i / total_episodes * (max_progress_percent - mid_progress_percent))
 

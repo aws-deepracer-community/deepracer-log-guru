@@ -189,6 +189,11 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def draw_episode(self, episode):
 
+        for obj in episode.object_locations:
+            (x, y) = obj
+            size = 0.4
+            self.track_graphics.plot_box(x - size/2, y - size/2, x + size/2, y + size/2, "red")
+
         if self.colour_scheme.get() == COLOUR_SCHEME_TRACK_SPEED:
             plot_event_method = self.colour_scheme_track_speed
         elif self.colour_scheme.get() == COLOUR_SCHEME_REWARD:

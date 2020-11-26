@@ -128,7 +128,7 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
         return speed >= self.max_speed - 0.33 * self.speed_range
 
     def is_medium_speed(self, speed):
-        return speed >= self.max_speed - 0.66 * self.speed_range
+        return self.max_speed - 0.66 * self.speed_range <= speed < self.max_speed - 0.33 * self.speed_range
 
     def is_low_speed(self, speed):
         return speed < self.max_speed - 0.66 * self.speed_range

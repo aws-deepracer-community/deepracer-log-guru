@@ -74,12 +74,14 @@ class Log:
 
     def parse_episode_events(self, please_wait :PleaseWait, min_progress_percent, mid_progress_percent, max_progress_percent):
         episode_events = []
+        episode_iterations = []
         episode_object_locations = []
         saved_events = []
         intro = True
         saved_debug = ""
         evaluation_rewards = []
         saved_object_locations = None
+        iteration_id = 0
 
         file_size = os.path.getsize(self.log_file_name)
         file_amount_read = 0
@@ -108,6 +110,9 @@ class Log:
                         assert evaluation_count == len(evaluation_rewards)
                         self.evaluation_phases.append(EvaluationPhase(evaluation_rewards, evaluation_progresses))
                         evaluation_rewards = []
+                        while len(episode_events) > len(episode_iterations):
+                            episode_iterations.append(iteration_id)
+                        iteration_id += 1
                     elif str.startswith(parse.STILL_EVALUATING):
                         saved_debug = ""    # Make sure debug info doesn't include any output from evaluation phase
                         saved_object_locations = None
@@ -132,9 +137,11 @@ class Log:
 
         total_episodes = len(episode_events)
 
+        while len(episode_events) > len(episode_iterations):
+            episode_iterations.append(iteration_id)
+
         for i, e in enumerate(episode_events[:-1]):
-            iteration = i // self.log_meta.hyper.episodes_between_training
-            self.episodes.append(Episode(i, iteration, e, episode_object_locations[i]))
+            self.episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i]))
             please_wait.set_progress(
                 mid_progress_percent + i / total_episodes * (max_progress_percent - mid_progress_percent))
 

@@ -96,7 +96,10 @@ class EpisodeSelector:
         if not episode:
             self.tk_episode_info_var_.set("No Episode")
         else:
-            average_speed = round(episode.distance_travelled / episode.time_taken, 1)
+            if episode.time_taken > 0:
+                average_speed = round(episode.distance_travelled / episode.time_taken, 1)
+            else:
+                average_speed = 0
 
             self.tk_episode_info_var_.set(
                 "# " + str(episode.id) + "\n" +

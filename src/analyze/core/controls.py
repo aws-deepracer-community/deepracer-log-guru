@@ -99,6 +99,7 @@ class EpisodeAxisControl(Control):
     AXIS_PROGRESS = 3
     AXIS_DISTANCE = 4
     AXIS_LAP_POSITION = 5
+    AXIS_WAYPOINT_ID = 6
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Axis")
@@ -111,6 +112,7 @@ class EpisodeAxisControl(Control):
         self.add_radiobutton("Progress", self._show_what, EpisodeAxisControl.AXIS_PROGRESS)
         self.add_radiobutton("Distance", self._show_what, EpisodeAxisControl.AXIS_DISTANCE)
         self.add_radiobutton("Lap Position", self._show_what, EpisodeAxisControl.AXIS_LAP_POSITION)
+        self.add_radiobutton("Waypoint Id", self._show_what, EpisodeAxisControl.AXIS_WAYPOINT_ID)
 
     def show_time(self):
         return self._show_what.get() == EpisodeAxisControl.AXIS_TIME
@@ -126,6 +128,9 @@ class EpisodeAxisControl(Control):
 
     def show_lap_position(self):
         return self._show_what.get() == EpisodeAxisControl.AXIS_LAP_POSITION
+
+    def show_waypoint_id(self):
+        return self._show_what.get() == EpisodeAxisControl.AXIS_WAYPOINT_ID
 
 
 

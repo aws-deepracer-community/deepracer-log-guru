@@ -1,39 +1,21 @@
 from src.tracks.track import Track
 import src.configuration.personal_track_annotations as config
 
-# TODO - check whether waypoints end is correct or not ************ although not important now
-
-
-
-# Other people might want to change/personalize this value
-PRIVATE_DESCRIPTION = "Summit Raceway Dec 2019 Virtual Race"
-
 
 class SummitRacewayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "AWS Summit Raceway"
-        self.ui_description = "Start preparing your models for the 2020 AWS DeepRacer League by taking part in this pre-season time-trial race."
-        self.ui_length_in_m = 22.57  # metres
-        self.ui_width_in_cm = 91  # centimetres
-        self.ui_difficulty = "Easy"
+        self._ui_name = "AWS Summit Raceway"
+        self._ui_description = "Start preparing your models for the 2020 AWS DeepRacer League by taking part in this pre-season time-trial race."
+        self._ui_length_in_m = 22.57  # metres
+        self._ui_width_in_cm = 91  # centimetres
+        self._world_name = "Vegas_track"
+        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._annotations = config.summit_raceway_annotations
+        self._track_width = 1.07
 
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "Vegas_track"
-
-        # Divide track into sections
-        self.track_section_dividers = [0]
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.summit_raceway_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 1.07
-        self.track_waypoints = [
-
+        self._track_waypoints = [
             [4.503267526626587, 0.18162955343723297],
             [4.351881504058838, 0.18078652024269104],
             [4.2004945278167725, 0.17995046079158783],

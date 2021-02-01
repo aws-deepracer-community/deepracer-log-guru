@@ -253,7 +253,7 @@ def get_model_info_for_open_model_dialog(track):
             log = Log()
             log.load_meta(f)
 
-            if log.log_meta.world_name == track.world_name:
+            if track.has_world_name(log.log_meta.world_name):
                 model_name = log.log_meta.model_name
                 model_names.append(model_name)
                 model_files[model_name] = f

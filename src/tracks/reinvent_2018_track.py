@@ -1,41 +1,21 @@
 from src.tracks.track import Track
 import src.configuration.personal_track_annotations as config
 
-# TODO - check whether waypoints end is correct or not ************ although not important now
-
-
-
-# Other people might want to change/personalize these values
-
-PRIVATE_DESCRIPTION = "The original DeepRacer track"
-PRIVATE_SECTION_DIVIDERS = []
-
 
 class Reinvent2018Track(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "re:Invent 2018"
+        self._ui_name = "re:Invent 2018"
+        self._ui_description = "The official 2019 DeepRacer League Summit Circuit track."
+        self._ui_length_in_m = 17.6  # metres
+        self._ui_width_in_cm = 76  # centimetres
+        self._world_name = "reinvent_base"
+        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._annotations = config.reinvent_2018_annotations
+        self._track_width = 0.60
 
-        self.ui_description = "The official 2019 DeepRacer League Summit Circuit track."
-        self.ui_length_in_m = 17.6 # metres
-        self.ui_width_in_cm = 76 # centimetres
-        self.ui_difficulty = "Easy"
-
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "reinvent_base"
-
-        # Divide track into sections
-        self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.reinvent_2018_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 0.60
-        self.track_waypoints = [
+        self._track_waypoints = [
             [2.909995283569139, 0.6831924746239328],
             [3.3199952311658905, 0.6833390533713652],
             [3.41999521838461, 0.6833748042853732],

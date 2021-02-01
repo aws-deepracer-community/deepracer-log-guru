@@ -111,7 +111,7 @@ class AnalyzeFavouriteSpeed(TrackAnalyzer):
 
                 self.visitor_maps = []
                 for i in range(0, 3):
-                    self.visitor_maps.append(self.current_track.get_visitor_map(self.granularity.get() / 100))
+                    self.visitor_maps.append(self.current_track.get_new_visitor_map(self.granularity.get() / 100))
                 for i, e in enumerate(self.filtered_episodes):
                     if self.speed_choice.get() == ACTION_SPEED:
                         apply_to_visitor_map = e.apply_action_speed_to_visitor_map

@@ -72,7 +72,7 @@ class AnalyzeConvergence(TrackAnalyzer):
         if self.filtered_episodes:
             if not self.visitor_map:
                 self.please_wait.start("Calculating")
-                self.visitor_map = self.current_track.get_visitor_map(self.granularity.get()/100)
+                self.visitor_map = self.current_track.get_new_visitor_map(self.granularity.get() / 100)
                 for i, e in enumerate(self.filtered_episodes):
                     e.apply_to_visitor_map(self.visitor_map, skip, self.action_space_filter)
                     self.please_wait.set_progress((i+1) / len(self.filtered_episodes) * 100)

@@ -66,7 +66,7 @@ class AnalyzeRewardsPerWaypoint(GraphAnalyzer):
     def plot_rewards_per_waypoint(self, axes :Axes):
         # Plot data
 
-        num_waypoints = len(self.current_track.track_waypoints)
+        num_waypoints = self.current_track.get_number_of_waypoints()
 
         if self.show_all.get():
             if self.show_median.get():

@@ -1,41 +1,22 @@
 from src.tracks.track import Track
 import src.configuration.personal_track_annotations as config
 
-# TODO - check whether waypoints end is correct or not ************ although not important now
-
-
-
-# Other people might want to change/personalize these values
-
-PRIVATE_DESCRIPTION = "Sola - March 2020"
-PRIVATE_SECTION_DIVIDERS = []
-
 
 class Sola2020Track(Track):
     def __init__(self):
         super().__init__()
 
         # Details of the track as it appears on the training UI
-        self.ui_name = "SOLA Speedway"
+        self._ui_name = "SOLA Speedway"
+        self._ui_description = "The first track of the 2020 AWS DeepRacer League Virtual Circuit season is dedicated to our reigning champion: SOLA-DNP."
+        self._ui_length_in_m = 38.0  # metres
+        self._ui_width_in_cm = 106  # centimetres
+        self._world_name = "LGSWide"
+        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._annotations = config.sola_2020_annotations
+        self._track_width = 1.06
 
-        self.ui_description = "The first track of the 2020 AWS DeepRacer League Virtual Circuit season is dedicated to our reigning champion: SOLA-DNP."
-        self.ui_length_in_m = 38.0 # metres
-        self.ui_width_in_cm = 106 # centimetres
-        self.ui_difficulty = "*NONE*"
-
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "LGSWide"
-
-        # Divide track into sections
-        self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.sola_2020_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 1.06
-        self.track_waypoints = [
+        self._track_waypoints = [
             [-0.0028240084648132324, -4.460500001907349],
             [0.14731850102543656, -4.45957612991333],
             [0.2975682467222214, -4.454782605171204],

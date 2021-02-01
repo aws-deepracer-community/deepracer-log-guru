@@ -24,7 +24,6 @@ def get_all_tracks():
               RogerRacewayTrack(), FumiakiLoop2020Track(), SummitRacewayTrack(),
               Sola2020Track(), Baadal2020Track(), Barcelona2020Track(), BowtieTrack()
               ]:
-        t.prepare()
-        tracks[t.world_name] = t
+        t.prepare(tracks)
 
     return tracks

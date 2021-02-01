@@ -2,35 +2,20 @@ from src.tracks.track import Track
 import src.configuration.personal_track_annotations as config
 
 
-# Other people might want to change/personalize this value
-PRIVATE_DESCRIPTION = "Yun - Aug 2020"
-
-
 class YunSpeedwayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "Yun Speedway"
-        self.ui_description = "Yun is the Chinese word for cloud. The Yun Speedway is a broad loop with constant cornering, void of any major straightaway."
-        self.ui_length_in_m = 51  # metres
-        self.ui_width_in_cm = 107  # centimetres
-        self.ui_difficulty = "*NONE*"
+        self._ui_name = "Yun Speedway"
+        self._ui_description = "Yun is the Chinese word for cloud. The Yun Speedway is a broad loop with constant cornering, void of any major straightaway."
+        self._ui_length_in_m = 51  # metres
+        self._ui_width_in_cm = 107  # centimetres
+        self._world_name = "Albert"
+        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._annotations = config.yun_speedway_annotations
+        self._track_width = 1.066
 
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "Albert"
-
-        # Divide track into sections
-        self.track_section_dividers = [0]
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.yun_speedway_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 1.066
-        self.track_waypoints = [
-
+        self._track_waypoints = [
             (-5.10302591323852, 6.096558332443237), (-4.952847003936768, 6.095563888549805),
             (-4.802656412124634, 6.0964930057525635), (-4.652460098266602, 6.099183559417725),
             (-4.502285003662113, 6.102705955505371), (-4.352135419845581, 6.106913089752197),

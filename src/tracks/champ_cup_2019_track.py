@@ -1,39 +1,22 @@
 from src.tracks.track import Track
 import src.configuration.personal_track_annotations as config
 
-# Other people might want to change/personalize these values
-
-PRIVATE_DESCRIPTION = "Las Vegas 2019 Championship Cup"
-PRIVATE_SECTION_DIVIDERS = []
-
 
 class ChampionshipCup2019Track(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "The 2019 DeepRacer Championship Cup"
+        self._ui_name = "The 2019 DeepRacer Championship Cup"
+        self._ui_description = "This is the official track for the 2019 DeepRacer Championship Cup finals. Train your model on this track if you are taking part in the Knockouts, or plan to be at re:Invent 2019 where you will get the opportunity to race on the track for prizes and glory."
+        self._ui_length_in_m = 60.0  # metres
+        self._ui_width_in_cm = 107  # centimetres
+        self._world_name = "reInvent2019_track"
+        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._annotations = config.championship_cup_2019_annotations
+        self._track_width = 1.06
 
-        self.ui_description = "This is the official track for the 2019 DeepRacer Championship Cup finals. Train your model on this track if you are taking part in the Knockouts, or plan to be at re:Invent 2019 where you will get the opportunity to race on the track for prizes and glory."
-
-        self.ui_length_in_m = 60.0 # metres
-        self.ui_width_in_cm = 107 # centimetres
-        self.ui_difficulty = "*NONE*"
-
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "reInvent2019_track"
-
-        # Divide track into sections
-        self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.championship_cup_2019_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 1.06
-        self.track_waypoints = [
-            [0.3078780025243759, 2.830607533454895],  # [0, 0.3078780025243759, 2.830607533454895]
+        self._track_waypoints = [
+            [0.3078780025243759, 2.830607533454895],
             [0.3236568570137024, 2.6803284883499146],
             [0.3449653461575508, 2.5307400226593018],
             [0.3729203939437866, 2.3822485208511353],

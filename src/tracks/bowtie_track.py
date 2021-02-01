@@ -1,37 +1,21 @@
 from src.tracks.track import Track
 import src.configuration.personal_track_annotations as config
 
-# Other people might want to change/personalize these values
-
-PRIVATE_DESCRIPTION = "Bowtie Track"
-PRIVATE_SECTION_DIVIDERS = []
-
 
 class BowtieTrack(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "Bowtie Track"
+        self._ui_name = "Bowtie Track"
+        self._ui_description = "The Bowtie offers a simple symmetrical track with a twist. It features shallow turns that you can use to experiment with different racing behaviors."
+        self._ui_length_in_m = 17.43  # metres
+        self._ui_width_in_cm = 76  # centimetres
+        self._world_name = "Bowtie_track"
+        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._annotations = config.bowtie_annotations
+        self._track_width = 0.607
 
-        self.ui_description = "The Bowtie offers a simple symmetrical track with a twist. It features shallow turns that you can use to experiment with different racing behaviors."
-        self.ui_length_in_m = 17.43  # metres
-        self.ui_width_in_cm = 76  # centimetres
-        self.ui_difficulty = "*NONE*"
-
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "Bowtie_track"
-
-        # Divide track into sections
-        self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.bowtie_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 0.607
-        self.track_waypoints = \
+        self._track_waypoints = \
             [(2.0846271888571692, 0.8706601931795019), (2.194043764683286, 0.8716426671132462),
              (2.302089784648281, 0.8852901866321512), (2.4072427641819303, 0.9121101819974184),
              (2.5082300096655814, 0.9515110226619987), (2.604580425829049, 1.0017894453637004),

@@ -65,7 +65,7 @@ class Episode:
         self.quarter = None
 
     def get_starting_position_as_percent_from_race_start(self, track :Track):
-        first_event_percent = track.percent_from_race_start[self.events[0].closest_waypoint_index]
+        first_event_percent = track.get_waypoint_percent_from_race_start(self.events[0].closest_waypoint_index)
 
         #  5 is magic number because there are 20 evenly spaced start points, i.e. every 5% round the track
         return round(first_event_percent / 5) * 5
@@ -271,13 +271,13 @@ class Episode:
 
         for e in self.events:
             if not finish_event and are_close_waypoint_ids(e.closest_waypoint_index, start, track):
-                (x2, y2) = track.track_waypoints[start]
+                (x2, y2) = track.get_waypoint(start)
                 dist = (x2 - e.x) * (x2 - e.x) + (y2 - e.y) * (y2 - e.y)
                 if dist < start_dist:
                     start_dist = dist
                     start_event = e
             if start_event and are_close_waypoint_ids(e.closest_waypoint_index, finish, track):
-                (x2, y2) = track.track_waypoints[finish]
+                (x2, y2) = track.get_waypoint(finish)
                 dist = (x2 - e.x) * (x2 - e.x) + (y2 - e.y) * (y2 - e.y)
                 if dist < finish_dist:
                     finish_dist = dist
@@ -300,7 +300,7 @@ def are_close_waypoint_ids(id1, id2, track :Track):
     if abs(id1 - id2) <= 2:
         return True
 
-    if max(id1, id2) >= len(track.track_waypoints) - 1 and min(id1, id2) <= 2:
+    if max(id1, id2) >= track.get_number_of_waypoints() - 1 and min(id1, id2) <= 2:
         return True
     else:
         return False

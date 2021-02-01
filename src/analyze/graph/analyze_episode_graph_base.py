@@ -84,7 +84,7 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
             plot_x, wrap_point = self.get_plot_data_waypoints()
             general_title = "by Waypoint Id"
             axis_label = "Waypoint Id"
-            max_xscale_override = len(self.current_track.track_waypoints)
+            max_xscale_override = self.current_track.get_number_of_waypoints()
 
         plot_y_bar_values_per_step = self.get_plot_bar_values_per_step(wrap_point)
         plot_y_line_values_per_step = self.get_plot_line_values_per_step(wrap_point)
@@ -185,10 +185,10 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
             waypoint_id = v.closest_waypoint_index
             waypoints.append(waypoint_id)
 
-            if not wrap_point and was_near_end and waypoint_id < len(self.current_track.track_waypoints) * 0.2:
+            if not wrap_point and was_near_end and waypoint_id < self.current_track.get_number_of_waypoints() * 0.2:
                 wrap_point = i
 
-            was_near_end = waypoint_id > len(self.current_track.track_waypoints) * 0.8
+            was_near_end = waypoint_id > self.current_track.get_number_of_waypoints() * 0.8
 
         if wrap_point:
             waypoints = waypoints[wrap_point:] + [math.nan] + waypoints[:wrap_point]

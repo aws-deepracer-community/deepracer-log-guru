@@ -99,7 +99,7 @@ class LogEventInfoWindow(tk.Toplevel):
         (prev_bearing, prev_distance) = track.get_bearing_and_distance_from_previous_waypoint(event.closest_waypoint_index)
 
         self.waypoint_id.set(str(event.closest_waypoint_index))
-        self.waypoint_lap_position.set(str(round(track.percent_from_race_start[event.closest_waypoint_index], 1)) + "  %")
+        self.waypoint_lap_position.set(str(round(track.get_waypoint_percent_from_race_start(event.closest_waypoint_index), 1)) + "  %")
         self.waypoint_bearing_to_next.set(str(round(next_bearing)))
         self.waypoint_distance_to_next.set(str(round(next_distance, 2)) + " m")
         self.waypoint_bearing_from_previous.set(str(round(prev_bearing)))
@@ -113,7 +113,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.state_heading.set(str(round(event.heading)))
         self.state_true_bearing.set(str(round(event.true_bearing)))
         self.state_skew.set(str(round(event.skew)))
-        self.state_side.set(track.get_position_of_point_relative_to_waypoint((event.x, event.y), event.closest_waypoint_index))
+        self.state_side.set(track._get_position_of_point_relative_to_waypoint((event.x, event.y), event.closest_waypoint_index))
         self.state_distance_from_centre.set("")
         self.state_all_wheels_on_track.set(str(event.all_wheels_on_track))
 

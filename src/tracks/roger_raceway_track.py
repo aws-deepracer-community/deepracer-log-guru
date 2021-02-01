@@ -2,35 +2,20 @@ from src.tracks.track import Track
 import src.configuration.personal_track_annotations as config
 
 
-# Other people might want to change/personalize this value
-PRIVATE_DESCRIPTION = "Roger - July 2020"
-
-
 class RogerRacewayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "Roger Raceway"
-        self.ui_description = "The Roger Raceway is named in honor of the 2019 Championship Cup bronze medalist Roger Chu."
-        self.ui_length_in_m = 60  # metres
-        self.ui_width_in_cm = 107  # centimetres
-        self.ui_difficulty = "*NONE*"
+        self._ui_name = "Roger Raceway"
+        self._ui_description = "The Roger Raceway is named in honor of the 2019 Championship Cup bronze medalist Roger Chu."
+        self._ui_length_in_m = 60  # metres
+        self._ui_width_in_cm = 107  # centimetres
+        self._world_name = "July_2020"
+        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._annotations = config.roger_raceway_annotations
+        self._track_width = 0.914
 
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "July_2020"
-
-        # Divide track into sections
-        self.track_section_dividers = [0]
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.roger_raceway_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 0.914
-        self.track_waypoints = [
-
+        self._track_waypoints = [
                          [-0.730726957321167, -0.8597202152013779],
                          [-1.1528210043907166, -0.860040083527565],
                          [-1.5706024765968323, -0.8600375205278397],

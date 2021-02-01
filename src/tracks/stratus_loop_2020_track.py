@@ -1,37 +1,21 @@
 from src.tracks.track import Track
 import src.configuration.personal_track_annotations as config
 
-# Other people might want to change/personalize these values
-
-PRIVATE_DESCRIPTION = "Stratus - October 2020"
-PRIVATE_SECTION_DIVIDERS = []
-
 
 class StratusLoop2020Track(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "Stratus Loop"
+        self._ui_name = "Stratus Loop"
+        self._ui_description = "An all-out sprint to the finish line, the Stratus Loop is a speed-loving track featuring two massive straightaways punctuated by broad, sweeping hairpins"
+        self._ui_length_in_m = 60.0  # metres
+        self._ui_width_in_cm = 107  # centimetres
+        self._world_name = "Aragon"
+        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._annotations = config.stratus_loop_annotations
+        self._track_width = 1.067
 
-        self.ui_description = "An all-out sprint to the finish line, the Stratus Loop is a speed-loving track featuring two massive straightaways punctuated by broad, sweeping hairpins"
-        self.ui_length_in_m = 60.0  # metres
-        self.ui_width_in_cm = 107  # centimetres
-        self.ui_difficulty = "*NONE*"
-
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "Aragon"
-
-        # Divide track into sections
-        self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.stratus_loop_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 1.067
-        self.track_waypoints = \
+        self._track_waypoints = \
             [(5.691117525100708, -3.4853140115737915), (5.540876150131226, -3.4840049743652344),
              (5.390634536743164, -3.4826955795288086), (5.240392446517944, -3.4813843965530396),
              (5.090150833129883, -3.480072498321533), (4.9399094581604, -3.478758454322815),

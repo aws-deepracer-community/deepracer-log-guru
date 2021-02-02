@@ -506,6 +506,14 @@ class MainApp(tk.Frame):
         self.view_manager.set_track_colour_blue()
         self.redraw()
 
+    def menu_callback_sectors_on(self):
+        self.view_manager.set_sectors_on()
+        self.redraw()
+
+    def menu_callback_sectors_off(self):
+        self.view_manager.set_sectors_off()
+        self.redraw()
+
     def menu_callback_waypoints_large(self):
         self.view_manager.set_waypoint_sizes_large()
         self.redraw()

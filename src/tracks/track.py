@@ -47,12 +47,10 @@ class Track:
         previous_right = self._drawing_points[-1].right
 
         for p in self._drawing_points:
-            if geometry.get_distance_between_points(previous_left, p.left) > 0.08:
-                track_graphics.plot_line(previous_left, p.left, 3, colour)
-                previous_left = p.left
-            if geometry.get_distance_between_points(previous_right, p.right) > 0.08:
-                track_graphics.plot_line(previous_right, p.right, 3, colour)
-                previous_right = p.right
+            track_graphics.plot_line(previous_left, p.left, 3, colour)
+            previous_left = p.left
+            track_graphics.plot_line(previous_right, p.right, 3, colour)
+            previous_right = p.right
 
     def draw_section_highlight(self, track_graphics: TrackGraphics, colour: str, start: int, finish: int):
         previous_left = self._drawing_points[start].left_outer
@@ -64,12 +62,10 @@ class Track:
             highlight_points = self._drawing_points[start:] + self._drawing_points[:finish + 1]
 
         for p in highlight_points:
-            if geometry.get_distance_between_points(previous_left, p.left_outer) > 0.08:
-                track_graphics.plot_line(previous_left, p.left_outer, 5, colour)
-                previous_left = p.left_outer
-            if geometry.get_distance_between_points(previous_right, p.right_outer) > 0.08:
-                track_graphics.plot_line(previous_right, p.right_outer, 5, colour)
-                previous_right = p.right_outer
+            track_graphics.plot_line(previous_left, p.left_outer, 5, colour)
+            previous_left = p.left_outer
+            track_graphics.plot_line(previous_right, p.right_outer, 5, colour)
+            previous_right = p.right_outer
 
     def draw_starting_line(self, track_graphics: TrackGraphics, colour: str):
         track_graphics.plot_line(self._drawing_points[0].left, self._drawing_points[0].right, 3, colour)
@@ -77,7 +73,7 @@ class Track:
     def draw_sector_dividers(self, track_graphics: TrackGraphics, colour: str):
         for p in self._drawing_points:
             if p.is_divider:
-                track_graphics.plot_line(p.left, p.right, 3, colour)
+                track_graphics.plot_line(p.left, p.right, 3, colour, (4, 2))
 
     def draw_waypoints(self, track_graphics: TrackGraphics, colour: str, minor_size: int, major_size: int):
         assert major_size >= minor_size
@@ -129,6 +125,12 @@ class Track:
             previous_id = len(self._drawing_points) - 1
 
         return self.get_bearing_and_distance_to_next_waypoint(previous_id)
+
+    def get_new_visitor_map(self, granularity: float):
+        return VisitorMap(
+            self._min_x - DISPLAY_BORDER, self._min_y - DISPLAY_BORDER,
+            self._max_x + DISPLAY_BORDER, self._max_y + DISPLAY_BORDER,
+            granularity)
 
     #
     # PRIVATE implementation
@@ -186,13 +188,21 @@ class Track:
         for i, w in enumerate(self._track_waypoints):
             # Tracks often contain a repeated waypoint, suspect this is deliberate to mess up waypoint algorithms!
             if previous != w:
+                previous_left = left
+                previous_right = right
                 left = geometry.get_target_point(previous, w, 90, self._track_width / 2)
+                if geometry.get_distance_between_points(previous_left, left) < 0.15:
+                    left = previous_left
+                else:
+                    left_outer = geometry.get_target_point(previous, w, 90, self._track_width / 2 + 0.08)
                 right = geometry.get_target_point(previous, w, -90, self._track_width / 2)
-                left_outer = geometry.get_target_point(previous, w, 90, self._track_width / 2 + 0.08)
-                right_outer = geometry.get_target_point(previous, w, -90, self._track_width / 2 + 0.08)
-                self._consider_new_point_in_area(left)
+                if geometry.get_distance_between_points(previous_right, right) < 0.15:
+                    right = previous_right
+                else:
+                    right_outer = geometry.get_target_point(previous, w, -90, self._track_width / 2 + 0.08)
+                self._consider_new_point_in_area(left_outer)
                 self._consider_new_point_in_area(w)
-                self._consider_new_point_in_area(right)
+                self._consider_new_point_in_area(right_outer)
                 previous = w
 
             is_divider = (i in self._track_sector_dividers)
@@ -292,9 +302,3 @@ class Track:
             self.is_divider = is_divider
             self.is_center = is_center
             self.section = section
-
-    def get_new_visitor_map(self, granularity: float):
-        return VisitorMap(
-            self._min_x - DISPLAY_BORDER, self._min_y - DISPLAY_BORDER,
-            self._max_x + DISPLAY_BORDER, self._max_y + DISPLAY_BORDER,
-            granularity)

@@ -41,7 +41,7 @@ class TrackGraphics:
 
         self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=fill_colour, width=0)
 
-    def plot_line(self, point1, point2, width, fill_colour):
+    def plot_line(self, point1, point2, width, fill_colour, dash_pattern=None):
         (x, y) = point1
         (x2, y2) = point2
 
@@ -51,7 +51,7 @@ class TrackGraphics:
         x2 = (x2 - self.min_x) * self.scale
         y2 = (self.max_y - y2) * self.scale
 
-        return self.canvas.create_line(x, y, x2, y2, fill=fill_colour, width=width)
+        return self.canvas.create_line(x, y, x2, y2, fill=fill_colour, width=width, dash=dash_pattern)
 
     def plot_angle_line(self, start_point, heading, distance, width, fill_colour):
         (x, y) = start_point

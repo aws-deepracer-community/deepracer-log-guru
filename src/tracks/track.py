@@ -199,13 +199,11 @@ class Track:
                 left = geometry.get_edge_point(previous, w, future, 90, self._track_width / 2)
                 if geometry.get_distance_between_points(previous_left, left) < edge_error_tolerance:
                     left = previous_left
-                    print("   Tolerance triggered LEFT", i)
                 else:
                     left_outer = geometry.get_edge_point(previous, w, future, 90, self._track_width / 2 + 0.08)
                 right = geometry.get_edge_point(previous, w, future, -90, self._track_width / 2)
                 if geometry.get_distance_between_points(previous_right, right) < edge_error_tolerance:
                     right = previous_right
-                    print("    Tolerance triggered RIGHT", i)
                 else:
                     right_outer = geometry.get_edge_point(previous, w, future, -90, self._track_width / 2 + 0.08)
                 self._consider_new_point_in_area(left_outer)

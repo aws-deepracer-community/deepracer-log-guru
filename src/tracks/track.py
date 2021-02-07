@@ -185,21 +185,29 @@ class Track:
         left_outer = previous
         right_outer = previous
 
+        edge_error_tolerance = 0.01
         for i, w in enumerate(self._track_waypoints):
             # Tracks often contain a repeated waypoint, suspect this is deliberate to mess up waypoint algorithms!
             if previous != w:
+                if i < len(self._track_waypoints)-1:
+                    future = self._track_waypoints[i + 1]
+                else:
+                    future = self._track_waypoints[0]
+
                 previous_left = left
                 previous_right = right
-                left = geometry.get_target_point(previous, w, 90, self._track_width / 2)
-                if geometry.get_distance_between_points(previous_left, left) < 0.15:
+                left = geometry.get_edge_point(previous, w, future, 90, self._track_width / 2)
+                if geometry.get_distance_between_points(previous_left, left) < edge_error_tolerance:
                     left = previous_left
+                    print("   Tolerance triggered LEFT", i)
                 else:
-                    left_outer = geometry.get_target_point(previous, w, 90, self._track_width / 2 + 0.08)
-                right = geometry.get_target_point(previous, w, -90, self._track_width / 2)
-                if geometry.get_distance_between_points(previous_right, right) < 0.15:
+                    left_outer = geometry.get_edge_point(previous, w, future, 90, self._track_width / 2 + 0.08)
+                right = geometry.get_edge_point(previous, w, future, -90, self._track_width / 2)
+                if geometry.get_distance_between_points(previous_right, right) < edge_error_tolerance:
                     right = previous_right
+                    print("    Tolerance triggered RIGHT", i)
                 else:
-                    right_outer = geometry.get_target_point(previous, w, -90, self._track_width / 2 + 0.08)
+                    right_outer = geometry.get_edge_point(previous, w, future, -90, self._track_width / 2 + 0.08)
                 self._consider_new_point_in_area(left_outer)
                 self._consider_new_point_in_area(w)
                 self._consider_new_point_in_area(right_outer)

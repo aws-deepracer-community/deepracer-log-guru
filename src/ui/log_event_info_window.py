@@ -84,7 +84,7 @@ class LogEventInfoWindow(tk.Toplevel):
 
         self.debug_output = tk.StringVar()
 
-        tk.Label(debug_frame, textvariable=self.debug_output, justify=tk.LEFT).grid(row=0, column=0, pady=5, padx=5, sticky=tk.W)
+        tk.Label(debug_frame, textvariable=self.debug_output, justify=tk.LEFT, font='TkFixedFont').grid(row=0, column=0, pady=5, padx=5, sticky=tk.W)
 
         self.geometry("+%d+%d" % (parent.winfo_rootx(), parent.winfo_rooty()))
 
@@ -127,7 +127,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.reward_total.set(get_pretty_large_integer(event.reward_total))
 
         if event.debug_log:
-            self.debug_output.set(event.debug_log[:700])
+            self.debug_output.set(event.debug_log[:1000])
         else:
             self.debug_output.set("")
 

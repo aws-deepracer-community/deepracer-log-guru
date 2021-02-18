@@ -121,7 +121,8 @@ def parse_episode_event(input, episode_events, episode_object_locations, saved_e
         episode_events.append([])
         episode_object_locations.append([])
 
-    input = input.split("\n", 1)[0]
+    input_line = input.split("\n", 1)[0]
+    split_input = input_line[14:].split(",")[:16]
 
     (episode,
      step,
@@ -138,7 +139,7 @@ def parse_episode_event(input, episode_events, episode_object_locations, saved_e
      closest_waypoint_index,
      track_length,
      time,
-     status) = input[14:].split(",")
+     status) = split_input
 
     event_meta = Event()
 
@@ -191,6 +192,7 @@ def parse_episode_event(input, episode_events, episode_object_locations, saved_e
                     episode_events.append([])
                     episode_object_locations.append([])
                 break
+
 
 def parse_evaluation_reward_info(str):
     if str.startswith(EVALUATION_REWARD_START):

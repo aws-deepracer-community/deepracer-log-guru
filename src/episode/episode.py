@@ -4,7 +4,7 @@ import numpy as np
 from src.action_space.action import MAX_POSSIBLE_ACTIONS
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.util.visitor import VisitorMap
-from src.utils.geometry import get_bearing_between_points, get_turn_between_directions
+from src.utils.geometry import get_bearing_between_points, get_turn_between_directions, get_distance_between_points
 
 from src.tracks.track import Track
 
@@ -102,11 +102,9 @@ class Episode:
         self.quarter = quarter
 
     def set_track_speed_on_events(self):
-        previous = [self.events[0]] * 7
+        previous = [self.events[0]] * 6   # 6 here matches DRF, but (TODO) DRF is marginally more accurate algorithm
         for e in self.events:
-            x_diff = e.x - previous[0].x
-            y_diff = e.y - previous[0].y
-            distance = math.sqrt(x_diff * x_diff + y_diff * y_diff)
+            distance = get_distance_between_points((e.x, e.y), (previous[0].x, previous[0].y))
             time_taken = e.time - previous[0].time
 
             if time_taken > 0:
@@ -118,7 +116,7 @@ class Episode:
             previous = previous[1:] + [e]
 
     def set_progress_speed_on_events(self):
-        previous = [self.events[0]] * 7
+        previous = [self.events[0]] * 5   # 5 here excludes current step so matches DRF of 6 including current step
         for e in self.events:
             progress_gain = e.progress - previous[0].progress
             time_taken = e.time - previous[0].time

@@ -11,7 +11,7 @@ from src.episode.episode import Episode
 
 
 
-class AnalyzeEpisodeSkew(GraphAnalyzer):
+class AnalyzeEpisodeSlide(GraphAnalyzer):
 
     def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg,
                  control_frame :tk.Frame, episode_selector :EpisodeSelector):
@@ -35,19 +35,17 @@ class AnalyzeEpisodeSkew(GraphAnalyzer):
 
         plot_x = get_plot_data_steps(episode)
 
-        plot_y_skew = get_plot_data_skew(episode)
+        plot_y_slide = get_plot_data_slide(episode)
 
         plot_y_track_speeds = get_plot_data_track_speeds(episode)
 
-
-        axes.plot(plot_x, plot_y_skew, color="C2", label="Skew", linewidth=3)
+        axes.plot(plot_x, plot_y_slide, color="C2", label="Slide", linewidth=3)
 
         # Setup formatting
-        axes.set_title("Skew for Episode #" + str(episode.id))
+        axes.set_title("Slide for Episode #" + str(episode.id))
         axes.set_xlabel("Step")
-        axes.set_ylabel("Skew (degrees)")
+        axes.set_ylabel("Slide (degrees)")
         axes.set_ybound(-20, 20)
-
 
 
 def get_plot_data_steps(episode :Episode):
@@ -68,11 +66,11 @@ def get_plot_data_track_speeds(episode :Episode):
 
     return np.array(speeds)
 
-def get_plot_data_skew(episode :Episode):
+def get_plot_data_slide(episode :Episode):
 
-    skew = []
+    slide = []
 
     for v in episode.events:
-        skew.append(v.skew)
+        slide.append(v.slide)
 
-    return np.array(skew)
+    return np.array(slide)

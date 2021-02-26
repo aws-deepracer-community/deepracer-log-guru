@@ -8,7 +8,7 @@ from src.utils.geometry import get_bearing_between_points, get_turn_between_dire
 
 from src.tracks.track import Track
 
-SKEW_SETTLING_PERIOD = 6
+SLIDE_SETTLING_PERIOD = 6
 
 
 class Episode:
@@ -54,8 +54,8 @@ class Episode:
         self.set_reward_total_on_events()
         self.set_time_elapsed_on_events()
         self.set_total_distance_travelled_on_events()
-        self.max_skew = 0.0
-        self.set_true_bearing_and_skew_on_events()
+        self.max_slide = 0.0
+        self.set_true_bearing_and_slide_on_events()
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -126,11 +126,11 @@ class Episode:
 
             previous = previous[1:] + [e]
 
-    def set_true_bearing_and_skew_on_events(self):
+    def set_true_bearing_and_slide_on_events(self):
 
         previous_event = self.events[0]
-        self.events[0].skew = 0.0
-        self.max_skew = 0.0
+        self.events[0].slide = 0.0
+        self.max_slide = 0.0
 
         for e in self.events[1:]:
             previous_location = (previous_event.x, previous_event.y)
@@ -139,9 +139,9 @@ class Episode:
                 e.true_bearing = previous_event.true_bearing
             else:
                 e.true_bearing = get_bearing_between_points(previous_location, current_location)
-            e.skew = get_turn_between_directions(e.heading, e.true_bearing)
-            if e.step > SKEW_SETTLING_PERIOD:
-                self.max_skew = max(self.max_skew, abs(e.skew))
+            e.slide = get_turn_between_directions(e.heading, e.true_bearing)
+            if e.step > SLIDE_SETTLING_PERIOD:
+                self.max_slide = max(self.max_slide, abs(e.slide))
             previous_event = e
 
 

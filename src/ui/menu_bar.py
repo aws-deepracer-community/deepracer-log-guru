@@ -90,7 +90,7 @@ class MenuBar():
         menu.add_command(label="Episode Route", command=self.main_app.menu_callback_analyze_route)
         menu.add_command(label="Episode Speed", command=self.main_app.menu_callback_analyze_episode_speed)
         menu.add_command(label="Episode Reward", command=self.main_app.menu_callback_analyze_episode_reward)
-        menu.add_command(label="Episode Skew", command=self.main_app.menu_callback_analyze_episode_skew)
+        menu.add_command(label="Episode Slide", command=self.main_app.menu_callback_analyze_episode_slide)
 
         menu.add_separator()
 

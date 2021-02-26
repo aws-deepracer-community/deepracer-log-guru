@@ -130,12 +130,15 @@ class Episode:
 
         previous_event = self.events[0]
         self.events[0].slide = 0.0
+        self.events[0].true_bearing = self.events[0].heading
         self.max_slide = 0.0
 
         for e in self.events[1:]:
             previous_location = (previous_event.x, previous_event.y)
             current_location = (e.x, e.y)
             if e.progress == previous_event.progress:   # Handle new AWS bug duplicating log entry position
+                e.true_bearing = previous_event.true_bearing
+            elif e.progress - previous_event.progress < 0.01 and (e.x == previous_event.x or e.y == previous_event.y):   # Very very slow progress can fool the start
                 e.true_bearing = previous_event.true_bearing
             else:
                 e.true_bearing = get_bearing_between_points(previous_location, current_location)

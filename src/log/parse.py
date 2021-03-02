@@ -38,7 +38,9 @@ MISC_ACTION_SPACE_B = "Action space from file: "
 OBJECT_LOCATIONS = "DRG-OBJECTS:"
 
 EVALUATION_REWARD_START = "## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = "
-EVALUATION_PROGRESSES_START = "Number of evaluations: "
+EVALUATION_PROGRESSES_START_OLD = "Number of evaluations: "
+EVALUATION_PROGRESSES_START = "[BestModelSelection] Number of evaluations: "
+
 
 def parse_intro_event(str, log_meta :LogMeta):
     if contains_hyper(str, HYPER_BATCH_SIZE):
@@ -201,8 +203,14 @@ def parse_evaluation_reward_info(str):
         return None
 
 def parse_evaluation_progress_info(str):
-    if str.startswith(EVALUATION_PROGRESSES_START):
-        info = str[len(EVALUATION_PROGRESSES_START):]
+    start_str_len = 0
+    if str.startswith(EVALUATION_PROGRESSES_START_OLD):
+        start_str_len = len(EVALUATION_PROGRESSES_START_OLD)
+    elif str.startswith(EVALUATION_PROGRESSES_START):
+        start_str_len = len(EVALUATION_PROGRESSES_START)
+
+    if start_str_len > 0:
+        info = str[start_str_len:]
         count = int(info.split(" ")[0])
 
         progresses_as_strings = info[:-2].split("[")[1].split(",")

@@ -55,3 +55,18 @@ def get_edge_point(previous: Point, mid: Point, future: Point, direction_offset:
     y = mid_y + math.sin(radians_to_edge_point) * distance
 
     return x, y
+
+# Distance of point from line comes from Wikipedia
+# https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+
+def get_distance_of_point_from_line(point: Point, line_point_a: Point, line_point_b: Point):
+    (x0, y0) = point
+    (x1, y1) = line_point_a
+    (x2, y2) = line_point_b
+
+    # print(point, line_point_a, line_point_b)
+
+    upper_expression = abs((x2 - x1) * (y1 - y0) - (x1 - x0) * (y2 - y1))
+    lower_expression = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+
+    return upper_expression / lower_expression

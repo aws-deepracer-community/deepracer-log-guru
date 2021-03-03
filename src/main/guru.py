@@ -310,7 +310,7 @@ class MainApp(tk.Frame):
         redraw_menu_afterwards = not self.log
 
         self.log = Log()
-        self.log.load_all(file_name, self.please_wait)
+        self.log.load_all(file_name, self.please_wait, self.current_track)
 
         self.status_frame.change_model_name(self.log.log_meta.model_name)
         self.apply_new_action_space()

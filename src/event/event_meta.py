@@ -30,4 +30,5 @@ class Event:
         self.total_distance_travelled = 0.0
         self.slide = 0.0
         self.true_bearing = 0.0
+        self.distance_from_center = 0.0
 

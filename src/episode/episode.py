@@ -4,7 +4,8 @@ import numpy as np
 from src.action_space.action import MAX_POSSIBLE_ACTIONS
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.util.visitor import VisitorMap
-from src.utils.geometry import get_bearing_between_points, get_turn_between_directions, get_distance_between_points
+from src.utils.geometry import get_bearing_between_points, get_turn_between_directions,\
+    get_distance_between_points, get_distance_of_point_from_line
 
 from src.tracks.track import Track
 
@@ -13,7 +14,7 @@ SLIDE_SETTLING_PERIOD = 6
 
 class Episode:
 
-    def __init__(self, id, iteration, events, object_locations):
+    def __init__(self, id, iteration, events, object_locations, track :Track):
 
         self.events = events
         self.id = id
@@ -56,6 +57,7 @@ class Episode:
         self.set_total_distance_travelled_on_events()
         self.max_slide = 0.0
         self.set_true_bearing_and_slide_on_events()
+        self.set_distance_from_center_on_events(track)
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -146,6 +148,20 @@ class Episode:
             if e.step > SLIDE_SETTLING_PERIOD:
                 self.max_slide = max(self.max_slide, abs(e.slide))
             previous_event = e
+
+    def set_distance_from_center_on_events(self, track :Track):
+        for e in self.events:
+            current_location = (e.x, e.y)
+            closest_waypoint = track.get_waypoint(e.closest_waypoint_index)
+            next_waypoint = track.get_next_different_waypoint(e.closest_waypoint_index)
+            previous_waypoint = track.get_previous_different_waypoint(e.closest_waypoint_index)
+            distance_of_next_waypoint = get_distance_between_points(current_location, next_waypoint)
+            distance_of_previous_waypoint = get_distance_between_points(current_location, previous_waypoint)
+            if distance_of_next_waypoint < distance_of_previous_waypoint:
+                e.distance_from_center = get_distance_of_point_from_line(current_location, closest_waypoint, next_waypoint)
+            else:
+                e.distance_from_center = get_distance_of_point_from_line(current_location, closest_waypoint, previous_waypoint)
+
 
 
     def set_reward_total_on_events(self):

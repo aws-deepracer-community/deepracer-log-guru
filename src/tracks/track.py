@@ -23,6 +23,31 @@ class Track:
     def get_waypoint(self, waypoint_id: int):
         return self._track_waypoints[waypoint_id]
 
+    def get_previous_different_waypoint(self, waypoint_id: int):
+        (avoid_x, avoid_y) = self.get_waypoint(waypoint_id)
+        (result_x, result_y) = (avoid_x, avoid_y)
+        result_id = waypoint_id
+
+        while avoid_x == result_x and avoid_y == result_y:
+            result_id -= 1
+            (result_x, result_y) = self.get_waypoint(result_id)
+
+        return result_x, result_y
+
+    def get_next_different_waypoint(self, waypoint_id: int):
+        (avoid_x, avoid_y) = self.get_waypoint(waypoint_id)
+        (result_x, result_y) = (avoid_x, avoid_y)
+        result_id = waypoint_id
+
+        while avoid_x == result_x and avoid_y == result_y:
+            if result_id >= len(self._track_waypoints) - 1:
+                result_id = 0
+            else:
+                result_id += 1
+            (result_x, result_y) = self.get_waypoint(result_id)
+
+        return result_x, result_y
+
     def get_waypoint_percent_from_race_start(self, waypoint_id: int):
         return self._percent_from_race_start[waypoint_id]
 

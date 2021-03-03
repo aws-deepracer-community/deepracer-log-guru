@@ -10,6 +10,8 @@ from src.episode.episode import Episode
 from src.log.log_meta import LogMeta
 from src.ui.please_wait import PleaseWait
 
+from src.tracks.track import Track
+
 META_FILE_SUFFIX = ".meta"
 LOG_FILE_SUFFIX = ".log"
 
@@ -39,11 +41,11 @@ class Log:
 
         # TODO assert log_info is the of the correct LogInfo type
 
-    def load_all(self, meta_file_name, please_wait :PleaseWait):
+    def load_all(self, meta_file_name, please_wait: PleaseWait, track: Track):
         please_wait.start("Loading")
         self.load_meta(meta_file_name)
         self.log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
-        self.parse_episode_events(please_wait, 0, 85, 95)
+        self.parse_episode_events(please_wait, 0, 85, 95, track)
         self.divide_episodes_into_quarters(please_wait, 95, 100)
         please_wait.stop(0.2)
 
@@ -72,7 +74,9 @@ class Log:
                 else:
                     parse.parse_intro_event(str, self.log_meta)
 
-    def parse_episode_events(self, please_wait :PleaseWait, min_progress_percent, mid_progress_percent, max_progress_percent):
+    def parse_episode_events(self, please_wait :PleaseWait,
+                             min_progress_percent, mid_progress_percent, max_progress_percent,
+                             track :Track):
         episode_events = []
         episode_iterations = []
         episode_object_locations = []
@@ -141,7 +145,7 @@ class Log:
             episode_iterations.append(iteration_id)
 
         for i, e in enumerate(episode_events[:-1]):
-            self.episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i]))
+            self.episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i], track))
             please_wait.set_progress(
                 mid_progress_percent + i / total_episodes * (max_progress_percent - mid_progress_percent))
 

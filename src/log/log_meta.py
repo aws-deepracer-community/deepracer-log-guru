@@ -1,6 +1,23 @@
 from src.action_space.action import MAX_POSSIBLE_ACTIONS
 
+
 class LogMeta:
+    #
+    # PUBLIC interface (this whole class is basically just a data structure, so it's all public)
+    #
+
+    def display_for_debug(self):
+        print("Model name = ", self.model_name)
+
+        print("World name = ", self.world_name)
+        print("Race type = ", self.race_type)
+        print("Job type = ", self.job_type)
+
+        print("Hyper:")
+        self.hyper.display_for_debug()
+
+        print("Episode Stats:")
+        self.episode_stats.display_for_debug()
 
     def __init__(self):
         self.hyper = LogMeta.HyperMeta()
@@ -36,7 +53,7 @@ class LogMeta:
 
         def display_for_debug(self):
             print("    Episode count = ", self.episode_count)
-            print("    Interation count = ", self.iteration_count)
+            print("    Iteration count = ", self.iteration_count)
             print("    Success count = ", self.success_count)
             print("    Success percent = ", round(self.success_count / self.episode_count * 100))
 
@@ -49,8 +66,6 @@ class LogMeta:
             print("    Best distance = ", round(self.best_distance, 2))
             print("    Average distance = ", round(self.average_distance, 2))
             print("    Worst distance = ", round(self.worst_distance, 2))
-
-
 
     class HyperMeta:
         def __init__(self):
@@ -70,18 +85,3 @@ class LogMeta:
             print("    Learning rate = ", self.learning_rate)
             print("    Episodes per training iteration = ", self.episodes_per_training_iteration)
             print("    Epochs = ", self.epochs)
-
-
-    def display_for_debug(self):
-
-        print("Model name = ", self.model_name)
-
-        print("World name = ", self.world_name)
-        print("Race type = ", self.race_type)
-        print("Job type = ", self.job_type)
-
-        print("Hyper:")
-        self.hyper.display_for_debug()
-
-        print("Episode Stats:")
-        self.episode_stats.display_for_debug()

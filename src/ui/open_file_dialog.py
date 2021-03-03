@@ -1,6 +1,7 @@
 import tkinter as tk
 from src.ui.dialog import Dialog
-from src.log.log import Log, get_model_info_for_open_model_dialog
+from src.log.log import Log
+from src.log.log_utils import get_model_info_for_open_model_dialog
 import os
 
 
@@ -25,19 +26,20 @@ class OpenFileDialog(Dialog):
 
             callback = lambda file_name=f: self.callback_open_file(file_name)
 
-            episode_stats = log.log_meta.episode_stats
+            log_meta = log.get_log_meta()
+            episode_stats = log_meta.episode_stats
 
-            progress_percent = str(round(log.log_meta.episode_stats.average_percent_complete)) + " %"
+            progress_percent = str(round(log_meta.episode_stats.average_percent_complete)) + " %"
             success_percent = str(round(episode_stats.success_count / episode_stats.episode_count * 100)) + " %"
 
-            self.place_in_grid(row, 0, tk.Button(master, text=log.log_meta.model_name, command=callback))
-            self.place_in_grid(row, 1, tk.Label(master, text=log.log_meta.race_type))
-            self.place_in_grid(row, 2, tk.Label(master, text=log.log_meta.job_type))
-            self.place_in_grid(row, 3, tk.Label(master, text=log.log_meta.episode_stats.episode_count))
+            self.place_in_grid(row, 0, tk.Button(master, text=log_meta.model_name, command=callback))
+            self.place_in_grid(row, 1, tk.Label(master, text=log_meta.race_type))
+            self.place_in_grid(row, 2, tk.Label(master, text=log_meta.job_type))
+            self.place_in_grid(row, 3, tk.Label(master, text=log_meta.episode_stats.episode_count))
             self.place_in_grid(row, 4, tk.Label(master, text=progress_percent))
             self.place_in_grid(row, 5, tk.Label(master, text=success_percent))
-            self.place_in_grid(row, 6, tk.Label(master, text=log.log_meta.episode_stats.best_steps))
-            self.place_in_grid(row, 7, tk.Label(master, text=log.log_meta.episode_stats.average_steps))
+            self.place_in_grid(row, 6, tk.Label(master, text=log_meta.episode_stats.best_steps))
+            self.place_in_grid(row, 7, tk.Label(master, text=log_meta.episode_stats.average_steps))
 
 
             #

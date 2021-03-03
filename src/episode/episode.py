@@ -14,7 +14,7 @@ SLIDE_SETTLING_PERIOD = 6
 
 class Episode:
 
-    def __init__(self, id, iteration, events, object_locations, track :Track):
+    def __init__(self, id, iteration, events, object_locations):
 
         self.events = events
         self.id = id
@@ -57,7 +57,6 @@ class Episode:
         self.set_total_distance_travelled_on_events()
         self.max_slide = 0.0
         self.set_true_bearing_and_slide_on_events()
-        self.set_distance_from_center_on_events(track)
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -66,12 +65,14 @@ class Episode:
         # THIS VARIABLE IS ASSIGNED RETROSPECTIVELY AFTER THE Log CLASS HAS LOADED ALL EPISODES
         self.quarter = None
 
+    def set_track(self, track: Track):
+        self.set_distance_from_center_on_events(track)
+
     def get_starting_position_as_percent_from_race_start(self, track :Track):
         first_event_percent = track.get_waypoint_percent_from_race_start(self.events[0].closest_waypoint_index)
 
         #  5 is magic number because there are 20 evenly spaced start points, i.e. every 5% round the track
         return round(first_event_percent / 5) * 5
-
 
     def get_distance_travelled(self):
 

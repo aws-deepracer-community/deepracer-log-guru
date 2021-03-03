@@ -312,10 +312,10 @@ class MainApp(tk.Frame):
         self.log = Log()
         self.log.load_all(file_name, self.please_wait, self.current_track)
 
-        self.status_frame.change_model_name(self.log.log_meta.model_name)
+        self.status_frame.change_model_name(self.log.get_log_meta().model_name)
         self.apply_new_action_space()
 
-        self.episode_filter.set_all_episodes(self.log.episodes)
+        self.episode_filter.set_all_episodes(self.log.get_episodes())
         self.reapply_episode_filter()
 
         if redraw_menu_afterwards:
@@ -323,9 +323,9 @@ class MainApp(tk.Frame):
             self.update()
 
     def apply_new_action_space(self):
-        self.action_space_filter.set_new_action_space(self.log.log_meta.action_space)
+        self.action_space_filter.set_new_action_space(self.log.get_log_meta().action_space)
         for v in self.all_analyzers:
-            v.set_action_space(self.log.log_meta.action_space)
+            v.set_action_space(self.log.get_log_meta().action_space)
             v.set_action_space_filter(self.action_space_filter)
 
     def reapply_action_space_filter(self):
@@ -340,11 +340,11 @@ class MainApp(tk.Frame):
 
         for v in self.all_analyzers:
             v.set_filtered_episodes(self.filtered_episodes)
-            v.set_all_episodes(self.log.episodes)
-            v.set_log_meta(self.log.log_meta)
-            v.set_evaluation_phases(self.log.evaluation_phases)
+            v.set_all_episodes(self.log.get_episodes())
+            v.set_log_meta(self.log.get_log_meta())
+            v.set_evaluation_phases(self.log.get_evaluation_phases())
 
-        self.status_frame.change_episodes(len(self.log.episodes), len(self.filtered_episodes))
+        self.status_frame.change_episodes(len(self.log.get_episodes()), len(self.filtered_episodes))
 
         self.redraw()
 
@@ -400,7 +400,7 @@ class MainApp(tk.Frame):
         self.reapply_episode_filter()
 
     def menu_callback_episodes_fast_laps(self):
-        es = self.log.log_meta.episode_stats
+        es = self.log.get_log_meta().episode_stats
         target_steps = round((es.average_steps + es.best_steps) / 2)
 
         self.episode_filter.reset()

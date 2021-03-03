@@ -4,12 +4,11 @@ import os
 
 import src.log.parse as parse
 
-from src.episode.episode import Episode
-from src.log.log_meta import LogMeta
-from src.ui.please_wait import PleaseWait
-
 from src.log.evaluation_phase import EvaluationPhase
+from src.log.log_meta import LogMeta
 
+from src.episode.episode import Episode
+from src.ui.please_wait import PleaseWait
 from src.tracks.track import Track
 
 META_FILE_SUFFIX = ".meta"
@@ -80,14 +79,14 @@ class Log:
 
     def _parse_intro_events(self):
         with open(self._log_file_name, "r") as file:
-            for str in file:
-                if str.startswith(parse.EPISODE_STARTS_WITH):
+            for line_of_text in file:
+                if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
                     break
                 else:
-                    parse.parse_intro_event(str, self._log_meta)
+                    parse.parse_intro_event(line_of_text, self._log_meta)
 
     def _parse_episode_events(self, please_wait: PleaseWait,
-                              min_progress_percent, mid_progress_percent, max_progress_percent):
+                              min_progress_percent: float, mid_progress_percent: float, max_progress_percent: float):
         episode_events = []
         episode_iterations = []
         episode_object_locations = []
@@ -102,24 +101,26 @@ class Log:
         file_amount_read = 0
 
         with open(self._log_file_name, "r") as file:
-            for str in file:
-                if str.startswith(parse.EPISODE_STARTS_WITH):
+            for line_of_text in file:
+                if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
                     intro = False
-                    parse.parse_episode_event(str, episode_events, episode_object_locations, saved_events, saved_debug, saved_object_locations)
+                    parse.parse_episode_event(line_of_text, episode_events, episode_object_locations,
+                                              saved_events, saved_debug, saved_object_locations)
                     saved_debug = ""
                     saved_object_locations = None
-                elif parse.EPISODE_STARTS_WITH in str and parse.SENT_SIGTERM in str:
-                    end_of_str = str[str.find(parse.EPISODE_STARTS_WITH):]
+                elif parse.EPISODE_STARTS_WITH in line_of_text and parse.SENT_SIGTERM in line_of_text:
+                    end_of_str = line_of_text[line_of_text.find(parse.EPISODE_STARTS_WITH):]
                     intro = False
-                    parse.parse_episode_event(end_of_str, episode_events, episode_object_locations, saved_events, saved_debug, saved_object_locations)
+                    parse.parse_episode_event(end_of_str, episode_events, episode_object_locations,
+                                              saved_events, saved_debug, saved_object_locations)
                     saved_debug = ""
                     saved_object_locations = None
                 elif not intro:
-                    evaluation_reward = parse.parse_evaluation_reward_info(str)
-                    evaluation_count, evaluation_progresses = parse.parse_evaluation_progress_info(str)
-                    object_locations = parse.parse_object_locations(str)
+                    evaluation_reward = parse.parse_evaluation_reward_info(line_of_text)
+                    evaluation_count, evaluation_progresses = parse.parse_evaluation_progress_info(line_of_text)
+                    object_locations = parse.parse_object_locations(line_of_text)
 
-                    if evaluation_reward != None:
+                    if evaluation_reward is not None:
                         evaluation_rewards.append(evaluation_reward)
                     elif evaluation_count and evaluation_progresses:
                         assert evaluation_count == len(evaluation_rewards)
@@ -128,20 +129,20 @@ class Log:
                         while len(episode_events) > len(episode_iterations):
                             episode_iterations.append(iteration_id)
                         iteration_id += 1
-                    elif str.startswith(parse.STILL_EVALUATING):
-                        saved_debug = ""    # Make sure debug info doesn't include any output from evaluation phase
+                    elif line_of_text.startswith(parse.STILL_EVALUATING):
+                        saved_debug = ""  # Make sure debug info doesn't include any output from evaluation phase
                         saved_object_locations = None
                     elif object_locations:
                         saved_object_locations = object_locations
                     else:
-                        saved_debug += str
+                        saved_debug += line_of_text
                 else:
-                    object_locations = parse.parse_object_locations(str)
+                    object_locations = parse.parse_object_locations(line_of_text)
                     if object_locations:
                         saved_object_locations = object_locations
                         intro = False
 
-                file_amount_read += len(str)
+                file_amount_read += len(line_of_text)
                 percent_read = file_amount_read / file_size * 100
                 scaled_percent_read = (mid_progress_percent - min_progress_percent) / 100 * percent_read
                 please_wait.set_progress(min_progress_percent + scaled_percent_read)
@@ -177,13 +178,15 @@ class Log:
                 total_success_steps += e.step_count
                 total_success_distance += e.distance_travelled
 
-                if self._log_meta.episode_stats.best_steps == 0 or e.step_count < self._log_meta.episode_stats.best_steps:
+                if self._log_meta.episode_stats.best_steps == 0 or \
+                        e.step_count < self._log_meta.episode_stats.best_steps:
                     self._log_meta.episode_stats.best_steps = e.step_count
 
                 if self._log_meta.episode_stats.worst_steps < e.step_count:
                     self._log_meta.episode_stats.worst_steps = e.step_count
 
-                if self._log_meta.episode_stats.best_distance == 0.0 or e.distance_travelled < self._log_meta.episode_stats.best_distance:
+                if self._log_meta.episode_stats.best_distance == 0.0 or \
+                        e.distance_travelled < self._log_meta.episode_stats.best_distance:
                     self._log_meta.episode_stats.best_distance = e.distance_travelled
 
                 if self._log_meta.episode_stats.worst_distance < e.distance_travelled:
@@ -198,19 +201,24 @@ class Log:
         if self._log_meta.episode_stats.success_count > 0:
             self._log_meta.episode_stats.average_steps = int(
                 round(total_success_steps / self._log_meta.episode_stats.success_count))
-            self._log_meta.episode_stats.average_distance = total_success_distance / self._log_meta.episode_stats.success_count
+            self._log_meta.episode_stats.average_distance = \
+                total_success_distance / self._log_meta.episode_stats.success_count
 
         if self._log_meta.episode_stats.episode_count > 0:
-            self._log_meta.episode_stats.average_percent_complete = total_percent_complete / self._log_meta.episode_stats.episode_count
+            self._log_meta.episode_stats.average_percent_complete = \
+                total_percent_complete / self._log_meta.episode_stats.episode_count
 
-    def _divide_episodes_into_quarters(self, please_wait :PleaseWait, min_progress_percent, max_progress_percent):
+    def _divide_episodes_into_quarters(self, please_wait: PleaseWait,
+                                       min_progress_percent: float, max_progress_percent: float):
         total_iterations = self._episodes[-1].iteration + 1
 
         if total_iterations < 4:
-            self._divide_episodes_into_quarters_ignoring_iteration(please_wait, min_progress_percent, max_progress_percent)
+            self._divide_episodes_into_quarters_ignoring_iteration(please_wait,
+                                                                   min_progress_percent, max_progress_percent)
         else:
             for e in self._episodes:
-                please_wait.set_progress(min_progress_percent + e.iteration / total_iterations * (max_progress_percent - min_progress_percent))
+                please_wait.set_progress(min_progress_percent +
+                                         e.iteration / total_iterations * (max_progress_percent - min_progress_percent))
 
                 if e.iteration <= round(total_iterations * 0.25) - 1:
                     e.set_quarter(1)
@@ -221,7 +229,9 @@ class Log:
                 else:
                     e.set_quarter(4)
 
-    def _divide_episodes_into_quarters_ignoring_iteration(self, please_wait :PleaseWait, min_progress_percent, max_progress_percent):
+    def _divide_episodes_into_quarters_ignoring_iteration(self, please_wait: PleaseWait,
+                                                          min_progress_percent: float,
+                                                          max_progress_percent: float):
         total_episodes = len(self._episodes)
         e: Episode
         for e in self._episodes:
@@ -241,4 +251,3 @@ class Log:
         e: Episode
         for e in self._episodes:
             e.set_track(track)
-

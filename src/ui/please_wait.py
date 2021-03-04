@@ -1,14 +1,21 @@
 import tkinter as tk
 import time
 
+NEARLY_COMPLETE = 99.99
+REDRAW_INTERVAL = 0.15
+SMALL_JUMP = 2
+BIG_JUMP = 25
+
+
 class PleaseWait():
     def __init__(self, root :tk.Frame, canvas :tk.Canvas):
         self.canvas = canvas
         self.root = root
 
-        self.percent_done = 0
+        self.percent_done = 0.0
         self.widgets = []
         self.title = ""
+        self.last_drawn_at = time.time()
 
     def start(self, title):
         self.stop()
@@ -20,17 +27,21 @@ class PleaseWait():
         time.sleep(pause_seconds)
         self.remove_previous_widgets()
         self.canvas.update()
-        self.percent_done = 0
+        self.percent_done = 0.0
         self.root.config(cursor="")
 
-    def set_progress(self, percent_done):
-        if percent_done < 0:
-            percent_done = 0
-        if percent_done > 100:
-            percent_done = 100
-        if int(round(percent_done)) != self.percent_done:
-            self.percent_done = int(round(percent_done))
+    def set_progress(self, percent_done: float):
+        if percent_done < 0.0:
+            percent_done = 0.0
+        if percent_done > 100.0:
+            percent_done = 100.0
+
+        jump = percent_done - self.percent_done
+        if percent_done >= NEARLY_COMPLETE > self.percent_done or jump >= BIG_JUMP or \
+                (jump >= SMALL_JUMP and time.time() - self.last_drawn_at >= REDRAW_INTERVAL):
+            self.percent_done = percent_done
             self.redraw()
+            self.last_drawn_at = time.time()
 
     def redraw(self):
         self.remove_previous_widgets()

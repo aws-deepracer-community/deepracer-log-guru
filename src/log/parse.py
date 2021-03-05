@@ -16,35 +16,35 @@ STILL_EVALUATING = "Reset agent"
 
 def parse_intro_event(line_of_text: str, log_meta: LogMeta):
     if _contains_hyper(line_of_text, HYPER_BATCH_SIZE):
-        log_meta.hyper.batch_size = get_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE)
+        log_meta.hyper.batch_size = _get_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE)
 
     if _contains_hyper(line_of_text, HYPER_ENTROPY):
-        log_meta.hyper.entropy = get_hyper_float_value(line_of_text, HYPER_ENTROPY)
+        log_meta.hyper.entropy = _get_hyper_float_value(line_of_text, HYPER_ENTROPY)
 
     if _contains_hyper(line_of_text, HYPER_DISCOUNT_FACTOR):
-        log_meta.hyper.discount_factor = get_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR)
+        log_meta.hyper.discount_factor = _get_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR)
 
     if _contains_hyper(line_of_text, HYPER_LOSS_TYPE):
-        log_meta.hyper.loss_type = get_hyper_string_value(line_of_text, HYPER_LOSS_TYPE)
+        log_meta.hyper.loss_type = _get_hyper_string_value(line_of_text, HYPER_LOSS_TYPE)
 
     if _contains_hyper(line_of_text, HYPER_LEARNING_RATE):
-        log_meta.hyper.learning_rate = get_hyper_float_value(line_of_text, HYPER_LEARNING_RATE)
+        log_meta.hyper.learning_rate = _get_hyper_float_value(line_of_text, HYPER_LEARNING_RATE)
 
     if _contains_hyper(line_of_text, HYPER_EPISODES_BETWEEN_TRAINING):
-        log_meta.hyper.episodes_between_training = get_hyper_integer_value(line_of_text,
-                                                                           HYPER_EPISODES_BETWEEN_TRAINING)
+        log_meta.hyper.episodes_between_training = _get_hyper_integer_value(line_of_text,
+                                                                            HYPER_EPISODES_BETWEEN_TRAINING)
 
     if _contains_hyper(line_of_text, HYPER_EPOCHS):
-        log_meta.hyper.epochs = get_hyper_integer_value(line_of_text, HYPER_EPOCHS)
+        log_meta.hyper.epochs = _get_hyper_integer_value(line_of_text, HYPER_EPOCHS)
 
-    if contains_parameter(line_of_text, PARAM_WORLD_NAME):
-        log_meta.world_name = get_parameter_string_value(line_of_text, PARAM_WORLD_NAME)
+    if _contains_parameter(line_of_text, PARAM_WORLD_NAME):
+        log_meta.world_name = _get_parameter_string_value(line_of_text, PARAM_WORLD_NAME)
 
-    if contains_parameter(line_of_text, PARAM_RACE_TYPE):
-        log_meta.race_type = get_parameter_string_value(line_of_text, PARAM_RACE_TYPE)
+    if _contains_parameter(line_of_text, PARAM_RACE_TYPE):
+        log_meta.race_type = _get_parameter_string_value(line_of_text, PARAM_RACE_TYPE)
 
-    if contains_parameter(line_of_text, PARAM_JOB_TYPE):
-        log_meta.job_type = get_parameter_string_value(line_of_text, PARAM_JOB_TYPE)
+    if _contains_parameter(line_of_text, PARAM_JOB_TYPE):
+        log_meta.job_type = _get_parameter_string_value(line_of_text, PARAM_JOB_TYPE)
 
     if log_meta.model_name == "":
         if line_of_text.startswith(MISC_MODEL_NAME_OLD_LOGS):
@@ -168,7 +168,7 @@ def parse_evaluation_reward_info(line_of_text: str):
         return None
 
 
-def parse_evaluation_progress_info(line_of_text):
+def parse_evaluation_progress_info(line_of_text: str):
     start_str_len = 0
     if line_of_text.startswith(EVALUATION_PROGRESSES_START_OLD):
         start_str_len = len(EVALUATION_PROGRESSES_START_OLD)
@@ -241,33 +241,31 @@ def _parse_actions(line_of_text: str, log_meta: LogMeta, starts_with: str):
 
 # Parse hyper parameters
 
-def _contains_hyper(line_of_text, hyper_name):
+def _contains_hyper(line_of_text: str, hyper_name: str):
     return line_of_text.startswith('  "' + hyper_name + '": ')
 
 
-def get_hyper_integer_value(line_of_text, hyper_name):
+def _get_hyper_integer_value(line_of_text: str, hyper_name: str):
     chop_chars = len(hyper_name) + 6
-
     return int(line_of_text[chop_chars:].split(",")[0])
 
 
-def get_hyper_float_value(line_of_text, hyper_name):
+def _get_hyper_float_value(line_of_text: str, hyper_name: str):
     chop_chars = len(hyper_name) + 6
-
     return float(line_of_text[chop_chars:].split(",")[0])
 
 
-def get_hyper_string_value(line_of_text, hyper_name):
+def _get_hyper_string_value(line_of_text: str, hyper_name: str):
     chop_chars = len(hyper_name) + 6
     return line_of_text[chop_chars:].split('"')[1]
 
 
 # Parse the high level training settings
 
-def contains_parameter(line_of_text, parameter_name):
+def _contains_parameter(line_of_text: str, parameter_name: str):
     return line_of_text.startswith(" * /" + parameter_name + ": ")
 
 
-def get_parameter_string_value(line_of_text, parameter_name):
+def _get_parameter_string_value(line_of_text: str, parameter_name: str):
     chop_chars = len(parameter_name) + 6
     return line_of_text[chop_chars:].split("\n")[0]

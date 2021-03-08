@@ -169,3 +169,57 @@ class GraphFormatControl(Control):
     def show_trends(self):
         return self._show_trends.get()
 
+
+class EpisodeRouteColourSchemeControl(Control):
+
+    SCHEME_REWARD = 1
+    SCHEME_ACTION_SPEED = 2
+    SCHEME_TRACK_SPEED = 3
+    SCHEME_PROGRESS_SPEED = 4
+    SCHEME_SMOOTHNESS = 5
+    SCHEME_STEERING = 6
+    SCHEME_SLIDE = 7
+    SCHEME_PER_SECOND = 8
+    SCHEME_NONE = 9
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Colour Scheme")
+        self._colour_scheme = tk.IntVar(value=EpisodeRouteColourSchemeControl.SCHEME_NONE)
+
+    def add_buttons(self):
+        self.add_radiobutton("Reward", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_REWARD)
+        self.add_radiobutton("Action Speed", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_ACTION_SPEED)
+        self.add_radiobutton("Track Speed", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_TRACK_SPEED)
+        self.add_radiobutton("Progress Speed", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_PROGRESS_SPEED)
+        self.add_radiobutton("Smoothness", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_SMOOTHNESS)
+        self.add_radiobutton("Steering", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_STEERING)
+        self.add_radiobutton("Slide", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_SLIDE)
+        self.add_radiobutton("Per Second", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_PER_SECOND)
+        self.add_radiobutton("None", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_NONE)
+
+    def scheme_reward(self):
+        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_REWARD
+
+    def scheme_action_speed(self):
+        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_ACTION_SPEED
+
+    def scheme_track_speed(self):
+        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_TRACK_SPEED
+
+    def scheme_progress_speed(self):
+        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_PROGRESS_SPEED
+
+    def scheme_smoothness(self):
+        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_SMOOTHNESS
+
+    def scheme_steering(self):
+        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_STEERING
+
+    def scheme_slide(self):
+        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_SLIDE
+
+    def scheme_per_second(self):
+        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_PER_SECOND
+
+    def scheme_none(self):
+        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_NONE

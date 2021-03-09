@@ -236,6 +236,13 @@ class Episode:
                 self.apply_event_to_visitor_map_(e, previous, visitor_map)
             previous = e
 
+    def apply_progress_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
+        previous = self.events[0]
+        for e in self.events:
+            if e.step >= skip_count and is_correct_speed(e.progress_speed):
+                self.apply_event_to_visitor_map_(e, previous, visitor_map)
+            previous = e
+
     def apply_event_to_visitor_map_(self, e, previous, visitor_map):
         visitor_map.visit(e.x, e.y, self)
         x_diff = e.x - previous.x

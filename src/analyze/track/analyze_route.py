@@ -10,13 +10,7 @@ from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.selector.episode_selector import EpisodeSelector
 from src.action_space.action_util import get_min_and_max_action_speeds
 
-from src.analyze.core.controls import EpisodeRouteColourSchemeControl
-
-
-
-BLOB_SIZE_SMALL = "Small"
-BLOB_SIZE_MEDIUM = "Medium"
-BLOB_SIZE_LARGE = "Large"
+from src.analyze.core.controls import EpisodeRouteColourSchemeControl, TrackAppearanceOptions
 
 
 class AnalyzeRoute(TrackAnalyzer):
@@ -27,7 +21,9 @@ class AnalyzeRoute(TrackAnalyzer):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
         self._colour_scheme_control = EpisodeRouteColourSchemeControl(guru_parent_redraw, control_frame)
-
+        self._appearance_control = TrackAppearanceOptions(guru_parent_redraw, control_frame,
+                                                          self.redraw_new_appearance, self.redraw_new_appearance,
+                                                          None)
         self.episode_selector = episode_selector
 
         self.chosen_event = None
@@ -37,29 +33,16 @@ class AnalyzeRoute(TrackAnalyzer):
 
         self.floating_window = None
 
-        self.blob_size = tk.StringVar()
-        self.blob_size.set(BLOB_SIZE_MEDIUM)
-
         self.show_heading = False
         self.show_true_bearing = False
-
 
     def build_control_frame(self, control_frame):
 
         self._colour_scheme_control.add_to_control_frame()
+        self._appearance_control.add_to_control_frame()
 
-        ####
-
-        format_group = tk.LabelFrame(control_frame, text="Format", padx=5, pady=5)
-        format_group.pack()
-
-        tk.Label(format_group, text="Blob size").grid(column=0, row=0, pady=2, padx=5, sticky=tk.W)
-        tk.OptionMenu(format_group, self.blob_size, BLOB_SIZE_SMALL, BLOB_SIZE_MEDIUM, BLOB_SIZE_LARGE,
-                      command=self.redraw_new_blob_size).grid(column=0, row=1, pady=2, padx=5, sticky=tk.W)
-
-        #######
-
-        episode_selector_frame = self.episode_selector.get_label_frame(control_frame, self.callback_selected_episode_changed)
+        episode_selector_frame = self.episode_selector.get_label_frame(
+            control_frame, self.callback_selected_episode_changed)
         episode_selector_frame.pack()
 
     def left_button_pressed(self, track_point):
@@ -97,14 +80,14 @@ class AnalyzeRoute(TrackAnalyzer):
         self.draw_chosen_event_()
 
     def get_increased_blob_size(self):
-        if self.blob_size.get() == BLOB_SIZE_SMALL:
+        if self._appearance_control.small_blob_size():
             return 0
-        elif self.blob_size.get() == BLOB_SIZE_MEDIUM:
+        elif self._appearance_control.medium_blob_size():
             return 1
-        elif self.blob_size.get() == BLOB_SIZE_LARGE:
+        elif self._appearance_control.large_blob_size():
             return 2
 
-    def redraw_new_blob_size(self, new_value):
+    def redraw_new_appearance(self, new_value):
         self.guru_parent_redraw()
         self.draw_chosen_event_()
 
@@ -296,4 +279,3 @@ class AnalyzeRoute(TrackAnalyzer):
     def set_show_true_bearing(self, setting :bool):
         self.show_true_bearing = setting
         self.draw_chosen_event_()
-

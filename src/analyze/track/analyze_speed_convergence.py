@@ -4,7 +4,7 @@ from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
 from src.ui.please_wait import PleaseWait
 from src.analyze.core.controls import ConvergenceGranularityControl, SpeedControl,\
-    TrackAppearanceOptions, EpisodeRadioButtonControl
+    TrackAppearanceOptions, EpisodeRadioButtonControl, SkipStartsControl
 
 
 from src.action_space.action_util import *
@@ -26,22 +26,17 @@ class AnalyzeSpeedConvergence(TrackAnalyzer):
         self._speed_control = SpeedControl(self.chosen_new_speed, control_frame)
         self._appearance_control = TrackAppearanceOptions(guru_parent_redraw, control_frame,
                                                   None, self.chosen_new_appearance, self.chosen_new_appearance)
+        self._skip_starts_control = SkipStartsControl(self.chosen_new_episodes, control_frame)
 
         self.visitor_maps = None
-        self.skip_starts = tk.BooleanVar(value=True)
         self.please_wait = please_wait
 
     def build_control_frame(self, control_frame):
-
-        tk.Checkbutton(
-            control_frame, text="Skip Starts",
-            variable=self.skip_starts,
-            command=self.checkbutton_press_skip_starts).pack()
-
         self._episodes_control.add_to_control_frame()
         self._granularity_control.add_to_control_frame()
         self._appearance_control.add_to_control_frame()
         self._speed_control.add_to_control_frame()
+        self._skip_starts_control.add_to_control_frame()
 
     def redraw(self):
         if self.visitor_maps:
@@ -72,7 +67,7 @@ class AnalyzeSpeedConvergence(TrackAnalyzer):
     def warning_action_space_filter_changed(self):
         self.visitor_maps = None
 
-    def checkbutton_press_skip_starts(self):
+    def chosen_skip_starts(self):
         self.visitor_maps = None
         self.guru_parent_redraw()
 
@@ -92,7 +87,7 @@ class AnalyzeSpeedConvergence(TrackAnalyzer):
         self.guru_parent_redraw()
 
     def recalculate(self):
-        if self.skip_starts.get():
+        if self._skip_starts_control.skip_starts():
             skip = 20
         else:
             skip = 0

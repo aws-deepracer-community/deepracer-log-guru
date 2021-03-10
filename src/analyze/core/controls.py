@@ -16,7 +16,8 @@ class Control:
         self.add_buttons()
         self.label_frame.pack()
 
-    def add_checkbutton(self, title, tk_var: tk.BooleanVar):
+    def add_checkbutton(self, title, tk_var: tk.BooleanVar, default_value: bool):
+        tk_var.set(default_value)
         tk.Checkbutton(
             self.label_frame, text=title, variable=tk_var,
             command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=3)
@@ -48,21 +49,21 @@ class EpisodeCheckButtonControl(Control):
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
         super().__init__(guru_parent_redraw, control_frame, "Episodes")
 
-        self._show_all = tk.BooleanVar(value="True")
-        self._show_filtered = tk.BooleanVar(value="False")
+        self._show_all = tk.BooleanVar()
+        self._show_filtered = tk.BooleanVar()
 
         if include_evaluations:
-            self._show_evaluations = tk.BooleanVar(value="False")
+            self._show_evaluations = tk.BooleanVar()
         else:
             self._show_evaluations = None
 
     def add_buttons(self):
 
-        self.add_checkbutton("All", self._show_all)
-        self.add_checkbutton("Filtered", self._show_filtered)
+        self.add_checkbutton("All", self._show_all, True)
+        self.add_checkbutton("Filtered", self._show_filtered, False)
 
         if self._show_evaluations:
-            self.add_checkbutton("Evaluations", self._show_evaluations)
+            self.add_checkbutton("Evaluations", self._show_evaluations, False)
 
     def show_all(self):
         return self._show_all.get()
@@ -149,11 +150,11 @@ class PredictionsControl(Control):
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Predictions")
 
-        self._show_predictions = tk.BooleanVar(value="False")
+        self._show_predictions = tk.BooleanVar()
 
     def add_buttons(self):
 
-        self.add_checkbutton("Show Predictions", self._show_predictions)
+        self.add_checkbutton("Show Predictions", self._show_predictions, False)
 
     def show_predictions(self):
         return self._show_predictions.get()
@@ -164,13 +165,13 @@ class GraphFormatControl(Control):
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Format")
 
-        self._swap_axes = tk.BooleanVar(value="False")
-        self._show_trends = tk.BooleanVar(value="False")
+        self._swap_axes = tk.BooleanVar()
+        self._show_trends = tk.BooleanVar()
 
     def add_buttons(self):
 
-        self.add_checkbutton("Swap Axes", self._swap_axes)
-        self.add_checkbutton("Show Trends", self._show_trends)
+        self.add_checkbutton("Swap Axes", self._swap_axes, False)
+        self.add_checkbutton("Show Trends", self._show_trends, False)
 
     def swap_axes(self):
         return self._swap_axes.get()
@@ -344,3 +345,46 @@ class TrackAppearanceOptions(Control):
 
     def very_bright_brightness(self):
         return self._brightness.get() == TrackAppearanceOptions._BRIGHTNESS_VERY_BRIGHT
+
+
+class SkipStartsControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Skip")
+
+        self._skip_starts = tk.BooleanVar()
+
+    def add_buttons(self):
+        self.add_checkbutton("Skip starts", self._skip_starts, True)
+
+    def skip_starts(self):
+        return self._skip_starts.get()
+
+
+class StatsControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Stats")
+
+        self._show_mean = tk.BooleanVar()
+        self._show_median = tk.BooleanVar()
+        self._show_best = tk.BooleanVar()
+        self._show_worst = tk.BooleanVar()
+
+    def add_buttons(self):
+        self.add_checkbutton("Mean", self._show_mean, True)
+        self.add_checkbutton("Median", self._show_median, False)
+        self.add_checkbutton("Best", self._show_best, False)
+        self.add_checkbutton("Worst", self._show_worst, False)
+
+    def show_mean(self):
+        return self._show_mean.get()
+
+    def show_median(self):
+        return self._show_median.get()
+
+    def show_best(self):
+        return self._show_best.get()
+
+    def show_worst(self):
+        return self._show_worst.get()

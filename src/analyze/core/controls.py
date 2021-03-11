@@ -388,3 +388,23 @@ class StatsControl(Control):
 
     def show_worst(self):
         return self._show_worst.get()
+
+
+class RoundingControl(Control):
+
+    _ROUNDING_EXACT = 1
+    _ROUNDING_INTEGER = 2
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Rounding")
+        self._rounding = tk.IntVar(value=RoundingControl._ROUNDING_EXACT)
+
+    def add_buttons(self):
+        self.add_radiobutton("Exact", self._rounding, RoundingControl._ROUNDING_EXACT)
+        self.add_radiobutton("Integer", self._rounding, RoundingControl._ROUNDING_INTEGER)
+
+    def rounding_exact(self):
+        return self._rounding.get() == RoundingControl._ROUNDING_EXACT
+
+    def rounding_integer(self):
+        return self._rounding.get() == RoundingControl._ROUNDING_INTEGER

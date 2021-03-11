@@ -2,13 +2,11 @@ import tkinter as tk
 import numpy as np
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.gridspec import GridSpec
 from matplotlib.axes import Axes
-from matplotlib.ticker import PercentFormatter
-from matplotlib.ticker import MultipleLocator
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
+from src.analyze.core.controls import EpisodeCheckButtonControl
 
 
 class AnalyzeCompleteLapPercentage(GraphAnalyzer):
@@ -17,50 +15,29 @@ class AnalyzeCompleteLapPercentage(GraphAnalyzer):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
-        self.show_all = tk.BooleanVar()
-        self.show_filtered = tk.BooleanVar()
-        self.show_evaluations = tk.BooleanVar()
+        self._episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame, True)
 
-        self.show_filtered.set(True)
-        self.show_evaluations.set(True)
-
+        # self.show_filtered.set(True)
+        # self.show_evaluations.set(True)
 
     def build_control_frame(self, control_frame):
-
-        episodes_group = tk.LabelFrame(control_frame, text="Episodes", padx=5, pady=5)
-        episodes_group.pack()
-
-        tk.Checkbutton(
-            episodes_group, text="All Episodes",
-            variable=self.show_all,
-            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
-
-        tk.Checkbutton(
-            episodes_group, text="Filtered Episodes",
-            variable=self.show_filtered,
-            command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
-
-        tk.Checkbutton(
-            episodes_group, text="Evaluations",
-            variable=self.show_evaluations,
-            command=self.guru_parent_redraw).grid(column=0, row=2, pady=5, padx=5)
+        self._episode_control.add_to_control_frame()
 
     def add_plots(self):
         if not self.all_episodes:
             return
 
-        axes :Axes = self.graph_figure.add_subplot()
-
+        axes: Axes = self.graph_figure.add_subplot()
 
         # Plot data
 
-        if self.show_all.get():
+        if self._episode_control.show_all():
             add_plot_for_episodes(axes, "All Episodes", self.all_episodes, "C1")
 
-        if self.filtered_episodes and self.show_filtered.get():
+        if self.filtered_episodes and self._episode_control.show_filtered():
             add_plot_for_episodes(axes, "Filtered Episodes", self.filtered_episodes, "C2")
 
-        if self.show_evaluations.get():
+        if self._episode_control.show_evaluations():
             add_plot_for_evaluations(axes, "Evaluations", self.evaluation_phases, "C3")
 
         # Format the plot
@@ -69,7 +46,6 @@ class AnalyzeCompleteLapPercentage(GraphAnalyzer):
 
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
-
 
 
 def get_plot_data_for_episodes(episodes):
@@ -91,10 +67,10 @@ def get_plot_data_for_episodes(episodes):
 
     return plot_iteration, plot_data
 
+
 def add_plot_for_episodes(axes :Axes, label, episodes, colour):
     (plot_x, plot_y) = get_plot_data_for_episodes(episodes)
     axes.plot(plot_x, plot_y, colour, label=label)
-
 
 
 def get_plot_data_for_evaluations(evaluation_phases):
@@ -107,6 +83,7 @@ def get_plot_data_for_evaluations(evaluation_phases):
         plot_data[i] = eval_list.count(100) / len(eval_list) * 100
 
     return plot_iteration, plot_data
+
 
 def add_plot_for_evaluations(axes :Axes, label, evaluation_phases, colour):
     (plot_x, plot_y) = get_plot_data_for_evaluations(evaluation_phases)

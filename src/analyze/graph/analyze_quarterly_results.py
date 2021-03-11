@@ -20,8 +20,6 @@ class AnalyzeQuarterlyResults(GraphAnalyzer):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
-        self.show_what = tk.IntVar(value=SHOW_ALL)
-
         self.episode_control = EpisodeRadioButtonControl(guru_parent_redraw, control_frame)
 
 

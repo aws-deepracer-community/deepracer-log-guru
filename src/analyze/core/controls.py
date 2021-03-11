@@ -11,7 +11,7 @@ class Control:
         self.label_frame = None
 
     def add_to_control_frame(self):
-        self.label_frame = tk.LabelFrame(self.control_frame, text=self.title, padx=5, pady=3)
+        self.label_frame = tk.LabelFrame(self.control_frame, text=self.title, padx=5, pady=2)
         self.row = 0
         self.add_buttons()
         self.label_frame.pack()
@@ -20,13 +20,13 @@ class Control:
         tk_var.set(default_value)
         tk.Checkbutton(
             self.label_frame, text=title, variable=tk_var,
-            command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=3)
+            command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=2)
         self.row += 1
 
     def add_radiobutton(self, title, tk_var: tk.IntVar, value: int):
         tk.Radiobutton(
             self.label_frame, text=title, variable=tk_var, value=value,
-            command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=3)
+            command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=2)
         self.row += 1
 
     def add_dropdown(self, title, tk_var: tk.StringVar, default_value: str, values: list[str], callback):

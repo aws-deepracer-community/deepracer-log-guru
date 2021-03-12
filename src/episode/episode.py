@@ -50,6 +50,7 @@ class Episode:
         self.repeated_action_percent = self.get_repeated_action_percent()
 
         self.peak_track_speed = 0
+        self.peak_progress_speed = 0
         self.set_track_speed_on_events()
         self.set_progress_speed_on_events()
         self.set_reward_total_on_events()
@@ -126,6 +127,9 @@ class Episode:
 
             if time_taken > 0:
                 e.progress_speed = progress_gain / 100 * e.track_length / time_taken
+
+                if e.progress_speed > self.peak_progress_speed:
+                    self.peak_progress_speed = e.progress_speed
 
             previous = previous[1:] + [e]
 

@@ -4,7 +4,7 @@ from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
 from src.ui.please_wait import PleaseWait
 from src.analyze.core.controls import ConvergenceGranularityControl, SpeedControl,\
-    TrackAppearanceOptions, EpisodeRadioButtonControl, SkipStartsControl
+    TrackAppearanceControl, EpisodeRadioButtonControl, AdvancedFiltersControl
 
 
 from src.action_space.action_util import *
@@ -24,9 +24,9 @@ class AnalyzeSpeedConvergence(TrackAnalyzer):
         self._episodes_control = EpisodeRadioButtonControl(self.chosen_new_episodes, control_frame, False)
         self._granularity_control = ConvergenceGranularityControl(self.chosen_new_granularity, control_frame)
         self._speed_control = SpeedControl(self.chosen_new_speed, control_frame)
-        self._appearance_control = TrackAppearanceOptions(guru_parent_redraw, control_frame,
-                                                  None, self.chosen_new_appearance, self.chosen_new_appearance)
-        self._skip_starts_control = SkipStartsControl(self.chosen_new_episodes, control_frame)
+        self._appearance_control = TrackAppearanceControl(guru_parent_redraw, control_frame,
+                                                          None, self.chosen_new_appearance, self.chosen_new_appearance)
+        self._skip_starts_control = AdvancedFiltersControl(self.chosen_new_episodes, control_frame)
 
         self.visitor_maps = None
         self.please_wait = please_wait

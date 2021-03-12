@@ -28,7 +28,7 @@ class Analyzer:
 
         self.build_control_frame(self.control_frame)
 
-        tk.Label(self.control_frame, text="                                                 ").pack()
+        tk.Label(self.control_frame, text="                                                       ").pack()
 
         self.control_frame.pack(side=tk.RIGHT)
 

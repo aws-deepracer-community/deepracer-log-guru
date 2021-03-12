@@ -3,8 +3,8 @@ import tkinter as tk
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
 from src.ui.please_wait import PleaseWait
-from src.analyze.core.controls import ConvergenceGranularityControl, TrackAppearanceOptions,\
-    EpisodeRadioButtonControl, SkipStartsControl
+from src.analyze.core.controls import ConvergenceGranularityControl, TrackAppearanceControl,\
+    EpisodeRadioButtonControl, AdvancedFiltersControl
 
 
 class AnalyzeConvergence(TrackAnalyzer):
@@ -14,9 +14,9 @@ class AnalyzeConvergence(TrackAnalyzer):
 
         self._episodes_control = EpisodeRadioButtonControl(self.chosen_new_episodes, control_frame, False)
         self._granularity_control = ConvergenceGranularityControl(self.chosen_new_granularity, control_frame)
-        self._appearance_control = TrackAppearanceOptions(guru_parent_redraw, control_frame,
+        self._appearance_control = TrackAppearanceControl(guru_parent_redraw, control_frame,
                                                           None, None, self.chosen_new_appearance)
-        self._skip_starts_control = SkipStartsControl(self.chosen_skip_starts, control_frame)
+        self._skip_starts_control = AdvancedFiltersControl(self.chosen_skip_starts, control_frame)
 
         self.visitor_map = None
         self.please_wait = please_wait

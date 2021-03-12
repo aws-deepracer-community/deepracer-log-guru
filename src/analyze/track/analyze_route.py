@@ -10,7 +10,7 @@ from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.selector.episode_selector import EpisodeSelector
 from src.action_space.action_util import get_min_and_max_action_speeds
 
-from src.analyze.core.controls import EpisodeRouteColourSchemeControl, TrackAppearanceOptions
+from src.analyze.core.controls import EpisodeRouteColourSchemeControl, TrackAppearanceControl
 
 
 class AnalyzeRoute(TrackAnalyzer):
@@ -21,7 +21,7 @@ class AnalyzeRoute(TrackAnalyzer):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
         self._colour_scheme_control = EpisodeRouteColourSchemeControl(guru_parent_redraw, control_frame)
-        self._appearance_control = TrackAppearanceOptions(guru_parent_redraw, control_frame,
+        self._appearance_control = TrackAppearanceControl(guru_parent_redraw, control_frame,
                                                           self.redraw_new_appearance, self.redraw_new_appearance,
                                                           None)
         self.episode_selector = episode_selector

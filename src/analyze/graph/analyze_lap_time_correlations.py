@@ -7,20 +7,10 @@ from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 
-from src.analyze.core.controls import EpisodeCheckButtonControl, PredictionsControl, GraphFormatControl
+from src.analyze.core.controls import EpisodeCheckButtonControl, PredictionsControl, \
+    GraphFormatControl, CorrelationControl
 
-AXIS_DISTANCE = 1
-AXIS_PEAK_TRACK_SPEED = 2
-AXIS_STARTING_POINT = 3
-AXIS_AVERAGE_REWARD = 4
-AXIS_TOTAL_REWARD = 5
-AXIS_SMOOTHNESS = 6
-AXIS_ITERATION = 7
-AXIS_FLYING_START = 8
-AXIS_MAX_SLIDE = 9
-
-
-
+from src.episode.episode import Episode
 
 class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
@@ -28,56 +18,17 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
-        self.correlation_tk_var = tk.IntVar(value = AXIS_DISTANCE)
-
         self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame)
         self.predictions_control = PredictionsControl(guru_parent_redraw, control_frame)
+        self.correlation_control = CorrelationControl(guru_parent_redraw, control_frame)
         self.format_control = GraphFormatControl(guru_parent_redraw, control_frame)
-
 
     def build_control_frame(self, control_frame):
 
         self.episode_control.add_to_control_frame()
-
         self.predictions_control.add_to_control_frame()
-
-        #####
-
-        axis_group = tk.LabelFrame(control_frame, text="Correlate With", padx=5, pady=5)
-        axis_group.pack()
-
-        tk.Radiobutton(axis_group, text="Total Distance", variable=self.correlation_tk_var,
-            value=AXIS_DISTANCE, command=self.guru_parent_redraw).grid(column=0, row=0, pady=2, padx=5)
-
-        tk.Radiobutton(axis_group, text="Peak Track Speed", variable=self.correlation_tk_var,
-                       value=AXIS_PEAK_TRACK_SPEED, command=self.guru_parent_redraw).grid(column=0, row=1, pady=2, padx=5)
-
-        tk.Radiobutton(axis_group, text="Starting Point", variable=self.correlation_tk_var,
-                       value=AXIS_STARTING_POINT, command=self.guru_parent_redraw).grid(column=0, row=2, pady=2, padx=5)
-
-        tk.Radiobutton(axis_group, text="Average Reward", variable=self.correlation_tk_var,
-                       value=AXIS_AVERAGE_REWARD, command=self.guru_parent_redraw).grid(column=0, row=3, pady=2, padx=5)
-
-        tk.Radiobutton(axis_group, text="Total Reward", variable=self.correlation_tk_var,
-                       value=AXIS_TOTAL_REWARD, command=self.guru_parent_redraw).grid(column=0, row=4, pady=2, padx=5)
-
-        tk.Radiobutton(axis_group, text="Smoothness", variable=self.correlation_tk_var,
-                       value=AXIS_SMOOTHNESS, command=self.guru_parent_redraw).grid(column=0, row=5, pady=2, padx=5)
-
-        tk.Radiobutton(axis_group, text="Training Iteration", variable=self.correlation_tk_var,
-                       value=AXIS_ITERATION, command=self.guru_parent_redraw).grid(column=0, row=6, pady=2, padx=5)
-
-        tk.Radiobutton(axis_group, text="Flying Start", variable=self.correlation_tk_var,
-                       value=AXIS_FLYING_START, command=self.guru_parent_redraw).grid(column=0, row=7, pady=2, padx=5)
-
-        tk.Radiobutton(axis_group, text="Max Slide", variable=self.correlation_tk_var,
-                       value=AXIS_MAX_SLIDE, command=self.guru_parent_redraw).grid(column=0, row=8, pady=2, padx=5)
-
-        ######
-
+        self.correlation_control.add_to_control_frame()
         self.format_control.add_to_control_frame()
-
-
 
     def add_plots(self):
         axes: Axes = self.graph_figure.add_subplot()
@@ -100,34 +51,38 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
             return
 
         if make_predictions:
-            if self.correlation_tk_var.get() == AXIS_TOTAL_REWARD:
+            if self.correlation_control.correlate_total_reward():
                 plot_y = get_plot_data_total_rewards_predicted(episodes)
-            elif self.correlation_tk_var.get() == AXIS_STARTING_POINT:
+            elif self.correlation_control.correlate_starting_point():
                 plot_y = get_plot_data_starting_points_predicted(episodes)
-            elif self.correlation_tk_var.get() == AXIS_AVERAGE_REWARD:
+            elif self.correlation_control.correlate_average_reward():
                 plot_y = get_plot_data_average_rewards_predicted(episodes)
-            elif self.correlation_tk_var.get() == AXIS_ITERATION:
+            elif self.correlation_control.correlate_training_iteration():
                 plot_y = get_plot_data_iterations_predicted(episodes)
             else:
                 return
         else:
-            if self.correlation_tk_var.get() == AXIS_DISTANCE:
+            if self.correlation_control.correlate_total_distance():
                 plot_y = get_plot_data_distances(episodes)
-            elif self.correlation_tk_var.get() == AXIS_PEAK_TRACK_SPEED:
-                plot_y = get_plot_data_peak_speeds(episodes)
-            elif self.correlation_tk_var.get() == AXIS_STARTING_POINT:
+            elif self.correlation_control.correlate_peak_track_speed():
+                plot_y = get_plot_data_peak_track_speeds(episodes)
+            elif self.correlation_control.correlate_peak_progress_speed():
+                plot_y = get_plot_data_peak_progress_speeds(episodes)
+            elif self.correlation_control.correlate_starting_point():
                 plot_y = get_plot_data_starting_points(episodes)
-            elif self.correlation_tk_var.get() == AXIS_AVERAGE_REWARD:
+            elif self.correlation_control.correlate_average_reward():
                 plot_y = get_plot_data_average_rewards(episodes)
-            elif self.correlation_tk_var.get() == AXIS_TOTAL_REWARD:
+            elif self.correlation_control.correlate_total_reward():
                 plot_y = get_plot_data_total_rewards(episodes)
-            elif self.correlation_tk_var.get() == AXIS_SMOOTHNESS:
+            elif self.correlation_control.correlate_final_reward():
+                plot_y = get_plot_data_final_rewards(episodes)
+            elif self.correlation_control.correlate_smoothness():
                 plot_y = get_plot_data_repeats(episodes)
-            elif self.correlation_tk_var.get() == AXIS_ITERATION:
+            elif self.correlation_control.correlate_training_iteration():
                 plot_y = get_plot_data_iterations(episodes)
-            elif self.correlation_tk_var.get() == AXIS_FLYING_START:
+            elif self.correlation_control.correlate_flying_start():
                 plot_y = get_plot_data_flying_starts(episodes)
-            elif self.correlation_tk_var.get() == AXIS_MAX_SLIDE:
+            elif self.correlation_control.correlate_max_slide():
                 plot_y = get_plot_data_max_slide(episodes)
             else:
                 return
@@ -167,31 +122,37 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         general_title = "???"
         axis_label = "???"
 
-        if self.correlation_tk_var.get() == AXIS_DISTANCE:
-            general_title = "Distance"
+        if self.correlation_control.correlate_total_distance():
+            general_title = "Total Distance"
             axis_label = "Distance / metres"
-        if self.correlation_tk_var.get() == AXIS_PEAK_TRACK_SPEED:
+        if self.correlation_control.correlate_peak_track_speed():
             general_title = "Peak Track Speed"
             axis_label = "Peak Speed / metres per second"
-        if self.correlation_tk_var.get() == AXIS_STARTING_POINT:
+        if self.correlation_control.correlate_peak_progress_speed():
+            general_title = "Peak Progress Speed"
+            axis_label = "Peak Speed / metres per second"
+        if self.correlation_control.correlate_starting_point():
             general_title = "Starting Point"
             axis_label = "Start Waypoint Id"
-        if self.correlation_tk_var.get() == AXIS_AVERAGE_REWARD:
+        if self.correlation_control.correlate_average_reward():
             general_title = "Average Reward Per Step"
             axis_label = general_title
-        if self.correlation_tk_var.get() == AXIS_TOTAL_REWARD:
+        if self.correlation_control.correlate_total_reward():
             general_title = "Total Reward"
             axis_label = general_title
-        if self.correlation_tk_var.get() == AXIS_SMOOTHNESS:
-            general_title = "Repeat Action Percent"
+        if self.correlation_control.correlate_final_reward():
+            general_title = "Final Reward"
             axis_label = general_title
-        if self.correlation_tk_var.get() == AXIS_ITERATION:
+        if self.correlation_control.correlate_smoothness():
+            general_title = "Smoothness"
+            axis_label = "Repeat Action Percent"
+        if self.correlation_control.correlate_training_iteration():
             general_title = "Training Iteration"
             axis_label = general_title
-        if self.correlation_tk_var.get() == AXIS_FLYING_START:
-            general_title = "Track Speed At One Second"
-            axis_label = general_title
-        if self.correlation_tk_var.get() == AXIS_MAX_SLIDE:
+        if self.correlation_control.correlate_flying_start():
+            general_title = "Flying Start"
+            axis_label = "Track Speed At One Second / metres per second"
+        if self.correlation_control.correlate_max_slide():
             general_title = "Maximum Slide"
             axis_label = general_title
 
@@ -217,12 +178,23 @@ def get_plot_data_distances(episodes :list):
 
     return np.array(distances)
 
-def get_plot_data_peak_speeds(episodes :list):
+
+def get_plot_data_peak_track_speeds(episodes :list):
     speeds = []
 
     for e in episodes:
         if e.lap_complete:
             speeds.append(e.peak_track_speed)
+
+    return np.array(speeds)
+
+
+def get_plot_data_peak_progress_speeds(episodes :list):
+    speeds = []
+
+    for e in episodes:
+        if e.lap_complete:
+            speeds.append(e.peak_progress_speed)
 
     return np.array(speeds)
 
@@ -287,6 +259,17 @@ def get_plot_data_total_rewards(episodes: list):
     for e in episodes:
         if e.lap_complete:
             rewards.append(e.total_reward)
+
+    return np.array(rewards)
+
+
+def get_plot_data_final_rewards(episodes: list):
+    rewards = []
+
+    e: Episode
+    for e in episodes:
+        if e.lap_complete:
+            rewards.append(e.events[-1].reward)
 
     return np.array(rewards)
 

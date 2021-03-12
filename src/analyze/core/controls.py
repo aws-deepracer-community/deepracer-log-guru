@@ -11,22 +11,22 @@ class Control:
         self.label_frame = None
 
     def add_to_control_frame(self):
-        self.label_frame = tk.LabelFrame(self.control_frame, text=self.title, padx=5, pady=2)
+        self.label_frame = tk.LabelFrame(self.control_frame, text=self.title)
         self.row = 0
         self.add_buttons()
-        self.label_frame.pack()
+        self.label_frame.pack(pady=4)
 
     def add_checkbutton(self, title, tk_var: tk.BooleanVar, default_value: bool):
         tk_var.set(default_value)
         tk.Checkbutton(
             self.label_frame, text=title, variable=tk_var,
-            command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=2)
+            command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=1)
         self.row += 1
 
     def add_radiobutton(self, title, tk_var: tk.IntVar, value: int):
         tk.Radiobutton(
             self.label_frame, text=title, variable=tk_var, value=value,
-            command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=2)
+            command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=1)
         self.row += 1
 
     def add_dropdown(self, title, tk_var: tk.StringVar, default_value: str, values: list[str], callback):
@@ -276,13 +276,13 @@ class SpeedControl(Control):
         return self._speed.get() == SpeedControl._PROGRESS_SPEED
 
 
-class TrackAppearanceOptions(Control):
-    _BLOB_SIZE_SMALL = "Small     "
-    _BLOB_SIZE_MEDIUM = "Medium    "
-    _BLOB_SIZE_LARGE = "Large     "
+class TrackAppearanceControl(Control):
+    _BLOB_SIZE_SMALL = "Small       "
+    _BLOB_SIZE_MEDIUM = "Medium   "
+    _BLOB_SIZE_LARGE = "Large       "
     _BLOB_SIZES = [_BLOB_SIZE_SMALL, _BLOB_SIZE_MEDIUM, _BLOB_SIZE_LARGE]
 
-    _PALETTE_MONO = "Mono      "
+    _PALETTE_MONO = "Mono       "
     _PALETTE_3_COLOURS = "3 Colours "
     _PALETTE_5_COLOURS = "5 Colours "
     _PALETTES = [_PALETTE_MONO, _PALETTE_3_COLOURS, _PALETTE_5_COLOURS]
@@ -308,57 +308,72 @@ class TrackAppearanceOptions(Control):
     def add_buttons(self):
         if self._blob_size_callback:
             self.add_dropdown(
-                "Blob Size", self._blob_size, TrackAppearanceOptions._BLOB_SIZE_MEDIUM,
-                TrackAppearanceOptions._BLOB_SIZES, self._blob_size_callback)
+                "Blob Size", self._blob_size, TrackAppearanceControl._BLOB_SIZE_MEDIUM,
+                TrackAppearanceControl._BLOB_SIZES, self._blob_size_callback)
         if self._palette_callback:
             self.add_dropdown(
-                "Palette", self._palette, TrackAppearanceOptions._PALETTE_3_COLOURS,
-                TrackAppearanceOptions._PALETTES, self._palette_callback)
+                "Palette", self._palette, TrackAppearanceControl._PALETTE_3_COLOURS,
+                TrackAppearanceControl._PALETTES, self._palette_callback)
         if self._brightness_callback:
             self.add_dropdown(
-                "Brightness", self._brightness, TrackAppearanceOptions._BRIGHTNESS_NORMAL,
-                TrackAppearanceOptions._BRIGHTNESSES, self._brightness_callback)
+                "Brightness", self._brightness, TrackAppearanceControl._BRIGHTNESS_NORMAL,
+                TrackAppearanceControl._BRIGHTNESSES, self._brightness_callback)
 
     def small_blob_size(self):
-        return self._blob_size.get() == TrackAppearanceOptions._BLOB_SIZE_SMALL
+        return self._blob_size.get() == TrackAppearanceControl._BLOB_SIZE_SMALL
 
     def medium_blob_size(self):
-        return self._blob_size.get() == TrackAppearanceOptions._BLOB_SIZE_MEDIUM
+        return self._blob_size.get() == TrackAppearanceControl._BLOB_SIZE_MEDIUM
 
     def large_blob_size(self):
-        return self._blob_size.get() == TrackAppearanceOptions._BLOB_SIZE_LARGE
+        return self._blob_size.get() == TrackAppearanceControl._BLOB_SIZE_LARGE
 
     def mono_palette(self):
-        return self._palette.get() == TrackAppearanceOptions._PALETTE_MONO
+        return self._palette.get() == TrackAppearanceControl._PALETTE_MONO
 
     def three_colour_palette(self):
-        return self._palette.get() == TrackAppearanceOptions._PALETTE_3_COLOURS
+        return self._palette.get() == TrackAppearanceControl._PALETTE_3_COLOURS
 
     def five_colour_palette(self):
-        return self._palette.get() == TrackAppearanceOptions._PALETTE_5_COLOURS
+        return self._palette.get() == TrackAppearanceControl._PALETTE_5_COLOURS
 
     def normal_brightness(self):
-        return self._brightness.get() == TrackAppearanceOptions._BRIGHTNESS_NORMAL
+        return self._brightness.get() == TrackAppearanceControl._BRIGHTNESS_NORMAL
 
     def bright_brightness(self):
-        return self._brightness.get() == TrackAppearanceOptions._BRIGHTNESS_BRIGHT
+        return self._brightness.get() == TrackAppearanceControl._BRIGHTNESS_BRIGHT
 
     def very_bright_brightness(self):
-        return self._brightness.get() == TrackAppearanceOptions._BRIGHTNESS_VERY_BRIGHT
+        return self._brightness.get() == TrackAppearanceControl._BRIGHTNESS_VERY_BRIGHT
 
 
-class SkipStartsControl(Control):
+class AdvancedFiltersControl(Control):
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
-        super().__init__(guru_parent_redraw, control_frame, "Skip")
+        super().__init__(guru_parent_redraw, control_frame, "Advanced Filters")
 
         self._skip_starts = tk.BooleanVar()
+        self._filter_actions = tk.BooleanVar()
+        self._filter_sector = tk.BooleanVar()
+        self._filter_section = tk.BooleanVar()
 
     def add_buttons(self):
         self.add_checkbutton("Skip starts", self._skip_starts, True)
+        self.add_checkbutton("Actions", self._filter_actions, False)
+        self.add_checkbutton("Sector", self._filter_sector, False)
+        self.add_checkbutton("Section", self._filter_section, False)
 
     def skip_starts(self):
         return self._skip_starts.get()
+
+    def filter_actions(self):
+        return self._filter_actions.get()
+
+    def filter_sector(self):
+        return self._filter_actions.get()
+
+    def filter_section(self):
+        return self._filter_actions.get()
 
 
 class StatsControl(Control):
@@ -408,3 +423,67 @@ class RoundingControl(Control):
 
     def rounding_integer(self):
         return self._rounding.get() == RoundingControl._ROUNDING_INTEGER
+
+
+class CorrelationControl(Control):
+    _TOTAL_DISTANCE = 1
+    _PEAK_TRACK_SPEED = 2
+    _PEAK_PROGRESS_SPEED = 3
+    _STARTING_POINT = 4
+    _AVERAGE_REWARD = 5
+    _TOTAL_REWARD = 6
+    _FINAL_REWARD = 7
+    _SMOOTHNESS = 8
+    _TRAINING_ITERATION = 9
+    _FLYING_START = 10
+    _MAX_SLIDE = 11
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Correlate With")
+        self._correlation = tk.IntVar(value=CorrelationControl._TOTAL_DISTANCE)
+
+    def add_buttons(self):
+        self.add_radiobutton("Total Distance", self._correlation, CorrelationControl._TOTAL_DISTANCE)
+        self.add_radiobutton("Peak Track Speed", self._correlation, CorrelationControl._PEAK_TRACK_SPEED)
+        self.add_radiobutton("Peak Progress Speed", self._correlation, CorrelationControl._PEAK_PROGRESS_SPEED)
+        self.add_radiobutton("Starting Point", self._correlation, CorrelationControl._STARTING_POINT)
+        self.add_radiobutton("Average Reward", self._correlation, CorrelationControl._AVERAGE_REWARD)
+        self.add_radiobutton("Total Reward", self._correlation, CorrelationControl._TOTAL_REWARD)
+        self.add_radiobutton("Final Reward", self._correlation, CorrelationControl._FINAL_REWARD)
+        self.add_radiobutton("Smoothness", self._correlation, CorrelationControl._SMOOTHNESS)
+        self.add_radiobutton("Training Iteration", self._correlation, CorrelationControl._TRAINING_ITERATION)
+        self.add_radiobutton("Flying Start", self._correlation, CorrelationControl._FLYING_START)
+        self.add_radiobutton("Max Slide", self._correlation, CorrelationControl._MAX_SLIDE)
+
+    def correlate_total_distance(self):
+        return self._correlation.get() == CorrelationControl._TOTAL_DISTANCE
+
+    def correlate_peak_track_speed(self):
+        return self._correlation.get() == CorrelationControl._PEAK_TRACK_SPEED
+
+    def correlate_peak_progress_speed(self):
+        return self._correlation.get() == CorrelationControl._PEAK_PROGRESS_SPEED
+
+    def correlate_starting_point(self):
+        return self._correlation.get() == CorrelationControl._STARTING_POINT
+
+    def correlate_average_reward(self):
+        return self._correlation.get() == CorrelationControl._AVERAGE_REWARD
+
+    def correlate_total_reward(self):
+        return self._correlation.get() == CorrelationControl._TOTAL_REWARD
+
+    def correlate_final_reward(self):
+        return self._correlation.get() == CorrelationControl._FINAL_REWARD
+
+    def correlate_smoothness(self):
+        return self._correlation.get() == CorrelationControl._SMOOTHNESS
+
+    def correlate_training_iteration(self):
+        return self._correlation.get() == CorrelationControl._TRAINING_ITERATION
+
+    def correlate_flying_start(self):
+        return self._correlation.get() == CorrelationControl._FLYING_START
+
+    def correlate_max_slide(self):
+        return self._correlation.get() == CorrelationControl._MAX_SLIDE

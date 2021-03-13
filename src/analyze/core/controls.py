@@ -1,47 +1,14 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import tkinter as tk
 
-
-class Control:
-
-    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, title: str):
-        self.guru_parent_redraw = guru_parent_redraw
-        self.control_frame = control_frame
-        self.title = title
-        self.row = None
-        self.label_frame = None
-
-    def add_to_control_frame(self):
-        self.label_frame = tk.LabelFrame(self.control_frame, text=self.title)
-        self.row = 0
-        self.add_buttons()
-        self.label_frame.pack(pady=4)
-
-    def add_checkbutton(self, title, tk_var: tk.BooleanVar, default_value: bool):
-        tk_var.set(default_value)
-        tk.Checkbutton(
-            self.label_frame, text=title, variable=tk_var,
-            command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=1)
-        self.row += 1
-
-    def add_radiobutton(self, title, tk_var: tk.IntVar, value: int):
-        tk.Radiobutton(
-            self.label_frame, text=title, variable=tk_var, value=value,
-            command=self.guru_parent_redraw).grid(column=0, row=self.row, padx=5, pady=1)
-        self.row += 1
-
-    def add_dropdown(self, title, tk_var: tk.StringVar, default_value: str, values: list[str], callback):
-        assert default_value in values
-
-        tk_var.set(default_value)
-        tk.Label(self.label_frame, text=title).grid(column=0, row=self.row, pady=0, padx=5, sticky=tk.W)
-
-        tk.OptionMenu(self.label_frame, tk_var, values[0], values[1], values[2],
-                      command=callback).grid(column=0, row=self.row + 1, pady=1, padx=5, sticky=tk.W)
-        self.row += 2
-
-    # Abstract method for each control to provide
-    def add_buttons(self):
-        pass
+from src.analyze.core.control import Control
 
 
 class EpisodeCheckButtonControl(Control):
@@ -58,7 +25,6 @@ class EpisodeCheckButtonControl(Control):
             self._show_evaluations = None
 
     def add_buttons(self):
-
         self.add_checkbutton("All", self._show_all, True)
         self.add_checkbutton("Filtered", self._show_filtered, False)
 
@@ -76,33 +42,32 @@ class EpisodeCheckButtonControl(Control):
 
 
 class EpisodeRadioButtonControl(Control):
-
-    SHOW_ALL = 1
-    SHOW_FILTERED = 2
-    SHOW_EVALUATIONS = 3
+    _SHOW_ALL = 1
+    _SHOW_FILTERED = 2
+    _SHOW_EVALUATIONS = 3
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
         super().__init__(guru_parent_redraw, control_frame, "Episodes")
 
-        self._show_what = tk.IntVar(value=EpisodeRadioButtonControl.SHOW_ALL)
+        self._show_what = tk.IntVar(value=EpisodeRadioButtonControl._SHOW_ALL)
         self.include_evaluations = include_evaluations
 
     def add_buttons(self):
 
-        self.add_radiobutton("All", self._show_what, EpisodeRadioButtonControl.SHOW_ALL)
-        self.add_radiobutton("Filtered", self._show_what, EpisodeRadioButtonControl.SHOW_FILTERED)
+        self.add_radiobutton("All", self._show_what, EpisodeRadioButtonControl._SHOW_ALL)
+        self.add_radiobutton("Filtered", self._show_what, EpisodeRadioButtonControl._SHOW_FILTERED)
 
         if self.include_evaluations:
-            self.add_radiobutton("Evaluations", self._show_what, EpisodeRadioButtonControl.SHOW_EVALUATIONS)
+            self.add_radiobutton("Evaluations", self._show_what, EpisodeRadioButtonControl._SHOW_EVALUATIONS)
 
     def show_all(self):
-        return self._show_what.get() == EpisodeRadioButtonControl.SHOW_ALL
+        return self._show_what.get() == EpisodeRadioButtonControl._SHOW_ALL
 
     def show_filtered(self):
-        return self._show_what.get() == EpisodeRadioButtonControl.SHOW_FILTERED
+        return self._show_what.get() == EpisodeRadioButtonControl._SHOW_FILTERED
 
     def show_evaluations(self):
-        return self._show_what.get() == EpisodeRadioButtonControl.SHOW_EVALUATIONS
+        return self._show_what.get() == EpisodeRadioButtonControl._SHOW_EVALUATIONS
 
 
 class EpisodeAxisControl(Control):

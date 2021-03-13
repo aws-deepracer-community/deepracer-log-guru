@@ -28,6 +28,9 @@ START = 10
 FINISH = 30
 
 
+# TODO - This can be replaced by lap time correlation with new "advanced filter" option for sector or section
+# ***********************************************************************************************************
+
 class AnalyzeSectionTimeCorrelations(GraphAnalyzer):
 
     def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg, control_frame :tk.Frame):

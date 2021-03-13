@@ -24,7 +24,6 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         self.format_control = GraphFormatControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
-
         self.episode_control.add_to_control_frame()
         self.predictions_control.add_to_control_frame()
         self.correlation_control.add_to_control_frame()

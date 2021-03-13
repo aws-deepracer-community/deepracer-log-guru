@@ -31,10 +31,7 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
         self.axis_control = EpisodeAxisControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
-
         self.axis_control.add_to_control_frame()
-
-        ####
 
         episode_selector_frame = self.episode_selector.get_label_frame(control_frame, self.guru_parent_redraw)
         episode_selector_frame.pack()

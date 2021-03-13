@@ -11,22 +11,15 @@ from src.utils.lists import get_list_of_empty_lists
 from src.analyze.core.controls import EpisodeRadioButtonControl
 
 
-SHOW_ALL = 1
-SHOW_FILTERED = 2
-
 class AnalyzeQuarterlyResults(GraphAnalyzer):
 
     def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg, control_frame :tk.Frame):
-
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
         self.episode_control = EpisodeRadioButtonControl(guru_parent_redraw, control_frame)
 
-
     def build_control_frame(self, control_frame):
-
         self.episode_control.add_to_control_frame()
-
 
     def add_plots(self):
         if self.episode_control.show_all():

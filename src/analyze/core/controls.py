@@ -487,3 +487,49 @@ class CorrelationControl(Control):
 
     def correlate_max_slide(self):
         return self._correlation.get() == CorrelationControl._MAX_SLIDE
+
+
+class GraphScaleControl(Control):
+    _FIXED_SCALE = 1
+    _DYNAMIC_SCALE = 2
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Scale")
+
+        self._scale = tk.IntVar(value=GraphScaleControl._FIXED_SCALE)
+
+    def add_buttons(self):
+
+        self.add_radiobutton("Fixed", self._scale, GraphScaleControl._FIXED_SCALE)
+        self.add_radiobutton("Dynamic", self._scale, GraphScaleControl._DYNAMIC_SCALE)
+
+    def fixed_scale(self):
+        return self._scale.get() == GraphScaleControl._FIXED_SCALE
+
+    def dynamic_scale(self):
+        return self._scale.get() == GraphScaleControl._DYNAMIC_SCALE
+
+
+class GraphSmoothingControl(Control):
+    _NONE = 1
+    _LINEAR = 2
+    _ADVANCED = 3
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Smoothing")
+
+        self._smoothing = tk.IntVar(value=GraphSmoothingControl._NONE)
+
+    def add_buttons(self):
+        self.add_radiobutton("None", self._smoothing, GraphSmoothingControl._NONE)
+        self.add_radiobutton("Linear", self._smoothing, GraphSmoothingControl._LINEAR)
+        self.add_radiobutton("Advanced", self._smoothing, GraphSmoothingControl._ADVANCED)
+
+    def no_smoothing(self):
+        return self._smoothing.get() == GraphSmoothingControl._NONE
+
+    def linear_smoothing(self):
+        return self._smoothing.get() == GraphSmoothingControl._LINEAR
+
+    def advanced_smoothing(self):
+        return self._smoothing.get() == GraphSmoothingControl._ADVANCED

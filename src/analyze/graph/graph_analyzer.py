@@ -1,10 +1,8 @@
 import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-from src.log.log_meta import LogMeta
 from matplotlib import style as mpl_style
 from src.analyze.core.analyzer import Analyzer
-
 
 
 class GraphAnalyzer(Analyzer):

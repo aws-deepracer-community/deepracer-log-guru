@@ -5,16 +5,12 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.gridspec import GridSpec
 from matplotlib.axes import Axes
 from matplotlib.ticker import PercentFormatter
-from matplotlib.ticker import MultipleLocator
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
 
-from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl
+from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl, GraphScaleControl, GraphSmoothingControl
 
-
-FIXED_SCALE = "Fixed"
-DYNAMIC_SCALE = "Dynamic"
 
 class AnalyzeTrainingProgress(GraphAnalyzer):
 
@@ -24,36 +20,22 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
         self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame, True)
         self._stats_control = StatsControl(guru_parent_redraw, control_frame)
-
-        self.scale_type = tk.StringVar(value=FIXED_SCALE)
+        self._scale_control = GraphScaleControl(guru_parent_redraw, control_frame)
+        self._smoothing_control = GraphSmoothingControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
-
         self.episode_control.add_to_control_frame()
         self._stats_control.add_to_control_frame()
-
-        scale_group = tk.LabelFrame(control_frame, text="Scale", padx=5, pady=5)
-        scale_group.pack()
-
-        tk.Radiobutton(
-            scale_group, text=FIXED_SCALE,
-            variable=self.scale_type,
-            value=FIXED_SCALE,
-            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
-
-        tk.Radiobutton(
-            scale_group, text=DYNAMIC_SCALE,
-            variable=self.scale_type,
-            value=DYNAMIC_SCALE,
-            command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
+        self._scale_control.add_to_control_frame()
+        self._smoothing_control.add_to_control_frame()
 
     def add_plots(self):
         if not self.all_episodes:
             return
 
         gs = GridSpec(1, 2)
-        axes_left :Axes = self.graph_figure.add_subplot(gs[0, 0])
-        axes_right :Axes = self.graph_figure.add_subplot(gs[0, 1])
+        axes_left: Axes = self.graph_figure.add_subplot(gs[0, 0])
+        axes_right: Axes = self.graph_figure.add_subplot(gs[0, 1])
 
         self.create_plot_iteration_vs_total_reward(axes_left)
         self.create_plot_iteration_vs_percent_complete(axes_right)
@@ -150,8 +132,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
     def is_fixed_scale(self):
-        return self.scale_type.get() == FIXED_SCALE
-
+        return self._scale_control.fixed_scale()
 
 
 def get_plot_data_iteration_vs_total_reward(episodes, stat_method):

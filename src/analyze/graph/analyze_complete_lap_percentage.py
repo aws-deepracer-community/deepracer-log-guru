@@ -17,9 +17,6 @@ class AnalyzeCompleteLapPercentage(GraphAnalyzer):
 
         self._episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame, True)
 
-        # self.show_filtered.set(True)
-        # self.show_evaluations.set(True)
-
     def build_control_frame(self, control_frame):
         self._episode_control.add_to_control_frame()
 

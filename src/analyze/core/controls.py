@@ -7,6 +7,7 @@
 #
 
 import tkinter as tk
+from enum import IntEnum, auto
 
 from src.analyze.core.control import Control
 
@@ -24,7 +25,7 @@ class EpisodeCheckButtonControl(Control):
         else:
             self._show_evaluations = None
 
-    def add_buttons(self):
+    def _add_widgets(self):
         self.add_checkbutton("All", self._show_all, True)
         self.add_checkbutton("Filtered", self._show_filtered, False)
 
@@ -42,32 +43,34 @@ class EpisodeCheckButtonControl(Control):
 
 
 class EpisodeRadioButtonControl(Control):
-    _SHOW_ALL = 1
-    _SHOW_FILTERED = 2
-    _SHOW_EVALUATIONS = 3
+    class _Values(IntEnum):
+        SHOW_ALL = 1
+        SHOW_FILTERED = 2
+        SHOW_EVALUATIONS = 3
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
         super().__init__(guru_parent_redraw, control_frame, "Episodes")
 
-        self._show_what = tk.IntVar(value=EpisodeRadioButtonControl._SHOW_ALL)
+        self._show_what = tk.IntVar(value=EpisodeRadioButtonControl._Values.SHOW_ALL.value)
         self.include_evaluations = include_evaluations
 
-    def add_buttons(self):
-
-        self.add_radiobutton("All", self._show_what, EpisodeRadioButtonControl._SHOW_ALL)
-        self.add_radiobutton("Filtered", self._show_what, EpisodeRadioButtonControl._SHOW_FILTERED)
+    def _add_widgets(self):
+        self.add_radiobutton("All", self._show_what, EpisodeRadioButtonControl._Values.SHOW_ALL.value)
+        self.add_radiobutton("Filtered", self._show_what, EpisodeRadioButtonControl._Values.SHOW_FILTERED.value)
 
         if self.include_evaluations:
-            self.add_radiobutton("Evaluations", self._show_what, EpisodeRadioButtonControl._SHOW_EVALUATIONS)
+            self.add_radiobutton("Evaluations", self._show_what, EpisodeRadioButtonControl._Values.SHOW_EVALUATIONS.value)
 
     def show_all(self):
-        return self._show_what.get() == EpisodeRadioButtonControl._SHOW_ALL
+        x = self._show_what.get()
+        y = EpisodeRadioButtonControl._Values.SHOW_ALL
+        return self._show_what.get() == EpisodeRadioButtonControl._Values.SHOW_ALL.value
 
     def show_filtered(self):
-        return self._show_what.get() == EpisodeRadioButtonControl._SHOW_FILTERED
+        return self._show_what.get() == EpisodeRadioButtonControl._Values.SHOW_FILTERED.value
 
     def show_evaluations(self):
-        return self._show_what.get() == EpisodeRadioButtonControl._SHOW_EVALUATIONS
+        return self._show_what.get() == EpisodeRadioButtonControl._Values.SHOW_EVALUATIONS.value
 
 
 class EpisodeAxisControl(Control):
@@ -83,7 +86,7 @@ class EpisodeAxisControl(Control):
 
         self._show_what = tk.IntVar(value=EpisodeAxisControl.AXIS_TIME)
 
-    def add_buttons(self):
+    def _add_widgets(self):
         self.add_radiobutton("Time", self._show_what, EpisodeAxisControl.AXIS_TIME)
         self.add_radiobutton("Step", self._show_what, EpisodeAxisControl.AXIS_STEP)
         self.add_radiobutton("Progress", self._show_what, EpisodeAxisControl.AXIS_PROGRESS)
@@ -117,7 +120,7 @@ class PredictionsControl(Control):
 
         self._show_predictions = tk.BooleanVar()
 
-    def add_buttons(self):
+    def _add_widgets(self):
 
         self.add_checkbutton("Show Predictions", self._show_predictions, False)
 
@@ -133,7 +136,7 @@ class GraphFormatControl(Control):
         self._swap_axes = tk.BooleanVar()
         self._show_trends = tk.BooleanVar()
 
-    def add_buttons(self):
+    def _add_widgets(self):
 
         self.add_checkbutton("Swap Axes", self._swap_axes, False)
         self.add_checkbutton("Show Trends", self._show_trends, False)
@@ -161,7 +164,7 @@ class EpisodeRouteColourSchemeControl(Control):
         super().__init__(guru_parent_redraw, control_frame, "Colour Scheme")
         self._colour_scheme = tk.IntVar(value=EpisodeRouteColourSchemeControl.SCHEME_NONE)
 
-    def add_buttons(self):
+    def _add_widgets(self):
         self.add_radiobutton("Reward", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_REWARD)
         self.add_radiobutton("Action Speed", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_ACTION_SPEED)
         self.add_radiobutton("Track Speed", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_TRACK_SPEED)
@@ -206,7 +209,7 @@ class ConvergenceGranularityControl(Control):
         super().__init__(guru_parent_redraw, control_frame, "Granularity")
         self._granularity = tk.IntVar(value=5)
 
-    def add_buttons(self):
+    def _add_widgets(self):
         self.add_radiobutton("3 cm", self._granularity, 3)
         self.add_radiobutton("5 cm", self._granularity, 5)
         self.add_radiobutton("10 cm", self._granularity, 10)
@@ -226,7 +229,7 @@ class SpeedControl(Control):
         super().__init__(guru_parent_redraw, control_frame, "Speed")
         self._speed = tk.IntVar(value=SpeedControl._ACTION_SPEED)
 
-    def add_buttons(self):
+    def _add_widgets(self):
         self.add_radiobutton("Action", self._speed, SpeedControl._ACTION_SPEED)
         self.add_radiobutton("Track", self._speed, SpeedControl._TRACK_SPEED)
         self.add_radiobutton("Progress", self._speed, SpeedControl._PROGRESS_SPEED)
@@ -270,7 +273,7 @@ class TrackAppearanceControl(Control):
         self._brightness = tk.StringVar()
         self._brightness_callback = brightness_callback
 
-    def add_buttons(self):
+    def _add_widgets(self):
         if self._blob_size_callback:
             self.add_dropdown(
                 "Blob Size", self._blob_size, TrackAppearanceControl._BLOB_SIZE_MEDIUM,
@@ -322,7 +325,7 @@ class AdvancedFiltersControl(Control):
         self._filter_sector = tk.BooleanVar()
         self._filter_section = tk.BooleanVar()
 
-    def add_buttons(self):
+    def _add_widgets(self):
         self.add_checkbutton("Skip starts", self._skip_starts, True)
         self.add_checkbutton("Actions", self._filter_actions, False)
         self.add_checkbutton("Sector", self._filter_sector, False)
@@ -351,7 +354,7 @@ class StatsControl(Control):
         self._show_best = tk.BooleanVar()
         self._show_worst = tk.BooleanVar()
 
-    def add_buttons(self):
+    def _add_widgets(self):
         self.add_checkbutton("Mean", self._show_mean, True)
         self.add_checkbutton("Median", self._show_median, False)
         self.add_checkbutton("Best", self._show_best, False)
@@ -379,7 +382,7 @@ class RoundingControl(Control):
         super().__init__(guru_parent_redraw, control_frame, "Rounding")
         self._rounding = tk.IntVar(value=RoundingControl._ROUNDING_EXACT)
 
-    def add_buttons(self):
+    def _add_widgets(self):
         self.add_radiobutton("Exact", self._rounding, RoundingControl._ROUNDING_EXACT)
         self.add_radiobutton("Integer", self._rounding, RoundingControl._ROUNDING_INTEGER)
 
@@ -407,7 +410,7 @@ class CorrelationControl(Control):
         super().__init__(guru_parent_redraw, control_frame, "Correlate With")
         self._correlation = tk.IntVar(value=CorrelationControl._TOTAL_DISTANCE)
 
-    def add_buttons(self):
+    def _add_widgets(self):
         self.add_radiobutton("Total Distance", self._correlation, CorrelationControl._TOTAL_DISTANCE)
         self.add_radiobutton("Peak Track Speed", self._correlation, CorrelationControl._PEAK_TRACK_SPEED)
         self.add_radiobutton("Peak Progress Speed", self._correlation, CorrelationControl._PEAK_PROGRESS_SPEED)
@@ -463,7 +466,7 @@ class GraphScaleControl(Control):
 
         self._scale = tk.IntVar(value=GraphScaleControl._FIXED_SCALE)
 
-    def add_buttons(self):
+    def _add_widgets(self):
 
         self.add_radiobutton("Fixed", self._scale, GraphScaleControl._FIXED_SCALE)
         self.add_radiobutton("Dynamic", self._scale, GraphScaleControl._DYNAMIC_SCALE)
@@ -485,7 +488,7 @@ class GraphSmoothingControl(Control):
 
         self._smoothing = tk.IntVar(value=GraphSmoothingControl._NONE)
 
-    def add_buttons(self):
+    def _add_widgets(self):
         self.add_radiobutton("None", self._smoothing, GraphSmoothingControl._NONE)
         self.add_radiobutton("Linear", self._smoothing, GraphSmoothingControl._LINEAR)
         self.add_radiobutton("Advanced", self._smoothing, GraphSmoothingControl._ADVANCED)

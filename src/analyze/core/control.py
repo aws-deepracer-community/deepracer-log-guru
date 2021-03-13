@@ -13,6 +13,9 @@ import src.utils.abstract_method as abstract_method
 
 
 class Control:
+    #
+    # PUBLIC interface
+    #
 
     def __init__(self, guru_parent_redraw: Callable, control_frame: tk.Frame, title: str):
         self._guru_parent_redraw = guru_parent_redraw
@@ -24,7 +27,7 @@ class Control:
     def add_to_control_frame(self):
         self._label_frame = tk.LabelFrame(self._control_frame, text=self._title)
         self._row = 0
-        self.add_buttons()
+        self._add_widgets()
         self._label_frame.pack(pady=4)
 
     def add_checkbutton(self, title: str, tk_var: tk.BooleanVar, default_value: bool):
@@ -50,6 +53,9 @@ class Control:
                       command=callback).grid(column=0, row=self._row + 1, pady=1, padx=5, sticky=tk.W)
         self._row += 2
 
-    # Abstract method for each control to provide
-    def add_buttons(self):
-        abstract_method.enforce()
+    #
+    # ABSTRACT interface
+    #
+
+    def _add_widgets(self):
+        abstract_method.enforce(self)

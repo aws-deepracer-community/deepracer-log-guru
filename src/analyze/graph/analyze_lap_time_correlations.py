@@ -1,6 +1,5 @@
 import tkinter as tk
 import numpy as np
-from scipy import stats
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
@@ -9,8 +8,10 @@ from src.analyze.graph.graph_analyzer import GraphAnalyzer
 
 from src.analyze.core.controls import EpisodeCheckButtonControl, PredictionsControl, \
     GraphFormatControl, CorrelationControl
+from src.analyze.core.line_fitting import get_linear_regression
 
 from src.episode.episode import Episode
+
 
 class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
@@ -91,21 +92,14 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         else:
             plot_x = get_plot_data_lap_times(episodes)
 
-
-        # Calculate linear regression line through the points
-
+        # Calculate linear regression line through the points, if requested
         (slope_y, r_label) = (None, None)
         if self.format_control.show_trends():
-            if len(plot_x) >= 3:
-                slope, intercept, r, p, std_err = stats.linregress(plot_x, plot_y)
-                def linear_line(x):
-                    return slope * x + intercept
-                if abs(r) > 0.25:
-                    slope_y = list(map(linear_line, plot_x))
-                    r_label = "R = " + str(round(r, 2))
+            (slope_y, r) = get_linear_regression(plot_x, plot_y, 0.25)
+            if slope_y:
+                r_label = "R = " + str(round(r, 2))
 
         # Finally plot the data we have gathered
-
         if self.format_control.swap_axes():
             axes.plot(plot_y, plot_x, shape, color=colour, label=label)
             if slope_y:
@@ -114,7 +108,6 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
             axes.plot(plot_x, plot_y, shape, color=colour, label=label)
             if slope_y:
                 axes.plot(plot_x, slope_y, color=colour, label=r_label)
-
 
     def format_axes(self, axes :Axes):
 

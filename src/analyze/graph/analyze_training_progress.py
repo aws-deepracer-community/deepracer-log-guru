@@ -6,6 +6,7 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.axes import Axes
 from matplotlib.ticker import PercentFormatter
 
+from src.analyze.core.line_fitting import get_linear_regression
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
 
@@ -45,33 +46,33 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
         if self.all_episodes and self.episode_control.show_all():
             if self._stats_control.show_median():
-                add_plot_iteration_vs_total_reward(axes, "All - Median", self.all_episodes, np.median, "C5")
+                self.add_plot_iteration_vs_total_reward(axes, "All - Median", self.all_episodes, np.median, "C5")
             if self._stats_control.show_mean():
-                add_plot_iteration_vs_total_reward(axes, "All - Mean", self.all_episodes, np.mean, "C6")
+                self.add_plot_iteration_vs_total_reward(axes, "All - Mean", self.all_episodes, np.mean, "C6")
             if self._stats_control.show_best():
-                add_plot_iteration_vs_total_reward(axes, "All - Best", self.all_episodes, np.max, "C7")
+                self.add_plot_iteration_vs_total_reward(axes, "All - Best", self.all_episodes, np.max, "C7")
             if self._stats_control.show_worst():
-                add_plot_iteration_vs_total_reward(axes, "All - Worst", self.all_episodes, np.min, "C8")
+                self.add_plot_iteration_vs_total_reward(axes, "All - Worst", self.all_episodes, np.min, "C8")
 
         if self.filtered_episodes and self.episode_control.show_filtered():
             if self._stats_control.show_median():
-                add_plot_iteration_vs_total_reward(axes, "Filtered - Median", self.filtered_episodes, np.median, "C1")
+                self.add_plot_iteration_vs_total_reward(axes, "Filtered - Median", self.filtered_episodes, np.median, "C1")
             if self._stats_control.show_mean():
-                add_plot_iteration_vs_total_reward(axes, "Filtered - Mean", self.filtered_episodes, np.mean, "C2")
+                self.add_plot_iteration_vs_total_reward(axes, "Filtered - Mean", self.filtered_episodes, np.mean, "C2")
             if self._stats_control.show_best():
-                add_plot_iteration_vs_total_reward(axes, "Filtered - Best", self.filtered_episodes, np.max, "C3")
+                self.add_plot_iteration_vs_total_reward(axes, "Filtered - Best", self.filtered_episodes, np.max, "C3")
             if self._stats_control.show_worst():
-                add_plot_iteration_vs_total_reward(axes, "Filtered - Worst", self.filtered_episodes, np.min, "C4")
+                self.add_plot_iteration_vs_total_reward(axes, "Filtered - Worst", self.filtered_episodes, np.min, "C4")
 
         if self.episode_control.show_evaluations():
             if self._stats_control.show_median():
-                add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Median", self.evaluation_phases, np.median, "C9")
+                self.add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Median", self.evaluation_phases, np.median, "C9")
             if self._stats_control.show_mean():
-                add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Mean", self.evaluation_phases, np.mean, "C10")
+                self.add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Mean", self.evaluation_phases, np.mean, "C10")
             if self._stats_control.show_best():
-                add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Best", self.evaluation_phases, np.max, "C11")
+                self.add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Best", self.evaluation_phases, np.max, "C11")
             if self._stats_control.show_worst():
-                add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Worst", self.evaluation_phases, np.min, "C12")
+                self.add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Worst", self.evaluation_phases, np.min, "C12")
 
         # Format the plot
         axes.set_title("Total Reward")
@@ -92,33 +93,33 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         # Plot data
         if self.episode_control.show_all():
             if self._stats_control.show_median():
-                add_plot_iteration_vs_percent_complete(axes, "All - Median", self.all_episodes, np.median, "C5")
+                self.add_plot_iteration_vs_percent_complete(axes, "All - Median", self.all_episodes, np.median, "C5")
             if self._stats_control.show_mean():
-                add_plot_iteration_vs_percent_complete(axes, "All - Mean", self.all_episodes, np.mean, "C6")
+                self.add_plot_iteration_vs_percent_complete(axes, "All - Mean", self.all_episodes, np.mean, "C6")
             if self._stats_control.show_best():
-                add_plot_iteration_vs_percent_complete(axes, "All - Best", self.all_episodes, np.max, "C7")
+                self.add_plot_iteration_vs_percent_complete(axes, "All - Best", self.all_episodes, np.max, "C7")
             if self._stats_control.show_worst():
-                add_plot_iteration_vs_percent_complete(axes, "All - Worst", self.all_episodes, np.min, "C8")
+                self.add_plot_iteration_vs_percent_complete(axes, "All - Worst", self.all_episodes, np.min, "C8")
 
         if self.filtered_episodes and self.episode_control.show_filtered():
             if self._stats_control.show_median():
-                add_plot_iteration_vs_percent_complete(axes, "Filtered - Median", self.filtered_episodes, np.median, "C1")
+                self.add_plot_iteration_vs_percent_complete(axes, "Filtered - Median", self.filtered_episodes, np.median, "C1")
             if self._stats_control.show_mean():
-                add_plot_iteration_vs_percent_complete(axes, "Filtered - Mean", self.filtered_episodes, np.mean, "C2")
+                self.add_plot_iteration_vs_percent_complete(axes, "Filtered - Mean", self.filtered_episodes, np.mean, "C2")
             if self._stats_control.show_best():
-                add_plot_iteration_vs_percent_complete(axes, "Filtered - Best", self.filtered_episodes, np.max, "C3")
+                self.add_plot_iteration_vs_percent_complete(axes, "Filtered - Best", self.filtered_episodes, np.max, "C3")
             if self._stats_control.show_worst():
-                add_plot_iteration_vs_percent_complete(axes, "Filtered - Worst", self.filtered_episodes, np.min, "C4")
+                self.add_plot_iteration_vs_percent_complete(axes, "Filtered - Worst", self.filtered_episodes, np.min, "C4")
 
         if self.episode_control.show_evaluations():
             if self._stats_control.show_median():
-                add_plot_iteration_vs_evaluation_percent_complete(axes, "Evaluations - Median", self.evaluation_phases, np.median, "C9")
+                self.add_plot_iteration_vs_evaluation_percent_complete(axes, "Evaluations - Median", self.evaluation_phases, np.median, "C9")
             if self._stats_control.show_mean():
-                add_plot_iteration_vs_evaluation_percent_complete(axes, "Evaluations - Mean", self.evaluation_phases, np.mean, "C10")
+                self.add_plot_iteration_vs_evaluation_percent_complete(axes, "Evaluations - Mean", self.evaluation_phases, np.mean, "C10")
             if self._stats_control.show_best():
-                add_plot_iteration_vs_evaluation_percent_complete(axes, "Evaluations - Best", self.evaluation_phases, np.max, "C11")
+                self.add_plot_iteration_vs_evaluation_percent_complete(axes, "Evaluations - Best", self.evaluation_phases, np.max, "C11")
             if self._stats_control.show_worst():
-                add_plot_iteration_vs_evaluation_percent_complete(axes, "Evaluations - Worst", self.evaluation_phases, np.min, "C12")
+                self.add_plot_iteration_vs_evaluation_percent_complete(axes, "Evaluations - Worst", self.evaluation_phases, np.min, "C12")
 
         # Format the plot
         axes.set_title("Track Completion")
@@ -133,6 +134,31 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
     def is_fixed_scale(self):
         return self._scale_control.fixed_scale()
+
+    def add_plot_iteration_vs_total_reward(self, axes: Axes, label, episodes, stat_method, colour):
+        (plot_x, plot_y) = get_plot_data_iteration_vs_total_reward(episodes, stat_method)
+        self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
+
+    def add_plot_iteration_vs_evaluation_total_reward(self, axes: Axes, label, evaluation_phases, stat_method, colour):
+        (plot_x, plot_y) = get_plot_data_iteration_vs_evaluation_total_reward(evaluation_phases, stat_method)
+        self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
+
+    def add_plot_iteration_vs_percent_complete(self, axes: Axes, label, episodes, stat_method, colour):
+        (plot_x, plot_y) = get_plot_data_iteration_vs_percent_complete(episodes, stat_method)
+        self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
+
+    def add_plot_iteration_vs_evaluation_percent_complete(self, axes: Axes, label, evaluation_phases, stat_method, colour):
+        (plot_x, plot_y) = get_plot_data_iteration_vs_evaluation_percent_complete(evaluation_phases, stat_method)
+        self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
+
+    def plot_data_or_smooth_it(self, axes: Axes, label: str, plot_x: np.ndarray, plot_y: np.ndarray, colour: str):
+        if self._smoothing_control.linear_smoothing():
+            (slope_y, r) = get_linear_regression(plot_x, plot_y)
+            if slope_y:
+                plot_y = slope_y
+            else:
+                return
+        axes.plot(plot_x, plot_y, colour, label=label)
 
 
 def get_plot_data_iteration_vs_total_reward(episodes, stat_method):
@@ -154,10 +180,6 @@ def get_plot_data_iteration_vs_total_reward(episodes, stat_method):
 
     return plot_iteration, plot_total_reward
 
-def add_plot_iteration_vs_total_reward(axes :Axes, label, episodes, stat_method, colour):
-    (plot_x, plot_y) = get_plot_data_iteration_vs_total_reward(episodes, stat_method)
-    axes.plot(plot_x, plot_y, colour, label=label)
-
 
 def get_plot_data_iteration_vs_percent_complete(episodes, stat_method):
     iteration_count = episodes[-1].iteration + 1
@@ -178,11 +200,6 @@ def get_plot_data_iteration_vs_percent_complete(episodes, stat_method):
 
     return plot_iteration, plot_percent_complete
 
-def add_plot_iteration_vs_percent_complete(axes :Axes, label, episodes, stat_method, colour):
-    (plot_x, plot_y) = get_plot_data_iteration_vs_percent_complete(episodes, stat_method)
-    axes.plot(plot_x, plot_y, colour, label=label)
-
-
 
 def get_plot_data_iteration_vs_evaluation_percent_complete(evaluation_phases, stat_method):
     # Build the plot data using numpy to get the [required stat of] percent for each iteration
@@ -193,11 +210,6 @@ def get_plot_data_iteration_vs_evaluation_percent_complete(evaluation_phases, st
         plot_percent_complete[i] = stat_method(np.array(eval.progresses))
 
     return plot_iteration, plot_percent_complete
-
-def add_plot_iteration_vs_evaluation_percent_complete(axes :Axes, label, evaluation_phases, stat_method, colour):
-    (plot_x, plot_y) = get_plot_data_iteration_vs_evaluation_percent_complete(evaluation_phases, stat_method)
-    axes.plot(plot_x, plot_y, colour, label=label)
-
 
 
 def get_plot_data_iteration_vs_evaluation_total_reward(evaluation_phases, stat_method):
@@ -211,6 +223,3 @@ def get_plot_data_iteration_vs_evaluation_total_reward(evaluation_phases, stat_m
     return plot_iteration, plot_percent_complete
 
 
-def add_plot_iteration_vs_evaluation_total_reward(axes: Axes, label, evaluation_phases, stat_method, colour):
-    (plot_x, plot_y) = get_plot_data_iteration_vs_evaluation_total_reward(evaluation_phases, stat_method)
-    axes.plot(plot_x, plot_y, colour, label=label)

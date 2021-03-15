@@ -93,21 +93,21 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
             plot_x = get_plot_data_lap_times(episodes)
 
         # Calculate linear regression line through the points, if requested
-        (slope_y, r_label) = (None, None)
+        (smoothed_x, smoothed_y, r_label) = (None, None, None)
         if self.format_control.show_trends():
-            (slope_y, r) = get_linear_regression(plot_x, plot_y, 0.25)
-            if slope_y:
+            (smoothed_x, smoothed_y, r) = get_linear_regression(plot_x, plot_y, 0.25)
+            if smoothed_y:
                 r_label = "R = " + str(round(r, 2))
 
         # Finally plot the data we have gathered
         if self.format_control.swap_axes():
             axes.plot(plot_y, plot_x, shape, color=colour, label=label)
-            if slope_y:
-                axes.plot(slope_y, plot_x, color=colour, label=r_label)
+            if smoothed_y:
+                axes.plot(smoothed_y, smoothed_x, color=colour, label=r_label)
         else:
             axes.plot(plot_x, plot_y, shape, color=colour, label=label)
-            if slope_y:
-                axes.plot(plot_x, slope_y, color=colour, label=r_label)
+            if smoothed_y:
+                axes.plot(smoothed_x, smoothed_y, color=colour, label=r_label)
 
     def format_axes(self, axes :Axes):
 

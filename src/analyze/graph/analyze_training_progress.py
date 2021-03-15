@@ -153,12 +153,13 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
     def plot_data_or_smooth_it(self, axes: Axes, label: str, plot_x: np.ndarray, plot_y: np.ndarray, colour: str):
         if self._smoothing_control.linear_smoothing():
-            (slope_y, r) = get_linear_regression(plot_x, plot_y)
-            if slope_y:
-                plot_y = slope_y
+            (smoothed_x, smoothed_y, r) = get_linear_regression(plot_x, plot_y)
+            if smoothed_y:
+                axes.plot(smoothed_x, smoothed_y, colour, label=label)
             else:
                 return
-        axes.plot(plot_x, plot_y, colour, label=label)
+        else:
+            axes.plot(plot_x, plot_y, colour, label=label)
 
 
 def get_plot_data_iteration_vs_total_reward(episodes, stat_method):

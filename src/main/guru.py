@@ -27,6 +27,7 @@ from src.analyze.track.analyze_route import AnalyzeRoute
 from src.episode.episode_filter import EpisodeFilter
 from src.graphics.track_graphics import TrackGraphics
 from src.log.log import Log
+from src.main.version import VERSION
 from src.main.view_manager import ViewManager
 from src.tracks.tracks import get_all_tracks
 from src.ui.menu_bar import MenuBar
@@ -184,7 +185,7 @@ class MainApp(tk.Frame):
         # Configure the rest of the application window and then make it appear
         #
 
-        self.master.title("Deep Racer Guru")
+        self.master.title("Deep Racer Guru v" + VERSION)
         self.menu_bar = MenuBar(root, self, False)
 
 

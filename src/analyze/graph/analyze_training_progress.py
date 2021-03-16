@@ -6,11 +6,12 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.axes import Axes
 from matplotlib.ticker import PercentFormatter
 
-from src.analyze.core.line_fitting import get_linear_regression
+from src.analyze.core.line_fitting import get_linear_regression, get_polynomial_quadratic_regression
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
 
-from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl, GraphScaleControl, GraphSmoothingControl
+from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl,\
+    GraphScaleControl, GraphLineFittingControl
 
 
 class AnalyzeTrainingProgress(GraphAnalyzer):
@@ -22,13 +23,13 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame, True)
         self._stats_control = StatsControl(guru_parent_redraw, control_frame)
         self._scale_control = GraphScaleControl(guru_parent_redraw, control_frame)
-        self._smoothing_control = GraphSmoothingControl(guru_parent_redraw, control_frame)
+        self._line_fitting_control = GraphLineFittingControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
         self.episode_control.add_to_control_frame()
         self._stats_control.add_to_control_frame()
         self._scale_control.add_to_control_frame()
-        self._smoothing_control.add_to_control_frame()
+        self._line_fitting_control.add_to_control_frame()
 
     def add_plots(self):
         if not self.all_episodes:
@@ -152,12 +153,14 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
 
     def plot_data_or_smooth_it(self, axes: Axes, label: str, plot_x: np.ndarray, plot_y: np.ndarray, colour: str):
-        if self._smoothing_control.linear_smoothing():
+        if self._line_fitting_control.linear_fitting():
             (smoothed_x, smoothed_y, r) = get_linear_regression(plot_x, plot_y)
             if smoothed_y:
                 axes.plot(smoothed_x, smoothed_y, colour, label=label)
-            else:
-                return
+        elif self._line_fitting_control.quadratic_fitting():
+            (smoothed_x, smoothed_y) = get_polynomial_quadratic_regression(plot_x, plot_y)
+            if smoothed_y:
+                axes.plot(smoothed_x, smoothed_y, colour, label=label)
         else:
             axes.plot(plot_x, plot_y, colour, label=label)
 

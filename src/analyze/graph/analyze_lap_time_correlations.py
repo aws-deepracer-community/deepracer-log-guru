@@ -5,11 +5,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
-
 from src.analyze.core.controls import EpisodeCheckButtonControl, PredictionsControl, \
-    GraphFormatControl, CorrelationControl
-from src.analyze.core.line_fitting import get_linear_regression
-
+    GraphFormatControl, CorrelationControl, GraphLineFittingControl
+from src.analyze.core.line_fitting import get_linear_regression, get_polynomial_quadratic_regression
 from src.episode.episode import Episode
 
 
@@ -23,12 +21,14 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         self.predictions_control = PredictionsControl(guru_parent_redraw, control_frame)
         self.correlation_control = CorrelationControl(guru_parent_redraw, control_frame)
         self.format_control = GraphFormatControl(guru_parent_redraw, control_frame)
+        self._line_fitting_control = GraphLineFittingControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
         self.episode_control.add_to_control_frame()
         self.predictions_control.add_to_control_frame()
         self.correlation_control.add_to_control_frame()
         self.format_control.add_to_control_frame()
+        self._line_fitting_control.add_to_control_frame()
 
     def add_plots(self):
         axes: Axes = self.graph_figure.add_subplot()
@@ -94,10 +94,13 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         # Calculate linear regression line through the points, if requested
         (smoothed_x, smoothed_y, r_label) = (None, None, None)
-        if self.format_control.show_trends():
+        if self._line_fitting_control.linear_fitting():
             (smoothed_x, smoothed_y, r) = get_linear_regression(plot_x, plot_y, 0.25)
             if smoothed_y:
                 r_label = "R = " + str(round(r, 2))
+        elif self._line_fitting_control.quadratic_fitting():
+            (smoothed_x, smoothed_y) = get_polynomial_quadratic_regression(plot_x, plot_y)
+            r_label = "Quadratic"
 
         # Finally plot the data we have gathered
         if self.format_control.swap_axes():

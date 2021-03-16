@@ -134,18 +134,13 @@ class GraphFormatControl(Control):
         super().__init__(guru_parent_redraw, control_frame, "Format")
 
         self._swap_axes = tk.BooleanVar()
-        self._show_trends = tk.BooleanVar()
 
     def _add_widgets(self):
 
         self.add_checkbutton("Swap Axes", self._swap_axes, False)
-        self.add_checkbutton("Show Trends", self._show_trends, False)
 
     def swap_axes(self):
         return self._swap_axes.get()
-
-    def show_trends(self):
-        return self._show_trends.get()
 
 
 class EpisodeRouteColourSchemeControl(Control):
@@ -478,26 +473,26 @@ class GraphScaleControl(Control):
         return self._scale.get() == GraphScaleControl._DYNAMIC_SCALE
 
 
-class GraphSmoothingControl(Control):
+class GraphLineFittingControl(Control):
     _NONE = 1
     _LINEAR = 2
-    _ADVANCED = 3
+    _QUADRATIC = 3
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
-        super().__init__(guru_parent_redraw, control_frame, "Smoothing")
+        super().__init__(guru_parent_redraw, control_frame, "Line Fitting")
 
-        self._smoothing = tk.IntVar(value=GraphSmoothingControl._NONE)
+        self._smoothing = tk.IntVar(value=GraphLineFittingControl._NONE)
 
     def _add_widgets(self):
-        self.add_radiobutton("None", self._smoothing, GraphSmoothingControl._NONE)
-        self.add_radiobutton("Linear", self._smoothing, GraphSmoothingControl._LINEAR)
-        self.add_radiobutton("Advanced", self._smoothing, GraphSmoothingControl._ADVANCED)
+        self.add_radiobutton("None", self._smoothing, GraphLineFittingControl._NONE)
+        self.add_radiobutton("Linear", self._smoothing, GraphLineFittingControl._LINEAR)
+        self.add_radiobutton("Quadratic", self._smoothing, GraphLineFittingControl._QUADRATIC)
 
-    def no_smoothing(self):
-        return self._smoothing.get() == GraphSmoothingControl._NONE
+    def no_fitting(self):
+        return self._smoothing.get() == GraphLineFittingControl._NONE
 
-    def linear_smoothing(self):
-        return self._smoothing.get() == GraphSmoothingControl._LINEAR
+    def linear_fitting(self):
+        return self._smoothing.get() == GraphLineFittingControl._LINEAR
 
-    def advanced_smoothing(self):
-        return self._smoothing.get() == GraphSmoothingControl._ADVANCED
+    def quadratic_fitting(self):
+        return self._smoothing.get() == GraphLineFittingControl._QUADRATIC

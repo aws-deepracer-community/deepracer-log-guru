@@ -102,7 +102,7 @@ class ViewManager:
     def set_sectors_off(self):
         self.sectors_on = False
 
-    def redraw(self, current_track :Track, track_graphics, analyzer, episode_filter: EpisodeFilter):
+    def redraw(self, current_track :Track, track_graphics, analyzer, background_analyser, episode_filter: EpisodeFilter):
         analyzer.recalculate()
 
         track_graphics.reset_to_blank()
@@ -129,6 +129,8 @@ class ViewManager:
                     current_track.draw_waypoints(track_graphics, self.track_colour, self.waypoint_minor_size, self.waypoint_major_size)
 
             if do == "A":
+                if background_analyser:
+                    background_analyser.redraw()
                 analyzer.redraw()
 
             if do == "N" and self.annotations_on:

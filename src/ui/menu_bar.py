@@ -94,24 +94,23 @@ class MenuBar():
         menu.add_command(label="Episode Slide", command=self.main_app.menu_callback_analyze_episode_slide)
 
         menu.add_separator()
-
         menu.add_command(label="Route Convergence", command=self.main_app.menu_callback_analyze_convergence)
         menu.add_command(label="Speed Convergence", command=self.main_app.menu_callback_analyze_favourite_speed)
 
         menu.add_separator()
+        menu.add_command(label="Episode Route + Convergence", command=self.main_app.menu_callback_analyze_route_over_convergence)
 
+        menu.add_separator()
         menu.add_command(label="Training Progress", command=self.main_app.menu_callback_analyze_training_progress)
         menu.add_command(label="Quarterly Results", command=self.main_app.menu_callback_analyze_quarterly_results)
         menu.add_command(label="Complete Lap Percentage", command=self.main_app.menu_callback_analyze_complete_lap_percentage)
         menu.add_command(label="Track Exit Points", command=self.main_app.menu_callback_analyze_exit_points)
 
         menu.add_separator()
-
         menu.add_command(label="Lap Time Correlations", command=self.main_app.menu_callback_analyze_lap_time_correlations)
         menu.add_command(label="Section Time Correlations", command=self.main_app.menu_callback_analyze_section_time_correlations)
 
         menu.add_separator()
-
         menu.add_command(label="Reward Distribution", command=self.main_app.menu_callback_analyze_reward_distribution)
         menu.add_command(label="Common Rewards", command=self.main_app.menu_callback_analyze_common_rewards)
         menu.add_command(label="Rewards per Waypoint", command=self.main_app.menu_callback_analyze_rewards_per_waypoint)

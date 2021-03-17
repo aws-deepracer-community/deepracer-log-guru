@@ -6,6 +6,7 @@ from matplotlib.figure import Figure
 
 import src.configuration.personal_configuration as config
 import src.secret_sauce.glue.glue as ss
+from src.analyze.core.analyzer import Analyzer
 
 from src.analyze.track.analyze_convergence import AnalyzeConvergence
 from src.analyze.graph.analyze_training_progress import AnalyzeTrainingProgress
@@ -166,6 +167,7 @@ class MainApp(tk.Frame):
             v.set_track(self.current_track)
 
         self.analyzer = self.analyze_route
+        self.background_analyzer = None
         self.analyzer.take_control()
 
         if ss.SHOW_SS:
@@ -237,17 +239,24 @@ class MainApp(tk.Frame):
 
         self.episode_selector.set_filtered_episodes(None)
 
-        self.analyzer.set_track(self.current_track)
-        self.analyzer.set_filtered_episodes(None)
-        self.analyzer.set_all_episodes(None)
-        self.analyzer.set_log_meta(None)
-        self.analyzer.set_evaluation_phases(None)
+        self._reset_analyzer(self.analyzer)
+        if self.background_analyzer:
+            self._reset_analyzer(self.background_analyzer)
 
         self.view_manager.zoom_clear()
 
         self.redraw()
 
-    def switch_analyzer(self, new_analyzer):
+    def _reset_analyzer(self, analyzer):
+        analyzer.set_track(self.current_track)
+        analyzer.set_filtered_episodes(None)
+        analyzer.set_all_episodes(None)
+        analyzer.set_log_meta(None)
+        analyzer.set_evaluation_phases(None)
+
+    def switch_analyzer(self, new_analyzer, new_background_analyzer=None):
+        if new_background_analyzer:
+            assert new_background_analyzer.uses_track_graphics() and new_analyzer.uses_track_graphics()
 
         if new_analyzer.uses_graph_canvas() and not self.analyzer.uses_graph_canvas():
             self.track_canvas.pack_forget()
@@ -257,6 +266,7 @@ class MainApp(tk.Frame):
             self.layout_ui_for_track_analyzer()
 
         self.analyzer = new_analyzer
+        self.background_analyzer = new_background_analyzer
         self.analyzer.take_control()
 
         self.redraw()
@@ -272,6 +282,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_route(self):
         self.switch_analyzer(self.analyze_route)
+
+    def menu_callback_analyze_route_over_convergence(self):
+        self.switch_analyzer(self.analyze_route, self.analyze_convergence)
 
     def menu_callback_analyze_training_progress(self):
         self.switch_analyzer(self.analyze_training_progress)
@@ -352,7 +365,7 @@ class MainApp(tk.Frame):
     def redraw(self, event=None):
         if not self.already_drawing:   # Nasty workaround to avoid multiple calls due to "please wait"
             self.already_drawing = True
-            self.view_manager.redraw(self.current_track, self.track_graphics, self.analyzer, self.episode_filter)
+            self.view_manager.redraw(self.current_track, self.track_graphics, self.analyzer, self.background_analyzer, self.episode_filter)
             self.please_wait.stop()
             self.already_drawing = False
 

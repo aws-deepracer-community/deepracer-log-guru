@@ -30,8 +30,7 @@ class Control:
         self._add_widgets()
         self._label_frame.pack(pady=4)
 
-    def add_checkbutton(self, title: str, tk_var: tk.BooleanVar, default_value: bool):
-        tk_var.set(default_value)
+    def add_checkbutton(self, title: str, tk_var: tk.BooleanVar):
         tk.Checkbutton(
             self._label_frame, text=title, variable=tk_var,
             command=self._guru_parent_redraw).grid(column=0, row=self._row, padx=5, pady=1)
@@ -43,13 +42,10 @@ class Control:
             command=self._guru_parent_redraw).grid(column=0, row=self._row, padx=5, pady=1)
         self._row += 1
 
-    def add_dropdown(self, title: str, tk_var: tk.StringVar, default_value: str, values: list[str], callback: Callable):
-        assert default_value in values
-
-        tk_var.set(default_value)
+    def add_dropdown(self, title: str, tk_var: tk.StringVar, values: list[str], callback: Callable):
         tk.Label(self._label_frame, text=title).grid(column=0, row=self._row, pady=0, padx=5, sticky=tk.W)
 
-        tk.OptionMenu(self._label_frame, tk_var, values[0], values[1], values[2],
+        tk.OptionMenu(self._label_frame, tk_var, *values,
                       command=callback).grid(column=0, row=self._row + 1, pady=1, padx=5, sticky=tk.W)
         self._row += 2
 

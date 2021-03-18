@@ -36,7 +36,7 @@ class VisitorMap:
     def draw(self, track_graphics :TrackGraphics, brightness: int):
         # self.print_debug()
 
-        assert brightness in [0, 1, 2]
+        assert brightness in [-1, 0, 1, 2]
 
         max_visits = max(max(x) for x in self.visits)
 
@@ -52,6 +52,9 @@ class VisitorMap:
         elif brightness == 2:
             colour_multiplier *= 3.5
             min_visits /= 3.5
+        elif brightness == -1:
+            colour_multiplier /= 2
+            min_visits *= 1.5
 
         for yy, visits in enumerate(self.visits):
             for xx, visit in enumerate(visits):

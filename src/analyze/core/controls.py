@@ -7,7 +7,7 @@
 #
 
 import tkinter as tk
-from enum import IntEnum, auto
+from enum import IntEnum
 
 from src.analyze.core.control import Control
 
@@ -17,20 +17,20 @@ class EpisodeCheckButtonControl(Control):
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
         super().__init__(guru_parent_redraw, control_frame, "Episodes")
 
-        self._show_all = tk.BooleanVar()
-        self._show_filtered = tk.BooleanVar()
+        self._show_all = tk.BooleanVar(value=True)
+        self._show_filtered = tk.BooleanVar(value=False)
 
         if include_evaluations:
-            self._show_evaluations = tk.BooleanVar()
+            self._show_evaluations = tk.BooleanVar(value=False)
         else:
             self._show_evaluations = None
 
     def _add_widgets(self):
-        self.add_checkbutton("All", self._show_all, True)
-        self.add_checkbutton("Filtered", self._show_filtered, False)
+        self.add_checkbutton("All", self._show_all)
+        self.add_checkbutton("Filtered", self._show_filtered)
 
         if self._show_evaluations:
-            self.add_checkbutton("Evaluations", self._show_evaluations, False)
+            self.add_checkbutton("Evaluations", self._show_evaluations)
 
     def show_all(self):
         return self._show_all.get()
@@ -62,8 +62,6 @@ class EpisodeRadioButtonControl(Control):
             self.add_radiobutton("Evaluations", self._show_what, EpisodeRadioButtonControl._Values.SHOW_EVALUATIONS.value)
 
     def show_all(self):
-        x = self._show_what.get()
-        y = EpisodeRadioButtonControl._Values.SHOW_ALL
         return self._show_what.get() == EpisodeRadioButtonControl._Values.SHOW_ALL.value
 
     def show_filtered(self):
@@ -118,11 +116,11 @@ class PredictionsControl(Control):
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Predictions")
 
-        self._show_predictions = tk.BooleanVar()
+        self._show_predictions = tk.BooleanVar(value=False)
 
     def _add_widgets(self):
 
-        self.add_checkbutton("Show Predictions", self._show_predictions, False)
+        self.add_checkbutton("Show Predictions", self._show_predictions)
 
     def show_predictions(self):
         return self._show_predictions.get()
@@ -133,11 +131,11 @@ class GraphFormatControl(Control):
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Format")
 
-        self._swap_axes = tk.BooleanVar()
+        self._swap_axes = tk.BooleanVar(value=False)
 
     def _add_widgets(self):
 
-        self.add_checkbutton("Swap Axes", self._swap_axes, False)
+        self.add_checkbutton("Swap Axes", self._swap_axes)
 
     def swap_axes(self):
         return self._swap_axes.get()
@@ -250,36 +248,37 @@ class TrackAppearanceControl(Control):
     _PALETTE_5_COLOURS = "5 Colours "
     _PALETTES = [_PALETTE_MONO, _PALETTE_3_COLOURS, _PALETTE_5_COLOURS]
 
+    _BRIGHTNESS_FAINT = "Faint      "
     _BRIGHTNESS_NORMAL = "Normal    "
     _BRIGHTNESS_BRIGHT = "Bright    "
     _BRIGHTNESS_VERY_BRIGHT = "Very Bright"
-    _BRIGHTNESSES = [_BRIGHTNESS_NORMAL, _BRIGHTNESS_BRIGHT, _BRIGHTNESS_VERY_BRIGHT]
+    _BRIGHTNESSES = [_BRIGHTNESS_FAINT, _BRIGHTNESS_NORMAL, _BRIGHTNESS_BRIGHT, _BRIGHTNESS_VERY_BRIGHT]
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame,
                  blob_size_callback, palette_callback, brightness_callback):
         super().__init__(guru_parent_redraw, control_frame, "Appearance")
 
-        self._blob_size = tk.StringVar()
+        self._blob_size = tk.StringVar(value=TrackAppearanceControl._BLOB_SIZE_MEDIUM)
         self._blob_size_callback = blob_size_callback
 
-        self._palette = tk.StringVar()
+        self._palette = tk.StringVar(value=TrackAppearanceControl._PALETTE_3_COLOURS)
         self._palette_callback = palette_callback
 
-        self._brightness = tk.StringVar()
+        self._brightness = tk.StringVar(value=TrackAppearanceControl._BRIGHTNESS_NORMAL)
         self._brightness_callback = brightness_callback
 
     def _add_widgets(self):
         if self._blob_size_callback:
             self.add_dropdown(
-                "Blob Size", self._blob_size, TrackAppearanceControl._BLOB_SIZE_MEDIUM,
+                "Blob Size", self._blob_size,
                 TrackAppearanceControl._BLOB_SIZES, self._blob_size_callback)
         if self._palette_callback:
             self.add_dropdown(
-                "Palette", self._palette, TrackAppearanceControl._PALETTE_3_COLOURS,
+                "Palette", self._palette,
                 TrackAppearanceControl._PALETTES, self._palette_callback)
         if self._brightness_callback:
             self.add_dropdown(
-                "Brightness", self._brightness, TrackAppearanceControl._BRIGHTNESS_NORMAL,
+                "Brightness", self._brightness,
                 TrackAppearanceControl._BRIGHTNESSES, self._brightness_callback)
 
     def small_blob_size(self):
@@ -300,6 +299,9 @@ class TrackAppearanceControl(Control):
     def five_colour_palette(self):
         return self._palette.get() == TrackAppearanceControl._PALETTE_5_COLOURS
 
+    def faint_brightness(self):
+        return self._brightness.get() == TrackAppearanceControl._BRIGHTNESS_FAINT
+
     def normal_brightness(self):
         return self._brightness.get() == TrackAppearanceControl._BRIGHTNESS_NORMAL
 
@@ -315,16 +317,16 @@ class AdvancedFiltersControl(Control):
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Advanced Filters")
 
-        self._skip_starts = tk.BooleanVar()
-        self._filter_actions = tk.BooleanVar()
-        self._filter_sector = tk.BooleanVar()
-        self._filter_section = tk.BooleanVar()
+        self._skip_starts = tk.BooleanVar(value=True)
+        self._filter_actions = tk.BooleanVar(value=False)
+        self._filter_sector = tk.BooleanVar(value=False)
+        self._filter_section = tk.BooleanVar(value=False)
 
     def _add_widgets(self):
-        self.add_checkbutton("Skip starts", self._skip_starts, True)
-        self.add_checkbutton("Actions", self._filter_actions, False)
-        self.add_checkbutton("Sector", self._filter_sector, False)
-        self.add_checkbutton("Section", self._filter_section, False)
+        self.add_checkbutton("Skip starts", self._skip_starts)
+        self.add_checkbutton("Actions", self._filter_actions)
+        self.add_checkbutton("Sector", self._filter_sector)
+        self.add_checkbutton("Section", self._filter_section)
 
     def skip_starts(self):
         return self._skip_starts.get()
@@ -344,16 +346,16 @@ class StatsControl(Control):
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Stats")
 
-        self._show_mean = tk.BooleanVar()
-        self._show_median = tk.BooleanVar()
-        self._show_best = tk.BooleanVar()
-        self._show_worst = tk.BooleanVar()
+        self._show_mean = tk.BooleanVar(value=True)
+        self._show_median = tk.BooleanVar(value=False)
+        self._show_best = tk.BooleanVar(value=False)
+        self._show_worst = tk.BooleanVar(value=False)
 
     def _add_widgets(self):
-        self.add_checkbutton("Mean", self._show_mean, True)
-        self.add_checkbutton("Median", self._show_median, False)
-        self.add_checkbutton("Best", self._show_best, False)
-        self.add_checkbutton("Worst", self._show_worst, False)
+        self.add_checkbutton("Mean", self._show_mean)
+        self.add_checkbutton("Median", self._show_median)
+        self.add_checkbutton("Best", self._show_best)
+        self.add_checkbutton("Worst", self._show_worst)
 
     def show_mean(self):
         return self._show_mean.get()

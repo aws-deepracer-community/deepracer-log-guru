@@ -34,6 +34,8 @@ class AnalyzeConvergence(TrackAnalyzer):
                 brightness = 1
             elif self._appearance_control.very_bright_brightness():
                 brightness = 2
+            elif self._appearance_control.faint_brightness():
+                brightness = -1
             self.visitor_map.draw(self.track_graphics, brightness)
 
     def warning_filtered_episodes_changed(self):

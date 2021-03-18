@@ -49,8 +49,10 @@ class AnalyzeSpeedConvergence(TrackAnalyzer):
                 threshold = 5
             elif self._appearance_control.bright_brightness():
                 threshold = 10
-            else:
+            elif self._appearance_control.normal_brightness():
                 threshold = 20
+            else:
+                threshold = 30
 
             v.multi_draw(self.track_graphics, self.visitor_maps, colours, threshold)
 

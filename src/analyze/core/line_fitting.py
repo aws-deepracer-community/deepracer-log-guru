@@ -42,7 +42,7 @@ def get_polynomial_quadratic_regression(plot_x: np.ndarray, plot_y: np.ndarray):
     analyse_y = plot_y[nan_filter]
 
     if len(analyse_x) <= 2:
-        return analyse_x, analyse_y, 1
+        return analyse_x, analyse_y
     else:
         params, _ = optimize.curve_fit(f_quadratic, analyse_x, analyse_y)
         (a, b, c) = params

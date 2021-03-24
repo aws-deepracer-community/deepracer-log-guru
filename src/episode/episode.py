@@ -1,8 +1,8 @@
 import math
 import numpy as np
 
-from src.action_space.action import MAX_POSSIBLE_ACTIONS
 from src.action_space.action_space_filter import ActionSpaceFilter
+from src.action_space.action_space import ActionSpace
 from src.analyze.util.visitor import VisitorMap
 from src.utils.geometry import get_bearing_between_points, get_turn_between_directions,\
     get_distance_between_points, get_distance_of_point_from_line
@@ -14,7 +14,7 @@ SLIDE_SETTLING_PERIOD = 6
 
 class Episode:
 
-    def __init__(self, id, iteration, events, object_locations):
+    def __init__(self, id, iteration, events, object_locations, action_space: ActionSpace):
 
         self.events = events
         self.id = id
@@ -46,7 +46,7 @@ class Episode:
         self.average_reward = self.rewards.mean()
         self.predicted_lap_reward = 100 / last_event.progress * self.total_reward  # predicted
 
-        self.action_frequency = self.get_action_frequency()
+        self.action_frequency = self._get_action_frequency(action_space)
         self.repeated_action_percent = self.get_repeated_action_percent()
 
         self.peak_track_speed = 0
@@ -198,8 +198,8 @@ class Episode:
             list_of_rewards.append(e.reward)
         return np.array(list_of_rewards)
 
-    def get_action_frequency(self):
-        action_frequency = [0] * MAX_POSSIBLE_ACTIONS
+    def _get_action_frequency(self, action_space: ActionSpace):
+        action_frequency = action_space.get_new_frequency_counter()
         for e in self.events:
             action_frequency[e.action_taken] += 1
         return action_frequency

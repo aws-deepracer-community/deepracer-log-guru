@@ -7,8 +7,6 @@ from src.analyze.core.controls import ConvergenceGranularityControl, SpeedContro
     TrackAppearanceControl, EpisodeRadioButtonControl, AdvancedFiltersControl
 
 
-from src.action_space.action_util import *
-
 import src.analyze.util.visitor as v
 
 HIGH_VISITOR_MAP = 0
@@ -104,8 +102,6 @@ class AnalyzeSpeedConvergence(TrackAnalyzer):
         if episodes:
             if not self.visitor_maps:
                 self.please_wait.start("Calculating")
-                (min_speed, self.max_speed) = get_min_and_max_action_speeds(self.action_space)
-                self.speed_range = self.max_speed - min_speed
 
                 self.visitor_maps = []
                 for i in range(0, 3):
@@ -121,18 +117,10 @@ class AnalyzeSpeedConvergence(TrackAnalyzer):
                         print("OOOPS - unknown type of speed!")
                         return
 
-                    apply_to_visitor_map(self.visitor_maps[HIGH_VISITOR_MAP], skip, self.action_space_filter, self.is_high_speed)
-                    apply_to_visitor_map(self.visitor_maps[MEDIUM_VISITOR_MAP], skip, self.action_space_filter, self.is_medium_speed)
-                    apply_to_visitor_map(self.visitor_maps[LOW_VISITOR_MAP], skip, self.action_space_filter, self.is_low_speed)
+                    apply_to_visitor_map(self.visitor_maps[HIGH_VISITOR_MAP], skip, self.action_space_filter, self.action_space.is_high_speed)
+                    apply_to_visitor_map(self.visitor_maps[MEDIUM_VISITOR_MAP], skip, self.action_space_filter, self.action_space.is_medium_speed)
+                    apply_to_visitor_map(self.visitor_maps[LOW_VISITOR_MAP], skip, self.action_space_filter, self.action_space.is_low_speed)
 
                     self.please_wait.set_progress((i+1) / len(episodes) * 100)
 
-    def is_high_speed(self, speed):
-        return speed >= self.max_speed - 0.33 * self.speed_range
-
-    def is_medium_speed(self, speed):
-        return self.max_speed - 0.66 * self.speed_range <= speed < self.max_speed - 0.33 * self.speed_range
-
-    def is_low_speed(self, speed):
-        return speed < self.max_speed - 0.66 * self.speed_range
 

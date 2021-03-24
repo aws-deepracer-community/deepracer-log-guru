@@ -236,7 +236,7 @@ def _parse_actions(line_of_text: str, log_meta: LogMeta, starts_with: str):
         if "index" in a:
             assert a["index"] == index
         new_action = Action(index, a["speed"], a["steering_angle"])
-        log_meta.action_space[index] = new_action
+        log_meta.action_space.add_action(new_action)
 
 
 # Parse hyper parameters

@@ -1,4 +1,4 @@
-from src.action_space.action import MAX_POSSIBLE_ACTIONS
+from src.action_space.action_space import ActionSpace
 
 
 class LogMeta:
@@ -29,7 +29,7 @@ class LogMeta:
         self.race_type = ""
         self.job_type = ""
 
-        self.action_space = [None] * MAX_POSSIBLE_ACTIONS
+        self.action_space = ActionSpace()
 
     class EpisodeStats:
         def __init__(self):

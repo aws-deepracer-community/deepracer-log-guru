@@ -8,7 +8,6 @@ from src.event.event_meta import Event
 from src.graphics.track_graphics import TrackGraphics
 from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.selector.episode_selector import EpisodeSelector
-from src.action_space.action_util import get_min_and_max_action_speeds
 
 from src.analyze.core.controls import EpisodeRouteColourSchemeControl, TrackAppearanceControl
 
@@ -176,8 +175,8 @@ class AnalyzeRoute(TrackAnalyzer):
             print("OOOPS - unknown colour scheme!")
             return
 
-        (min_speed, max_speed) = get_min_and_max_action_speeds(self.action_space)
-        speed_range = max_speed - min_speed
+        max_speed = self.action_space.get_max_speed()
+        speed_range = self.action_space.get_speed_range()
 
         previous_event = episode.events[0]
         for e in episode.events[1:]:

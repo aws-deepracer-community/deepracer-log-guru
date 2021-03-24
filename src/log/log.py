@@ -155,7 +155,7 @@ class Log:
             episode_iterations.append(iteration_id)
 
         for i, e in enumerate(episode_events[:-1]):
-            self._episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i]))
+            self._episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i], self._log_meta.action_space))
             please_wait.set_progress(
                 mid_progress_percent + i / total_episodes * (max_progress_percent - mid_progress_percent))
 

@@ -70,3 +70,11 @@ def get_distance_of_point_from_line(point: Point, line_point_a: Point, line_poin
     lower_expression = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
 
     return upper_expression / lower_expression
+
+
+def is_left_bearing(bearing: float) -> bool:
+    return bearing > 0.0001
+
+
+def is_right_bearing(bearing: float) -> bool:
+    return bearing < -0.0001

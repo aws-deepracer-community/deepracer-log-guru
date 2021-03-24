@@ -3,8 +3,9 @@ import tkinter as tk
 from src.event.event_meta import Event
 from src.tracks.track import Track
 
-from src.action_space.action_util import is_right_turn, is_left_turn
 from src.utils.formatting import get_pretty_small_float, get_pretty_large_float, get_pretty_large_integer
+import src.utils.geometry as geometry
+
 
 class LogEventInfoWindow(tk.Toplevel):
 
@@ -133,10 +134,11 @@ class LogEventInfoWindow(tk.Toplevel):
 
         self.lift()
 
+
 def get_formatted_steering(steering_angle):
-    if is_right_turn(steering_angle):
+    if geometry.is_right_bearing(steering_angle):
         return "RIGHT " + get_pretty_small_float(abs(steering_angle), 30, 1)
-    elif is_left_turn(steering_angle):
+    elif geometry.is_left_bearing(steering_angle):
         return "LEFT " + get_pretty_small_float(abs(steering_angle), 30, 1)
     else:
         return "AHEAD"

@@ -29,7 +29,7 @@ Its main purpose is to provide "out-of-the-box" analysis that can run locally on
 
 You don't have to write Python code. Simply download logs from the AWS Deep Racer console, and then use a GUI to see how your models are performing.
 
-![](./sample_pictures/Collage.png)
+![Analyze DeepRacer log files easily with DRG](./sample_pictures/Collage.png)
 
 ## Installation Notes
 

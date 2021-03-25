@@ -37,6 +37,12 @@ class ActionSpace:
     def get_all_actions(self):
         return self._actions
 
+    def get_all_action_names_for_x_axis(self):
+        names = []
+        for action in self._actions:
+            names.append(action.get_readable_for_x_axis())
+        return names
+
     def get_new_frequency_counter(self):
         return [0] * len(self._actions)
 

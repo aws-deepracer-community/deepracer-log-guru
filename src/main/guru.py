@@ -19,6 +19,7 @@ from src.analyze.graph.analyze_rewards_per_waypoint import AnalyzeRewardsPerWayp
 from src.analyze.graph.analyze_episode_speed import AnalyzeEpisodeSpeed
 from src.analyze.graph.analyze_episode_reward import AnalyzeEpisodeReward
 from src.analyze.graph.analyze_episode_slide import AnalyzeEpisodeSlide
+from src.analyze.graph.analyze_episode_action_distribution import AnalyzeEpisodeActionDistribution
 from src.analyze.graph.analyze_lap_time_correlations import AnalyzeLapTimeCorrelations
 from src.analyze.graph.analyze_section_time_correlations import AnalyzeSectionTimeCorrelations
 from src.analyze.graph.analyze_complete_lap_percentage import AnalyzeCompleteLapPercentage
@@ -141,6 +142,7 @@ class MainApp(tk.Frame):
         self.analyze_episode_speed = AnalyzeEpisodeSpeed(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
         self.analyze_episode_reward = AnalyzeEpisodeReward(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
         self.analyze_episode_slide = AnalyzeEpisodeSlide(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
+        self.analyze_episode_action_distribution = AnalyzeEpisodeActionDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
         self.analyze_lap_time_correlations = AnalyzeLapTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_section_time_correlations = AnalyzeSectionTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_complete_lap_percentage = AnalyzeCompleteLapPercentage(self.redraw, matplotlib_canvas, self.inner_control_frame)
@@ -158,6 +160,7 @@ class MainApp(tk.Frame):
             self.analyze_episode_speed,
             self.analyze_episode_reward,
             self.analyze_episode_slide,
+            self.analyze_episode_action_distribution,
             self.analyze_lap_time_correlations,
             self.analyze_section_time_correlations,
             self.analyze_complete_lap_percentage
@@ -309,6 +312,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_episode_slide(self):
         self.switch_analyzer(self.analyze_episode_slide)
+
+    def menu_callback_analyze_episode_action_distribution(self):
+        self.switch_analyzer(self.analyze_episode_action_distribution)
 
     def menu_callback_analyze_lap_time_correlations(self):
         self.switch_analyzer(self.analyze_lap_time_correlations)

@@ -25,13 +25,14 @@ class Action:
         self._is_straight = not (self._is_left or self._is_right)
 
         if self._is_left:
-            self._print_str = "L +" + formatting.get_pretty_small_float(steering_angle, 30, 0)
+            self._print_steering = "L +" + formatting.get_pretty_small_float(steering_angle, 30, 0)
         elif self._is_right:
-            self._print_str = "R -" + formatting.get_pretty_small_float(-steering_angle, 30, 0)
+            self._print_steering = "R -" + formatting.get_pretty_small_float(-steering_angle, 30, 0)
         else:
-            self._print_str = "AHEAD"
+            self._print_steering = "AHEAD"
 
-        self._print_str += " @ " + formatting.get_pretty_small_float(speed, 4, 1) + " m/s"
+        self._print_speed = formatting.get_pretty_small_float(speed, 4, 1) + " m/s"
+        self._print_str = self._print_steering + " @ " + self._print_speed
 
     def get_index(self) -> int:
         return self._index
@@ -60,6 +61,9 @@ class Action:
         else:
             prepend = ""
         return prepend + str(self._index) + ": " + self._print_str
+
+    def get_readable_for_x_axis(self) -> str:
+        return str(self._index) + ": \n" + self._print_steering + "\n" + self._print_speed
 
     def is_same_as(self, another_action: 'Action') -> bool:
         return self._speed == another_action.get_speed() and \

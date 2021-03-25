@@ -92,6 +92,7 @@ class MenuBar():
         menu.add_command(label="Episode Speed", command=self.main_app.menu_callback_analyze_episode_speed)
         menu.add_command(label="Episode Reward", command=self.main_app.menu_callback_analyze_episode_reward)
         menu.add_command(label="Episode Slide", command=self.main_app.menu_callback_analyze_episode_slide)
+        menu.add_command(label="Episode Action Distribution", command=self.main_app.menu_callback_analyze_episode_action_distribution)
 
         menu.add_separator()
         menu.add_command(label="Route Convergence", command=self.main_app.menu_callback_analyze_convergence)

@@ -10,8 +10,10 @@ from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.selector.episode_selector import EpisodeSelector
 
 from src.analyze.core.controls import EpisodeRouteColourSchemeControl, TrackAppearanceControl
-from src.utils.colors import get_color_for_data
+from src.utils.colors import get_color_for_data, ColorPalette
 
+_WORST_SLIDE = 20
+_HIGHEST_STEERING = 30
 
 class AnalyzeRoute(TrackAnalyzer):
 
@@ -35,6 +37,12 @@ class AnalyzeRoute(TrackAnalyzer):
 
         self.show_heading = False
         self.show_true_bearing = False
+
+        self.single_tone = ""   # Will be populated just in time
+        self.dual_tone = ""
+        self.color_palette = ColorPalette.MULTI_COLOR_A
+
+        self.reward_percentiles = None
 
     def build_control_frame(self, control_frame):
 
@@ -132,14 +140,7 @@ class AnalyzeRoute(TrackAnalyzer):
             all_rewards = self.all_episodes[0].rewards
             for e in self.all_episodes[1:]:
                 all_rewards = np.append(all_rewards, e.rewards)
-
-            # TODO - need to do a lot more work here to make better auto choices
-            self.reward_percentiles = np.percentile(all_rewards, [10, 37, 64, 90])
-
-            if (self.reward_percentiles[0] == self.reward_percentiles[2]):
-                self.reward_percentiles = np.percentile(all_rewards, [64, 73, 82, 91])
-            elif (self.reward_percentiles[0] == self.reward_percentiles[1]):
-                self.reward_percentiles = np.percentile(all_rewards, [37, 55, 73, 90])
+            self.reward_percentiles = np.percentile(all_rewards, np.arange(100))
         else:
             self.reward_percentiles = None
 
@@ -179,6 +180,10 @@ class AnalyzeRoute(TrackAnalyzer):
         max_speed = self.action_space.get_max_speed()
         speed_range = self.action_space.get_speed_range()
 
+        self.color_palette = self._appearance_control.get_chosen_color_palette()
+        self.single_tone = get_color_for_data(0.6, self.color_palette)
+        self.dual_tone = get_color_for_data(1, self.color_palette)
+
         previous_event = episode.events[0]
         for e in episode.events[1:]:
             if self.action_space_filter.should_show_action(e.action_taken):
@@ -186,76 +191,60 @@ class AnalyzeRoute(TrackAnalyzer):
                 previous_event = e
 
     def colour_scheme_reward(self, event, previous_event, max_speed, speed_range):
-        if event.reward >= self.reward_percentiles[3]:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "white")
-        elif event.reward >= self.reward_percentiles[2]:
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "blue")
-        elif event.reward >= self.reward_percentiles[1]:
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "green")
-        elif event.reward >= self.reward_percentiles[0]:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "orange")
-        else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
+        percentile = np.searchsorted(self.reward_percentiles, event.reward)
+        brightness = min(1, percentile / 100 * 0.9 + 0.1)
+        self._plot_dot(event, brightness)
 
-    def plot_speed_dot(self, x, y, speed, max_speed, speed_range):
+    def _plot_speed_dot(self, event, speed, max_speed, speed_range):
         gap_from_best = max_speed - speed
         brightness = max(0.1, min(1, 1 - 0.9 * gap_from_best / speed_range))
-        colour_palette = self._appearance_control.get_chosen_color_palette()
-        colour = get_color_for_data(brightness, colour_palette)
+        self._plot_dot(event, brightness)
 
-        self.track_graphics.plot_dot((x, y), 3 + self.get_increased_blob_size(), colour)
+    def _plot_dot(self, event, brightness):
+        colour = get_color_for_data(brightness, self.color_palette)
+        self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), colour)
 
     def colour_scheme_track_speed(self, event, previous_event, max_speed, speed_range):
-        self.plot_speed_dot(event.x, event.y, event.track_speed, max_speed, speed_range)
+        self._plot_speed_dot(event, event.track_speed, max_speed, speed_range)
 
     def colour_scheme_action_speed(self, event, previous_event, max_speed, speed_range):
-        self.plot_speed_dot(event.x, event.y, event.speed, max_speed, speed_range)
+        self._plot_speed_dot(event, event.speed, max_speed, speed_range)
 
     def colour_scheme_progress_speed(self, event, previous_event, max_speed, speed_range):
-        self.plot_speed_dot(event.x, event.y, event.progress_speed, max_speed, speed_range)
+        self._plot_speed_dot(event, event.progress_speed, max_speed, speed_range)
 
     def colour_scheme_smoothness(self, event, previous_event, max_speed, speed_range):
         if event.action_taken == previous_event.action_taken:
             if self.smoothness_alternate:
-                colour = "green"
+                brightness = 0.7
             else:
-                colour = "purple"
+                brightness = 1.0
 
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), colour)
-            self.track_graphics.plot_dot((previous_event.x, previous_event.y), 3 + self.get_increased_blob_size(), colour)
+            self._plot_dot(event, brightness)
+            self._plot_dot(previous_event, brightness)
             self.smoothness_current = True
         else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
+            self._plot_dot(event, 0.1)
             if self.smoothness_current:
                 self.smoothness_current = False
                 self.smoothness_alternate = not self.smoothness_alternate
 
     def colour_scheme_steering(self, event, previous_event, max_speed, speed_range):
-        if abs(event.steering_angle) < 0.1:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "green")
-        elif abs(event.steering_angle) < 10.1:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "orange")
-        else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
+        brightness = max(0.1, min(1, 1 - 0.9 * abs(event.steering_angle) / _HIGHEST_STEERING))
+        self._plot_dot(event, brightness)
 
     def colour_scheme_slide(self, event: Event, previous_event, max_speed, speed_range):
-        if abs(event.slide) > 20:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "red")
-        elif abs(event.slide) > 10:
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "orange")
-        else:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "green")
+        brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.slide) / _WORST_SLIDE))
+        self._plot_dot(event, brightness)
 
     def colour_scheme_none(self, event, previous_event, max_speed, speed_range):
-        self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "green")
+        self._plot_dot(event, 0.7)
 
     def colour_scheme_per_second(self, event, previous_event, max_speed, speed_range):
         if int(event.time_elapsed) % 2 == 0:
-            colour = "green"
+            self._plot_dot(event, 0.7)
         else:
-            colour = "purple"
-
-        self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), colour)
+            self._plot_dot(event, 1.0)
 
     def set_show_heading(self, setting :bool):
         self.show_heading = setting

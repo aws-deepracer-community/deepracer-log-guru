@@ -14,13 +14,13 @@ class ViewManager:
         self.waypoint_minor_size = 0
 
         self.waypoints_on = True
-        self.grid_on = True
+        self.grid_on = False
         self.annotations_on = False
         self.sectors_on = False
 
         self.drawing_order = [ "G", "A", "T", "N" ]
 
-        self.set_track_colour_blue()
+        self.set_track_colour_grey()
         self.set_waypoint_sizes_micro()
 
         self.zoom_x = None

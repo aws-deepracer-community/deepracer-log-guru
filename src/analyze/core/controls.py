@@ -10,6 +10,7 @@ import tkinter as tk
 from enum import IntEnum
 
 from src.analyze.core.control import Control
+from src.utils.colors import ColorPalette
 
 
 class EpisodeCheckButtonControl(Control):
@@ -243,10 +244,12 @@ class TrackAppearanceControl(Control):
     _BLOB_SIZE_LARGE = "Large       "
     _BLOB_SIZES = [_BLOB_SIZE_SMALL, _BLOB_SIZE_MEDIUM, _BLOB_SIZE_LARGE]
 
-    _PALETTE_MONO = "Mono       "
+    _PALETTE_GREYS = "Greys       "
     _PALETTE_3_COLOURS = "3 Colours "
     _PALETTE_5_COLOURS = "5 Colours "
-    _PALETTES = [_PALETTE_MONO, _PALETTE_3_COLOURS, _PALETTE_5_COLOURS]
+    _PALETTE_MULTI_A = "Multi-A"
+    _PALETTE_MULTI_B = "Multi-B"
+    _PALETTES = [_PALETTE_GREYS, _PALETTE_3_COLOURS, _PALETTE_5_COLOURS, _PALETTE_MULTI_A, _PALETTE_MULTI_B]
 
     _BRIGHTNESS_FAINT = "Faint      "
     _BRIGHTNESS_NORMAL = "Normal    "
@@ -261,7 +264,7 @@ class TrackAppearanceControl(Control):
         self._blob_size = tk.StringVar(value=TrackAppearanceControl._BLOB_SIZE_MEDIUM)
         self._blob_size_callback = blob_size_callback
 
-        self._palette = tk.StringVar(value=TrackAppearanceControl._PALETTE_3_COLOURS)
+        self._palette = tk.StringVar(value=TrackAppearanceControl._PALETTE_MULTI_A)
         self._palette_callback = palette_callback
 
         self._brightness = tk.StringVar(value=TrackAppearanceControl._BRIGHTNESS_NORMAL)
@@ -290,14 +293,18 @@ class TrackAppearanceControl(Control):
     def large_blob_size(self):
         return self._blob_size.get() == TrackAppearanceControl._BLOB_SIZE_LARGE
 
-    def mono_palette(self):
-        return self._palette.get() == TrackAppearanceControl._PALETTE_MONO
-
-    def three_colour_palette(self):
-        return self._palette.get() == TrackAppearanceControl._PALETTE_3_COLOURS
-
-    def five_colour_palette(self):
-        return self._palette.get() == TrackAppearanceControl._PALETTE_5_COLOURS
+    def get_chosen_color_palette(self) -> ColorPalette:
+        choice = self._palette.get()
+        if choice == TrackAppearanceControl._PALETTE_GREYS:
+            return ColorPalette.GREYS
+        if choice == TrackAppearanceControl._PALETTE_3_COLOURS:
+            return ColorPalette.DISCRETE_THREE
+        if choice == TrackAppearanceControl._PALETTE_5_COLOURS:
+            return ColorPalette.DISCRETE_FIVE
+        if choice == TrackAppearanceControl._PALETTE_MULTI_A:
+            return ColorPalette.MULTI_COLOR_A
+        if choice == TrackAppearanceControl._PALETTE_MULTI_B:
+            return ColorPalette.MULTI_COLOR_B
 
     def faint_brightness(self):
         return self._brightness.get() == TrackAppearanceControl._BRIGHTNESS_FAINT

@@ -14,7 +14,7 @@
 
 (7) Enforce abstract methods using enforce()
 
-(8) Use IntEnum type for enums ... avoid using auto() which causes issues with type hints
+(8) Use IntEnum type for enums ... but may need avoid using auto() which causes issues with type hints (MORE INFO??)
 
 (8) No lint issues
 

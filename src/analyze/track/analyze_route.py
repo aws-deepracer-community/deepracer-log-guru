@@ -10,6 +10,7 @@ from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.selector.episode_selector import EpisodeSelector
 
 from src.analyze.core.controls import EpisodeRouteColourSchemeControl, TrackAppearanceControl
+from src.utils.colors import get_color_for_data
 
 
 class AnalyzeRoute(TrackAnalyzer):
@@ -196,37 +197,22 @@ class AnalyzeRoute(TrackAnalyzer):
         else:
             self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
 
+    def plot_speed_dot(self, x, y, speed, max_speed, speed_range):
+        gap_from_best = max_speed - speed
+        brightness = max(0.1, min(1, 1 - 0.9 * gap_from_best / speed_range))
+        colour_palette = self._appearance_control.get_chosen_color_palette()
+        colour = get_color_for_data(brightness, colour_palette)
+
+        self.track_graphics.plot_dot((x, y), 3 + self.get_increased_blob_size(), colour)
+
     def colour_scheme_track_speed(self, event, previous_event, max_speed, speed_range):
-        if event.track_speed >= max_speed - 0.2 * speed_range:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "white")
-        elif event.track_speed >= max_speed - 0.4 * speed_range:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "blue")
-        elif event.track_speed >= max_speed - 0.6 * speed_range:
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "green")
-        elif event.track_speed >= max_speed - 0.8 * speed_range:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "yellow")
-        else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
+        self.plot_speed_dot(event.x, event.y, event.track_speed, max_speed, speed_range)
 
     def colour_scheme_action_speed(self, event, previous_event, max_speed, speed_range):
-        if event.speed >= max_speed - 0.33 * speed_range:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "green")
-        elif event.speed >= max_speed - 0.66 * speed_range:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "yellow")
-        else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
+        self.plot_speed_dot(event.x, event.y, event.speed, max_speed, speed_range)
 
     def colour_scheme_progress_speed(self, event, previous_event, max_speed, speed_range):
-        if event.progress_speed >= max_speed - 0.2 * speed_range:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "white")
-        elif event.progress_speed >= max_speed - 0.4 * speed_range:
-            self.track_graphics.plot_dot((event.x, event.y), 4 + self.get_increased_blob_size(), "blue")
-        elif event.progress_speed >= max_speed - 0.6 * speed_range:
-            self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), "green")
-        elif event.progress_speed >= max_speed - 0.8 * speed_range:
-            self.track_graphics.plot_dot((event.x, event.y), 2, "yellow")
-        else:
-            self.track_graphics.plot_dot((event.x, event.y), 1, "grey")
+        self.plot_speed_dot(event.x, event.y, event.progress_speed, max_speed, speed_range)
 
     def colour_scheme_smoothness(self, event, previous_event, max_speed, speed_range):
         if event.action_taken == previous_event.action_taken:

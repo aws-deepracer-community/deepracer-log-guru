@@ -8,6 +8,7 @@ from src.analyze.core.controls import ConvergenceGranularityControl, SpeedContro
 
 
 import src.analyze.util.visitor as v
+from src.utils.colors import get_color_for_data
 
 HIGH_VISITOR_MAP = 0
 MEDIUM_VISITOR_MAP = 1
@@ -39,9 +40,10 @@ class AnalyzeSpeedConvergence(TrackAnalyzer):
     def redraw(self):
         if self.visitor_maps:
             colours = [ "", "", "" ]
-            colours[HIGH_VISITOR_MAP] = "green"
-            colours[MEDIUM_VISITOR_MAP] = "yellow"
-            colours[LOW_VISITOR_MAP] = "red"
+            color_palette = self._appearance_control.get_chosen_color_palette()
+            colours[HIGH_VISITOR_MAP] = get_color_for_data(1.0, color_palette)
+            colours[MEDIUM_VISITOR_MAP] = get_color_for_data(0.6, color_palette)
+            colours[LOW_VISITOR_MAP] = get_color_for_data(0.2, color_palette)
 
             if self._appearance_control.very_bright_brightness():
                 threshold = 5

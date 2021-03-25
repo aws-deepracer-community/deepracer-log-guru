@@ -1,6 +1,9 @@
 from src.graphics.track_graphics import TrackGraphics
 import math
 
+from src.utils.colors import get_color_for_data, ColorPalette
+
+
 class VisitorMap:
 
     def __init__(self, min_x, min_y, max_x, max_y, granularity):
@@ -33,7 +36,7 @@ class VisitorMap:
             self.last_visitor[y_index][x_index] = visitor
             self.visits[y_index][x_index] += 1
 
-    def draw(self, track_graphics :TrackGraphics, brightness: int):
+    def draw(self, track_graphics :TrackGraphics, brightness: int, color_palette: ColorPalette):
         # self.print_debug()
 
         assert brightness in [-1, 0, 1, 2]
@@ -62,16 +65,9 @@ class VisitorMap:
                     x = self.min_x + self.granularity * xx
                     y = self.min_y + self.granularity * yy
 
-                    h = hex(round(min(255, 30 + colour_multiplier * visit * visit)))[2:]
-
-                    if len(h) == 1:
-                        h = "0" + h
-
-                    colour = "#" + h*3
-
+                    data = min(1.0, 30/255 + colour_multiplier / 255 * visit * visit)
+                    colour = get_color_for_data(data, color_palette)
                     track_graphics.plot_box(x, y, x + self.granularity, y + self.granularity, colour)
-
-
 
     def print_debug(self):
         for v in reversed(self.visits):

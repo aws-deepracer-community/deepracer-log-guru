@@ -22,6 +22,7 @@ from src.analyze.graph.analyze_episode_slide import AnalyzeEpisodeSlide
 from src.analyze.graph.analyze_episode_action_distribution import AnalyzeEpisodeActionDistribution
 from src.analyze.graph.analyze_lap_time_correlations import AnalyzeLapTimeCorrelations
 from src.analyze.graph.analyze_section_time_correlations import AnalyzeSectionTimeCorrelations
+from src.analyze.graph.analyze_lap_time_distribution import AnalyzeLapTimeDistribution
 from src.analyze.graph.analyze_complete_lap_percentage import AnalyzeCompleteLapPercentage
 
 from src.action_space.action_space_filter import ActionSpaceFilter
@@ -145,6 +146,7 @@ class MainApp(tk.Frame):
         self.analyze_episode_action_distribution = AnalyzeEpisodeActionDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
         self.analyze_lap_time_correlations = AnalyzeLapTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_section_time_correlations = AnalyzeSectionTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_lap_time_distribution = AnalyzeLapTimeDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_complete_lap_percentage = AnalyzeCompleteLapPercentage(self.redraw, matplotlib_canvas, self.inner_control_frame)
 
         self.all_analyzers = [
@@ -163,6 +165,7 @@ class MainApp(tk.Frame):
             self.analyze_episode_action_distribution,
             self.analyze_lap_time_correlations,
             self.analyze_section_time_correlations,
+            self.analyze_lap_time_distribution,
             self.analyze_complete_lap_percentage
         ]
 
@@ -321,6 +324,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_section_time_correlations(self):
         self.switch_analyzer(self.analyze_section_time_correlations)
+
+    def menu_callback_analyze_lap_time_distribution(self):
+        self.switch_analyzer(self.analyze_lap_time_distribution)
 
     def menu_callback_analyze_complete_lap_percentage(self):
         self.switch_analyzer(self.analyze_complete_lap_percentage)

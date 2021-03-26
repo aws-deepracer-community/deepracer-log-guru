@@ -41,8 +41,10 @@ class MenuBar():
 
     def add_file_menu(self):
         menu = Menu(self.menubar, tearoff=0)
-        menu.add_command(label="New", command=self.new_files)
-        menu.add_command(label="Open", command=self.open_file)
+        menu.add_command(label="New File(s)", command=self.new_files)
+        menu.add_command(label="Open File", command=self.open_file)
+        menu.add_separator()
+        menu.add_command(label="Switch Directory", command=self.main_app.menu_callback_switch_directory)
         menu.add_separator()
         menu.add_command(label="Exit", command=self.root.quit)
 
@@ -162,7 +164,6 @@ class MenuBar():
         menu = Menu(self.menubar, tearoff=0)
         menu.add_command(label="Re-calculate Log Meta", command=self.refresh_all_log_meta)
         menu.add_command(label="View Log File Info", command=self.main_app.menu_callback_view_log_file_info)
-
 
         self.menubar.add_cascade(label="Admin", menu=menu)
 

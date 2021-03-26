@@ -1,12 +1,12 @@
 import tkinter as tk
-from os import chdir
+from tkinter import filedialog
+import os
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 import src.configuration.personal_configuration as config
 import src.secret_sauce.glue.glue as ss
-from src.analyze.core.analyzer import Analyzer
 
 from src.analyze.track.analyze_convergence import AnalyzeConvergence
 from src.analyze.graph.analyze_training_progress import AnalyzeTrainingProgress
@@ -72,7 +72,8 @@ class MainApp(tk.Frame):
         # Go to the correct directory where the log files are located, ready to load or save them there
         #
 
-        chdir(config.LOG_DIRECTORY)
+        # TODO - load from a new saved config file
+        os.chdir(config.LOG_DIRECTORY)
 
 
         #
@@ -330,6 +331,12 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_complete_lap_percentage(self):
         self.switch_analyzer(self.analyze_complete_lap_percentage)
+
+    def menu_callback_switch_directory(self):
+        result = tk.filedialog.askdirectory(title="Choose the directory where log files are stored", mustexist=True, initialdir=os.curdir)
+        if result:
+            os.chdir(result)
+            # TODO - save in new config file
 
     def callback_open_this_file(self, file_name):
 

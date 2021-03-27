@@ -2,7 +2,6 @@ import tkinter as tk
 import tkinter.messagebox
 
 from src.ui.dialog import Dialog
-from src.ui.please_wait_OLD import PleaseWaitDialog
 from src.log.log_utils import import_new_logs, get_possible_new_model_log_files
 from src.ui.please_wait import PleaseWait
 

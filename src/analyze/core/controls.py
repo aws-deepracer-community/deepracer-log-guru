@@ -320,25 +320,37 @@ class TrackAppearanceControl(Control):
     def very_bright_brightness(self):
         return self._brightness.get() == TrackAppearanceControl._BRIGHTNESS_VERY_BRIGHT
 
+class SkipControl(Control):
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Skip")
+
+        self._skip_starts = tk.BooleanVar(value=True)
+        self._skip_bad_ends = tk.BooleanVar(value=True)
+
+    def _add_widgets(self):
+        self.add_checkbutton("Starts", self._skip_starts)
+        self.add_checkbutton_right("Ends", self._skip_bad_ends)
+
+    def skip_starts(self):
+        return self._skip_starts.get()
+
+    def skip_ends(self):
+        return self._skip_bad_ends.get()
+
 
 class AdvancedFiltersControl(Control):
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Advanced Filters")
 
-        self._skip_starts = tk.BooleanVar(value=True)
         self._filter_actions = tk.BooleanVar(value=False)
         self._filter_sector = tk.BooleanVar(value=False)
         self._filter_section = tk.BooleanVar(value=False)
 
     def _add_widgets(self):
-        self.add_checkbutton("Skip starts", self._skip_starts)
         self.add_checkbutton("Actions", self._filter_actions)
-        self.add_checkbutton("Sector", self._filter_sector)
-        self.add_checkbutton("Section", self._filter_section)
-
-    def skip_starts(self):
-        return self._skip_starts.get()
+        self.add_checkbutton("Sector TBD", self._filter_sector)
+        self.add_checkbutton("Section TBD", self._filter_section)
 
     def filter_actions(self):
         return self._filter_actions.get()

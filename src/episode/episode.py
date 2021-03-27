@@ -222,54 +222,52 @@ class Episode:
 
         return event, index
 
-    #### NEW STYLE
-
-    def apply_visits_to_heat_map(self, heat_map: HeatMap, skip_count, action_space_filter: ActionSpaceFilter):
+    def apply_visits_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
         previous = self.events[0]
         for e in self.events:
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
                 self._apply_event_stat_to_heat_map(e, previous, heat_map, 1)
             previous = e
 
-    def apply_action_speed_to_heat_map(self, heat_map: HeatMap, skip_count, action_space_filter: ActionSpaceFilter):
+    def apply_action_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
         previous = self.events[0]
         for e in self.events:
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
                 self._apply_event_stat_to_heat_map(e, previous, heat_map, e.speed)
             previous = e
 
-    def apply_progress_speed_to_heat_map(self, heat_map: HeatMap, skip_count, action_space_filter: ActionSpaceFilter):
+    def apply_progress_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
         previous = self.events[0]
         for e in self.events:
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
                 self._apply_event_stat_to_heat_map(e, previous, heat_map, e.progress_speed)
             previous = e
 
-    def apply_track_speed_to_heat_map(self, heat_map: HeatMap, skip_count, action_space_filter: ActionSpaceFilter):
+    def apply_track_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
         previous = self.events[0]
         for e in self.events:
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
                 self._apply_event_stat_to_heat_map(e, previous, heat_map, e.track_speed)
             previous = e
 
-    def apply_reward_to_heat_map(self, heat_map: HeatMap, skip_count, action_space_filter: ActionSpaceFilter):
+    def apply_reward_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
         previous = self.events[0]
         for e in self.events:
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
                 self._apply_event_stat_to_heat_map(e, previous, heat_map, e.reward)
             previous = e
 
-    def apply_slide_to_heat_map(self, heat_map: HeatMap, skip_count, action_space_filter: ActionSpaceFilter):
+    def apply_slide_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
         previous = self.events[0]
         for e in self.events:
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
                 self._apply_event_stat_to_heat_map(e, previous, heat_map, abs(e.slide))
             previous = e
 
-    def apply_steering_to_heat_map(self, heat_map: HeatMap, skip_count, action_space_filter: ActionSpaceFilter):
+    def apply_steering_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
         previous = self.events[0]
         for e in self.events:
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
+            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
                 self._apply_event_stat_to_heat_map(e, previous, heat_map, 30 - abs(e.steering_angle))
             previous = e
 
@@ -281,44 +279,6 @@ class Episode:
         heat_map.visit(e.x - 0.25 * x_diff, e.y - 0.25 * y_diff, self, stat)
         heat_map.visit(e.x - 0.50 * x_diff, e.y - 0.50 * y_diff, self, stat)
         heat_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self, stat)
-
-    #### ORIGINAL
-
-    def apply_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter):
-        previous = self.events[0]
-        for e in self.events:
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken):
-                self.apply_event_to_visitor_map_(e, previous, visitor_map)
-            previous = e
-
-    def apply_action_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
-        previous = self.events[0]
-        for e in self.events:
-            if e.step >= skip_count and action_space_filter.should_show_action(e.action_taken) and is_correct_speed(e.speed):
-                self.apply_event_to_visitor_map_(e, previous, visitor_map)
-            previous = e
-
-    def apply_track_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
-        previous = self.events[0]
-        for e in self.events:
-            if e.step >= skip_count and is_correct_speed(e.track_speed):
-                self.apply_event_to_visitor_map_(e, previous, visitor_map)
-            previous = e
-
-    def apply_progress_speed_to_visitor_map(self, visitor_map :VisitorMap, skip_count, action_space_filter :ActionSpaceFilter, is_correct_speed):
-        previous = self.events[0]
-        for e in self.events:
-            if e.step >= skip_count and is_correct_speed(e.progress_speed):
-                self.apply_event_to_visitor_map_(e, previous, visitor_map)
-            previous = e
-
-    def apply_event_to_visitor_map_(self, e, previous, visitor_map):
-        visitor_map.visit(e.x, e.y, self)
-        x_diff = e.x - previous.x
-        y_diff = e.y - previous.y
-        visitor_map.visit(e.x - 0.25 * x_diff, e.y - 0.25 * y_diff, self)
-        visitor_map.visit(e.x - 0.50 * x_diff, e.y - 0.50 * y_diff, self)
-        visitor_map.visit(e.x - 0.75 * x_diff, e.y - 0.75 * y_diff, self)
 
     # Only "probably" because spinning can fool this simple logic
     def probably_finishes_section_(self, start, finish):

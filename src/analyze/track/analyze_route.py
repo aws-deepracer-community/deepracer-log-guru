@@ -196,6 +196,7 @@ class AnalyzeRoute(TrackAnalyzer):
         self._plot_dot(event, brightness)
 
     def _plot_speed_dot(self, event, speed, max_speed, speed_range):
+        speed_range = max(0.5, speed_range)   # Single speed training not only divide 0 but no variation for track or progress
         gap_from_best = max_speed - speed
         brightness = max(0.1, min(1, 1 - 0.9 * gap_from_best / speed_range))
         self._plot_dot(event, brightness)

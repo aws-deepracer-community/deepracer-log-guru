@@ -65,6 +65,7 @@ class MainApp(tk.Frame):
         self.view_manager = ViewManager()
         self.action_space_filter = ActionSpaceFilter()
         self.episode_selector = EpisodeSelector()
+        self.sector_filter = ""
 
 
         #
@@ -363,6 +364,11 @@ class MainApp(tk.Frame):
             v.set_action_space_filter(self.action_space_filter)
         self.redraw()
 
+    def reapply_sector_filter(self):
+        for v in self.all_analyzers:
+            v.set_sector_filter(self.sector_filter)
+        self.redraw()
+
     def reapply_episode_filter(self):
         self.filtered_episodes = self.episode_filter.get_filtered_episodes(self.current_track)
 
@@ -505,6 +511,11 @@ class MainApp(tk.Frame):
     def menu_callback_actions_straight(self):
         self.action_space_filter.set_filter_straight()
         self.reapply_action_space_filter()
+
+    def menu_callback_sector_filter(self, sector: str):
+        assert len(sector) == 1
+        self.sector_filter = sector
+        self.reapply_sector_filter()
 
     def menu_callback_zoom_in_out(self):
         self.view_manager.zoom_toggle()

@@ -32,3 +32,12 @@ class Event:
         self.true_bearing = 0.0
         self.distance_from_center = 0.0
 
+    def is_within_waypoint_range(self, waypoint_range):
+        if waypoint_range:
+            (start, finish) = waypoint_range
+            if start <= finish:
+                return start <= self.closest_waypoint_index <= finish
+            else:
+                return self.closest_waypoint_index >= start or self.closest_waypoint_index <= finish
+        else:
+            return True

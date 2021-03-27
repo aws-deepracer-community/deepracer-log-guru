@@ -14,6 +14,7 @@ class Analyzer:
         self.all_episodes = None
         self.action_space = None
         self.action_space_filter = None
+        self.sector_filter = None
         self.log_meta = None
         self.evaluation_phases = None
 
@@ -55,6 +56,9 @@ class Analyzer:
         self.action_space_filter = action_space_filter
         self.warning_action_space_filter_changed()
 
+    def set_sector_filter(self, sector):
+        self.sector_filter = sector
+        self.warning_sector_filter_changed()
 
     ##########################
     ### ABSTRACT INTERFACE ###
@@ -101,6 +105,11 @@ class Analyzer:
         pass
 
     def warning_action_space_filter_changed(self):
+        # You MIGHT override this to manage cached or pre-calculated data structures
+        # Do not override to redraw() since Guru already calls redraw() at the right times!
+        pass
+
+    def warning_sector_filter_changed(self):
         # You MIGHT override this to manage cached or pre-calculated data structures
         # Do not override to redraw() since Guru already calls redraw() at the right times!
         pass

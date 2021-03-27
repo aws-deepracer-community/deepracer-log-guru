@@ -351,18 +351,13 @@ class MoreFiltersControl(Control):
     def _add_widgets(self):
         self.add_checkbutton("Actions", self._filter_actions)
         if not self._actions_only:
-            self.add_checkbutton("Sector TBD", self._filter_sector)
-            self.add_checkbutton("Section TBD", self._filter_section)
+            self.add_checkbutton("Sector", self._filter_sector)
 
     def filter_actions(self):
         return self._filter_actions.get()
 
     def filter_sector(self):
-        return self._filter_actions.get()
-
-    def filter_section(self):
-        return self._filter_actions.get()
-
+        return self._filter_sector.get()
 
 class StatsControl(Control):
 

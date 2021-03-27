@@ -23,6 +23,7 @@ class MenuBar():
         if file_is_open:
             self.add_episode_menu()
             self.add_action_menu()
+            self.add_sector_menu()
             self.add_analyze_menu()
 
         self.add_view_menu()
@@ -38,6 +39,14 @@ class MenuBar():
                              command=lambda track=t: self.choose_track(track))
 
         self.menubar.add_cascade(label="Track", menu=menu)
+
+    def add_sector_menu(self):
+        menu = Menu(self.menubar, tearoff=0)
+        for s in self.main_app.current_track.get_all_sector_names():
+            menu.add_command(label="Sector" + s,
+                             command=lambda sector=s: self.choose_sector(sector))
+
+        self.menubar.add_cascade(label="Sector", menu=menu)
 
     def add_file_menu(self):
         menu = Menu(self.menubar, tearoff=0)
@@ -173,6 +182,9 @@ class MenuBar():
 
     def choose_track(self, track):
         self.main_app.menu_callback_switch_track(track)
+
+    def choose_sector(self, sector: str):
+        self.main_app.menu_callback_sector_filter(sector)
 
     def open_episode_filter_dialog(self):
         EpisodeFilterDialog(self.main_app)

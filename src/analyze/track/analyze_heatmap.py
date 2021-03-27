@@ -19,7 +19,7 @@ class AnalyzeHeatmap(TrackAnalyzer):
         self._appearance_control = TrackAppearanceControl(guru_parent_redraw, control_frame,
                                                           None, self.chosen_new_appearance, self.chosen_new_appearance)
         self._skip_control = SkipControl(self.chosen_new_skip, control_frame)
-        self._more_filters_control = MoreFiltersControl(self.chosen_more_filters, control_frame, True)
+        self._more_filters_control = MoreFiltersControl(self.chosen_more_filters, control_frame, False)
 
         self._heat_map = None
         self.please_wait = please_wait
@@ -69,6 +69,10 @@ class AnalyzeHeatmap(TrackAnalyzer):
 
     def warning_action_space_filter_changed(self):
         if self._more_filters_control.filter_actions():
+            self._heat_map = None
+
+    def warning_sector_filter_changed(self):
+        if self._more_filters_control.filter_sector():
             self._heat_map = None
 
     def chosen_new_skip(self):
@@ -125,59 +129,64 @@ class AnalyzeHeatmap(TrackAnalyzer):
                 else:
                     action_space_filter = None
 
+                if self._more_filters_control.filter_sector() and self.sector_filter and len(self.sector_filter) == 1:
+                    waypoint_range = self.current_track.get_sector_start_and_finish(self.sector_filter)
+                else:
+                    waypoint_range = None
+
                 if self._measurement_control.measure_visits():
-                    self._recalculate_measure_visits(episodes, skip_start, skip_end, action_space_filter)
+                    self._recalculate_measure_visits(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_action_speed():
-                    self._recalculate_measure_action_speed(episodes, skip_start, skip_end, action_space_filter)
+                    self._recalculate_measure_action_speed(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_progress_speed():
-                    self._recalculate_measure_progress_speed(episodes, skip_start, skip_end, action_space_filter)
+                    self._recalculate_measure_progress_speed(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_track_speed():
-                    self._recalculate_measure_track_speed(episodes, skip_start, skip_end, action_space_filter)
+                    self._recalculate_measure_track_speed(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_reward():
-                    self._recalculate_measure_reward(episodes, skip_start, skip_end, action_space_filter)
+                    self._recalculate_measure_reward(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_slide():
-                    self._recalculate_measure_slide(episodes, skip_start, skip_end, action_space_filter)
+                    self._recalculate_measure_slide(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_steering():
-                    self._recalculate_measure_steering(episodes, skip_start, skip_end, action_space_filter)
+                    self._recalculate_measure_steering(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
 
-    def _recalculate_measure_visits(self, episodes, skip_start, skip_end, action_space_filter):
+    def _recalculate_measure_visits(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_visits_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
+            e.apply_visits_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_action_speed(self, episodes, skip_start, skip_end, action_space_filter):
+    def _recalculate_measure_action_speed(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_action_speed_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
+            e.apply_action_speed_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_track_speed(self, episodes, skip_start, skip_end, action_space_filter):
+    def _recalculate_measure_track_speed(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_track_speed_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
+            e.apply_track_speed_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_progress_speed(self, episodes, skip_start, skip_end, action_space_filter):
+    def _recalculate_measure_progress_speed(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_progress_speed_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
+            e.apply_progress_speed_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_reward(self, episodes, skip_start, skip_end, action_space_filter):
+    def _recalculate_measure_reward(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_reward_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
+            e.apply_reward_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_slide(self, episodes, skip_start, skip_end, action_space_filter):
+    def _recalculate_measure_slide(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_slide_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
+            e.apply_slide_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_steering(self, episodes, skip_start, skip_end, action_space_filter):
+    def _recalculate_measure_steering(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_steering_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
+            e.apply_steering_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)

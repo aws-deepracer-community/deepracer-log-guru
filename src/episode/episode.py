@@ -7,6 +7,7 @@ from src.action_space.action_space_filter import ActionSpaceFilter
 from src.action_space.action_space import ActionSpace
 from src.analyze.util.heatmap import HeatMap
 from src.analyze.util.visitor import VisitorMap
+from src.event.event_meta import Event
 from src.utils.geometry import get_bearing_between_points, get_turn_between_directions,\
     get_distance_between_points, get_distance_of_point_from_line
 
@@ -222,53 +223,74 @@ class Episode:
 
         return event, index
 
-    def apply_visits_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
-        previous = self.events[0]
-        for e in self.events:
-            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
-                self._apply_event_stat_to_heat_map(e, previous, heat_map, 1)
-            previous = e
+    def apply_visits_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                      action_space_filter: ActionSpaceFilter):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, self._get_event_visitor_dummy)
 
-    def apply_action_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
-        previous = self.events[0]
-        for e in self.events:
-            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
-                self._apply_event_stat_to_heat_map(e, previous, heat_map, e.speed)
-            previous = e
+    def apply_track_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                      action_space_filter: ActionSpaceFilter):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, self._get_event_track_speed)
 
-    def apply_progress_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
-        previous = self.events[0]
-        for e in self.events:
-            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
-                self._apply_event_stat_to_heat_map(e, previous, heat_map, e.progress_speed)
-            previous = e
+    def apply_action_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                      action_space_filter: ActionSpaceFilter):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter,
+                                        self._get_event_action_speed)
 
-    def apply_track_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
-        previous = self.events[0]
-        for e in self.events:
-            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
-                self._apply_event_stat_to_heat_map(e, previous, heat_map, e.track_speed)
-            previous = e
+    def apply_progress_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                      action_space_filter: ActionSpaceFilter):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, self._get_event_track_speed)
 
-    def apply_reward_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
-        previous = self.events[0]
-        for e in self.events:
-            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
-                self._apply_event_stat_to_heat_map(e, previous, heat_map, e.reward)
-            previous = e
+    def apply_reward_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                      action_space_filter: ActionSpaceFilter):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, self._get_event_reward)
 
-    def apply_slide_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
-        previous = self.events[0]
-        for e in self.events:
-            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
-                self._apply_event_stat_to_heat_map(e, previous, heat_map, abs(e.slide))
-            previous = e
+    def apply_slide_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                      action_space_filter: ActionSpaceFilter):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, self._get_event_slide)
 
-    def apply_steering_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter):
+    def apply_steering_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                      action_space_filter: ActionSpaceFilter):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, self._get_event_steering)
+
+    @staticmethod
+    def _get_event_track_speed(event: Event):
+        return event.track_speed
+
+    @staticmethod
+    def _get_event_action_speed(event: Event):
+        return event.speed
+
+    @staticmethod
+    def _get_event_progress_speed(event: Event):
+        return max(0, event.progress_speed)
+
+    @staticmethod
+    def _get_event_reward(event: Event):
+        return max(0, event.reward)
+
+    @staticmethod
+    def _get_event_slide(event: Event):
+        return abs(event.slide)
+
+    @staticmethod
+    def _get_event_steering(event: Event):
+        return max(0, 30 - abs(event.steering_angle))
+
+    @staticmethod
+    def _get_event_visitor_dummy(event: Event):
+        return 1
+
+    def _apply_episode_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter, stat_extractor: callable):
+        assert min(skip_start, skip_end) >= 0
         previous = self.events[0]
+        if self.lap_complete:
+            skip_end = self.events[-1].step
+        else:
+            skip_end = self.events[-1].step - skip_end
         for e in self.events:
-            if e.step >= skip_start and action_space_filter.should_show_action(e.action_taken):
-                self._apply_event_stat_to_heat_map(e, previous, heat_map, 30 - abs(e.steering_angle))
+            stat = stat_extractor(e)
+            if skip_start <= e.step <= skip_end and action_space_filter.should_show_action(e.action_taken):
+                self._apply_event_stat_to_heat_map(e, previous, heat_map, stat)
             previous = e
 
     def _apply_event_stat_to_heat_map(self, e, previous, heat_map: HeatMap, stat: typing.Union[float, int]):

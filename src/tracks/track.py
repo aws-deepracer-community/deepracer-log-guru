@@ -167,6 +167,22 @@ class Track:
     def get_all_sector_names(self):
         return [self._get_sector_name(x) for x in range(len(self._track_sector_dividers) + 1)]
 
+    def get_sector_start_and_finish(self, sector_name: str):
+        assert len(sector_name) == 1
+        sector_id = ord(sector_name) - ord("A")
+        assert 0 <= sector_id <= len(self._track_sector_dividers)
+
+        if sector_id == 0:
+            start = 0
+        else:
+            start = self._track_sector_dividers[sector_id - 1]
+
+        if sector_id == len(self._track_sector_dividers):
+            finish = len(self._track_waypoints) - 1
+        else:
+            finish = self._track_sector_dividers[sector_id]
+
+        return start, finish
 
     #
     # PRIVATE implementation

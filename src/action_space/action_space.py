@@ -37,6 +37,9 @@ class ActionSpace:
     def get_all_actions(self):
         return self._actions
 
+    def get_number_of_actions(self):
+        return len(self._actions)
+
     def get_all_action_names_for_x_axis(self):
         names = []
         for action in self._actions:

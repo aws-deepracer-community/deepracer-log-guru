@@ -119,8 +119,9 @@ class MenuBar():
         menu.add_separator()
         menu.add_command(label="Lap Time Correlations", command=self.main_app.menu_callback_analyze_lap_time_correlations)
         menu.add_command(label="Lap Time Distribution", command=self.main_app.menu_callback_analyze_lap_time_distribution)
+
+        menu.add_separator()
         menu.add_command(label="Sector Time Correlations", command=self.main_app.menu_callback_analyze_sector_time_correlations)
-        menu.add_command(label="OLD* Section Time Correlations", command=self.main_app.menu_callback_analyze_section_time_correlations_OLD)
 
         menu.add_separator()
         menu.add_command(label="Reward Distribution", command=self.main_app.menu_callback_analyze_reward_distribution)

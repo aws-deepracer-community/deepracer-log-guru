@@ -287,6 +287,9 @@ class MainApp(tk.Frame):
     def menu_callback_analyze_route_over_heatmap(self):
         self.switch_analyzer(self.analyze_route, self.analyze_track_heatmap)
 
+    def menu_callback_analyze_exit_points_over_heatmap(self):
+        self.switch_analyzer(self.analyze_exit_points, self.analyze_track_heatmap)
+
     def menu_callback_analyze_training_progress(self):
         self.switch_analyzer(self.analyze_training_progress)
 

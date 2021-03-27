@@ -402,7 +402,7 @@ class MainApp(tk.Frame):
             self.track_canvas.delete(self.zoom_widget)
             x_diff = abs(self.zoom_start_x - event.x)
             y_diff = abs(self.zoom_start_y - event.y)
-            if x_diff > 10 or y_diff > 10:
+            if x_diff > 10 and y_diff > 10:
                 self.view_manager.zoom_set(self.track_graphics, self.zoom_start_x, self.zoom_start_y, event.x, event.y)
                 self.redraw()
 

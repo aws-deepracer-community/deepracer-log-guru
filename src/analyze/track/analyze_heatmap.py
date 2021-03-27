@@ -24,8 +24,8 @@ class AnalyzeHeatmap(TrackAnalyzer):
         self.please_wait = please_wait
 
     def build_control_frame(self, control_frame):
-        self._measurement_control.add_to_control_frame()
         self._episodes_control.add_to_control_frame()
+        self._measurement_control.add_to_control_frame()
         self._granularity_control.add_to_control_frame()
         self._appearance_control.add_to_control_frame()
         self._skip_starts_control.add_to_control_frame()

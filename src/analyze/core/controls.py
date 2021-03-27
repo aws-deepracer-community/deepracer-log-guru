@@ -28,7 +28,7 @@ class EpisodeCheckButtonControl(Control):
 
     def _add_widgets(self):
         self.add_checkbutton("All", self._show_all)
-        self.add_checkbutton("Filtered", self._show_filtered)
+        self.add_checkbutton_right("Filtered", self._show_filtered)
 
         if self._show_evaluations:
             self.add_checkbutton("Evaluations", self._show_evaluations)
@@ -57,7 +57,7 @@ class EpisodeRadioButtonControl(Control):
 
     def _add_widgets(self):
         self.add_radiobutton("All", self._show_what, EpisodeRadioButtonControl._Values.SHOW_ALL.value)
-        self.add_radiobutton("Filtered", self._show_what, EpisodeRadioButtonControl._Values.SHOW_FILTERED.value)
+        self.add_radiobutton_right("Filtered", self._show_what, EpisodeRadioButtonControl._Values.SHOW_FILTERED.value)
 
         if self.include_evaluations:
             self.add_radiobutton("Evaluations", self._show_what, EpisodeRadioButtonControl._Values.SHOW_EVALUATIONS.value)
@@ -208,8 +208,8 @@ class ConvergenceGranularityControl(Control):
     def _add_widgets(self):
         self.add_radiobutton("3 cm", self._granularity, 3)
         self.add_radiobutton("5 cm", self._granularity, 5)
-        self.add_radiobutton("10 cm", self._granularity, 10)
-        self.add_radiobutton("20 cm", self._granularity, 20)
+        self.add_radiobutton_right("10 cm", self._granularity, 10)
+        self.add_radiobutton_right("20 cm", self._granularity, 20)
 
     def granularity(self):
         return self._granularity.get()

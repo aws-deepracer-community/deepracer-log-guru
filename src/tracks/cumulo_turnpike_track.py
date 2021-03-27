@@ -11,7 +11,7 @@ class CumuloTurnpikeTrack(Track):
         self._ui_length_in_m = 60  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "Belille"
-        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._track_sector_dividers = [10, 20]
         self._annotations = config.cumulo_turnpike_annotations
         self._track_width = 1.066
 

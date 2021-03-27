@@ -11,7 +11,7 @@ class EuropeanSeasideCircuitTrack(Track):
         self._ui_length_in_m = 60.0  # metres
         self._ui_width_in_cm = 128  # centimetres
         self._world_name = "Monaco"
-        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._track_sector_dividers = [55, 118, 180]
         self._annotations = config.european_seaside_circuit_annotations
         self._track_width = 1.45
 

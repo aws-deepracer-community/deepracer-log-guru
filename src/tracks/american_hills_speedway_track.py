@@ -11,7 +11,7 @@ class AmericanHillsSpeedwayTrack(Track):
         self._ui_length_in_m = 59.0  # metres
         self._ui_width_in_cm = 131  # centimetres
         self._world_name = "Austin"
-        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._track_sector_dividers = [10, 20]
         self._annotations = config.american_speedway_annotations
         self._track_width = 1.44
 

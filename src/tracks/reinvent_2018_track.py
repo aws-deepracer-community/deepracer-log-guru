@@ -11,7 +11,7 @@ class Reinvent2018Track(Track):
         self._ui_length_in_m = 17.6  # metres
         self._ui_width_in_cm = 76  # centimetres
         self._world_name = "reinvent_base"
-        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._track_sector_dividers = [10, 20]
         self._annotations = config.reinvent_2018_annotations
         self._track_width = 0.60
 

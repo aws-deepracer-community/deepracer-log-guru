@@ -12,7 +12,7 @@ class Sola2020Track(Track):
         self._ui_length_in_m = 38.0  # metres
         self._ui_width_in_cm = 106  # centimetres
         self._world_name = "LGSWide"
-        self._track_sector_dividers = [0, 10, 20]  # Sectors TODO
+        self._track_sector_dividers = [10, 20]
         self._annotations = config.sola_2020_annotations
         self._track_width = 1.06
 

@@ -202,11 +202,16 @@ class Track:
         assert 70 < self._ui_width_in_cm < 140
         assert len(self._world_name) > 5
         assert len(self._track_waypoints) > 20
+        assert len(self._track_sector_dividers) > 0
+
+        prev = self._track_sector_dividers[0] - 1
+        for d in self._track_sector_dividers:
+            assert 0 < d < len(self._track_waypoints) - 1
+            assert d > prev
+            assert d == round(d)
+            prev = d
 
     def _process_raw_waypoints(self):
-        section_centers = self._get_section_centers()
-
-        section = "A"
         previous = self._track_waypoints[-2]   # Must be penultimate since last one is same as first one
 
         (self._min_x, self._min_y) = previous
@@ -244,27 +249,10 @@ class Track:
                 previous = w
 
             is_divider = (i in self._track_sector_dividers)
-            is_center = (i in section_centers)
-            if is_divider:
-                sector = chr(ord(section) + 1)
-            else:
-                sector = None
-            self._drawing_points.append(Track.DrawingPoint(left, w, right, left_outer, right_outer,
-                                                           is_divider, is_center, sector))
+            self._drawing_points.append(Track.DrawingPoint(left, w, right, left_outer, right_outer, is_divider))
 
         self._mid_x = (self._min_x + self._max_x) / 2
         self._mid_y = (self._min_y + self._max_y) / 2
-
-    def _get_section_centers(self):
-        centers = []
-        previous = 0
-        for d in self._track_sector_dividers:
-            centers.append(int(round((d + previous)/2)))
-            previous = d
-
-        centers.append(round((len(self._track_waypoints) + previous) / 2))
-
-        return centers
 
     def _consider_new_point_in_area(self, point: Point):
         (x, y) = point
@@ -331,12 +319,10 @@ class Track:
     class DrawingPoint:
         def __init__(self, left: Point, middle: Point, right: Point,
                      left_outer: Point, right_outer: Point,
-                     is_divider: bool, is_center: bool, section: str):
+                     is_divider: bool):
             self.left = left
             self.middle = middle
             self.right = right
             self.left_outer = left_outer
             self.right_outer = right_outer
             self.is_divider = is_divider
-            self.is_center = is_center
-            self.section = section

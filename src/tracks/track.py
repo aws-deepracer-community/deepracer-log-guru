@@ -164,6 +164,10 @@ class Track:
             self._max_x + DISPLAY_BORDER, self._max_y + DISPLAY_BORDER,
             granularity, allow_repeats)
 
+    def get_all_sector_names(self):
+        return [self._get_sector_name(x) for x in range(len(self._track_sector_dividers) + 1)]
+
+
     #
     # PRIVATE implementation
     #
@@ -315,6 +319,10 @@ class Track:
             return "L"
         else:
             return "R"
+
+    @staticmethod
+    def _get_sector_name(sector_id: int):
+        return chr(ord("A") + sector_id)
 
     class DrawingPoint:
         def __init__(self, left: Point, middle: Point, right: Point,

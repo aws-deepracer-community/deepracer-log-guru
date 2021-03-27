@@ -1,5 +1,4 @@
 import tkinter as tk
-import numpy as np
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.episode.episode import Episode

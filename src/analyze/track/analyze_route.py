@@ -9,7 +9,7 @@ from src.graphics.track_graphics import TrackGraphics
 from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.selector.episode_selector import EpisodeSelector
 
-from src.analyze.core.controls import MeasurementControl, TrackAppearanceControl
+from src.analyze.core.controls import MeasurementControl, TrackAppearanceControl, MoreFiltersControl
 from src.utils.colors import get_color_for_data, ColorPalette
 
 _WORST_SLIDE = 20
@@ -26,6 +26,8 @@ class AnalyzeRoute(TrackAnalyzer):
         self._appearance_control = TrackAppearanceControl(guru_parent_redraw, control_frame,
                                                           self.redraw_new_appearance, self.redraw_new_appearance,
                                                           None)
+        self._more_filters_control = MoreFiltersControl(guru_parent_redraw, control_frame, True)
+
         self.episode_selector = episode_selector
 
         self.chosen_event = None
@@ -48,6 +50,7 @@ class AnalyzeRoute(TrackAnalyzer):
 
         self._measurement_control.add_to_control_frame()
         self._appearance_control.add_to_control_frame()
+        self._more_filters_control.add_to_control_frame()
 
         episode_selector_frame = self.episode_selector.get_label_frame(
             control_frame, self.callback_selected_episode_changed)
@@ -184,9 +187,10 @@ class AnalyzeRoute(TrackAnalyzer):
         self.single_tone = get_color_for_data(0.6, self.color_palette)
         self.dual_tone = get_color_for_data(1, self.color_palette)
 
+        show_all_actions = not self._more_filters_control.filter_actions()
         previous_event = episode.events[0]
         for e in episode.events[1:]:
-            if self.action_space_filter.should_show_action(e.action_taken):
+            if show_all_actions or self.action_space_filter.should_show_action(e.action_taken):
                 plot_event_method(e, previous_event, max_speed, speed_range)
                 previous_event = e
 

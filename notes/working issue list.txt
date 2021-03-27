@@ -1,0 +1,143 @@
+
+Finish Soon
+===========
++ sector config for every track!
++ ability to place sector names A, B, C on the track view
++ Enhance episode filter for a "section" to offer built-in "sector" choices too
++ onboard this months' tracks
++ optimise (SLOW) performance of latest heatmap  (esp. the long time to redraw which happens after the "calculation"), caching would be nice too
++ finish the log directory improvement  (persistent JSON config to remember TRACK and LOG DIR for next run ... )  + TO SIMPLIFY INSTALLATION
++ pressing a button when screen is already drawing does not redraw but does still press the button - VERY ODD BUG FOR THE USER
++ professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
++ more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
++ as a minimum, rename log meta files with a v3 in them so funny errors won't occur if someone uses old meta files
++ straight line to always appear (don't cut off poor fits, since cannot do same with quadratic)
++ Fix old bugs 4 (with 5), 6 and 21 that users are likely to notice early on
++ Rewrite the proposed simpler installation documentation
++ Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?
++ Complete action space analysis having now started to add it .....
++ Smooth occasional big peaks and dips in track speed caused by logging issues (perhaps simply smooth +/- 10% jumps etc)
+
+
+Brand New Analysis Views
+======================
+Detailed drilldown into "outcomes" at a particular waypoint - esp. graphs to show outcome of different positions (e.g. success % beyond point)
+Track-only view - with facilities like measuring distance between points, inside versus outside distance, ability to draw and measure a path etc.
+Curve fitting - as special feature of track-only view?
+Frequency analysis of actions -> still very new, need to be able to group e.g by speed + handle sectors too
+Best possible lap time predictor - by piecing together fastest sections
+Time Animations of esp. lap time distribution or action distribution
+Ability to "race" episodes against each other (episodes chosen by filter or favourites per ****)
+
+Existing Analysis Enhancements
+=============================
+Reward graphs: Graphs to show discount factor effect - e.g. as an addition or variation to normal episode reward graph
+(lap) time correlation with certain actions (e.g. percent of actions that are in the filter, see also +++)
+Offer reward correlations without final reward included in total?...
+Episode route - add acceleration/braking colour scheme ...
+Add waypoint numbers (every 10?) to track views (optional)
+Exit points:
+    + show last second or similar as a line (alternative to dots)
+    + ability to show evaluation exit waypoints too
+Training/Learning stats - eliminate incomplete final iteration (if actually incomplete)
+                        - offer additional optional plotting of estimated lap time
+Episode slide is not finished - should have same/similar filters as for episode speed, reward & so on
+Ability to flag favourite episodes (****)
+Quarterly progress - add speed indications e.g. median lap time in particular (i.e. to answer broadly was it getting faster or not?)
+Curve fitting - go beyond quadratic for more advanced curves with 2 or 3 inflexions ....
+Quarterly progress - make sure Q really are now as even as possible + decide if/how to eliminate a final iteration if not complete
+Set the brightness thresholds for heatmap more intelligently when there is less data ... ? fixed values are too blunt?
+Show colourmap key for heatmap & route analysis
+Ability to stipulate that sector times (esp. for correlation) must have a survival period before and/or after ... (i.e. skip slow starts, and risky finishes)
+Maximise space around graphs (see how quarterly view did it)
+Colour-code quarterly progress to see at a glance if learning or not - and then can add a LOT of new indicators - like a true dashboard...
+
+
+Filters
+=======
+Find sequences +++
+More quick-choice options for action filtering?? (esp. turning rather than speed)
+Enhance "sector" with DIY "section" capability too ... with ability to set a section using mouse markers (drag and drop start and finish markers), as well entering waypoint numbers
+Enhance episode section/sector filtering for additional characteristics of the section e.g. min/max reward etc.
+Ability to filter episode for entire total score (with or without last step)
+
++++ Remembering to add these to all relevant analysis views as new choices etc.
+
+Special Features
+================
+Make graphs interactive - esp. (a) see the data at a point   (b) "goto" that point (e.g. switch to that episode etc.)
+Ability to join several files together as a single set of episodes for analysis
+Larger text option - for better screen video capture ...
+Add quick keys for all major / most useful menu options
+Ability to try a new reward function
+(in conjunction with existing analysis an option to display new reward instead of or as well as actual reward)
+Ability to calculate "safe distance ahead" and "visible distance ahead" and hence offer as options for episode route INFO and as a COLOUR SCHEME
+
+
+Minor bugs & fixes etc
+======================
+Lap time estimate should account for start-up time in first 1 or 2 seconds ...
+Show training start point more clearly as different shape (e.g. diamond)
+Ability to include waypoint numbers as part of waypoint view options
+
+Code Quality etc.
+=================
+Implement standards
+Add unit tests!!!
+Standardize graph colours as constants
+
+Documentation
+=============
+
+YouTube videos
+Announce V3 "loudly"
+Terminology reference
+Keyboard reference
+Help screens from within GUI (including terminology)
+Markup screenshot collage with comment that Google can find and index
+List of features (primarily as marketing material)
+
+========================
+
+Analysis articles - grab ideas from:
++   https://codelikeamother.uk/analyzing-the-aws-deepracer-logs-my-way
++   https://aws.amazon.com/blogs/machine-learning/using-log-analysis-to-drive-experiments-and-win-the-aws-deepracer-f1-proam-race/
+
+
+===================
+
+
+
+47-ENH  Load seems to be (disappointingly) slow - check if extra analysis on load is slowing it down
+46-ENH  Special search facility to find correlations between observations and results  [search all waypoints or short sections to see if certain actions, positions, speed or bearing have a clear correlation with either progress % or overall lap time]
+45-BUG  *** Don't show the final iteration, if incomplete, in certain training stats and similar  [ noting that AWS console may include incomplete EVALUATION runs, but not an incomplete training ]
+44-ENH  Reproduce the same reward graph as AWS Console   [does mean EXACTLY, or perhaps only able to chose console or DRG colours?]
+43-ENH  Provide simple dialog view of key stats for a track e.g. exact length, inside and outside lengths etc.
+40-ENH  Event selection as per route analysis should be "shared" with other route analysis (e.g. speed)   [for example, on speed analysis, the action dot can be highlighted, and also the same arrow keys can be used to navigate backwards or forwards along the actions/steps]
+37-ENH  Add analysis options about use of action space   ** IN PROGRESS **
+36-ENH  Add shortcut keys for menu options - especially analysis views and common filters
+35-ENH  Provide quick switch buttons between useful/related analysis views (more convenient than menus)
+34-ENH  Show lap times as well as # of steps in open file dialog
+32-ENH  Ability to increase text size of menus and frame-based controls etc. (for better YouTube reproduction)
+31-ENH  Ability to see more stats and info across multiple files (esp. the training hyper parameters)  [export button would be nice] [ main thing is to be able to see/review how I tinkered with the hyper parameters (coupled with a reminder of the defaults - so easy to see what changed, and by how much]
+30-ENH  Provide a "future discounted reward" view of current episode
+26-ENH  Bit of fun - ability to simulate one or more episode as real-time "race" around the track
+23-ENH  Ability to extract episode route details (for use in subsequent reward function)  [esp. focussed on giving ALL the inputs including difficult track position calculations etc]
+22-ENH  Add ability to chose favourite episodes   [ideally keep a record in meta file for next time...]
+21-BUG  *** Error message on console if switch to different track and then go to episode menu  [Switching track effectively means no log is loaded ... menu should probably revert to the limited menu on startup (fewer options) until user has opened a log file for the newly chosen track]
+19-ENH  Optimize performance & check button response in "convergence" analysis  [CONTAINS A HOST OF ISSUES AND IDEAS ...]
+17-ENH  Add filtered/all option to ALL analysis screens, including episode route [Think again about whether applying all/filtered option to the "video" controls is viable]
+15-DOC  Provide help / demo videos on YouTube
+14-ENH  Provide "goto" episode
+13-ENH  Provide link to episode on charts like lap time correlation [e.g. click on the plotted dot and it takes you to route analysis]
+12-ENH  Annotate waypoint charts with track features like left, right, straight, hairpin etc. [perhaps also show in episode graphs so user can recognize positions]
+ 9-ENH  Ability to try a new reward function
+ 8-DOC  Provide help / documentation - help menu and info/help icons on the screen
+ 7-DOC  Document terminology  [User reported things like "filtered" and also especially the different colour schemes for the episode route analysis]
+ 6-BUG  *** Previous log event window stays visible when new episode is selected
+ 5-ENH  Log event info changes width with each event [esp. bad with varying debug output, but still not perfect even for just numbers/stats]
+ 4-BUG  ***RETEST*** Long debug output messes up the event info window [One user has set wraplength to 1000 which helps apparently]
+
+
+
+

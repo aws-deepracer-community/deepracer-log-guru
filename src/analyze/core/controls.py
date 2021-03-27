@@ -142,59 +142,61 @@ class GraphFormatControl(Control):
         return self._swap_axes.get()
 
 
-class EpisodeRouteColourSchemeControl(Control):
+class MeasurementControl(Control):
 
-    SCHEME_REWARD = 1
-    SCHEME_ACTION_SPEED = 2
-    SCHEME_TRACK_SPEED = 3
-    SCHEME_PROGRESS_SPEED = 4
-    SCHEME_SMOOTHNESS = 5
-    SCHEME_STEERING = 6
-    SCHEME_SLIDE = 7
-    SCHEME_PER_SECOND = 8
-    SCHEME_NONE = 9
+    MEASURE_REWARD = 1
+    MEASURE_ACTION_SPEED = 2
+    MEASURE_TRACK_SPEED = 3
+    MEASURE_PROGRESS_SPEED = 4
+    MEASURE_SMOOTHNESS = 5
+    MEASURE_STEERING = 6
+    MEASURE_SLIDE = 7
+    MEASURE_SECONDS = 8
+    MEASURE_VISITS = 9
 
-    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
-        super().__init__(guru_parent_redraw, control_frame, "Colour Scheme")
-        self._colour_scheme = tk.IntVar(value=EpisodeRouteColourSchemeControl.SCHEME_NONE)
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, measure_seconds: bool):
+        super().__init__(guru_parent_redraw, control_frame, "Measure")
+        self._colour_scheme = tk.IntVar(value=MeasurementControl.MEASURE_VISITS)
+        self._measure_seconds = measure_seconds
 
     def _add_widgets(self):
-        self.add_radiobutton("Reward", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_REWARD)
-        self.add_radiobutton("Action Speed", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_ACTION_SPEED)
-        self.add_radiobutton("Track Speed", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_TRACK_SPEED)
-        self.add_radiobutton("Progress Speed", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_PROGRESS_SPEED)
-        self.add_radiobutton("Smoothness", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_SMOOTHNESS)
-        self.add_radiobutton("Steering", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_STEERING)
-        self.add_radiobutton("Slide", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_SLIDE)
-        self.add_radiobutton("Per Second", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_PER_SECOND)
-        self.add_radiobutton("None", self._colour_scheme, EpisodeRouteColourSchemeControl.SCHEME_NONE)
+        self.add_radiobutton("Reward", self._colour_scheme, MeasurementControl.MEASURE_REWARD)
+        self.add_radiobutton("Action Speed", self._colour_scheme, MeasurementControl.MEASURE_ACTION_SPEED)
+        self.add_radiobutton("Track Speed", self._colour_scheme, MeasurementControl.MEASURE_TRACK_SPEED)
+        self.add_radiobutton("Progress Speed", self._colour_scheme, MeasurementControl.MEASURE_PROGRESS_SPEED)
+        self.add_radiobutton("Smoothness", self._colour_scheme, MeasurementControl.MEASURE_SMOOTHNESS)
+        self.add_radiobutton("Steering", self._colour_scheme, MeasurementControl.MEASURE_STEERING)
+        self.add_radiobutton("Slide", self._colour_scheme, MeasurementControl.MEASURE_SLIDE)
+        if self._measure_seconds:
+            self.add_radiobutton("Seconds", self._colour_scheme, MeasurementControl.MEASURE_SECONDS)
+        self.add_radiobutton("Visits", self._colour_scheme, MeasurementControl.MEASURE_VISITS)
 
-    def scheme_reward(self):
-        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_REWARD
+    def measure_reward(self):
+        return self._colour_scheme.get() == MeasurementControl.MEASURE_REWARD
 
-    def scheme_action_speed(self):
-        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_ACTION_SPEED
+    def measure_action_speed(self):
+        return self._colour_scheme.get() == MeasurementControl.MEASURE_ACTION_SPEED
 
-    def scheme_track_speed(self):
-        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_TRACK_SPEED
+    def measure_track_speed(self):
+        return self._colour_scheme.get() == MeasurementControl.MEASURE_TRACK_SPEED
 
-    def scheme_progress_speed(self):
-        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_PROGRESS_SPEED
+    def measure_progress_speed(self):
+        return self._colour_scheme.get() == MeasurementControl.MEASURE_PROGRESS_SPEED
 
-    def scheme_smoothness(self):
-        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_SMOOTHNESS
+    def measure_smoothness(self):
+        return self._colour_scheme.get() == MeasurementControl.MEASURE_SMOOTHNESS
 
-    def scheme_steering(self):
-        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_STEERING
+    def measure_steering(self):
+        return self._colour_scheme.get() == MeasurementControl.MEASURE_STEERING
 
-    def scheme_slide(self):
-        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_SLIDE
+    def measure_slide(self):
+        return self._colour_scheme.get() == MeasurementControl.MEASURE_SLIDE
 
-    def scheme_per_second(self):
-        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_PER_SECOND
+    def measure_seconds(self):
+        return self._colour_scheme.get() == MeasurementControl.MEASURE_SECONDS
 
-    def scheme_none(self):
-        return self._colour_scheme.get() == EpisodeRouteColourSchemeControl.SCHEME_NONE
+    def measure_visits(self):
+        return self._colour_scheme.get() == MeasurementControl.MEASURE_VISITS
 
 
 class ConvergenceGranularityControl(Control):

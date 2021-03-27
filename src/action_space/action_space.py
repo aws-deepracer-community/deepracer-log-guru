@@ -56,6 +56,9 @@ class ActionSpace:
             new_marker.append(matching_function(action))
         return new_marker
 
+    def get_min_speed(self):
+        return self._min_speed
+
     def get_max_speed(self):
         return self._max_speed
 

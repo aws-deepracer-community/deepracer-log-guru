@@ -9,7 +9,7 @@ from src.graphics.track_graphics import TrackGraphics
 from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.selector.episode_selector import EpisodeSelector
 
-from src.analyze.core.controls import EpisodeRouteColourSchemeControl, TrackAppearanceControl
+from src.analyze.core.controls import MeasurementControl, TrackAppearanceControl
 from src.utils.colors import get_color_for_data, ColorPalette
 
 _WORST_SLIDE = 20
@@ -22,7 +22,7 @@ class AnalyzeRoute(TrackAnalyzer):
 
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
-        self._colour_scheme_control = EpisodeRouteColourSchemeControl(guru_parent_redraw, control_frame)
+        self._measurement_control = MeasurementControl(guru_parent_redraw, control_frame, True)
         self._appearance_control = TrackAppearanceControl(guru_parent_redraw, control_frame,
                                                           self.redraw_new_appearance, self.redraw_new_appearance,
                                                           None)
@@ -46,7 +46,7 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def build_control_frame(self, control_frame):
 
-        self._colour_scheme_control.add_to_control_frame()
+        self._measurement_control.add_to_control_frame()
         self._appearance_control.add_to_control_frame()
 
         episode_selector_frame = self.episode_selector.get_label_frame(
@@ -155,23 +155,23 @@ class AnalyzeRoute(TrackAnalyzer):
             size = 0.4
             self.track_graphics.plot_box(x - size/2, y - size/2, x + size/2, y + size/2, "red")
 
-        if self._colour_scheme_control.scheme_reward():
+        if self._measurement_control.measure_reward():
             plot_event_method = self.colour_scheme_reward
-        elif self._colour_scheme_control.scheme_action_speed():
+        elif self._measurement_control.measure_action_speed():
             plot_event_method = self.colour_scheme_action_speed
-        elif self._colour_scheme_control.scheme_track_speed():
+        elif self._measurement_control.measure_track_speed():
             plot_event_method = self.colour_scheme_track_speed
-        elif self._colour_scheme_control.scheme_progress_speed():
+        elif self._measurement_control.measure_progress_speed():
             plot_event_method = self.colour_scheme_progress_speed
-        elif self._colour_scheme_control.scheme_smoothness():
+        elif self._measurement_control.measure_smoothness():
             plot_event_method = self.colour_scheme_smoothness
-        elif self._colour_scheme_control.scheme_steering():
+        elif self._measurement_control.measure_steering():
             plot_event_method = self.colour_scheme_steering
-        elif self._colour_scheme_control.scheme_slide():
+        elif self._measurement_control.measure_slide():
             plot_event_method = self.colour_scheme_slide
-        elif self._colour_scheme_control.scheme_per_second():
+        elif self._measurement_control.measure_seconds():
             plot_event_method = self.colour_scheme_per_second
-        elif self._colour_scheme_control.scheme_none():
+        elif self._measurement_control.measure_visits():
             plot_event_method = self.colour_scheme_none
         else:
             print("OOOPS - unknown colour scheme!")

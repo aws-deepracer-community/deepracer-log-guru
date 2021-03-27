@@ -8,10 +8,9 @@ from matplotlib.figure import Figure
 import src.configuration.personal_configuration as config
 import src.secret_sauce.glue.glue as ss
 
-from src.analyze.track.analyze_convergence import AnalyzeConvergence
+from src.analyze.track.analyze_heatmap import AnalyzeHeatmap
 from src.analyze.graph.analyze_training_progress import AnalyzeTrainingProgress
 from src.analyze.graph.analyze_quarterly_results import AnalyzeQuarterlyResults
-from src.analyze.track.analyze_speed_convergence import AnalyzeSpeedConvergence
 from src.analyze.track.analyze_exit_points import AnalyzeExitPoints
 from src.analyze.graph.analyze_reward_distribution import AnalyzeRewardDistribution
 from src.analyze.graph.analyze_common_rewards import AnalyzeCommonRewards
@@ -41,7 +40,7 @@ from src.ui.view_log_file_info import ViewLogFileInfo
 
 
 DEFAULT_CANVAS_WIDTH = 900
-DEFAULT_CANVAS_HEIGHT = 600
+DEFAULT_CANVAS_HEIGHT = 650
 
 class MainApp(tk.Frame):
     def __init__(self, root):
@@ -133,8 +132,7 @@ class MainApp(tk.Frame):
         self.current_track.configure_track_graphics(self.track_graphics)
 
         self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.inner_control_frame, self.episode_selector)
-        self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
-        self.analyze_favourite_speed = AnalyzeSpeedConvergence(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
+        self.analyze_track_heatmap = AnalyzeHeatmap(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
         self.analyze_exit_points = AnalyzeExitPoints(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_quarterly_results = AnalyzeQuarterlyResults(self.redraw, matplotlib_canvas, self.inner_control_frame)
@@ -152,8 +150,7 @@ class MainApp(tk.Frame):
 
         self.all_analyzers = [
             self.analyze_route,
-            self.analyze_convergence,
-            self.analyze_favourite_speed,
+            self.analyze_track_heatmap,
             self.analyze_exit_points,
             self.analyze_training_progress,
             self.analyze_quarterly_results,
@@ -278,11 +275,8 @@ class MainApp(tk.Frame):
 
         self.redraw()
 
-    def menu_callback_analyze_convergence(self):
-        self.switch_analyzer(self.analyze_convergence)
-
-    def menu_callback_analyze_favourite_speed(self):
-        self.switch_analyzer(self.analyze_favourite_speed)
+    def menu_callback_analyze_track_heatmap(self):
+        self.switch_analyzer(self.analyze_track_heatmap)
 
     def menu_callback_analyze_exit_points(self):
         self.switch_analyzer(self.analyze_exit_points)
@@ -290,8 +284,8 @@ class MainApp(tk.Frame):
     def menu_callback_analyze_route(self):
         self.switch_analyzer(self.analyze_route)
 
-    def menu_callback_analyze_route_over_convergence(self):
-        self.switch_analyzer(self.analyze_route, self.analyze_convergence)
+    def menu_callback_analyze_route_over_heatmap(self):
+        self.switch_analyzer(self.analyze_route, self.analyze_track_heatmap)
 
     def menu_callback_analyze_training_progress(self):
         self.switch_analyzer(self.analyze_training_progress)

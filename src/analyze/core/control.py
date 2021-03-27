@@ -33,13 +33,13 @@ class Control:
     def add_checkbutton(self, title: str, tk_var: tk.BooleanVar):
         tk.Checkbutton(
             self._label_frame, text=title, variable=tk_var,
-            command=self._guru_parent_redraw).grid(column=0, row=self._row, padx=5, pady=1)
+            command=self._guru_parent_redraw).grid(column=0, row=self._row, padx=5, pady=0)
         self._row += 1
 
     def add_radiobutton(self, title: str, tk_var: tk.IntVar, value: int):
         tk.Radiobutton(
             self._label_frame, text=title, variable=tk_var, value=value,
-            command=self._guru_parent_redraw).grid(column=0, row=self._row, padx=5, pady=1)
+            command=self._guru_parent_redraw).grid(column=0, row=self._row, padx=5, pady=0)
         self._row += 1
 
     def add_dropdown(self, title: str, tk_var: tk.StringVar, values: list[str], callback: Callable):

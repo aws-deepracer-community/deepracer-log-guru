@@ -1,4 +1,5 @@
 import src.utils.geometry as geometry
+from src.analyze.util.heatmap import HeatMap
 from src.analyze.util.visitor import VisitorMap
 from src.graphics.track_graphics import TrackGraphics
 from src.utils.types import Point
@@ -156,6 +157,12 @@ class Track:
             self._min_x - DISPLAY_BORDER, self._min_y - DISPLAY_BORDER,
             self._max_x + DISPLAY_BORDER, self._max_y + DISPLAY_BORDER,
             granularity)
+
+    def get_new_heat_map(self, granularity: float, allow_repeats: bool):
+        return HeatMap(
+            self._min_x - DISPLAY_BORDER, self._min_y - DISPLAY_BORDER,
+            self._max_x + DISPLAY_BORDER, self._max_y + DISPLAY_BORDER,
+            granularity, allow_repeats)
 
     #
     # PRIVATE implementation

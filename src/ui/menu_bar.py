@@ -97,11 +97,8 @@ class MenuBar():
         menu.add_command(label="Episode Action Distribution", command=self.main_app.menu_callback_analyze_episode_action_distribution)
 
         menu.add_separator()
-        menu.add_command(label="Route Convergence", command=self.main_app.menu_callback_analyze_convergence)
-        menu.add_command(label="Speed Convergence", command=self.main_app.menu_callback_analyze_favourite_speed)
-
-        menu.add_separator()
-        menu.add_command(label="Episode Route + Convergence", command=self.main_app.menu_callback_analyze_route_over_convergence)
+        menu.add_command(label="Heatmap", command=self.main_app.menu_callback_analyze_track_heatmap)
+        menu.add_command(label="Heatmap + Episode Route", command=self.main_app.menu_callback_analyze_route_over_heatmap)
 
         menu.add_separator()
         menu.add_command(label="Training Progress", command=self.main_app.menu_callback_analyze_training_progress)

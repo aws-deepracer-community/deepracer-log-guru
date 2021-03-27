@@ -115,6 +115,7 @@ def test_it():
     print(map.get_x_index(1.49))
     print(map.get_x_index(1.51))
 
+    print("-------------------------")
 
     map.visit(1, 1, "aaa")
     map.visit(6, 7, "bbb")
@@ -139,7 +140,7 @@ def test_it():
 
 
 # RUN TEST
-#test_it()
+# test_it()
 
 
 

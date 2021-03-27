@@ -289,7 +289,8 @@ class Episode:
             skip_end = self.events[-1].step - skip_end
         for e in self.events:
             stat = stat_extractor(e)
-            if skip_start <= e.step <= skip_end and action_space_filter.should_show_action(e.action_taken):
+            if skip_start <= e.step <= skip_end and (
+                    not action_space_filter or action_space_filter.should_show_action(e.action_taken)):
                 self._apply_event_stat_to_heat_map(e, previous, heat_map, stat)
             previous = e
 

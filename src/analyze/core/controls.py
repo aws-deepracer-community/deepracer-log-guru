@@ -338,19 +338,21 @@ class SkipControl(Control):
         return self._skip_bad_ends.get()
 
 
-class AdvancedFiltersControl(Control):
+class MoreFiltersControl(Control):
 
-    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
-        super().__init__(guru_parent_redraw, control_frame, "Advanced Filters")
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, actions_only: bool):
+        super().__init__(guru_parent_redraw, control_frame, "More Filters")
 
+        self._actions_only = actions_only
         self._filter_actions = tk.BooleanVar(value=False)
         self._filter_sector = tk.BooleanVar(value=False)
         self._filter_section = tk.BooleanVar(value=False)
 
     def _add_widgets(self):
         self.add_checkbutton("Actions", self._filter_actions)
-        self.add_checkbutton("Sector TBD", self._filter_sector)
-        self.add_checkbutton("Section TBD", self._filter_section)
+        if not self._actions_only:
+            self.add_checkbutton("Sector TBD", self._filter_sector)
+            self.add_checkbutton("Section TBD", self._filter_section)
 
     def filter_actions(self):
         return self._filter_actions.get()

@@ -6,7 +6,7 @@ from src.episode.episode import Episode
 from src.graphics.track_graphics import TrackGraphics
 from src.ui.please_wait import PleaseWait
 from src.analyze.core.controls import ConvergenceGranularityControl, TrackAppearanceControl,\
-    EpisodeRadioButtonControl, AdvancedFiltersControl, MeasurementControl, SkipControl
+    EpisodeRadioButtonControl, MoreFiltersControl, MeasurementControl, SkipControl
 
 
 class AnalyzeHeatmap(TrackAnalyzer):
@@ -20,7 +20,7 @@ class AnalyzeHeatmap(TrackAnalyzer):
         self._appearance_control = TrackAppearanceControl(guru_parent_redraw, control_frame,
                                                           None, self.chosen_new_appearance, self.chosen_new_appearance)
         self._skip_control = SkipControl(self.chosen_new_skip, control_frame)
-        self._advanced_filters_control = AdvancedFiltersControl(self.chosen_new_advanced_filter, control_frame)
+        self._more_filters_control = MoreFiltersControl(self.chosen_more_filters, control_frame, True)
 
         self._heat_map = None
         self.please_wait = please_wait
@@ -31,7 +31,7 @@ class AnalyzeHeatmap(TrackAnalyzer):
         self._granularity_control.add_to_control_frame()
         self._appearance_control.add_to_control_frame()
         self._skip_control.add_to_control_frame()
-        self._advanced_filters_control.add_to_control_frame()
+        self._more_filters_control.add_to_control_frame()
 
     def redraw(self):
         if self._heat_map:
@@ -69,13 +69,14 @@ class AnalyzeHeatmap(TrackAnalyzer):
         self._heat_map = None
 
     def warning_action_space_filter_changed(self):
-        self._heat_map = None
+        if self._more_filters_control.filter_actions():
+            self._heat_map = None
 
     def chosen_new_skip(self):
         self._heat_map = None
         self.guru_parent_redraw()
 
-    def chosen_new_advanced_filter(self):
+    def chosen_more_filters(self):
         self._heat_map = None
         self.guru_parent_redraw()
 
@@ -115,66 +116,69 @@ class AnalyzeHeatmap(TrackAnalyzer):
         if episodes:
             if not self._heat_map:
                 self.please_wait.start("Calculating")
+
+                allow_repeats = not self._measurement_control.measure_visits()
+                self._heat_map = self.current_track.get_new_heat_map(
+                    self._granularity_control.granularity() / 100, allow_repeats)
+
+                if self._more_filters_control.filter_actions():
+                    action_space_filter = self.action_space_filter
+                else:
+                    action_space_filter = None
+
                 if self._measurement_control.measure_visits():
-                    self._recalculate_measure_visits(episodes, skip_start, skip_end)
+                    self._recalculate_measure_visits(episodes, skip_start, skip_end, action_space_filter)
                 elif self._measurement_control.measure_action_speed():
-                    self._recalculate_measure_action_speed(episodes, skip_start, skip_end)
+                    self._recalculate_measure_action_speed(episodes, skip_start, skip_end, action_space_filter)
                 elif self._measurement_control.measure_progress_speed():
-                    self._recalculate_measure_progress_speed(episodes, skip_start, skip_end)
+                    self._recalculate_measure_progress_speed(episodes, skip_start, skip_end, action_space_filter)
                 elif self._measurement_control.measure_track_speed():
-                    self._recalculate_measure_track_speed(episodes, skip_start, skip_end)
+                    self._recalculate_measure_track_speed(episodes, skip_start, skip_end, action_space_filter)
                 elif self._measurement_control.measure_reward():
-                    self._recalculate_measure_reward(episodes, skip_start, skip_end)
+                    self._recalculate_measure_reward(episodes, skip_start, skip_end, action_space_filter)
                 elif self._measurement_control.measure_slide():
-                    self._recalculate_measure_slide(episodes, skip_start, skip_end)
+                    self._recalculate_measure_slide(episodes, skip_start, skip_end, action_space_filter)
                 elif self._measurement_control.measure_steering():
-                    self._recalculate_measure_steering(episodes, skip_start, skip_end)
+                    self._recalculate_measure_steering(episodes, skip_start, skip_end, action_space_filter)
 
-    def _recalculate_measure_visits(self, episodes, skip_start, skip_end):
-        self._heat_map = self.current_track.get_new_heat_map(self._granularity_control.granularity() / 100, False)
+    def _recalculate_measure_visits(self, episodes, skip_start, skip_end, action_space_filter):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_visits_to_heat_map(self._heat_map, skip_start, skip_end, self.action_space_filter)
+            e.apply_visits_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_action_speed(self, episodes, skip_start, skip_end):
-        self._heat_map = self.current_track.get_new_heat_map(self._granularity_control.granularity() / 100, True)
+    def _recalculate_measure_action_speed(self, episodes, skip_start, skip_end, action_space_filter):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_action_speed_to_heat_map(self._heat_map, skip_start, skip_end, self.action_space_filter)
+            e.apply_action_speed_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_track_speed(self, episodes, skip_start, skip_end):
-        self._heat_map = self.current_track.get_new_heat_map(self._granularity_control.granularity() / 100, True)
+    def _recalculate_measure_track_speed(self, episodes, skip_start, skip_end, action_space_filter):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_track_speed_to_heat_map(self._heat_map, skip_start, skip_end, self.action_space_filter)
+            e.apply_track_speed_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_progress_speed(self, episodes, skip_start, skip_end):
-        self._heat_map = self.current_track.get_new_heat_map(self._granularity_control.granularity() / 100, True)
+    def _recalculate_measure_progress_speed(self, episodes, skip_start, skip_end, action_space_filter):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_progress_speed_to_heat_map(self._heat_map, skip_start, skip_end, self.action_space_filter)
+            e.apply_progress_speed_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_reward(self, episodes, skip_start, skip_end):
-        self._heat_map = self.current_track.get_new_heat_map(self._granularity_control.granularity() / 100, True)
+    def _recalculate_measure_reward(self, episodes, skip_start, skip_end, action_space_filter):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_reward_to_heat_map(self._heat_map, skip_start, skip_end, self.action_space_filter)
+            e.apply_reward_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_slide(self, episodes, skip_start, skip_end):
-        self._heat_map = self.current_track.get_new_heat_map(self._granularity_control.granularity() / 100, True)
+    def _recalculate_measure_slide(self, episodes, skip_start, skip_end, action_space_filter):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_slide_to_heat_map(self._heat_map, skip_start, skip_end, self.action_space_filter)
+            e.apply_slide_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
-    def _recalculate_measure_steering(self, episodes, skip_start, skip_end):
-        self._heat_map = self.current_track.get_new_heat_map(self._granularity_control.granularity() / 100, True)
+    def _recalculate_measure_steering(self, episodes, skip_start, skip_end, action_space_filter):
         e: Episode
         for i, e in enumerate(episodes):
-            e.apply_steering_to_heat_map(self._heat_map, skip_start, skip_end, self.action_space_filter)
+            e.apply_steering_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)

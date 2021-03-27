@@ -43,7 +43,7 @@ class MenuBar():
     def add_sector_menu(self):
         menu = Menu(self.menubar, tearoff=0)
         for s in self.main_app.current_track.get_all_sector_names():
-            menu.add_command(label="Sector" + s,
+            menu.add_command(label="Sector " + s,
                              command=lambda sector=s: self.choose_sector(sector))
 
         self.menubar.add_cascade(label="Sector", menu=menu)
@@ -118,8 +118,9 @@ class MenuBar():
 
         menu.add_separator()
         menu.add_command(label="Lap Time Correlations", command=self.main_app.menu_callback_analyze_lap_time_correlations)
-        menu.add_command(label="Section Time Correlations", command=self.main_app.menu_callback_analyze_section_time_correlations)
         menu.add_command(label="Lap Time Distribution", command=self.main_app.menu_callback_analyze_lap_time_distribution)
+        menu.add_command(label="Sector Time Correlations", command=self.main_app.menu_callback_analyze_sector_time_correlations)
+        menu.add_command(label="OLD* Section Time Correlations", command=self.main_app.menu_callback_analyze_section_time_correlations_OLD)
 
         menu.add_separator()
         menu.add_command(label="Reward Distribution", command=self.main_app.menu_callback_analyze_reward_distribution)

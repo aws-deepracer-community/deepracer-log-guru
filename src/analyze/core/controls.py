@@ -420,23 +420,29 @@ class CorrelationControl(Control):
     _TRAINING_ITERATION = 9
     _FLYING_START = 10
     _MAX_SLIDE = 11
+    _COMPLETE_LAP_TIME = 12
 
-    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, is_for_whole_laps: bool):
         super().__init__(guru_parent_redraw, control_frame, "Correlate With")
         self._correlation = tk.IntVar(value=CorrelationControl._TOTAL_DISTANCE)
+        self._is_for_whole_laps = is_for_whole_laps
 
     def _add_widgets(self):
         self.add_radiobutton("Total Distance", self._correlation, CorrelationControl._TOTAL_DISTANCE)
         self.add_radiobutton("Peak Track Speed", self._correlation, CorrelationControl._PEAK_TRACK_SPEED)
         self.add_radiobutton("Peak Progress Speed", self._correlation, CorrelationControl._PEAK_PROGRESS_SPEED)
-        self.add_radiobutton("Starting Point", self._correlation, CorrelationControl._STARTING_POINT)
         self.add_radiobutton("Average Reward", self._correlation, CorrelationControl._AVERAGE_REWARD)
         self.add_radiobutton("Total Reward", self._correlation, CorrelationControl._TOTAL_REWARD)
-        self.add_radiobutton("Final Reward", self._correlation, CorrelationControl._FINAL_REWARD)
+        if self._is_for_whole_laps:
+            self.add_radiobutton("Final Reward", self._correlation, CorrelationControl._FINAL_REWARD)
         self.add_radiobutton("Smoothness", self._correlation, CorrelationControl._SMOOTHNESS)
         self.add_radiobutton("Training Iteration", self._correlation, CorrelationControl._TRAINING_ITERATION)
-        self.add_radiobutton("Flying Start", self._correlation, CorrelationControl._FLYING_START)
         self.add_radiobutton("Max Slide", self._correlation, CorrelationControl._MAX_SLIDE)
+        if self._is_for_whole_laps:
+            self.add_radiobutton("Flying Start", self._correlation, CorrelationControl._FLYING_START)
+            self.add_radiobutton("Starting Point", self._correlation, CorrelationControl._STARTING_POINT)
+        else:
+            self.add_radiobutton("Complete Lap Time", self._correlation, CorrelationControl._COMPLETE_LAP_TIME)
 
     def correlate_total_distance(self):
         return self._correlation.get() == CorrelationControl._TOTAL_DISTANCE
@@ -470,6 +476,9 @@ class CorrelationControl(Control):
 
     def correlate_max_slide(self):
         return self._correlation.get() == CorrelationControl._MAX_SLIDE
+
+    def correlate_complete_lap_time(self):
+        return self._correlation.get() == CorrelationControl._COMPLETE_LAP_TIME
 
 
 class GraphScaleControl(Control):

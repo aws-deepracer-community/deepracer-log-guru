@@ -19,7 +19,7 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame)
         self.predictions_control = PredictionsControl(guru_parent_redraw, control_frame)
-        self.correlation_control = CorrelationControl(guru_parent_redraw, control_frame)
+        self.correlation_control = CorrelationControl(guru_parent_redraw, control_frame, True)
         self.format_control = GraphFormatControl(guru_parent_redraw, control_frame)
         self._line_fitting_control = GraphLineFittingControl(guru_parent_redraw, control_frame)
 
@@ -164,7 +164,7 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
 
-def get_plot_data_distances(episodes :list):
+def get_plot_data_distances(episodes: list):
     distances = []
 
     for e in episodes:

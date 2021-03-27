@@ -51,7 +51,7 @@ class Episode:
         self.predicted_lap_reward = 100 / last_event.progress * self.total_reward  # predicted
 
         self.action_frequency = self._get_action_frequency(action_space)
-        self.repeated_action_percent = self.get_repeated_action_percent()
+        self.repeated_action_percent = self.get_repeated_action_percent(self.events)
 
         self.peak_track_speed = 0
         self.peak_progress_speed = 0
@@ -91,19 +91,21 @@ class Episode:
             if e.time_elapsed >= seconds:
                 return e.track_speed
 
-    def get_repeated_action_percent(self):
-        if not self.events or len(self.events) < 2 or self.percent_complete < 100:
+    # Otherwise known as "smoothness"
+    @staticmethod
+    def get_repeated_action_percent(events):
+        if not events or len(events) < 2:
             return 0
 
-        previous_action_taken = self.events[0].action_taken
+        previous_action_taken = events[0].action_taken
         count = 0
 
-        for e in self.events[1:]:
+        for e in events[1:]:
             if e.action_taken == previous_action_taken:
                 count += 1
             previous_action_taken = e.action_taken
 
-        return 100 * count / len(self.events)
+        return 100 * count / len(events)
 
     def set_quarter(self, quarter: int):
         assert 1 <= quarter <= 4
@@ -365,6 +367,10 @@ class Episode:
             return start_event, finish_event
         else:
             return None
+
+    def get_events_in_range(self, start_event: Event, finish_event: Event):
+        assert start_event.step <= finish_event.step
+        return self.events[start_event.step - 1:finish_event.step]
 
     def does_debug_contain(self, search_string):
         for e in self.events:

@@ -67,6 +67,9 @@ class AnalyzeHeatmap(TrackAnalyzer):
     def warning_track_changed(self):
         self._heat_map = None
 
+    def warning_all_episodes_changed(self):
+        self._heat_map = None
+
     def warning_action_space_filter_changed(self):
         if self._more_filters_control.filter_actions():
             self._heat_map = None

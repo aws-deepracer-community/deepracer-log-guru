@@ -132,6 +132,14 @@ class Track:
                 colour)
             y += 1
 
+    def draw_sector_labels(self, track_graphics: TrackGraphics, colour: str):
+        for name in self.get_all_sector_names():
+            (start, finish) = self.get_sector_start_and_finish(name)
+            label_waypoint = int((start + finish) / 2)
+            point = self._drawing_points[label_waypoint].middle
+
+            track_graphics.plot_text(point, name, 14, colour)
+
     def get_bearing_and_distance_to_next_waypoint(self, waypoint_id: int):
         this_point = self._drawing_points[waypoint_id].middle
 
@@ -183,6 +191,9 @@ class Track:
             finish = self._track_sector_dividers[sector_id]
 
         return start, finish
+
+
+
 
     #
     # PRIVATE implementation

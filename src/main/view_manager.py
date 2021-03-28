@@ -125,6 +125,7 @@ class ViewManager:
                 current_track.draw_starting_line(track_graphics, self.track_colour)
                 if self.sectors_on:
                     current_track.draw_sector_dividers(track_graphics, self.track_colour)
+                    current_track.draw_sector_labels(track_graphics, self.track_colour)
                 if self.waypoints_on:
                     current_track.draw_waypoints(track_graphics, self.track_colour, self.waypoint_minor_size, self.waypoint_major_size)
 

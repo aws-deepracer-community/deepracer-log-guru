@@ -65,13 +65,13 @@ class TrackGraphics:
 
         return self.plot_line(start_point, end_point, width, fill_colour)
 
-    def plot_text(self, point, text_string, font_size):
+    def plot_text(self, point, text_string, font_size, colour: str):
         (x, y) = point
 
         x = (x - self.min_x) * self.scale
         y = (self.max_y - y) * self.scale
 
-        self.canvas.create_text(x, y, text=text_string, fill="Grey", font=("", font_size))
+        self.canvas.create_text(x, y, text=text_string, fill=colour, font=("", font_size))
 
     def plot_box(self, x, y, x2, y2, colour):
 

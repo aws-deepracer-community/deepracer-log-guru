@@ -11,7 +11,7 @@ class ChampionshipCup2019Track(Track):
         self._ui_length_in_m = 60.0  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "reInvent2019_track"
-        self._track_sector_dividers = [10, 20]
+        self._track_sector_dividers = [47, 95]
         self._annotations = config.championship_cup_2019_annotations
         self._track_width = 1.06
 

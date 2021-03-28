@@ -6,8 +6,6 @@ Finish Soon
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
 + more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
 
-+ sector config for every track!
-+ ability to place sector names A, B, C on the track view
 + Enhance episode filter for a "section" to offer built-in "sector" choices too
 
 + finish the log directory improvement  (persistent JSON config to remember TRACK and LOG DIR for next run ... )  + TO SIMPLIFY INSTALLATION

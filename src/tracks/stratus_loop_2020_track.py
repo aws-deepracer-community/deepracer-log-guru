@@ -11,7 +11,7 @@ class StratusLoop2020Track(Track):
         self._ui_length_in_m = 60.0  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "Aragon"
-        self._track_sector_dividers = [10, 20]
+        self._track_sector_dividers = [36, 87, 150, 225, 281]
         self._annotations = config.stratus_loop_annotations
         self._track_width = 1.067
 

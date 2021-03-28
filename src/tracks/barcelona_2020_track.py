@@ -11,7 +11,7 @@ class Barcelona2020Track(Track):
         self._ui_length_in_m = 60.0  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "Spain_track"
-        self._track_sector_dividers = [10, 20]
+        self._track_sector_dividers = [67, 125, 157, 205]
         self._annotations = config.barcelona_annotations
         self._track_width = 0.914
 

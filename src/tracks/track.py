@@ -138,7 +138,7 @@ class Track:
             label_waypoint = int((start + finish) / 2)
             point = self._drawing_points[label_waypoint].middle
 
-            track_graphics.plot_text(point, name, 14, colour)
+            track_graphics.plot_text(point, name, 18, colour)
 
     def get_bearing_and_distance_to_next_waypoint(self, waypoint_id: int):
         this_point = self._drawing_points[waypoint_id].middle

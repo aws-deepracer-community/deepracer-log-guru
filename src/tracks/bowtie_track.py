@@ -11,7 +11,7 @@ class BowtieTrack(Track):
         self._ui_length_in_m = 17.43  # metres
         self._ui_width_in_cm = 76  # centimetres
         self._world_name = "Bowtie_track"
-        self._track_sector_dividers = [10, 20]
+        self._track_sector_dividers = [38, 82, 120]
         self._annotations = config.bowtie_annotations
         self._track_width = 0.607
 

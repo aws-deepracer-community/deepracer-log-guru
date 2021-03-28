@@ -31,7 +31,7 @@ class EpisodeCheckButtonControl(Control):
         self.add_checkbutton_right("Filtered", self._show_filtered)
 
         if self._show_evaluations:
-            self.add_checkbutton("Evaluations", self._show_evaluations)
+            self.add_checkbutton_wide("Evaluations", self._show_evaluations)
 
     def show_all(self):
         return self._show_all.get()
@@ -60,7 +60,7 @@ class EpisodeRadioButtonControl(Control):
         self.add_radiobutton_right("Filtered", self._show_what, EpisodeRadioButtonControl._Values.SHOW_FILTERED.value)
 
         if self.include_evaluations:
-            self.add_radiobutton("Evaluations", self._show_what, EpisodeRadioButtonControl._Values.SHOW_EVALUATIONS.value)
+            self.add_radiobutton_wide("Evaluations", self._show_what, EpisodeRadioButtonControl._Values.SHOW_EVALUATIONS.value)
 
     def show_all(self):
         return self._show_what.get() == EpisodeRadioButtonControl._Values.SHOW_ALL.value
@@ -525,3 +525,28 @@ class GraphLineFittingControl(Control):
 
     def quadratic_fitting(self):
         return self._smoothing.get() == GraphLineFittingControl._QUADRATIC
+
+class ActionGroupControl(Control):
+    _NONE = 1
+    _SPEED = 2
+    _STEERING = 3
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Group By")
+
+        self._group = tk.IntVar(value=ActionGroupControl._NONE)
+
+    def _add_widgets(self):
+        self.add_radiobutton("None", self._group, ActionGroupControl._NONE)
+        self.add_radiobutton("Speed", self._group, ActionGroupControl._SPEED)
+        self.add_radiobutton("Steering", self._group, ActionGroupControl._STEERING)
+
+    def no_grouping(self):
+        return self._group.get() == ActionGroupControl._NONE
+
+    def group_by_speed(self):
+        return self._group.get() == ActionGroupControl._SPEED
+
+    def group_by_steering(self):
+        return self._group.get() == ActionGroupControl._STEERING
+

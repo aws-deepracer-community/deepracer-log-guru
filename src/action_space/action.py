@@ -52,6 +52,21 @@ class Action:
     def is_steering_straight(self) -> bool:
         return self._is_straight
 
+    def get_steering_group_name(self) -> str:
+        if self._is_straight:
+            return "Ahead"
+        elif abs(self._steering_angle) <= 15:
+            severity = "Gentle"
+        else:
+            severity = "Hard"
+        if self._is_left:
+            return severity + " Left"
+        else:
+            return severity + " Right"
+
+    def get_speed_group_name(self) -> str:
+        return self._print_speed
+
     def get_readable_without_index(self) -> str:
         return self._print_str
 

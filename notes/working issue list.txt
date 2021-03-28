@@ -1,22 +1,30 @@
 
 Finish Soon
 ===========
++ Complete action space analysis having now started to add it .....
++ Smooth occasional big peaks and dips in track speed caused by logging issues (perhaps simply smooth +/- 10% jumps etc)
++ straight line to always appear (don't cut off poor fits, since cannot do same with quadratic)
+
++ professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
++ more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
+
 + sector config for every track!
 + ability to place sector names A, B, C on the track view
 + Enhance episode filter for a "section" to offer built-in "sector" choices too
-+ onboard this months' tracks
-+ optimise (SLOW) performance of latest heatmap  (esp. the long time to redraw which happens after the "calculation"), caching would be nice too
+
 + finish the log directory improvement  (persistent JSON config to remember TRACK and LOG DIR for next run ... )  + TO SIMPLIFY INSTALLATION
-+ pressing a button when screen is already drawing does not redraw but does still press the button - VERY ODD BUG FOR THE USER
-+ professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
-+ more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
 + as a minimum, rename log meta files with a v3 in them so funny errors won't occur if someone uses old meta files
-+ straight line to always appear (don't cut off poor fits, since cannot do same with quadratic)
+
++ onboard this months' tracks
+
++ optimise (SLOW) performance of latest heatmap  (esp. the long time to redraw which happens after the "calculation"), caching would be nice too
+
++ pressing a button when screen is already drawing does not redraw but does still press the button - VERY ODD BUG FOR THE USER
 + Fix old bugs 4 (with 5), 6 and 21 that users are likely to notice early on
+
 + Rewrite the proposed simpler installation documentation
 + Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?
-+ Complete action space analysis having now started to add it .....
-+ Smooth occasional big peaks and dips in track speed caused by logging issues (perhaps simply smooth +/- 10% jumps etc)
+
 
 
 Brand New Analysis Views

@@ -44,6 +44,14 @@ class Control:
             command=self._guru_parent_redraw).grid(column=1, row=self._row_right, padx=5, pady=0)
         self._row_right += 1
 
+    def add_checkbutton_wide(self, title: str, tk_var: tk.BooleanVar):
+        assert self._row == self._row_right
+        tk.Checkbutton(
+            self._label_frame, text=title, variable=tk_var,
+            command=self._guru_parent_redraw).grid(column=0, columnspan=2, row=self._row_right, padx=5, pady=0)
+        self._row_right += 1
+        self._row += 1
+
     def add_radiobutton(self, title: str, tk_var: tk.IntVar, value: int):
         tk.Radiobutton(
             self._label_frame, text=title, variable=tk_var, value=value,
@@ -55,6 +63,14 @@ class Control:
             self._label_frame, text=title, variable=tk_var, value=value,
             command=self._guru_parent_redraw).grid(column=1, row=self._row_right, padx=5, pady=0)
         self._row_right += 1
+
+    def add_radiobutton_wide(self, title: str, tk_var: tk.IntVar, value: int):
+        assert self._row == self._row_right
+        tk.Radiobutton(
+            self._label_frame, text=title, variable=tk_var, value=value,
+            command=self._guru_parent_redraw).grid(column=0, columnspan=2, row=self._row_right, padx=5, pady=0)
+        self._row_right += 1
+        self._row += 1
 
     def add_dropdown(self, title: str, tk_var: tk.StringVar, values: list[str], callback: Callable):
         tk.Label(self._label_frame, text=title).grid(column=0, row=self._row, pady=0, padx=5, sticky=tk.W)

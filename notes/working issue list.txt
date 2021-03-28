@@ -1,7 +1,6 @@
 
 Finish Soon
 ===========
-+ New bug** load file does not "recalculate" the heatmap afterwards!
 
 + No data for the 20 episodes of training for small example - is view broken? Maybe incomplete iteration fix is (partly?) working???
 

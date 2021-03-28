@@ -18,10 +18,16 @@ def get_linear_regression(plot_x: np.ndarray, plot_y: np.ndarray):
     else:
         slope, intercept, r, p, std_err = stats.linregress(analyse_x, analyse_y)
 
-        def linear_line(x):
+        min_x = np.min(analyse_x)
+        max_x = np.max(analyse_x)
+        step_x = (max_x - min_x) / 100
+        fitted_x = np.arange(min_x, max_x + step_x, step_x)
+
+        def fitted_line(x):
             return slope * x + intercept
-        slope_y = list(map(linear_line, analyse_x))
-        return analyse_x, slope_y, r
+
+        fitted_y = list(map(fitted_line, fitted_x))
+        return fitted_x, fitted_y, r
 
 
 def f_quadratic(x, a, b, c):

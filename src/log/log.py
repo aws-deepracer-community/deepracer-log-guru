@@ -11,7 +11,7 @@ from src.episode.episode import Episode
 from src.ui.please_wait import PleaseWait
 from src.tracks.track import Track
 
-META_FILE_SUFFIX = ".meta"
+META_FILE_SUFFIX = ".v3.meta"
 LOG_FILE_SUFFIX = ".log"
 
 

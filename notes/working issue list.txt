@@ -1,6 +1,8 @@
 
 Finish Soon
 ===========
++ New bug** load file does not "recalculate" the heatmap afterwards!
+
 + No data for the 20 episodes of training for small example - is view broken? Maybe incomplete iteration fix is (partly?) working???
 
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
@@ -9,7 +11,6 @@ Finish Soon
 + Enhance episode filter for a "section" to offer built-in "sector" choices too
 
 + finish the log directory improvement  (persistent JSON config to remember TRACK and LOG DIR for next run ... )  + TO SIMPLIFY INSTALLATION
-+ as a minimum, rename log meta files with a v3 in them so funny errors won't occur if someone uses old meta files
 
 + onboard this months' tracks
 
@@ -89,6 +90,7 @@ Code Quality etc.
 Implement standards
 Add unit tests!!!
 Standardize graph colours as constants
+Switch meta file format to JSON    (see new user config file as prototype for JSON approach)
 
 Documentation
 =============

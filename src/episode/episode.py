@@ -53,6 +53,8 @@ class Episode:
         self.action_frequency = self._get_action_frequency(action_space)
         self.repeated_action_percent = self.get_repeated_action_percent(self.events)
 
+        self._mark_dodgy_data()   # Must be first, before all the analysis below, especially for speeds
+
         self.peak_track_speed = 0
         self.peak_progress_speed = 0
         self.set_track_speed_on_events()
@@ -111,31 +113,65 @@ class Episode:
         assert 1 <= quarter <= 4
         self.quarter = quarter
 
+    def _mark_dodgy_data(self):
+        e: Event
+        for i, e in enumerate(self.events[1:-1]):
+            previous_event = self.events[i]
+            previous_point = (previous_event.x, previous_event.y)
+            next_event = self.events[i + 2]
+            next_point = (next_event.x, next_event.y)
+            current_point = (e.x, e.y)
+
+            distance_to_previous = get_distance_between_points(current_point, previous_point)
+            distance_to_next = get_distance_between_points(current_point, next_point)
+
+            time_gap_to_previous = e.time - previous_event.time
+            time_gap_to_next = next_event.time - e.time
+
+            if time_gap_to_previous > 3 * time_gap_to_next:
+                e.dodgy_data = True
+            elif max(distance_to_next, distance_to_previous) > 0.1:
+                if distance_to_next > 2 * distance_to_previous or distance_to_previous > 2 * distance_to_next:
+                    e.dodgy_data = True
+
     def set_track_speed_on_events(self):
         previous = [self.events[0]] * 6   # 6 here matches DRF, but (TODO) DRF is marginally more accurate algorithm
+        improve_previous = False
         for e in self.events:
-            distance = get_distance_between_points((e.x, e.y), (previous[0].x, previous[0].y))
-            time_taken = e.time - previous[0].time
-
-            if time_taken > 0:
-                e.track_speed = distance / time_taken
-
-                if e.track_speed > self.peak_track_speed:
-                    self.peak_track_speed = e.track_speed
+            if e.dodgy_data or previous[0].dodgy_data:
+                e.track_speed = previous[-1].track_speed
+                improve_previous = True
+            else:
+                distance = get_distance_between_points((e.x, e.y), (previous[0].x, previous[0].y))
+                time_taken = e.time - previous[0].time
+                if time_taken > 0:
+                    e.track_speed = distance / time_taken
+                    if e.track_speed > self.peak_track_speed:
+                        self.peak_track_speed = e.track_speed
+                    if improve_previous:
+                        previous[-1].track_speed = (e.track_speed + previous[-1].track_speed) / 2
+                improve_previous = False
 
             previous = previous[1:] + [e]
 
     def set_progress_speed_on_events(self):
         previous = [self.events[0]] * 5   # 5 here excludes current step so matches DRF of 6 including current step
+        improve_previous = False
         for e in self.events:
-            progress_gain = e.progress - previous[0].progress
-            time_taken = e.time - previous[0].time
+            if e.dodgy_data or previous[0].dodgy_data:
+                e.progress_speed = previous[-1].progress_speed
+                improve_previous = True
+            else:
+                progress_gain = e.progress - previous[0].progress
+                time_taken = e.time - previous[0].time
 
-            if time_taken > 0:
-                e.progress_speed = progress_gain / 100 * e.track_length / time_taken
-
-                if e.progress_speed > self.peak_progress_speed:
-                    self.peak_progress_speed = e.progress_speed
+                if time_taken > 0:
+                    e.progress_speed = progress_gain / 100 * e.track_length / time_taken
+                    if e.progress_speed > self.peak_progress_speed:
+                        self.peak_progress_speed = e.progress_speed
+                    if improve_previous:
+                        previous[-1].progress_speed = (e.progress_speed + previous[-1].progress_speed) / 2
+                improve_previous = False
 
             previous = previous[1:] + [e]
 

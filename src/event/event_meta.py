@@ -32,6 +32,8 @@ class Event:
         self.true_bearing = 0.0
         self.distance_from_center = 0.0
 
+        self.dodgy_data = False
+
     def is_within_waypoint_range(self, waypoint_range):
         if waypoint_range:
             (start, finish) = waypoint_range

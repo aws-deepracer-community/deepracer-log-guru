@@ -155,12 +155,10 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
     def plot_data_or_smooth_it(self, axes: Axes, label: str, plot_x: np.ndarray, plot_y: np.ndarray, colour: str):
         if self._line_fitting_control.linear_fitting():
             (smoothed_x, smoothed_y, r) = get_linear_regression(plot_x, plot_y)
-            if smoothed_y:
-                axes.plot(smoothed_x, smoothed_y, colour, label=label)
+            axes.plot(smoothed_x, smoothed_y, colour, label=label)
         elif self._line_fitting_control.quadratic_fitting():
             (smoothed_x, smoothed_y) = get_polynomial_quadratic_regression(plot_x, plot_y)
-            if smoothed_y:
-                axes.plot(smoothed_x, smoothed_y, colour, label=label)
+            axes.plot(smoothed_x, smoothed_y, colour, label=label)
         else:
             axes.plot(plot_x, plot_y, colour, label=label)
 

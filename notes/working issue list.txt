@@ -1,9 +1,10 @@
 
 Finish Soon
 ===========
-+ Complete action space analysis having now started to add it .....
-+ Smooth occasional big peaks and dips in track speed caused by logging issues (perhaps simply smooth +/- 10% jumps etc)
 + straight line to always appear (don't cut off poor fits, since cannot do same with quadratic)
++ Smooth occasional big peaks and dips in track speed caused by logging issues (perhaps simply smooth +/- 10% jumps etc)
+
++ No data for the 20 episodes of training for small example - is view broken? Maybe incomplete iteration fix is (partly?) working???
 
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
 + more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
@@ -59,7 +60,7 @@ Show colourmap key for heatmap & route analysis
 Ability to stipulate that sector times (esp. for correlation) must have a survival period before and/or after ... (i.e. skip slow starts, and risky finishes)
 Maximise space around graphs (see how quarterly view did it)
 Colour-code quarterly progress to see at a glance if learning or not - and then can add a LOT of new indicators - like a true dashboard...
-
+Enhance action space analysis to show distribution within each sector (multiple graphs on screen at same time ...)
 
 Filters
 =======

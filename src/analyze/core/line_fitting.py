@@ -4,8 +4,7 @@ from scipy import stats, optimize
 #  TODO - fix duplications, initial check-in just gets it working with different flavours of equation ...
 
 
-def get_linear_regression(plot_x: np.ndarray, plot_y: np.ndarray, r_min: float = 0.0):
-    assert 0.0 <= r_min < 1
+def get_linear_regression(plot_x: np.ndarray, plot_y: np.ndarray):
     assert len(plot_x) == len(plot_y)
     assert not np.isnan(plot_x).any()     # X axis must be complete, no gaps indicated by NaN
 
@@ -21,11 +20,8 @@ def get_linear_regression(plot_x: np.ndarray, plot_y: np.ndarray, r_min: float =
 
         def linear_line(x):
             return slope * x + intercept
-        if abs(r) >= r_min:
-            slope_y = list(map(linear_line, analyse_x))
-            return analyse_x, slope_y, r
-        else:
-            return None, None, r
+        slope_y = list(map(linear_line, analyse_x))
+        return analyse_x, slope_y, r
 
 
 def f_quadratic(x, a, b, c):

@@ -95,9 +95,8 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         # Calculate linear regression line through the points, if requested
         (smoothed_x, smoothed_y, r_label) = (None, None, None)
         if self._line_fitting_control.linear_fitting():
-            (smoothed_x, smoothed_y, r) = get_linear_regression(plot_x, plot_y, 0.25)
-            if smoothed_y:
-                r_label = "R = " + str(round(r, 2))
+            (smoothed_x, smoothed_y, r) = get_linear_regression(plot_x, plot_y)
+            r_label = "R = " + str(round(r, 2))
         elif self._line_fitting_control.quadratic_fitting():
             (smoothed_x, smoothed_y) = get_polynomial_quadratic_regression(plot_x, plot_y)
             r_label = "Quadratic"
@@ -105,11 +104,11 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         # Finally plot the data we have gathered
         if self.format_control.swap_axes():
             axes.plot(plot_y, plot_x, shape, color=colour, label=label)
-            if smoothed_y:
+            if smoothed_y is not None:
                 axes.plot(smoothed_y, smoothed_x, color=colour, label=r_label)
         else:
             axes.plot(plot_x, plot_y, shape, color=colour, label=label)
-            if smoothed_y:
+            if smoothed_y is not None:
                 axes.plot(smoothed_x, smoothed_y, color=colour, label=r_label)
 
     def format_axes(self, axes :Axes):

@@ -16,7 +16,7 @@ Finish Soon
 + optimise (SLOW) performance of latest heatmap  (esp. the long time to redraw which happens after the "calculation"), caching would be nice too
 
 + pressing a button when screen is already drawing does not redraw but does still press the button - VERY ODD BUG FOR THE USER
-+ Fix old bugs 4 (with 5), 6 and 21 that users are likely to notice early on
++ Fix old bugs 4 (with 5), and 6  that users are likely to notice early on
 
 + Rewrite the proposed simpler installation documentation
 + Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?
@@ -118,7 +118,6 @@ Analysis articles - grab ideas from:
 44-ENH  Reproduce the same reward graph as AWS Console   [does mean EXACTLY, or perhaps only able to chose console or DRG colours?]
 43-ENH  Provide simple dialog view of key stats for a track e.g. exact length, inside and outside lengths etc.
 40-ENH  Event selection as per route analysis should be "shared" with other route analysis (e.g. speed)   [for example, on speed analysis, the action dot can be highlighted, and also the same arrow keys can be used to navigate backwards or forwards along the actions/steps]
-37-ENH  Add analysis options about use of action space   ** IN PROGRESS **
 36-ENH  Add shortcut keys for menu options - especially analysis views and common filters
 35-ENH  Provide quick switch buttons between useful/related analysis views (more convenient than menus)
 34-ENH  Show lap times as well as # of steps in open file dialog
@@ -128,7 +127,6 @@ Analysis articles - grab ideas from:
 26-ENH  Bit of fun - ability to simulate one or more episode as real-time "race" around the track
 23-ENH  Ability to extract episode route details (for use in subsequent reward function)  [esp. focussed on giving ALL the inputs including difficult track position calculations etc]
 22-ENH  Add ability to chose favourite episodes   [ideally keep a record in meta file for next time...]
-21-BUG  *** Error message on console if switch to different track and then go to episode menu  [Switching track effectively means no log is loaded ... menu should probably revert to the limited menu on startup (fewer options) until user has opened a log file for the newly chosen track]
 19-ENH  Optimize performance & check button response in "convergence" analysis  [CONTAINS A HOST OF ISSUES AND IDEAS ...]
 17-ENH  Add filtered/all option to ALL analysis screens, including episode route [Think again about whether applying all/filtered option to the "video" controls is viable]
 15-DOC  Provide help / demo videos on YouTube

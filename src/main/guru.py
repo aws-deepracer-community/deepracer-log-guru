@@ -250,6 +250,8 @@ class MainApp(tk.Frame):
 
         self.view_manager.zoom_clear()
 
+        self.menu_bar = MenuBar(root, self, False)
+
         self.redraw()
 
     def _reset_analyzer(self, analyzer):

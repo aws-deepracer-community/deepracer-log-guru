@@ -229,7 +229,7 @@ class Track:
     def _assert_sensible_info(self):
         assert len(self._ui_name) > 5
         assert len(self._ui_description) > 10
-        assert 10 < self._ui_length_in_m < 70
+        assert 10 < self._ui_length_in_m < 100
         assert 70 < self._ui_width_in_cm < 140
         assert len(self._world_name) > 5
         assert len(self._track_waypoints) > 20

@@ -2,16 +2,17 @@
 Finish Soon
 ===========
 
++ Grab best sample logs per track & per best model into one place in clear dir. structure
++ Improve track menu to put tracks with logs in top section, and other tracks in bottom section
++ finish the log directory improvement  (persistent JSON config to remember TRACK and LOG DIR for next run ... )  + TO SIMPLIFY INSTALLATION
+
 + No data for the 20 episodes of training for small example - is view broken? Maybe incomplete iteration fix is (partly?) working???
+(fix in conjunction with perhaps #45 ??)
 
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
 + more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
 
 + Enhance episode filter for a "section" to offer built-in "sector" choices too
-
-+ finish the log directory improvement  (persistent JSON config to remember TRACK and LOG DIR for next run ... )  + TO SIMPLIFY INSTALLATION
-
-+ onboard this months' tracks
 
 + optimise (SLOW) performance of latest heatmap  (esp. the long time to redraw which happens after the "calculation"), caching would be nice too
 
@@ -21,6 +22,7 @@ Finish Soon
 + Rewrite the proposed simpler installation documentation
 + Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?
 
++ Test a lot, comparing where possible with v2.0.5 for regression issues
 
 
 Brand New Analysis Views

@@ -58,3 +58,7 @@ american_speedway_annotations = []
 asia_pacific_bay_loop_annotations = []
 
 european_seaside_circuit_annotations = []
+
+po_chun_speedway_annotations = []
+
+po_chun_super_speedway_annotations = []

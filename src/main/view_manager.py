@@ -104,6 +104,8 @@ class ViewManager:
 
     def redraw(self, current_track :Track, track_graphics, analyzer, background_analyser, episode_filter: EpisodeFilter):
         analyzer.recalculate()
+        if background_analyser:
+            background_analyser.recalculate()
 
         track_graphics.reset_to_blank()
 

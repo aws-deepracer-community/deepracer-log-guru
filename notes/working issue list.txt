@@ -12,8 +12,6 @@ Finish Soon
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
 + more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
 
-+ Enhance episode filter for a "section" to offer built-in "sector" choices too
-
 + optimise (SLOW) performance of latest heatmap  (esp. the long time to redraw which happens after the "calculation"), caching would be nice too
 
 + pressing a button when screen is already drawing does not redraw but does still press the button - VERY ODD BUG FOR THE USER
@@ -30,10 +28,10 @@ Brand New Analysis Views
 Detailed drilldown into "outcomes" at a particular waypoint - esp. graphs to show outcome of different positions (e.g. success % beyond point)
 Track-only view - with facilities like measuring distance between points, inside versus outside distance, ability to draw and measure a path etc.
 Curve fitting - as special feature of track-only view?
-Frequency analysis of actions -> still very new, need to be able to group e.g by speed + handle sectors too
 Best possible lap time predictor - by piecing together fastest sections
 Time Animations of esp. lap time distribution or action distribution
 Ability to "race" episodes against each other (episodes chosen by filter or favourites per ****)
+-> similarly, or object avoidance, could animate the moving bots (IF get position info at every debug step...)
 
 Existing Analysis Enhancements
 =============================
@@ -48,7 +46,7 @@ Exit points:
 Training/Learning stats - eliminate incomplete final iteration (if actually incomplete)
                         - offer additional optional plotting of estimated lap time
 Episode slide is not finished - should have same/similar filters as for episode speed, reward & so on
-Ability to flag favourite episodes (****)
+Ability to flag favourite episodes (****)   OR ALLOW USER TO "TAG" EPISODES (and then quote a TAG as a filter criteria)
 Quarterly progress - add speed indications e.g. median lap time in particular (i.e. to answer broadly was it getting faster or not?)
 Curve fitting - go beyond quadratic for more advanced curves with 2 or 3 inflexions ....
 Quarterly progress - make sure Q really are now as even as possible + decide if/how to eliminate a final iteration if not complete

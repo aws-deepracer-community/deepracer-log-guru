@@ -7,7 +7,6 @@ from src.ui.episode_filter_dialog import EpisodeFilterDialog
 from src.ui.action_filter_dialog import ActionSpaceFilterDialog
 
 import src.secret_sauce.glue.glue as ss
-import src.log.log as log
 
 
 class MenuBar():
@@ -135,20 +134,29 @@ class MenuBar():
         menu.add_command(label="All", command=self.main_app.menu_callback_episodes_all)
         menu.add_command(label="All From Start", command=self.main_app.menu_callback_episodes_all_from_start)
         menu.add_separator()
+
         menu.add_command(label="Complete Laps", command=self.main_app.menu_callback_episodes_complete_laps)
         menu.add_command(label="Complete Laps from Start", command=self.main_app.menu_callback_episodes_complete_laps_from_start)
         menu.add_command(label="Fast Laps", command=self.main_app.menu_callback_episodes_fast_laps)
         menu.add_separator()
+
         menu.add_command(label="10% complete", command=self.main_app.menu_callback_episodes_min_percent_10)
         menu.add_command(label="25% complete", command=self.main_app.menu_callback_episodes_min_percent_25)
         menu.add_command(label="33% complete", command=self.main_app.menu_callback_episodes_min_percent_33)
         menu.add_command(label="50% complete", command=self.main_app.menu_callback_episodes_min_percent_50)
         menu.add_separator()
+
         menu.add_command(label="Q1", command=self.main_app.menu_callback_episodes_q1)
         menu.add_command(label="Q2", command=self.main_app.menu_callback_episodes_q2)
         menu.add_command(label="Q3", command=self.main_app.menu_callback_episodes_q3)
         menu.add_command(label="Q4", command=self.main_app.menu_callback_episodes_q4)
         menu.add_separator()
+
+        for s in self.main_app.current_track.get_all_sector_names():
+            menu.add_command(label="Sector " + s,
+                             command=lambda sector=s: self._choose_episode_filter_sector(sector))
+        menu.add_separator()
+
         menu.add_command(label="More ...", command=self.open_episode_filter_dialog)
 
         self.menubar.add_cascade(label="Episodes", menu=menu)
@@ -187,6 +195,9 @@ class MenuBar():
 
     def choose_sector(self, sector: str):
         self.main_app.menu_callback_sector_filter(sector)
+
+    def _choose_episode_filter_sector(self, sector: str):
+        self.main_app.menu_callback_episodes_sector(sector)
 
     def open_episode_filter_dialog(self):
         EpisodeFilterDialog(self.main_app)

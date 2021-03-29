@@ -494,6 +494,12 @@ class MainApp(tk.Frame):
         self.episode_filter.set_filter_quarters(False, False, False, True)
         self.reapply_episode_filter()
 
+    def menu_callback_episodes_sector(self, sector):
+        self.episode_filter.reset()
+        (start, finish) = self.current_track.get_sector_start_and_finish(sector)
+        self.episode_filter.set_filter_complete_section_and_time(start, finish, None, None)
+        self.reapply_episode_filter()
+
     def menu_callback_actions_all(self):
         self.action_space_filter.set_filter_all()
         self.reapply_action_space_filter()

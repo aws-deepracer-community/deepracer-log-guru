@@ -126,7 +126,7 @@ class Log:
                         assert evaluation_count == len(evaluation_rewards)
                         self._evaluation_phases.append(EvaluationPhase(evaluation_rewards, evaluation_progresses))
                         evaluation_rewards = []
-                        while len(episode_events) > len(episode_iterations):
+                        while len(episode_events) - 1 > len(episode_iterations):  # Minus 1 avoids counting next (empty) one
                             episode_iterations.append(iteration_id)
                         iteration_id += 1
                     elif line_of_text.startswith(parse.STILL_EVALUATING):

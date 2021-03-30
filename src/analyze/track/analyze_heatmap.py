@@ -47,7 +47,7 @@ class AnalyzeHeatmap(TrackAnalyzer):
             if self._measurement_control.measure_visits():
                 self._heat_map.draw_visits(self.track_graphics, brightness, color_palette)
             elif self._measurement_control.measure_slide():
-                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 12, 0)
+                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 14, 0)
             elif self._measurement_control.measure_steering():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 30, 0)
             elif self._measurement_control.measure_reward():

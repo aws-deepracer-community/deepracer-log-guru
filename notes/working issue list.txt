@@ -2,16 +2,11 @@
 Finish Soon
 ===========
 
-+ Training view dots for single items
-
-+ Grab best sample logs per track & per best model into one place in clear dir. structure
 + Improve track menu to put tracks with logs in top section, and other tracks in bottom section
 + finish the log directory improvement  (persistent JSON config to remember TRACK and LOG DIR for next run ... )  + TO SIMPLIFY INSTALLATION
 
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
 + more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
-
-+ optimise (SLOW) performance of latest heatmap  (esp. the long time to redraw which happens after the "calculation"), caching would be nice too
 
 + pressing a button when screen is already drawing does not redraw but does still press the button - VERY ODD BUG FOR THE USER
 + Fix old bugs 4 (with 5), and 6  that users are likely to notice early on
@@ -20,6 +15,7 @@ Finish Soon
 + Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?
 
 + Test a lot, comparing where possible with v2.0.5 for regression issues
++ Grab best sample logs per track & per best model into one place in clear dir. structure
 
 
 Brand New Analysis Views
@@ -49,12 +45,12 @@ Ability to flag favourite episodes (****)   OR ALLOW USER TO "TAG" EPISODES (and
 Quarterly progress - add speed indications e.g. median lap time in particular (i.e. to answer broadly was it getting faster or not?)
 Curve fitting - go beyond quadratic for more advanced curves with 2 or 3 inflexions ....
 Quarterly progress - make sure Q really are now as even as possible + decide if/how to eliminate a final iteration if not complete
-Set the brightness thresholds for heatmap more intelligently when there is less data ... ? fixed values are too blunt?
 Show colourmap key for heatmap & route analysis
 Ability to stipulate that sector times (esp. for correlation) must have a survival period before and/or after ... (i.e. skip slow starts, and risky finishes)
 Maximise space around graphs (see how quarterly view did it)
 Colour-code quarterly progress to see at a glance if learning or not - and then can add a LOT of new indicators - like a true dashboard...
 Enhance action space analysis to show distribution within each sector (multiple graphs on screen at same time ...)
+Perhaps use caching to speed up repeated flicking between heatmap options
 
 Filters
 =======

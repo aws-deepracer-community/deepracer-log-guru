@@ -75,14 +75,14 @@ class HeatMap:
                        forced_max_stat=-1, forced_min_stat=-1):
         assert brightness in [-1, 0, 1, 2]
 
-        if brightness == 2:
-            threshold = 5
-        elif brightness == 1:
-            threshold = 10
-        elif brightness == 0:
-            threshold = 15
-        else:
-            threshold = 20
+        threshold = round(self._get_stats_count() / 10)
+
+        if brightness == 1:
+            threshold /= 2
+        elif brightness == 2:
+            threshold /= 3.5
+        elif brightness == -1:
+            threshold *= 1.5
 
         (stats, min_stat, max_stat) = self._get_stats_array(np.median, threshold)
         if max_stat == 0:
@@ -128,6 +128,14 @@ class HeatMap:
     def _get_y_index(self, value):
         value = max(min(value, self.max_y), self.min_y)
         return round((value - self.min_y - self._granularity / 2) / self._granularity)
+
+    def _get_stats_count(self):
+        count = 0
+        for y_stats in self._stats:
+            for x_stats in y_stats:
+                if x_stats:
+                    count = max(count, len(x_stats))
+        return count
 
     def _get_stats_array(self, stat_method: callable, threshold: int = 0):
         min_value = math.nan

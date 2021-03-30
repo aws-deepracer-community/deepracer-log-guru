@@ -75,7 +75,7 @@ def _matplotlib_color(colormap: Colormap, data: float) -> str:
 def _get_color_cache(colormap: Colormap):
     colors = []
     for i in range(0, _CACHE_SIZE + 1):
-        colors.append(_matplotlib_color(_COLORMAP_A, i / _CACHE_SIZE))
+        colors.append(_matplotlib_color(colormap, i / _CACHE_SIZE))
     return colors
 
 

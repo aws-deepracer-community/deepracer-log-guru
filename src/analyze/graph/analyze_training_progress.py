@@ -154,14 +154,15 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
     def plot_data_or_smooth_it(self, axes: Axes, label: str, plot_x: np.ndarray, plot_y: np.ndarray, colour: str):
         if self._line_fitting_control.linear_fitting():
-            (smoothed_x, smoothed_y, r) = get_linear_regression(plot_x, plot_y)
-            axes.plot(smoothed_x, smoothed_y, colour, label=label)
+            (x_values, y_values, r) = get_linear_regression(plot_x, plot_y)
         elif self._line_fitting_control.quadratic_fitting():
-            (smoothed_x, smoothed_y) = get_polynomial_quadratic_regression(plot_x, plot_y)
-            axes.plot(smoothed_x, smoothed_y, colour, label=label)
+            (x_values, y_values) = get_polynomial_quadratic_regression(plot_x, plot_y)
         else:
-            axes.plot(plot_x, plot_y, colour, label=label)
+            x_values = plot_x
+            y_values = plot_y
 
+        axes.plot(x_values, y_values, colour, label=label)
+        self._plot_solo_items(axes, x_values, y_values, colour)
 
 def get_plot_data_iteration_vs_total_reward(episodes, stat_method):
     iteration_count = episodes[-1].iteration + 1

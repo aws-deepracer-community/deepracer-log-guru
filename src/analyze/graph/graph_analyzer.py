@@ -1,4 +1,6 @@
 import tkinter as tk
+import math
+
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from matplotlib import style as mpl_style
@@ -39,3 +41,18 @@ class GraphAnalyzer(Analyzer):
     def add_plots(self):
         # You *MUST* override this
         pass
+
+    @staticmethod
+    def _plot_solo_items(axes, x_values, y_values, colour):
+        x_solo = []
+        y_solo = []
+
+        previous_y = math.nan
+        for i, y in enumerate(y_values):
+            if math.isnan(previous_y) and not math.isnan(y):
+                if i == len(y_values) - 1 or math.isnan(y_values[i + 1]):
+                    x_solo.append(x_values[i])
+                    y_solo.append(y)
+            previous_y = y
+
+        axes.plot(x_solo, y_solo, ".", color=colour)

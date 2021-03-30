@@ -29,10 +29,10 @@ class AnalyzeCompleteLapPercentage(GraphAnalyzer):
         # Plot data
 
         if self._episode_control.show_all():
-            add_plot_for_episodes(axes, "All Episodes", self.all_episodes, "C1")
+            self._add_plot_for_episodes(axes, "All Episodes", self.all_episodes, "C1")
 
         if self.filtered_episodes and self._episode_control.show_filtered():
-            add_plot_for_episodes(axes, "Filtered Episodes", self.filtered_episodes, "C2")
+            self._add_plot_for_episodes(axes, "Filtered Episodes", self.filtered_episodes, "C2")
 
         if self._episode_control.show_evaluations():
             add_plot_for_evaluations(axes, "Evaluations", self.evaluation_phases, "C3")
@@ -43,6 +43,11 @@ class AnalyzeCompleteLapPercentage(GraphAnalyzer):
 
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
+
+    def _add_plot_for_episodes(self, axes: Axes, label, episodes, colour):
+        (plot_x, plot_y) = get_plot_data_for_episodes(episodes)
+        axes.plot(plot_x, plot_y, colour, label=label)
+        self._plot_solo_items(axes, plot_x, plot_y, colour)
 
 
 def get_plot_data_for_episodes(episodes):
@@ -64,10 +69,6 @@ def get_plot_data_for_episodes(episodes):
 
     return plot_iteration, plot_data
 
-
-def add_plot_for_episodes(axes :Axes, label, episodes, colour):
-    (plot_x, plot_y) = get_plot_data_for_episodes(episodes)
-    axes.plot(plot_x, plot_y, colour, label=label)
 
 
 def get_plot_data_for_evaluations(evaluation_phases):

@@ -18,6 +18,8 @@ import src.configuration.personal_configuration as config
 _COLORMAP_A = get_cmap(config.COLORMAP_A)
 _COLORMAP_B = get_cmap(config.COLORMAP_B)
 
+_CACHE_SIZE = 1000
+
 
 #
 # PUBLIC interface
@@ -43,9 +45,9 @@ def get_color_for_data(data: float, palette: ColorPalette) -> str:
     if palette == ColorPalette.DISCRETE_FIVE:
         return _discrete_color(5, config.DISCRETE_FIVE_COLOURS, data)
     if palette == ColorPalette.MULTI_COLOR_A:
-        return _matplotlib_color(_COLORMAP_A, data)
+        return _get_color_from_cache(COLOR_CACHE_A, data)
     if palette == ColorPalette.MULTI_COLOR_B:
-        return _matplotlib_color(_COLORMAP_B, data)
+        return _get_color_from_cache(COLOR_CACHE_B, data)
 
 
 #
@@ -66,4 +68,20 @@ def _matplotlib_color(colormap: Colormap, data: float) -> str:
     r = round(255 * r)
     g = round(255 * g)
     b = round(255 * b)
+
     return _rgb_color((r, g, b))
+
+
+def _get_color_cache(colormap: Colormap):
+    colors = []
+    for i in range(0, _CACHE_SIZE + 1):
+        colors.append(_matplotlib_color(_COLORMAP_A, i / _CACHE_SIZE))
+    return colors
+
+
+def _get_color_from_cache(cache, data):
+    return cache[int(round(data * _CACHE_SIZE))]
+
+
+COLOR_CACHE_A = _get_color_cache(_COLORMAP_A)
+COLOR_CACHE_B = _get_color_cache(_COLORMAP_B)

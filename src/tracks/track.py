@@ -18,6 +18,9 @@ class Track:
     def has_world_name(self, world_name: str):
         return world_name == self._world_name
 
+    def get_world_name(self):
+        return self._world_name
+
     def get_number_of_waypoints(self):
         return len(self._track_waypoints)
 

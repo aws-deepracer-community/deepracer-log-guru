@@ -270,25 +270,29 @@ class Episode:
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range, self._get_event_track_speed)
 
     def apply_action_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
-                                      action_space_filter: ActionSpaceFilter, waypoint_range):
+                                       action_space_filter: ActionSpaceFilter, waypoint_range):
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
                                         self._get_event_action_speed)
 
     def apply_progress_speed_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
-                                      action_space_filter: ActionSpaceFilter, waypoint_range):
-        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range, self._get_event_track_speed)
+                                         action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_progress_speed)
 
     def apply_reward_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
-                                      action_space_filter: ActionSpaceFilter, waypoint_range):
-        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range, self._get_event_reward)
+                                 action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_reward)
 
     def apply_slide_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
-                                      action_space_filter: ActionSpaceFilter, waypoint_range):
-        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range, self._get_event_slide)
+                                action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_slide)
 
     def apply_steering_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
-                                      action_space_filter: ActionSpaceFilter, waypoint_range):
-        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range, self._get_event_steering)
+                                   action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_steering)
 
     @staticmethod
     def _get_event_track_speed(event: Event):

@@ -3,7 +3,6 @@ Finish Soon
 ===========
 
 + Improve track menu to put tracks with logs in top section, and other tracks in bottom section
-+ finish the log directory improvement  (persistent JSON config to remember TRACK and LOG DIR for next run ... )  + TO SIMPLIFY INSTALLATION
 
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
 + more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
@@ -11,7 +10,7 @@ Finish Soon
 + pressing a button when screen is already drawing does not redraw but does still press the button - VERY ODD BUG FOR THE USER
 + Fix old bugs 4 (with 5), and 6  that users are likely to notice early on
 
-+ Rewrite the proposed simpler installation documentation
++ Rewrite the proposed simpler installation documentation (remember no clunky setting of log dir now ...)
 + Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?
 
 + Test a lot, comparing where possible with v2.0.5 for regression issues

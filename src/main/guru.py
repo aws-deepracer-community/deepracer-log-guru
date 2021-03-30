@@ -26,6 +26,7 @@ from src.analyze.graph.analyze_complete_lap_percentage import AnalyzeCompleteLap
 
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.analyze.track.analyze_route import AnalyzeRoute
+from src.configuration.config_manager import ConfigManager
 from src.episode.episode_filter import EpisodeFilter
 from src.graphics.track_graphics import TrackGraphics
 from src.log.log import Log
@@ -42,6 +43,7 @@ from src.ui.view_log_file_info import ViewLogFileInfo
 DEFAULT_CANVAS_WIDTH = 900
 DEFAULT_CANVAS_HEIGHT = 650
 
+
 class MainApp(tk.Frame):
     def __init__(self, root):
         #
@@ -50,13 +52,18 @@ class MainApp(tk.Frame):
 
         super().__init__(root)
 
+        #
+        # First of all, get config manager up and running so we have access to any settings that it manages for us
+        #
+
+        self._config_manager = ConfigManager()
 
         #
         # Initialise all internal settings not related to UI components
         #
 
         self.tracks = get_all_tracks()
-        self.current_track = self.tracks["reinvent_base"]
+        self.current_track = self.tracks[self._config_manager.get_last_open_track()]
 
         self.log = None
         self.filtered_episodes = None
@@ -66,15 +73,6 @@ class MainApp(tk.Frame):
         self.action_space_filter = ActionSpaceFilter()
         self.episode_selector = EpisodeSelector()
         self.sector_filter = ""
-
-
-        #
-        # Go to the correct directory where the log files are located, ready to load or save them there
-        #
-
-        # TODO - load from a new saved config file
-        os.chdir(config.LOG_DIRECTORY)
-
 
         #
         # Create the simple high level UI components (the canvas, control frame and status frame)
@@ -238,6 +236,7 @@ class MainApp(tk.Frame):
         self.status_frame.reset()
 
         self.current_track = new_track
+        self._config_manager.set_last_open_track(new_track.get_world_name())
 
         for v in self.all_analyzers:
             v.set_track(new_track)
@@ -333,16 +332,17 @@ class MainApp(tk.Frame):
         self.switch_analyzer(self.analyze_complete_lap_percentage)
 
     def menu_callback_switch_directory(self):
-        result = tk.filedialog.askdirectory(title="Choose the directory where log files are stored", mustexist=True, initialdir=os.curdir)
+        result = tk.filedialog.askdirectory(title="Choose the directory where log files are stored",
+                                            mustexist=True,
+                                            initialdir=self._config_manager.get_log_directory())
         if result:
-            os.chdir(result)
-            # TODO - save in new config file
+            self._config_manager.set_log_directory(result)
 
     def callback_open_this_file(self, file_name):
 
         redraw_menu_afterwards = not self.log
 
-        self.log = Log()
+        self.log = Log(self._config_manager.get_log_directory())
         self.log.load_all(file_name, self.please_wait, self.current_track)
 
         self.status_frame.change_model_name(self.log.get_log_meta().model_name)
@@ -616,6 +616,9 @@ class MainApp(tk.Frame):
     def menu_callback_view_log_file_info(self):
         if self.log:
             ViewLogFileInfo(self, self.log)
+
+    def get_log_directory(self):
+        return self._config_manager.get_log_directory()
 
 
 root = tk.Tk()

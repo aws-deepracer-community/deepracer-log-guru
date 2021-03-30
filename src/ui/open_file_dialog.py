@@ -8,7 +8,7 @@ import os
 class OpenFileDialog(Dialog):
 
     def body(self, master):
-        model_files, model_names = get_model_info_for_open_model_dialog(self.parent.current_track)
+        model_files, model_names = get_model_info_for_open_model_dialog(self.parent.current_track, self.parent.get_log_directory())
 
         self.place_in_grid(0, 3, tk.Label(master, text="Episodes"))
         self.place_in_grid(0, 4, tk.Label(master, text="Average\nProgress", justify=tk.RIGHT))
@@ -21,7 +21,7 @@ class OpenFileDialog(Dialog):
         for model_name in sorted(model_names):
             f = model_files[model_name]
 
-            log = Log()
+            log = Log(self.parent.get_log_directory())
             log.load_meta(f)
 
             callback = lambda file_name=f: self.callback_open_file(file_name)

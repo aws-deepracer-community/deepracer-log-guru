@@ -206,6 +206,6 @@ class MenuBar():
         ActionSpaceFilterDialog(self.main_app)
 
     def refresh_all_log_meta(self):
-        src.log.log_utils.refresh_all_log_meta(self.main_app.please_wait)
+        src.log.log_utils.refresh_all_log_meta(self.main_app.please_wait, self.main_app.get_log_directory())
         self.main_app.please_wait.stop()
         messagebox.showinfo("Refresh All Log Meta", "Refresh succeeded!")

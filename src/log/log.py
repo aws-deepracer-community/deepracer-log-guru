@@ -22,7 +22,7 @@ class Log:
 
     def load_meta(self, meta_file_name: str):
         self._meta_file_name = meta_file_name
-        with open(meta_file_name, 'rb') as file:
+        with open(self._log_directory + "\\" + meta_file_name, 'rb') as file:
             self._log_meta = pickle.load(file)
 
     def load_all(self, meta_file_name, please_wait: PleaseWait, track: Track):
@@ -48,7 +48,7 @@ class Log:
         self._analyze_episode_details()
 
     def save(self):
-        with open(self._meta_file_name, "wb") as meta_file:
+        with open(self._log_directory + "\\" + self._meta_file_name, "wb") as meta_file:
             pickle.dump(self._log_meta, meta_file)
 
     def get_meta_file_name(self):
@@ -70,15 +70,16 @@ class Log:
     # PRIVATE implementation
     #
 
-    def __init__(self):
+    def __init__(self, log_directory: str):
         self._log_meta = LogMeta()
         self._episodes = []
         self._evaluation_phases = []
         self._log_file_name = ""
         self._meta_file_name = ""
+        self._log_directory = log_directory
 
     def _parse_intro_events(self):
-        with open(self._log_file_name, "r") as file:
+        with open(self._log_directory + "\\" + self._log_file_name, "r") as file:
             for line_of_text in file:
                 if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
                     break
@@ -97,10 +98,10 @@ class Log:
         saved_object_locations = None
         iteration_id = 0
 
-        file_size = os.path.getsize(self._log_file_name)
+        file_size = os.path.getsize(self._log_directory + "\\" + self._log_file_name)
         file_amount_read = 0
 
-        with open(self._log_file_name, "r") as file:
+        with open(self._log_directory + "\\" + self._log_file_name, "r") as file:
             for line_of_text in file:
                 if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
                     intro = False

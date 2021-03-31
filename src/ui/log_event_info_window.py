@@ -128,7 +128,8 @@ class LogEventInfoWindow(tk.Toplevel):
         self.reward_average.set(get_pretty_large_integer(event.average_reward_so_far))
         self.reward_total.set(get_pretty_large_integer(event.reward_total))
 
-        self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80))  # TODO - expose configuration
+        # self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80, ["x", "y", "distance_from_center", "closest_waypoints"]))  # TODO - expose configuration
+        self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80, []))  # TODO - expose configuration
         self.lift()
 
 

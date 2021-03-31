@@ -2,6 +2,7 @@ import tkinter as tk
 
 from src.event.event_meta import Event
 from src.tracks.track import Track
+from src.ui.debug_text_formatter import get_formatted_debug
 
 from src.utils.formatting import get_pretty_small_float, get_pretty_large_float, get_pretty_large_integer
 import src.utils.geometry as geometry
@@ -127,11 +128,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.reward_average.set(get_pretty_large_integer(event.average_reward_so_far))
         self.reward_total.set(get_pretty_large_integer(event.reward_total))
 
-        if event.debug_log:
-            self.debug_output.set(event.debug_log[:1000])
-        else:
-            self.debug_output.set("")
-
+        self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80))  # TODO - expose configuration
         self.lift()
 
 

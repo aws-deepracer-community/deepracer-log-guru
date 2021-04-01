@@ -337,6 +337,7 @@ class MainApp(tk.Frame):
                                             initialdir=self._config_manager.get_log_directory())
         if result:
             self._config_manager.set_log_directory(result)
+            self.menu_bar.refresh()
 
     def callback_open_this_file(self, file_name):
 

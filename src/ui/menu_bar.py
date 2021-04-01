@@ -13,13 +13,15 @@ class MenuBar():
     def __init__(self, root, main_app, file_is_open):
         self.main_app = main_app
         self.root = root
-
         self.menubar = Menu(root)
+        self._file_is_open = file_is_open
+        self._create_menus()
 
+    def _create_menus(self):
         self.add_file_menu()
         self.add_track_menu()
 
-        if file_is_open:
+        if self._file_is_open:
             self.add_episode_menu()
             self.add_action_menu()
             self.add_sector_menu()
@@ -31,11 +33,24 @@ class MenuBar():
 
         self.root.config(menu=self.menubar)
 
+    def refresh(self):
+        self.menubar = Menu(self.root)
+        self._create_menus()
+
     def add_track_menu(self):
+        existing_log_world_names = src.log.log_utils.get_world_names_of_existing_logs(self.main_app.get_log_directory())
+
         menu = Menu(self.menubar, tearoff=0)
+
+        if existing_log_world_names:
+            for i, t in enumerate(self.main_app.tracks.values()):
+                if t.get_world_name() in existing_log_world_names:
+                    menu.add_command(label=t.get_name_on_menu(), command=lambda track=t: self.choose_track(track))
+            menu.add_separator()
+
         for i, t in enumerate(self.main_app.tracks.values()):
-            menu.add_command(label=t.get_name_on_menu(),
-                             command=lambda track=t: self.choose_track(track))
+            if t.get_world_name() not in existing_log_world_names:
+                menu.add_command(label=t.get_name_on_menu(), command=lambda track=t: self.choose_track(track))
 
         self.menubar.add_cascade(label="Track", menu=menu)
 
@@ -186,6 +201,7 @@ class MenuBar():
 
     def new_files(self):
         NewFilesDialog(self.main_app, self.main_app.please_wait)
+        self.refresh()
 
     def open_file(self):
         OpenFileDialog(self.main_app, "Open File")
@@ -209,3 +225,4 @@ class MenuBar():
         src.log.log_utils.refresh_all_log_meta(self.main_app.please_wait, self.main_app.get_log_directory())
         self.main_app.please_wait.stop()
         messagebox.showinfo("Refresh All Log Meta", "Refresh succeeded!")
+        self.refresh()

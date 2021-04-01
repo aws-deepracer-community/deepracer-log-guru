@@ -2,8 +2,6 @@
 Finish Soon
 ===========
 
-+ Improve track menu to put tracks with logs in top section, and other tracks in bottom section
-
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
 + more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
 

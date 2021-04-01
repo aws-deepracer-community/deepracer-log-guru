@@ -47,3 +47,13 @@ def get_possible_new_model_log_files(log_directory: str):
                 new_log_files.append(f)
 
     return new_log_files
+
+
+def get_world_names_of_existing_logs(log_directory):
+    world_names = set()
+    for f in os.listdir(log_directory):
+        if f.endswith(META_FILE_SUFFIX):
+            log = Log(log_directory)
+            log.load_meta(f)
+            world_names.add(log.get_log_meta().world_name)
+    return world_names

@@ -26,7 +26,10 @@ class LogEventInfoWindow(tk.Toplevel):
         state_frame.grid(row=0, column=1, rowspan=2, pady=5, padx=5, sticky=tk.NW+tk.E)
         action_frame.grid(row=1, column=0, pady=5, padx=5, sticky=tk.NW+tk.E)
         reward_frame.grid(row=0, column=0, pady=5, padx=5, sticky=tk.NW+tk.E)
-        debug_frame.grid(row=2, column=0, columnspan=3, pady=5, padx=5, sticky=tk.NW+tk.E)
+        debug_frame.grid(row=2, column=0, columnspan=4, pady=5, padx=5, sticky=tk.NW+tk.E)
+
+        # The debug frame stretches into column 3 so we tell it to absorb stretch instead of messing up data cols 0-2
+        self.columnconfigure(3, weight=1)
 
         self.waypoint_id = tk.StringVar()
         self.waypoint_lap_position = tk.StringVar()

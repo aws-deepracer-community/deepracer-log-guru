@@ -6,17 +6,23 @@ Finish Soon
 + more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
 
 + pressing a button when screen is already drawing does not redraw but does still press the button - VERY ODD BUG FOR THE USER
-+ Fix old bugs 4 (with 5), and 6  that users are likely to notice early on
+
+Fix old bugs:
+45-BUG  *** Don't show the final iteration, if incomplete, in certain training stats and similar  [ noting that AWS console may include incomplete EVALUATION runs, but not an incomplete training ]
+ 6-BUG  *** Previous log event window stays visible when new episode is selected
+(+ related to #6 moving to next episode via the << or >> also leaves the wrong event highlighted and/or info window open....)
+
 
 + Rewrite the proposed simpler installation documentation (remember no clunky setting of log dir now ...)
 + Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?
 
 + Test a lot, comparing where possible with v2.0.5 for regression issues
-+ Grab best sample logs per track & per best model into one place in clear dir. structure
++ (to help with this, consider .. )Grab best sample logs per track & per best model into one place in clear dir. structure
 
 
 Brand New Analysis Views
 ======================
+Newest idea - ability to show relatioship between reward and characteristics like speed and pos from centre - 1D and 2D (coloured)
 Detailed drilldown into "outcomes" at a particular waypoint - esp. graphs to show outcome of different positions (e.g. success % beyond point)
 Track-only view - with facilities like measuring distance between points, inside versus outside distance, ability to draw and measure a path etc.
 Curve fitting - as special feature of track-only view?
@@ -130,8 +136,7 @@ Analysis articles - grab ideas from:
  8-DOC  Provide help / documentation - help menu and info/help icons on the screen
  7-DOC  Document terminology  [User reported things like "filtered" and also especially the different colour schemes for the episode route analysis]
  6-BUG  *** Previous log event window stays visible when new episode is selected
- 5-ENH  Log event info changes width with each event [esp. bad with varying debug output, but still not perfect even for just numbers/stats]
- 4-BUG  ***RETEST*** Long debug output messes up the event info window [One user has set wraplength to 1000 which helps apparently]
+ 5-ENH  Log event info changes width with each event [improved now except for minor jitter - don't fix yet]
 
 
 

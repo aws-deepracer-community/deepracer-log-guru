@@ -109,7 +109,7 @@ class Log:
                                               saved_events, saved_debug, saved_object_locations)
                     saved_debug = ""
                     saved_object_locations = None
-                elif parse.EPISODE_STARTS_WITH in line_of_text and parse.SENT_SIGTERM in line_of_text:
+                elif parse.EPISODE_STARTS_WITH in line_of_text and (len(line_of_text) > 1000 or parse.SENT_SIGTERM in line_of_text):
                     end_of_str = line_of_text[line_of_text.find(parse.EPISODE_STARTS_WITH):]
                     intro = False
                     parse.parse_episode_event(end_of_str, episode_events, episode_object_locations,

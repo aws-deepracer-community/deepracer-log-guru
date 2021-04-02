@@ -62,3 +62,7 @@ european_seaside_circuit_annotations = []
 po_chun_speedway_annotations = []
 
 po_chun_super_speedway_annotations = []
+
+lars_loop_annotations = []
+
+lars_circuit_annotations = []

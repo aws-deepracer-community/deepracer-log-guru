@@ -15,6 +15,8 @@ from src.tracks.asia_pacific_bay_loop_track import AsiaPacificBayLoopTrack
 from src.tracks.european_seaside_circuit_track import EuropeanSeasideCircuitTrack
 from src.tracks.po_chun_super_speedway_track import PoChunSuperSpeedwayTrack
 from src.tracks.po_chun_speedway_track import PoChunSpeedwayTrack
+from src.tracks.lars_loop_track import LarsLoopTrack
+from src.tracks.lars_circuit_track import LarsCircuitTrack
 
 def get_all_tracks():
     tracks = {}
@@ -24,7 +26,7 @@ def get_all_tracks():
               CumuloTurnpikeTrack(), YunSpeedwayTrack(),
               RogerRacewayTrack(), FumiakiLoop2020Track(), SummitRacewayTrack(),
               Sola2020Track(), Baadal2020Track(), Barcelona2020Track(), BowtieTrack(),
-              PoChunSuperSpeedwayTrack(), PoChunSpeedwayTrack()
+              PoChunSuperSpeedwayTrack(), PoChunSpeedwayTrack(), LarsCircuitTrack(), LarsLoopTrack()
               ]:
         t.prepare(tracks)
 

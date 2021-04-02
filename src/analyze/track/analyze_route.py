@@ -149,6 +149,7 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def callback_selected_episode_changed(self):
         self.chosen_event = None
+        self.floating_window.destroy()
         self.guru_parent_redraw()
 
     def draw_episode(self, episode):

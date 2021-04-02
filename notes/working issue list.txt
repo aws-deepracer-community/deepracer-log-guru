@@ -9,9 +9,7 @@ Finish Soon
 
 Fix old bugs:
 45-BUG  *** Don't show the final iteration, if incomplete, in certain training stats and similar  [ noting that AWS console may include incomplete EVALUATION runs, but not an incomplete training ]
- 6-BUG  *** Previous log event window stays visible when new episode is selected
-(+ related to #6 moving to next episode via the << or >> also leaves the wrong event highlighted and/or info window open....)
-
+Display ROUTE log info, then go to different analysis and change the episode selector << or >> (log info should close), and return to ROUTE circle highlight is still there!!
 
 + Rewrite the proposed simpler installation documentation (remember no clunky setting of log dir now ...)
 + Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?

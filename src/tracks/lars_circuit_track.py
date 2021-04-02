@@ -8,7 +8,7 @@ class LarsCircuitTrack(Track):
 
         self._ui_name = "Lars Circuit"
         self._ui_description = "Lars Circuit is a pro difficulty track that adds an increasing to decreasing double apex and multiple high speed straightaways to its shorter cohort Lars Loop. It is named in honor of 2020 AWS DeepRacer League silver medalist Lars Ludvigson (Duckworth)"
-        self._ui_length_in_m = 68.68  # metres
+        self._ui_length_in_m = 99.99  # metres  (99.99 = not stated in AWS DR GUI)
         self._ui_width_in_cm = 107  # centimetres   # TODO
         self._world_name = "thunder_hill_pro"
         self._track_sector_dividers = [39, 78, 113, 161]

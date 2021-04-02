@@ -8,7 +8,7 @@ class LarsLoopTrack(Track):
 
         self._ui_name = "Lars Loop"
         self._ui_description = "Lars Loop is a short track comprised of a modified oval with increasing radius and double apex, a varying double chicane, and a broad hairpin final stretch. It is named in honor of 2020 AWS DeepRacer League silver medalist Lars Ludvigson (Duckworth)."
-        self._ui_length_in_m = 68.68  # metres
+        self._ui_length_in_m = 99.99  # metres  (99.99 = not stated in AWS DR GUI)
         self._ui_width_in_cm = 107  # centimetres   # TODO
         self._world_name = "thunder_hill_open"
         self._track_sector_dividers = [24, 48, 69]

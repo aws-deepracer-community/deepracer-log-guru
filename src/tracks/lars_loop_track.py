@@ -11,7 +11,7 @@ class LarsLoopTrack(Track):
         self._ui_length_in_m = 68.68  # metres
         self._ui_width_in_cm = 107  # centimetres   # TODO
         self._world_name = "thunder_hill_open"
-        self._track_sector_dividers = [20, 40, 60]
+        self._track_sector_dividers = [24, 48, 69]
         self._annotations = config.lars_loop_annotations
         self._track_width = 1.066
 

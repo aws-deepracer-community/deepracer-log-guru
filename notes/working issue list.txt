@@ -3,7 +3,7 @@ Finish Soon
 ===========
 
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
-+ more testing and adjustments to colours of trickier "smoothness" and "steering" analysis views
++ more testing of colours and heatmaps
 
 + pressing a button when screen is already drawing does not redraw but does still press the button - VERY ODD BUG FOR THE USER
 

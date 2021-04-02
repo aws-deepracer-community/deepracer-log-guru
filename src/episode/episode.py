@@ -6,7 +6,6 @@ import numpy as np
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.action_space.action_space import ActionSpace
 from src.analyze.util.heatmap import HeatMap
-from src.analyze.util.visitor import VisitorMap
 from src.event.event_meta import Event
 from src.utils.geometry import get_bearing_between_points, get_turn_between_directions,\
     get_distance_between_points, get_distance_of_point_from_line
@@ -64,6 +63,7 @@ class Episode:
         self.set_total_distance_travelled_on_events()
         self.max_slide = 0.0
         self.set_true_bearing_and_slide_on_events()
+        self.set_sequence_length_on_events()
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -234,6 +234,18 @@ class Episode:
             e.total_distance_travelled = distance
             previous = e
 
+    def set_sequence_length_on_events(self):
+        sequence = 0
+        previous_action_id = -1
+
+        for e in self.events:
+            if e.action_taken == previous_action_id:
+                sequence += 1
+            else:
+                sequence = 1
+                previous_action_id = e.action_taken
+            e.sequence_count = sequence
+
     def get_list_of_rewards(self):
         list_of_rewards = []
         for e in self.events:
@@ -294,6 +306,11 @@ class Episode:
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
                                         self._get_event_steering)
 
+    def apply_smoothness_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                   action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_smoothness)
+
     @staticmethod
     def _get_event_track_speed(event: Event):
         return event.track_speed
@@ -317,6 +334,10 @@ class Episode:
     @staticmethod
     def _get_event_steering(event: Event):
         return max(0, 30 - abs(event.steering_angle))
+
+    @staticmethod
+    def _get_event_smoothness(event: Event):
+        return event.sequence_count - 1
 
     @staticmethod
     def _get_event_visitor_dummy(event: Event):

@@ -125,7 +125,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.action_id.set(str(event.action_taken))
         self.action_steering.set(get_formatted_steering(event.steering_angle))
         self.action_speed.set(str(event.speed) + "  m/s")
-        self.action_sequence.set("")
+        self.action_sequence.set(str(event.sequence_count))
 
         self.reward_value.set(get_pretty_large_float(round(event.reward, 5)))
         self.reward_average.set(get_pretty_large_integer(event.average_reward_so_far))

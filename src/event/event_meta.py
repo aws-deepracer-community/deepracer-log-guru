@@ -18,6 +18,7 @@ class Event:
         self.time = 0.0
         self.status = ""
         self.track_length = 0.0
+        self.sequence_count = 0
 
         self.debug_log = ""
 

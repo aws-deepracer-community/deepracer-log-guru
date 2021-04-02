@@ -52,6 +52,8 @@ class AnalyzeHeatmap(TrackAnalyzer):
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 30, 0)
             elif self._measurement_control.measure_reward():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
+            elif self._measurement_control.measure_smoothness():
+                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
             else:
                 max_speed = self.action_space.get_max_speed()
                 min_speed = self.action_space.get_min_speed()
@@ -151,6 +153,8 @@ class AnalyzeHeatmap(TrackAnalyzer):
                     self._recalculate_measure_slide(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_steering():
                     self._recalculate_measure_steering(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
+                elif self._measurement_control.measure_smoothness():
+                    self._recalculate_measure_smoothness(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
 
     def _recalculate_measure_visits(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
         e: Episode
@@ -192,4 +196,10 @@ class AnalyzeHeatmap(TrackAnalyzer):
         e: Episode
         for i, e in enumerate(episodes):
             e.apply_steering_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
+            self.please_wait.set_progress((i + 1) / len(episodes) * 100)
+
+    def _recalculate_measure_smoothness(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
+        e: Episode
+        for i, e in enumerate(episodes):
+            e.apply_smoothness_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)

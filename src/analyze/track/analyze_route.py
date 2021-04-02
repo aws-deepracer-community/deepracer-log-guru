@@ -32,9 +32,6 @@ class AnalyzeRoute(TrackAnalyzer):
 
         self.chosen_event = None
 
-        self.smoothness_alternate = False
-        self.smoothness_current = False
-
         self.floating_window = None
 
         self.show_heading = False
@@ -149,7 +146,9 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def callback_selected_episode_changed(self):
         self.chosen_event = None
-        self.floating_window.destroy()
+        if self.floating_window is not None:
+            self.floating_window.destroy()
+            self.floating_window = None
         self.guru_parent_redraw()
 
     def draw_episode(self, episode):
@@ -189,13 +188,11 @@ class AnalyzeRoute(TrackAnalyzer):
         self.dual_tone = get_color_for_data(1, self.color_palette)
 
         show_all_actions = not self._more_filters_control.filter_actions()
-        previous_event = episode.events[0]
         for e in episode.events[1:]:
             if show_all_actions or self.action_space_filter.should_show_action(e.action_taken):
-                plot_event_method(e, previous_event, max_speed, speed_range)
-                previous_event = e
+                plot_event_method(e, max_speed, speed_range)
 
-    def colour_scheme_reward(self, event, previous_event, max_speed, speed_range):
+    def colour_scheme_reward(self, event, max_speed, speed_range):
         percentile = np.searchsorted(self.reward_percentiles, event.reward)
         brightness = min(1, percentile / 100 * 0.9 + 0.1)
         self._plot_dot(event, brightness)
@@ -210,43 +207,36 @@ class AnalyzeRoute(TrackAnalyzer):
         colour = get_color_for_data(brightness, self.color_palette)
         self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), colour)
 
-    def colour_scheme_track_speed(self, event, previous_event, max_speed, speed_range):
+    def colour_scheme_track_speed(self, event, max_speed, speed_range):
         self._plot_speed_dot(event, event.track_speed, max_speed, speed_range)
 
-    def colour_scheme_action_speed(self, event, previous_event, max_speed, speed_range):
+    def colour_scheme_action_speed(self, event, max_speed, speed_range):
         self._plot_speed_dot(event, event.speed, max_speed, speed_range)
 
-    def colour_scheme_progress_speed(self, event, previous_event, max_speed, speed_range):
+    def colour_scheme_progress_speed(self, event, max_speed, speed_range):
         self._plot_speed_dot(event, event.progress_speed, max_speed, speed_range)
 
-    def colour_scheme_smoothness(self, event, previous_event, max_speed, speed_range):
-        if event.action_taken == previous_event.action_taken:
-            if self.smoothness_alternate:
-                brightness = 0.7
-            else:
-                brightness = 1.0
-
-            self._plot_dot(event, brightness)
-            self._plot_dot(previous_event, brightness)
-            self.smoothness_current = True
+    def colour_scheme_smoothness(self, event, max_speed, speed_range):
+        if event.sequence_count == 1:
+            brightness = 0.05
+        elif event.sequence_count == 2:
+            brightness = 0.15
         else:
-            self._plot_dot(event, 0.1)
-            if self.smoothness_current:
-                self.smoothness_current = False
-                self.smoothness_alternate = not self.smoothness_alternate
+            brightness = min(1.0, 0.3 + event.sequence_count / 15)
+        self._plot_dot(event, brightness)
 
-    def colour_scheme_steering(self, event, previous_event, max_speed, speed_range):
+    def colour_scheme_steering(self, event, max_speed, speed_range):
         brightness = max(0.1, min(1, 1 - 0.9 * abs(event.steering_angle) / _HIGHEST_STEERING))
         self._plot_dot(event, brightness)
 
-    def colour_scheme_slide(self, event: Event, previous_event, max_speed, speed_range):
+    def colour_scheme_slide(self, event: Event, max_speed, speed_range):
         brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.slide) / _WORST_SLIDE))
         self._plot_dot(event, brightness)
 
-    def colour_scheme_none(self, event, previous_event, max_speed, speed_range):
+    def colour_scheme_none(self, event, max_speed, speed_range):
         self._plot_dot(event, 0.7)
 
-    def colour_scheme_per_second(self, event, previous_event, max_speed, speed_range):
+    def colour_scheme_per_second(self, event, max_speed, speed_range):
         if int(event.time_elapsed) % 2 == 0:
             self._plot_dot(event, 0.7)
         else:

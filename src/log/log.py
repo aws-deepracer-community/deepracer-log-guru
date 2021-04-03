@@ -29,10 +29,11 @@ class Log:
         please_wait.start("Loading")
         self.load_meta(meta_file_name)
         self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
-        self._parse_episode_events(please_wait, 0, 85, 95)
+        self._parse_episode_events(please_wait, 0, 50, 95)
         self._add_track_to_all_episodes(track)
         self._divide_episodes_into_quarters(please_wait, 95, 100)
-        please_wait.stop(0.2)
+        please_wait.set_progress(100)
+        please_wait.stop(0.3)
 
     def parse(self, log_file_name, please_wait: PleaseWait, min_progress_percent: float, max_progress_percent: float):
         self._log_file_name = log_file_name

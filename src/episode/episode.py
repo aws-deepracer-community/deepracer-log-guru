@@ -11,6 +11,7 @@ from src.utils.geometry import get_bearing_between_points, get_turn_between_dire
     get_distance_between_points, get_distance_of_point_from_line
 
 from src.tracks.track import Track
+from src.utils.discount_factors import discount_factors
 
 SLIDE_SETTLING_PERIOD = 6
 
@@ -64,6 +65,7 @@ class Episode:
         self.max_slide = 0.0
         self.set_true_bearing_and_slide_on_events()
         self.set_sequence_length_on_events()
+        self.set_discounted_future_rewards()
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -245,6 +247,10 @@ class Episode:
                 sequence = 1
                 previous_action_id = e.action_taken
             e.sequence_count = sequence
+
+    def set_discounted_future_rewards(self):
+        for i in range(len(self.events)):
+            self.events[i].discounted_future_rewards = discount_factors.get_discounted_future_rewards(self.rewards[i:])
 
     def get_list_of_rewards(self):
         list_of_rewards = []

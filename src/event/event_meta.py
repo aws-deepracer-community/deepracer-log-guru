@@ -32,6 +32,7 @@ class Event:
         self.slide = 0.0
         self.true_bearing = 0.0
         self.distance_from_center = 0.0
+        self.discounted_future_rewards = []
 
         self.dodgy_data = False
 

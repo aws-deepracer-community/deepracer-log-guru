@@ -1,11 +1,9 @@
 import tkinter as tk
 from tkinter import filedialog
-import os
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
-import src.configuration.personal_configuration as config
 import src.secret_sauce.glue.glue as ss
 
 from src.analyze.track.analyze_heatmap import AnalyzeHeatmap

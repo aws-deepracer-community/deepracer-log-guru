@@ -11,9 +11,18 @@ class DiscountFactors:
 
         self._prepare_multipliers()
 
-        self._calls_since_gc = 0
+    def reset_for_log(self, training_discount_factor):
+        if self._discount_factors[0] == training_discount_factor:
+            return
+
+        self._discount_factors = [training_discount_factor]
+        for df in DISCOUNT_FACTORS:
+            if df != training_discount_factor:
+                self._discount_factors.append(df)
+        self._prepare_multipliers()
 
     def _prepare_multipliers(self):
+        self._multipliers = []
         for df in self._discount_factors:
             assert 0.0 < df <= 1.0
             multiplier = []

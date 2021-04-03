@@ -11,6 +11,8 @@ from src.episode.episode import Episode
 from src.ui.please_wait import PleaseWait
 from src.tracks.track import Track
 
+from src.utils.discount_factors import discount_factors
+
 META_FILE_SUFFIX = ".v3.meta"
 LOG_FILE_SUFFIX = ".log"
 
@@ -29,7 +31,9 @@ class Log:
         please_wait.start("Loading")
         self.load_meta(meta_file_name)
         self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
-        self._parse_episode_events(please_wait, 0, 50, 95)
+        discount_factors.reset_for_log(self._log_meta.hyper.discount_factor)
+        please_wait.set_progress(2)
+        self._parse_episode_events(please_wait, 2, 50, 95)
         self._add_track_to_all_episodes(track)
         self._divide_episodes_into_quarters(please_wait, 95, 100)
         please_wait.set_progress(100)

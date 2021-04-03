@@ -82,10 +82,12 @@ class LogEventInfoWindow(tk.Toplevel):
         self.reward_value = tk.StringVar()
         self.reward_average = tk.StringVar()
         self.reward_total = tk.StringVar()
+        self.future_discounted_reward = tk.StringVar()
 
         self.make_label_and_value(reward_frame, 0, "Reward", self.reward_value)
         self.make_label_and_value(reward_frame, 1, "Average so far", self.reward_average)
         self.make_label_and_value(reward_frame, 2, "Total so far", self.reward_total)
+        self.make_label_and_value(reward_frame, 3, "Future discounted", self.future_discounted_reward)
 
         self.debug_output = tk.StringVar()
 
@@ -130,6 +132,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.reward_value.set(get_pretty_large_float(round(event.reward, 5)))
         self.reward_average.set(get_pretty_large_integer(event.average_reward_so_far))
         self.reward_total.set(get_pretty_large_integer(event.reward_total))
+        self.future_discounted_reward.set(get_pretty_large_integer(event.discounted_future_rewards[0]))
 
         # self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80, ["x", "y", "distance_from_center", "closest_waypoints"]))  # TODO - expose configuration
         self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80, []))  # TODO - expose configuration

@@ -65,7 +65,9 @@ class Episode:
         self.max_slide = 0.0
         self.set_true_bearing_and_slide_on_events()
         self.set_sequence_length_on_events()
+
         self.set_discounted_future_rewards()
+        self.discounted_future_rewards = self.get_list_of_discounted_future_rewards()
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -258,6 +260,12 @@ class Episode:
             list_of_rewards.append(e.reward)
         return np.array(list_of_rewards)
 
+    def get_list_of_discounted_future_rewards(self):
+        list_of_rewards = []
+        for e in self.events:
+            list_of_rewards.append(e.discounted_future_rewards[0])
+        return np.array(list_of_rewards)
+
     def _get_action_frequency(self, action_space: ActionSpace):
         action_frequency = action_space.get_new_frequency_counter()
         for e in self.events:
@@ -302,6 +310,11 @@ class Episode:
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
                                         self._get_event_reward)
 
+    def apply_discounted_future_reward_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                 action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_future_discounted_reward)
+
     def apply_slide_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
                                 action_space_filter: ActionSpaceFilter, waypoint_range):
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
@@ -332,6 +345,10 @@ class Episode:
     @staticmethod
     def _get_event_reward(event: Event):
         return max(0, event.reward)
+
+    @staticmethod
+    def _get_event_future_discounted_reward(event: Event):
+        return max(0, event.discounted_future_rewards[0])
 
     @staticmethod
     def _get_event_slide(event: Event):

@@ -153,6 +153,7 @@ class MeasurementControl(Control):
     MEASURE_SLIDE = 7
     MEASURE_SECONDS = 8
     MEASURE_VISITS = 9
+    MEASURE_DISCOUNTED_FUTURE_REWARD = 10
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame, measure_seconds: bool):
         super().__init__(guru_parent_redraw, control_frame, "Measure")
@@ -161,6 +162,7 @@ class MeasurementControl(Control):
 
     def _add_widgets(self):
         self.add_radiobutton("Reward", self._colour_scheme, MeasurementControl.MEASURE_REWARD)
+        self.add_radiobutton("DF Reward", self._colour_scheme, MeasurementControl.MEASURE_DISCOUNTED_FUTURE_REWARD)
         self.add_radiobutton("Action Speed", self._colour_scheme, MeasurementControl.MEASURE_ACTION_SPEED)
         self.add_radiobutton("Track Speed", self._colour_scheme, MeasurementControl.MEASURE_TRACK_SPEED)
         self.add_radiobutton("Progress Speed", self._colour_scheme, MeasurementControl.MEASURE_PROGRESS_SPEED)
@@ -173,6 +175,9 @@ class MeasurementControl(Control):
 
     def measure_reward(self):
         return self._colour_scheme.get() == MeasurementControl.MEASURE_REWARD
+
+    def measure_discounted_future_reward(self):
+        return self._colour_scheme.get() == MeasurementControl.MEASURE_DISCOUNTED_FUTURE_REWARD
 
     def measure_action_speed(self):
         return self._colour_scheme.get() == MeasurementControl.MEASURE_ACTION_SPEED

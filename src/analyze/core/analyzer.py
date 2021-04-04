@@ -26,7 +26,8 @@ class Analyzer:
 
         self.build_control_frame(self.control_frame)
 
-        tk.Label(self.control_frame, text="                                                       ").pack()
+        # Dodgy but sets correct total width for the control section
+        tk.Label(self.control_frame, text="                                                          ").pack()
 
         self.control_frame.pack(side=tk.RIGHT)
 

@@ -144,64 +144,96 @@ class GraphFormatControl(Control):
 
 class MeasurementControl(Control):
 
-    MEASURE_REWARD = 1
-    MEASURE_ACTION_SPEED = 2
-    MEASURE_TRACK_SPEED = 3
-    MEASURE_PROGRESS_SPEED = 4
-    MEASURE_SMOOTHNESS = 5
-    MEASURE_STEERING = 6
-    MEASURE_SLIDE = 7
-    MEASURE_SECONDS = 8
-    MEASURE_VISITS = 9
-    MEASURE_DISCOUNTED_FUTURE_REWARD = 10
+    _EVENT_REWARD = "Event Reward"
+    _FUTURE_REWARD = "Future Reward"
+    _NEW_EVENT_REWARD = "New Event Reward"
+    _NEW_FUTURE_REWARD = "New Future Reward"
+    _ACTION_SPEED = "Action Speed"
+    _TRACK_SPEED = "Track Speed"
+    _PROGRESS_SPEED = "Progress Speed"
+    _ACCELERATION = "Acceleration"
+    _BRAKING = "Braking"
+    _PREDICTED_LAP = "Predicted Lap"
+    _SMOOTHNESS = "Smoothness"
+    _STEERING_STRAIGHT = "Steering Straight"
+    _STEERING_LEFT = "Steering Left"
+    _STEERING_RIGHT = "Steering Right"
+    _SKEW = "Skew"
+    _SLIDE = "Slide"
+    _SECONDS = "Seconds"
+    _VISITS = "Visits"
+    _OTHER = "Other:"
 
-    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, measure_seconds: bool):
-        super().__init__(guru_parent_redraw, control_frame, "Measure")
-        self._colour_scheme = tk.IntVar(value=MeasurementControl.MEASURE_VISITS)
-        self._measure_seconds = measure_seconds
+    _ALL_MEASUREMENTS_EXCEPT_SECONDS = [
+        _EVENT_REWARD, _FUTURE_REWARD, _NEW_EVENT_REWARD, _NEW_FUTURE_REWARD, _ACTION_SPEED, _TRACK_SPEED,
+        _PROGRESS_SPEED, _ACCELERATION, _BRAKING, _PREDICTED_LAP, _SMOOTHNESS, _STEERING_STRAIGHT, _STEERING_LEFT,
+        _STEERING_RIGHT, _SKEW, _SLIDE, _VISITS
+                                        ]
+
+    def __init__(self, redraw_callback: callable, control_frame: tk.Frame, measure_seconds: bool):
+        super().__init__(redraw_callback, control_frame, "Measure")
+        self._current_measurement_button = tk.StringVar(value=MeasurementControl._VISITS)
+        self._current_measurement_dropdown = tk.StringVar()
+        self._show_measure_seconds = measure_seconds
+        self._redraw_callback = redraw_callback
 
     def _add_widgets(self):
-        self.add_radiobutton("Reward", self._colour_scheme, MeasurementControl.MEASURE_REWARD)
-        self.add_radiobutton("DF Reward", self._colour_scheme, MeasurementControl.MEASURE_DISCOUNTED_FUTURE_REWARD)
-        self.add_radiobutton("Action Speed", self._colour_scheme, MeasurementControl.MEASURE_ACTION_SPEED)
-        self.add_radiobutton("Track Speed", self._colour_scheme, MeasurementControl.MEASURE_TRACK_SPEED)
-        self.add_radiobutton("Progress Speed", self._colour_scheme, MeasurementControl.MEASURE_PROGRESS_SPEED)
-        self.add_radiobutton("Smoothness", self._colour_scheme, MeasurementControl.MEASURE_SMOOTHNESS)
-        self.add_radiobutton("Steering", self._colour_scheme, MeasurementControl.MEASURE_STEERING)
-        self.add_radiobutton("Slide", self._colour_scheme, MeasurementControl.MEASURE_SLIDE)
-        if self._measure_seconds:
-            self.add_radiobutton("Seconds", self._colour_scheme, MeasurementControl.MEASURE_SECONDS)
-        self.add_radiobutton("Visits", self._colour_scheme, MeasurementControl.MEASURE_VISITS)
+        self.add_radiobutton_improved(MeasurementControl._VISITS, self._current_measurement_button)
+        self.add_radiobutton_improved(MeasurementControl._EVENT_REWARD, self._current_measurement_button)
+        self.add_radiobutton_improved(MeasurementControl._FUTURE_REWARD, self._current_measurement_button)
+        self.add_radiobutton_improved(MeasurementControl._ACTION_SPEED, self._current_measurement_button)
+        self.add_radiobutton_improved(MeasurementControl._TRACK_SPEED, self._current_measurement_button)
+        self.add_radiobutton_improved(MeasurementControl._SMOOTHNESS, self._current_measurement_button)
+        self.add_radiobutton_improved(MeasurementControl._SLIDE, self._current_measurement_button)
+        self.add_radiobutton_improved(MeasurementControl._OTHER, self._current_measurement_button)
 
-    def measure_reward(self):
-        return self._colour_scheme.get() == MeasurementControl.MEASURE_REWARD
+        all_measurements = MeasurementControl._ALL_MEASUREMENTS_EXCEPT_SECONDS
+        if self._show_measure_seconds:
+            all_measurements.append(MeasurementControl._SECONDS)
+
+        self.add_dropdown(
+            "", self._current_measurement_dropdown,
+            all_measurements, self._dropdown_callback)
+
+    def _dropdown_callback(self, value):
+        if self._current_measurement_button.get() == MeasurementControl._OTHER:
+            self._redraw_callback(value)
+
+    def _check_if_measurement(self, required_value):
+        return self._current_measurement_button.get() == required_value or (
+                self._current_measurement_button.get() == MeasurementControl._OTHER and
+                self._current_measurement_dropdown.get() == required_value
+        )
+
+    def measure_event_reward(self):
+        return self._check_if_measurement(MeasurementControl._EVENT_REWARD)
 
     def measure_discounted_future_reward(self):
-        return self._colour_scheme.get() == MeasurementControl.MEASURE_DISCOUNTED_FUTURE_REWARD
+        return self._check_if_measurement(MeasurementControl._FUTURE_REWARD)
 
     def measure_action_speed(self):
-        return self._colour_scheme.get() == MeasurementControl.MEASURE_ACTION_SPEED
+        return self._check_if_measurement(MeasurementControl._ACTION_SPEED)
 
     def measure_track_speed(self):
-        return self._colour_scheme.get() == MeasurementControl.MEASURE_TRACK_SPEED
+        return self._check_if_measurement(MeasurementControl._TRACK_SPEED)
 
     def measure_progress_speed(self):
-        return self._colour_scheme.get() == MeasurementControl.MEASURE_PROGRESS_SPEED
+        return self._check_if_measurement(MeasurementControl._PROGRESS_SPEED)
 
     def measure_smoothness(self):
-        return self._colour_scheme.get() == MeasurementControl.MEASURE_SMOOTHNESS
+        return self._check_if_measurement(MeasurementControl._SMOOTHNESS)
 
-    def measure_steering(self):
-        return self._colour_scheme.get() == MeasurementControl.MEASURE_STEERING
+    def measure_steering_straight(self):
+        return self._check_if_measurement(MeasurementControl._STEERING_STRAIGHT)
 
     def measure_slide(self):
-        return self._colour_scheme.get() == MeasurementControl.MEASURE_SLIDE
+        return self._check_if_measurement(MeasurementControl._SLIDE)
 
     def measure_seconds(self):
-        return self._colour_scheme.get() == MeasurementControl.MEASURE_SECONDS
+        return self._check_if_measurement(MeasurementControl._SECONDS)
 
     def measure_visits(self):
-        return self._colour_scheme.get() == MeasurementControl.MEASURE_VISITS
+        return self._check_if_measurement(MeasurementControl._VISITS)
 
 
 class ConvergenceGranularityControl(Control):

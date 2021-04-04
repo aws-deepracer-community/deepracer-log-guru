@@ -13,13 +13,13 @@ class AnalyzeHeatmap(TrackAnalyzer):
     def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame, please_wait :PleaseWait):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
-        self._measurement_control = MeasurementControl(self.chosen_new_measurement, control_frame, False)
-        self._episodes_control = EpisodeRadioButtonControl(self.chosen_new_episodes, control_frame, False)
-        self._granularity_control = ConvergenceGranularityControl(self.chosen_new_granularity, control_frame)
+        self._measurement_control = MeasurementControl(self._callback_full_recalculate, control_frame, False)
+        self._episodes_control = EpisodeRadioButtonControl(self._callback_full_recalculate, control_frame, False)
+        self._granularity_control = ConvergenceGranularityControl(self._callback_full_recalculate, control_frame)
         self._appearance_control = TrackAppearanceControl(guru_parent_redraw, control_frame,
-                                                          None, self.chosen_new_appearance, self.chosen_new_appearance)
-        self._skip_control = SkipControl(self.chosen_new_skip, control_frame)
-        self._more_filters_control = MoreFiltersControl(self.chosen_more_filters, control_frame, False)
+                                                          None, self._callback_quick_change_appearance, self._callback_quick_change_appearance)
+        self._skip_control = SkipControl(self._callback_full_recalculate, control_frame)
+        self._more_filters_control = MoreFiltersControl(self._callback_full_recalculate, control_frame, False)
 
         self._heat_map = None
         self.please_wait = please_wait
@@ -48,9 +48,9 @@ class AnalyzeHeatmap(TrackAnalyzer):
                 self._heat_map.draw_visits(self.track_graphics, brightness, color_palette)
             elif self._measurement_control.measure_slide():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 14, 0)
-            elif self._measurement_control.measure_steering():
+            elif self._measurement_control.measure_steering_straight():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 30, 0)
-            elif self._measurement_control.measure_reward():
+            elif self._measurement_control.measure_event_reward():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
             elif self._measurement_control.measure_discounted_future_reward():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
@@ -82,27 +82,11 @@ class AnalyzeHeatmap(TrackAnalyzer):
         if self._more_filters_control.filter_sector():
             self._heat_map = None
 
-    def chosen_new_skip(self):
+    def _callback_full_recalculate(self, optional_value=None):
         self._heat_map = None
         self.guru_parent_redraw()
 
-    def chosen_more_filters(self):
-        self._heat_map = None
-        self.guru_parent_redraw()
-
-    def chosen_new_granularity(self):
-        self._heat_map = None
-        self.guru_parent_redraw()
-
-    def chosen_new_episodes(self):
-        self._heat_map = None
-        self.guru_parent_redraw()
-
-    def chosen_new_measurement(self):
-        self._heat_map = None
-        self.guru_parent_redraw()
-
-    def chosen_new_appearance(self, new_value):
+    def _callback_quick_change_appearance(self, optional_value=None):
         self.guru_parent_redraw()
 
     def recalculate(self):
@@ -149,13 +133,13 @@ class AnalyzeHeatmap(TrackAnalyzer):
                     self._recalculate_measure_progress_speed(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_track_speed():
                     self._recalculate_measure_track_speed(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
-                elif self._measurement_control.measure_reward():
+                elif self._measurement_control.measure_event_reward():
                     self._recalculate_measure_reward(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_discounted_future_reward():
                     self._recalculate_measure_discounted_future_reward(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_slide():
                     self._recalculate_measure_slide(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
-                elif self._measurement_control.measure_steering():
+                elif self._measurement_control.measure_steering_straight():
                     self._recalculate_measure_steering(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_smoothness():
                     self._recalculate_measure_smoothness(episodes, skip_start, skip_end, action_space_filter, waypoint_range)

@@ -164,7 +164,7 @@ class AnalyzeRoute(TrackAnalyzer):
             size = 0.4
             self.track_graphics.plot_box(x - size/2, y - size/2, x + size/2, y + size/2, "red")
 
-        if self._measurement_control.measure_reward():
+        if self._measurement_control.measure_event_reward():
             plot_event_method = self.colour_scheme_reward
         elif self._measurement_control.measure_discounted_future_reward():
             plot_event_method = self.colour_scheme_discounted_future_reward
@@ -176,7 +176,7 @@ class AnalyzeRoute(TrackAnalyzer):
             plot_event_method = self.colour_scheme_progress_speed
         elif self._measurement_control.measure_smoothness():
             plot_event_method = self.colour_scheme_smoothness
-        elif self._measurement_control.measure_steering():
+        elif self._measurement_control.measure_steering_straight():
             plot_event_method = self.colour_scheme_steering
         elif self._measurement_control.measure_slide():
             plot_event_method = self.colour_scheme_slide

@@ -13,15 +13,20 @@ from src.utils.geometry import get_bearing_between_points, get_turn_between_dire
 from src.tracks.track import Track
 from src.utils.discount_factors import discount_factors
 
+from src.personalize.configuration import NEW_REWARD_FUNCTION
+
 SLIDE_SETTLING_PERIOD = 6
 
 
 class Episode:
 
-    def __init__(self, id, iteration, events, object_locations, action_space: ActionSpace):
+    def __init__(self, episode_id, iteration, events, object_locations, action_space: ActionSpace,
+                 do_full_analysis: bool, track: Track=None):
+
+        assert track is not None or not do_full_analysis
 
         self.events = events
-        self.id = id
+        self.id = episode_id
         self.iteration = iteration
         self.object_locations = object_locations
 
@@ -66,8 +71,9 @@ class Episode:
         self.set_true_bearing_and_slide_on_events()
         self.set_sequence_length_on_events()
 
-        self.set_discounted_future_rewards()
-        self.discounted_future_rewards = self.get_list_of_discounted_future_rewards()
+        if do_full_analysis:
+            self.set_discounted_future_rewards()
+            self.discounted_future_rewards = self.get_list_of_discounted_future_rewards()
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -76,8 +82,13 @@ class Episode:
         # THIS VARIABLE IS ASSIGNED RETROSPECTIVELY AFTER THE Log CLASS HAS LOADED ALL EPISODES
         self.quarter = None
 
-    def set_track(self, track: Track):
-        self.set_distance_from_center_on_events(track)
+        # New stuff moved here
+        if do_full_analysis:
+            self.set_distance_from_center_on_events(track)
+            self._set_new_rewards(track)
+            self.new_rewards = self.get_list_of_new_rewards()
+        else:
+            self.new_rewards = []
 
     def get_starting_position_as_percent_from_race_start(self, track :Track):
         first_event_percent = track.get_waypoint_percent_from_race_start(self.events[0].closest_waypoint_index)
@@ -213,8 +224,6 @@ class Episode:
             else:
                 e.distance_from_center = get_distance_of_point_from_line(current_location, closest_waypoint, previous_waypoint)
 
-
-
     def set_reward_total_on_events(self):
         reward_total = 0.0
         for e in self.events:
@@ -260,6 +269,12 @@ class Episode:
             list_of_rewards.append(e.reward)
         return np.array(list_of_rewards)
 
+    def get_list_of_new_rewards(self):
+        list_of_new_rewards = []
+        for e in self.events:
+            list_of_new_rewards.append(e.new_reward)
+        return np.array(list_of_new_rewards)
+
     def get_list_of_discounted_future_rewards(self):
         list_of_rewards = []
         for e in self.events:
@@ -271,6 +286,11 @@ class Episode:
         for e in self.events:
             action_frequency[e.action_taken] += 1
         return action_frequency
+
+    def _set_new_rewards(self, track: Track):
+        if NEW_REWARD_FUNCTION:
+            for e in self.events:
+                e.new_reward = NEW_REWARD_FUNCTION(e.get_reward_input_params(track))
 
     def get_closest_event_to_point(self, point):
         (x, y) = point
@@ -310,6 +330,11 @@ class Episode:
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
                                         self._get_event_reward)
 
+    def apply_new_reward_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                 action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_new_event_reward)
+
     def apply_discounted_future_reward_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
                                  action_space_filter: ActionSpaceFilter, waypoint_range):
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
@@ -345,6 +370,10 @@ class Episode:
     @staticmethod
     def _get_event_reward(event: Event):
         return max(0, event.reward)
+
+    @staticmethod
+    def _get_new_event_reward(event: Event):
+        return max(0, event.new_reward)
 
     @staticmethod
     def _get_event_future_discounted_reward(event: Event):

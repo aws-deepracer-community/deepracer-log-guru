@@ -42,6 +42,7 @@ class AnalyzeRoute(TrackAnalyzer):
         self.color_palette = ColorPalette.MULTI_COLOR_A
 
         self.reward_percentiles = None
+        self.new_reward_percentiles = None
         self.discounted_future_reward_percentiles = None
 
     def build_control_frame(self, control_frame):
@@ -147,6 +148,11 @@ class AnalyzeRoute(TrackAnalyzer):
             for e in self.all_episodes[1:]:
                 all_discounted_future_rewards = np.append(all_discounted_future_rewards, e.discounted_future_rewards)
             self.discounted_future_reward_percentiles = np.percentile(all_discounted_future_rewards, np.arange(100))
+
+            all_new_rewards = self.all_episodes[0].new_rewards
+            for e in self.all_episodes[1:]:
+                all_new_rewards = np.append(all_new_rewards, e.new_rewards)
+            self.new_reward_percentiles = np.percentile(all_new_rewards, np.arange(100))
         else:
             self.reward_percentiles = None
 
@@ -166,6 +172,8 @@ class AnalyzeRoute(TrackAnalyzer):
 
         if self._measurement_control.measure_event_reward():
             plot_event_method = self.colour_scheme_reward
+        elif self._measurement_control.measure_new_event_reward():
+            plot_event_method = self.colour_scheme_new_reward
         elif self._measurement_control.measure_discounted_future_reward():
             plot_event_method = self.colour_scheme_discounted_future_reward
         elif self._measurement_control.measure_action_speed():
@@ -202,6 +210,11 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_reward(self, event, max_speed, speed_range):
         percentile = np.searchsorted(self.reward_percentiles, event.reward)
+        brightness = min(1, percentile / 100 * 0.9 + 0.1)
+        self._plot_dot(event, brightness)
+
+    def colour_scheme_new_reward(self, event, max_speed, speed_range):
+        percentile = np.searchsorted(self.new_reward_percentiles, event.new_reward)
         brightness = min(1, percentile / 100 * 0.9 + 0.1)
         self._plot_dot(event, brightness)
 

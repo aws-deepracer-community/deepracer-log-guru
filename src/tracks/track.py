@@ -27,6 +27,12 @@ class Track:
     def get_waypoint(self, waypoint_id: int):
         return self._track_waypoints[waypoint_id]
 
+    def get_width(self):
+        return self._track_width
+
+    def get_all_waypoints(self):
+        return self._track_waypoints
+
     def get_previous_different_waypoint(self, waypoint_id: int):
         (avoid_x, avoid_y) = self.get_waypoint(waypoint_id)
         (result_x, result_y) = (avoid_x, avoid_y)
@@ -195,8 +201,26 @@ class Track:
 
         return start, finish
 
+    def get_position_of_point_relative_to_waypoint(self, point: Point, waypoint_id: int):
+        dp = self._drawing_points[waypoint_id]
 
+        left_distance = geometry.get_distance_between_points(point, dp.left)
+        right_distance = geometry.get_distance_between_points(point, dp.right)
 
+        if abs(left_distance - right_distance) < 0.001:
+            return "C"
+        elif left_distance < right_distance:
+            return "L"
+        else:
+            return "R"
+
+    def get_waypoint_ids_before_and_after(self, point: Point, waypoint_id: int):
+        # TODO - do this properly - cannot assume like this that the current waypoint is always behind us!
+        assert 0 <= waypoint_id < len(self._track_waypoints)
+        if waypoint_id >= len(self._track_waypoints) - 1:
+            return waypoint_id, 0
+        else:
+            return waypoint_id, waypoint_id + 1
 
     #
     # PRIVATE implementation
@@ -336,19 +360,6 @@ class Track:
 
         if abs(last_x - first_x) > 0.0001 or abs(last_y - first_y) > 0.0001:
             self._track_waypoints.append(first_point)
-
-    def _get_position_of_point_relative_to_waypoint(self, point: Point, waypoint_id: int):
-        dp = self._drawing_points[waypoint_id]
-
-        left_distance = geometry.get_distance_between_points(point, dp.left)
-        right_distance = geometry.get_distance_between_points(point, dp.right)
-
-        if abs(left_distance - right_distance) < 0.001:
-            return "C"
-        elif left_distance < right_distance:
-            return "L"
-        else:
-            return "R"
 
     @staticmethod
     def _get_sector_name(sector_id: int):

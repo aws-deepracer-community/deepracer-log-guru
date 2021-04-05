@@ -33,8 +33,7 @@ class Log:
         self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
         discount_factors.reset_for_log(self._log_meta.hyper.discount_factor)
         please_wait.set_progress(2)
-        self._parse_episode_events(please_wait, 2, 50, 95)
-        self._add_track_to_all_episodes(track)
+        self._parse_episode_events(please_wait, 2, 50, 95, True, track)
         self._divide_episodes_into_quarters(please_wait, 95, 100)
         please_wait.set_progress(100)
         please_wait.stop(0.3)
@@ -48,7 +47,7 @@ class Log:
             please_wait,
             min_progress_percent,
             min_progress_percent + 0.9 * (max_progress_percent - min_progress_percent),
-            max_progress_percent)
+            max_progress_percent, False)
 
         self._analyze_episode_details()
 
@@ -92,7 +91,8 @@ class Log:
                     parse.parse_intro_event(line_of_text, self._log_meta)
 
     def _parse_episode_events(self, please_wait: PleaseWait,
-                              min_progress_percent: float, mid_progress_percent: float, max_progress_percent: float):
+                              min_progress_percent: float, mid_progress_percent: float, max_progress_percent: float,
+                              do_full_analysis: bool, track: Track = None):
         episode_events = []
         episode_iterations = []
         episode_object_locations = []
@@ -161,7 +161,8 @@ class Log:
             episode_iterations.append(iteration_id)
 
         for i, e in enumerate(episode_events[:-1]):
-            self._episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i], self._log_meta.action_space))
+            self._episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i],
+                                          self._log_meta.action_space, do_full_analysis, track))
             please_wait.set_progress(
                 mid_progress_percent + i / total_episodes * (max_progress_percent - mid_progress_percent))
 
@@ -252,8 +253,3 @@ class Log:
                 e.set_quarter(3)
             else:
                 e.set_quarter(4)
-
-    def _add_track_to_all_episodes(self, track: Track):
-        e: Episode
-        for e in self._episodes:
-            e.set_track(track)

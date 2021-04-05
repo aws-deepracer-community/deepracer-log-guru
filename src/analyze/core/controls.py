@@ -187,7 +187,7 @@ class MeasurementControl(Control):
         self.add_radiobutton_improved(MeasurementControl._SLIDE, self._current_measurement_button)
         self.add_radiobutton_improved(MeasurementControl._OTHER, self._current_measurement_button)
 
-        all_measurements = MeasurementControl._ALL_MEASUREMENTS_EXCEPT_SECONDS
+        all_measurements = MeasurementControl._ALL_MEASUREMENTS_EXCEPT_SECONDS.copy()
         if self._show_measure_seconds:
             all_measurements.append(MeasurementControl._SECONDS)
 
@@ -235,6 +235,8 @@ class MeasurementControl(Control):
     def measure_visits(self):
         return self._check_if_measurement(MeasurementControl._VISITS)
 
+    def measure_new_event_reward(self):
+        return self._check_if_measurement(MeasurementControl._NEW_EVENT_REWARD)
 
 class ConvergenceGranularityControl(Control):
 

@@ -6,6 +6,7 @@ from src.ui.debug_text_formatter import get_formatted_debug
 
 from src.utils.formatting import get_pretty_small_float, get_pretty_large_float, get_pretty_large_integer
 import src.utils.geometry as geometry
+from src.utils.discount_factors import discount_factors
 
 
 class LogEventInfoWindow(tk.Toplevel):
@@ -16,17 +17,22 @@ class LogEventInfoWindow(tk.Toplevel):
 
         self.title("Detailed Event Info")
 
+        event_reward_frame = tk.LabelFrame(self, text="Event Reward")
+        new_event_reward_frame = tk.LabelFrame(self, text="Alternate Reward")
+        discount_factors_frame = tk.LabelFrame(self, text="Other Discount Factors")
         waypoint_frame = tk.LabelFrame(self, text="Closest Waypoint")
         state_frame = tk.LabelFrame(self, text="State")
         action_frame = tk.LabelFrame(self, text="Chosen Action")
-        reward_frame = tk.LabelFrame(self, text="Reward")
         debug_frame = tk.LabelFrame(self, text="Log File Debug")
 
-        waypoint_frame.grid(row=0, column=2, rowspan=2, pady=5, padx=5, sticky=tk.NW+tk.E)
-        state_frame.grid(row=0, column=1, rowspan=2, pady=5, padx=5, sticky=tk.NW+tk.E)
-        action_frame.grid(row=1, column=0, pady=5, padx=5, sticky=tk.NW+tk.E)
-        reward_frame.grid(row=0, column=0, pady=5, padx=5, sticky=tk.NW+tk.E)
-        debug_frame.grid(row=2, column=0, columnspan=4, pady=5, padx=5, sticky=tk.NW+tk.E)
+        stickiness = tk.NW+tk.E
+        event_reward_frame.grid(row=0, column=0, pady=5, padx=5, sticky=stickiness)
+        new_event_reward_frame.grid(row=1, column=0, pady=5, padx=5, sticky=stickiness)
+        discount_factors_frame.grid(row=2, column=0, pady=5, padx=5, sticky=stickiness)
+        state_frame.grid(row=0, column=1, rowspan=3, pady=5, padx=5, sticky=stickiness)
+        waypoint_frame.grid(row=0, column=2, rowspan=2, pady=5, padx=5, sticky=stickiness)
+        action_frame.grid(row=2, column=2, pady=5, padx=5, sticky=stickiness)
+        debug_frame.grid(row=3, column=0, columnspan=4, pady=5, padx=5, sticky=stickiness)
 
         # The debug frame stretches into column 3 so we tell it to absorb stretch instead of messing up data cols 0-2
         self.columnconfigure(3, weight=1)
@@ -53,6 +59,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.state_heading = tk.StringVar()
         self.state_true_bearing = tk.StringVar()
         self.state_slide = tk.StringVar()
+        self.state_skew = tk.StringVar()
         self.state_side = tk.StringVar()
         self.state_distance_from_centre = tk.StringVar()
         self.state_all_wheels_on_track = tk.StringVar()
@@ -65,9 +72,10 @@ class LogEventInfoWindow(tk.Toplevel):
         self.make_label_and_value(state_frame, 5, "Heading", self.state_heading)
         self.make_label_and_value(state_frame, 6, "True Bearing", self.state_true_bearing)
         self.make_label_and_value(state_frame, 7, "Slide", self.state_slide)
-        self.make_label_and_value(state_frame, 8, "Side", self.state_side)
-        self.make_label_and_value(state_frame, 9, "Distance from Centre", self.state_distance_from_centre)
-        self.make_label_and_value(state_frame, 10, "All Wheels on Track", self.state_all_wheels_on_track)
+        self.make_label_and_value(state_frame, 8, "Skew", self.state_skew)
+        self.make_label_and_value(state_frame, 9, "Side", self.state_side)
+        self.make_label_and_value(state_frame, 10, "Distance from Centre", self.state_distance_from_centre)
+        self.make_label_and_value(state_frame, 11, "All Wheels on Track", self.state_all_wheels_on_track)
 
         self.action_id = tk.StringVar()
         self.action_steering = tk.StringVar()
@@ -83,13 +91,25 @@ class LogEventInfoWindow(tk.Toplevel):
         self.reward_average = tk.StringVar()
         self.reward_total = tk.StringVar()
         self.discounted_future_reward = tk.StringVar()
-        self.new_reward = tk.StringVar()
 
-        self.make_label_and_value(reward_frame, 0, "Reward", self.reward_value)
-        self.make_label_and_value(reward_frame, 1, "Average so far", self.reward_average)
-        self.make_label_and_value(reward_frame, 2, "Total so far", self.reward_total)
-        self.make_label_and_value(reward_frame, 3, "Discounted future", self.discounted_future_reward)
-        self.make_label_and_value(reward_frame, 4, "New Reward", self.new_reward)
+        df_title = self._make_long_discount_factor_title(0)
+
+        self.make_label_and_value(event_reward_frame, 0, "Reward", self.reward_value)
+        self.make_label_and_value(event_reward_frame, 1, "Average so far", self.reward_average)
+        self.make_label_and_value(event_reward_frame, 2, "Total so far", self.reward_total)
+        self.make_label_and_value(event_reward_frame, 3, df_title, self.discounted_future_reward)
+
+        self.new_reward = tk.StringVar()
+        self.new_discounted_future_reward = tk.StringVar()
+        self.make_label_and_value(new_event_reward_frame, 0, "Reward", self.new_reward)
+        self.make_label_and_value(new_event_reward_frame, 1, df_title, self.new_discounted_future_reward)
+
+        self.other_discounted_future_rewards = []
+        for i in range(discount_factors.get_number_of_discount_factors() - 1):
+            new_tk_var = tk.StringVar()
+            self.other_discounted_future_rewards.append(new_tk_var)
+            df_title = self._make_short_discount_factor_title(i + 1)
+            self.make_label_and_value(discount_factors_frame, i, df_title, new_tk_var)
 
         self.debug_output = tk.StringVar()
 
@@ -98,7 +118,9 @@ class LogEventInfoWindow(tk.Toplevel):
         self.geometry("+%d+%d" % (parent.winfo_rootx(), parent.winfo_rooty()))
 
     def make_label_and_value(self, parent_frame, row, label, tk_variable):
-        tk.Label(parent_frame, text=label + ":").grid(row=row, column=0, pady=5, padx=5, sticky=tk.E)
+        if ":" not in label:
+            label += ":"
+        tk.Label(parent_frame, text=label).grid(row=row, column=0, pady=5, padx=5, sticky=tk.E)
         tk.Label(parent_frame, textvariable=tk_variable).grid(row=row, column=1, pady=5, padx=5, sticky=tk.W)
 
 
@@ -122,6 +144,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.state_heading.set(str(round(event.heading)))
         self.state_true_bearing.set(str(round(event.true_bearing)))
         self.state_slide.set(str(round(event.slide)))
+        self.state_skew.set("TODO")
         self.state_side.set(track.get_position_of_point_relative_to_waypoint((event.x, event.y), event.closest_waypoint_index))
         self.state_distance_from_centre.set(str(round(event.distance_from_center, 2)))
         self.state_all_wheels_on_track.set(str(event.all_wheels_on_track))
@@ -136,10 +159,19 @@ class LogEventInfoWindow(tk.Toplevel):
         self.reward_total.set(get_pretty_large_integer(event.reward_total))
         self.discounted_future_reward.set(get_pretty_large_integer(event.discounted_future_rewards[0]))
         self.new_reward.set(get_pretty_large_float(round(event.new_reward, 5)))
+        self.new_discounted_future_reward.set(get_pretty_large_integer(event.new_discounted_future_reward))
 
         # self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80, ["x", "y", "distance_from_center", "closest_waypoints"]))  # TODO - expose configuration
         self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80, []))  # TODO - expose configuration
         self.lift()
+
+    def _make_long_discount_factor_title(self, factor_id):
+        return "Future:\n" + self._make_short_discount_factor_title(factor_id)
+
+    @staticmethod
+    def _make_short_discount_factor_title(factor_id):
+        factor = discount_factors.get_discount_factor(factor_id)
+        return "( DF = " + str(factor) + " )"
 
 
 def get_formatted_steering(steering_angle):

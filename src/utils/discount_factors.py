@@ -11,6 +11,12 @@ class DiscountFactors:
 
         self._prepare_multipliers()
 
+    def get_discount_factor(self, index: int):
+        return self._discount_factors[index]
+
+    def get_number_of_discount_factors(self):
+        return len(self._discount_factors)
+
     def reset_for_log(self, training_discount_factor):
         if self._discount_factors[0] == training_discount_factor:
             return

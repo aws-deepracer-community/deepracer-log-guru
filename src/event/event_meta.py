@@ -48,6 +48,7 @@ class Event:
         self.sequence_count = 0
         self.discounted_future_rewards = []
         self.new_reward = 0.0
+        self.new_discounted_future_reward = 0.0
 
         self.dodgy_data = False
 

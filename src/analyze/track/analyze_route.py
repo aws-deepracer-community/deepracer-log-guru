@@ -234,7 +234,7 @@ class AnalyzeRoute(TrackAnalyzer):
         self._plot_dot(event, brightness)
 
     def colour_scheme_new_discounted_future_reward(self, event, max_speed, speed_range):
-        percentile = np.searchsorted(self.new_discounted_future_reward_percentiles, event.new_discounted_future_rewards)
+        percentile = np.searchsorted(self.new_discounted_future_reward_percentiles, event.new_discounted_future_reward)
         brightness = min(1, percentile / 100 * 0.9 + 0.1)
         self._plot_dot(event, brightness)
 

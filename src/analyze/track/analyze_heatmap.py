@@ -44,27 +44,21 @@ class AnalyzeHeatmap(TrackAnalyzer):
 
             color_palette = self._appearance_control.get_chosen_color_palette()
 
-            if self._measurement_control.measure_visits():
-                self._heat_map.draw_visits(self.track_graphics, brightness, color_palette)
-            elif self._measurement_control.measure_slide():
-                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 14, 0)
-            elif self._measurement_control.measure_steering_straight():
-                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 30, 0)
-            elif self._measurement_control.measure_event_reward():
-                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
-            elif self._measurement_control.measure_new_event_reward():
-                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
-            elif self._measurement_control.measure_discounted_future_reward():
-                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
-            elif self._measurement_control.measure_smoothness():
-                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
-            else:
+            if self._measurement_control.measure_progress_speed() or self._measurement_control.measure_action_speed() or self._measurement_control.measure_track_speed():
                 max_speed = self.action_space.get_max_speed()
                 min_speed = self.action_space.get_min_speed()
                 if self._measurement_control.measure_progress_speed():
                     max_speed *= 1.2
                     min_speed *= 0.8
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, max_speed, min_speed)
+            elif self._measurement_control.measure_visits():
+                self._heat_map.draw_visits(self.track_graphics, brightness, color_palette)
+            elif self._measurement_control.measure_slide():
+                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 14, 0)
+            elif self._measurement_control.measure_steering_straight():
+                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 30, 0)
+            else:
+                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
 
     def warning_filtered_episodes_changed(self):
         if self._episodes_control.show_filtered():
@@ -141,6 +135,8 @@ class AnalyzeHeatmap(TrackAnalyzer):
                     self._recalculate_measure_new_reward(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_discounted_future_reward():
                     self._recalculate_measure_discounted_future_reward(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
+                elif self._measurement_control.measure_new_discounted_future_reward():
+                    self._recalculate_measure_new_discounted_future_reward(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_slide():
                     self._recalculate_measure_slide(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_steering_straight():
@@ -188,6 +184,12 @@ class AnalyzeHeatmap(TrackAnalyzer):
         e: Episode
         for i, e in enumerate(episodes):
             e.apply_discounted_future_reward_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
+            self.please_wait.set_progress((i + 1) / len(episodes) * 100)
+
+    def _recalculate_measure_new_discounted_future_reward(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
+        e: Episode
+        for i, e in enumerate(episodes):
+            e.apply_new_discounted_future_reward_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
     def _recalculate_measure_slide(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):

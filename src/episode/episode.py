@@ -80,7 +80,7 @@ class Episode:
             self._set_discounted_future_rewards()
             self.discounted_future_rewards = self._get_lists_of_discounted_future_rewards()
 
-            self._set_new_discounted_future_rewards()
+            self._set_new_discounted_future_reward()
             self.new_discounted_future_rewards = self._get_list_of_new_discounted_future_rewards()
         else:
             self.new_rewards = []
@@ -267,9 +267,9 @@ class Episode:
             self.events[i].discounted_future_rewards = discount_factors.get_discounted_future_rewards(
                 self.rewards[i:], True)
 
-    def _set_new_discounted_future_rewards(self):
+    def _set_new_discounted_future_reward(self):
         for i in range(len(self.events)):
-            self.events[i].new_discounted_future_rewards = discount_factors.get_discounted_future_rewards(
+            self.events[i].new_discounted_future_reward = discount_factors.get_discounted_future_rewards(
                 self.new_rewards[i:], False)
 
     def get_list_of_rewards(self):
@@ -298,7 +298,7 @@ class Episode:
     def _get_list_of_new_discounted_future_rewards(self):
         list_of_rewards = []
         for e in self.events:
-            list_of_rewards.append(e.new_discounted_future_rewards)
+            list_of_rewards.append(e.new_discounted_future_reward)
         return np.array(list_of_rewards)
 
     def _get_action_frequency(self, action_space: ActionSpace):
@@ -360,6 +360,11 @@ class Episode:
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
                                         self._get_event_future_discounted_reward)
 
+    def apply_new_discounted_future_reward_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                 action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_new_future_discounted_reward)
+
     def apply_slide_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
                                 action_space_filter: ActionSpaceFilter, waypoint_range):
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
@@ -398,6 +403,10 @@ class Episode:
     @staticmethod
     def _get_event_future_discounted_reward(event: Event):
         return max(0, event.discounted_future_rewards[0])
+
+    @staticmethod
+    def _get_event_new_future_discounted_reward(event: Event):
+        return max(0, event.new_discounted_future_reward)
 
     @staticmethod
     def _get_event_slide(event: Event):

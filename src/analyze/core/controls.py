@@ -208,8 +208,14 @@ class MeasurementControl(Control):
     def measure_event_reward(self):
         return self._check_if_measurement(MeasurementControl._EVENT_REWARD)
 
+    def measure_new_event_reward(self):
+        return self._check_if_measurement(MeasurementControl._NEW_EVENT_REWARD)
+
     def measure_discounted_future_reward(self):
         return self._check_if_measurement(MeasurementControl._FUTURE_REWARD)
+
+    def measure_new_discounted_future_reward(self):
+        return self._check_if_measurement(MeasurementControl._NEW_FUTURE_REWARD)
 
     def measure_action_speed(self):
         return self._check_if_measurement(MeasurementControl._ACTION_SPEED)
@@ -235,8 +241,7 @@ class MeasurementControl(Control):
     def measure_visits(self):
         return self._check_if_measurement(MeasurementControl._VISITS)
 
-    def measure_new_event_reward(self):
-        return self._check_if_measurement(MeasurementControl._NEW_EVENT_REWARD)
+
 
 class ConvergenceGranularityControl(Control):
 

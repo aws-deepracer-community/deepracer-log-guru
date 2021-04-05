@@ -44,6 +44,7 @@ class AnalyzeRoute(TrackAnalyzer):
         self.reward_percentiles = None
         self.new_reward_percentiles = None
         self.discounted_future_reward_percentiles = None
+        self.new_discounted_future_reward_percentiles = None
 
     def build_control_frame(self, control_frame):
 
@@ -144,15 +145,22 @@ class AnalyzeRoute(TrackAnalyzer):
                 all_rewards = np.append(all_rewards, e.rewards)
             self.reward_percentiles = np.percentile(all_rewards, np.arange(100))
 
-            all_discounted_future_rewards = self.all_episodes[0].discounted_future_rewards
-            for e in self.all_episodes[1:]:
-                all_discounted_future_rewards = np.append(all_discounted_future_rewards, e.discounted_future_rewards)
-            self.discounted_future_reward_percentiles = np.percentile(all_discounted_future_rewards, np.arange(100))
+            self.discounted_future_reward_percentiles = []
+            for i in range(len(self.all_episodes[0].discounted_future_rewards)):
+                all_discounted_future_rewards = self.all_episodes[0].discounted_future_rewards[i]
+                for e in self.all_episodes[1:]:
+                    all_discounted_future_rewards = np.append(all_discounted_future_rewards, e.discounted_future_rewards[i])
+                self.discounted_future_reward_percentiles.append(np.percentile(all_discounted_future_rewards, np.arange(100)))
 
             all_new_rewards = self.all_episodes[0].new_rewards
             for e in self.all_episodes[1:]:
                 all_new_rewards = np.append(all_new_rewards, e.new_rewards)
             self.new_reward_percentiles = np.percentile(all_new_rewards, np.arange(100))
+
+            all_new_discounted_future_rewards = self.all_episodes[0].new_discounted_future_rewards
+            for e in self.all_episodes[1:]:
+                all_new_discounted_future_rewards = np.append(all_new_discounted_future_rewards, e.new_discounted_future_rewards)
+            self.new_discounted_future_reward_percentiles = np.percentile(all_new_discounted_future_rewards, np.arange(100))
         else:
             self.reward_percentiles = None
 
@@ -176,6 +184,8 @@ class AnalyzeRoute(TrackAnalyzer):
             plot_event_method = self.colour_scheme_new_reward
         elif self._measurement_control.measure_discounted_future_reward():
             plot_event_method = self.colour_scheme_discounted_future_reward
+        elif self._measurement_control.measure_new_discounted_future_reward():
+            plot_event_method = self.colour_scheme_new_discounted_future_reward
         elif self._measurement_control.measure_action_speed():
             plot_event_method = self.colour_scheme_action_speed
         elif self._measurement_control.measure_track_speed():
@@ -219,7 +229,12 @@ class AnalyzeRoute(TrackAnalyzer):
         self._plot_dot(event, brightness)
 
     def colour_scheme_discounted_future_reward(self, event, max_speed, speed_range):
-        percentile = np.searchsorted(self.discounted_future_reward_percentiles, event.discounted_future_rewards[0])
+        percentile = np.searchsorted(self.discounted_future_reward_percentiles[0], event.discounted_future_rewards[0])
+        brightness = min(1, percentile / 100 * 0.9 + 0.1)
+        self._plot_dot(event, brightness)
+
+    def colour_scheme_new_discounted_future_reward(self, event, max_speed, speed_range):
+        percentile = np.searchsorted(self.new_discounted_future_reward_percentiles, event.new_discounted_future_rewards)
         brightness = min(1, percentile / 100 * 0.9 + 0.1)
         self._plot_dot(event, brightness)
 

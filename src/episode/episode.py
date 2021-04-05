@@ -72,8 +72,19 @@ class Episode:
         self.set_sequence_length_on_events()
 
         if do_full_analysis:
-            self.set_discounted_future_rewards()
-            self.discounted_future_rewards = self.get_list_of_discounted_future_rewards()
+            self._set_distance_from_center_on_events(track)
+
+            self._set_new_rewards(track)
+            self.new_rewards = self._get_list_of_new_rewards()
+
+            self._set_discounted_future_rewards()
+            self.discounted_future_rewards = self._get_lists_of_discounted_future_rewards()
+
+            self._set_new_discounted_future_rewards()
+            self.new_discounted_future_rewards = self._get_list_of_new_discounted_future_rewards()
+        else:
+            self.new_rewards = []
+            self.new_discounted_future_rewards = []
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -81,14 +92,6 @@ class Episode:
 
         # THIS VARIABLE IS ASSIGNED RETROSPECTIVELY AFTER THE Log CLASS HAS LOADED ALL EPISODES
         self.quarter = None
-
-        # New stuff moved here
-        if do_full_analysis:
-            self.set_distance_from_center_on_events(track)
-            self._set_new_rewards(track)
-            self.new_rewards = self.get_list_of_new_rewards()
-        else:
-            self.new_rewards = []
 
     def get_starting_position_as_percent_from_race_start(self, track :Track):
         first_event_percent = track.get_waypoint_percent_from_race_start(self.events[0].closest_waypoint_index)
@@ -211,7 +214,7 @@ class Episode:
                 self.max_slide = max(self.max_slide, abs(e.slide))
             previous_event = e
 
-    def set_distance_from_center_on_events(self, track :Track):
+    def _set_distance_from_center_on_events(self, track :Track):
         for e in self.events:
             current_location = (e.x, e.y)
             closest_waypoint = track.get_waypoint(e.closest_waypoint_index)
@@ -259,9 +262,15 @@ class Episode:
                 previous_action_id = e.action_taken
             e.sequence_count = sequence
 
-    def set_discounted_future_rewards(self):
+    def _set_discounted_future_rewards(self):
         for i in range(len(self.events)):
-            self.events[i].discounted_future_rewards = discount_factors.get_discounted_future_rewards(self.rewards[i:])
+            self.events[i].discounted_future_rewards = discount_factors.get_discounted_future_rewards(
+                self.rewards[i:], True)
+
+    def _set_new_discounted_future_rewards(self):
+        for i in range(len(self.events)):
+            self.events[i].new_discounted_future_rewards = discount_factors.get_discounted_future_rewards(
+                self.new_rewards[i:], False)
 
     def get_list_of_rewards(self):
         list_of_rewards = []
@@ -269,16 +278,27 @@ class Episode:
             list_of_rewards.append(e.reward)
         return np.array(list_of_rewards)
 
-    def get_list_of_new_rewards(self):
+    def _get_list_of_new_rewards(self):
         list_of_new_rewards = []
         for e in self.events:
             list_of_new_rewards.append(e.new_reward)
         return np.array(list_of_new_rewards)
 
-    def get_list_of_discounted_future_rewards(self):
+    # List of lists since there is a list of rewards per discount factor (0 = the current DF)
+    def _get_lists_of_discounted_future_rewards(self):
+        all_lists = []
+        for i in range(len(self.events[0].discounted_future_rewards)):
+            list_of_rewards = []
+            for e in self.events:
+                list_of_rewards.append(e.discounted_future_rewards[i])
+            all_lists.append(np.array(list_of_rewards))
+        return all_lists
+
+    # Single list since for NEW future rewards we only do the current DF for efficiency
+    def _get_list_of_new_discounted_future_rewards(self):
         list_of_rewards = []
         for e in self.events:
-            list_of_rewards.append(e.discounted_future_rewards[0])
+            list_of_rewards.append(e.new_discounted_future_rewards)
         return np.array(list_of_rewards)
 
     def _get_action_frequency(self, action_space: ActionSpace):

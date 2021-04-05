@@ -32,12 +32,16 @@ class DiscountFactors:
                 factor *= df
             self._multipliers.append(np.array(multiplier))
 
-    def get_discounted_future_rewards(self, rewards: np.ndarray):
-        discounted_future_rewards = []
+    def get_discounted_future_rewards(self, rewards: np.ndarray, multi_discount_factor: bool):
         look_ahead = min(self._max_steps, len(rewards))
-        for m in self._multipliers:
-            discounted_future_rewards.append(np.sum(np.multiply(rewards[:look_ahead], m[:look_ahead])))
-        return discounted_future_rewards
+        if multi_discount_factor:
+            discounted_future_rewards = []
+            for m in self._multipliers:
+                discounted_future_rewards.append(np.sum(np.multiply(rewards[:look_ahead], m[:look_ahead])))
+            return discounted_future_rewards
+        else:
+            m = self._multipliers[0]
+            return np.sum(np.multiply(rewards[:look_ahead], m[:look_ahead]))
 
     def print_for_debug(self):
         for i, m in enumerate(self._multipliers):

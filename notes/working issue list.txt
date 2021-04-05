@@ -2,6 +2,19 @@
 Finish Soon
 ===========
 
++ Finish testing new reward function integration
++ Correctly populate before & after waypoints
++ Test with complicated DRF style reward functions too
++ Calculate its future discounted new reward too...
+
++ Finish support for all the newly added route/heatmap measurement options
++ Add to them the variety of DF options for current reward (add dynamically to dropdown options etc.)
+
++ Enhance the Episode reward analysis for variations of current/new reward and current/other DF factors
++ Simple graph(s) for extra comparison between discount factors
+
++ Finish simple re-org of config in the "personalize" package instead ...
+
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
 + more testing of colours and heatmaps
 
@@ -31,10 +44,8 @@ Ability to "race" episodes against each other (episodes chosen by filter or favo
 
 Existing Analysis Enhancements
 =============================
-Reward graphs: Graphs to show discount factor effect - e.g. as an addition or variation to normal episode reward graph
 (lap) time correlation with certain actions (e.g. percent of actions that are in the filter, see also +++)
 Offer reward correlations without final reward included in total?...
-Episode route - add acceleration/braking colour scheme ...
 Add waypoint numbers (every 10?) to track views (optional)
 Exit points:
     + show last second or similar as a line (alternative to dots)
@@ -69,7 +80,6 @@ Make graphs interactive - esp. (a) see the data at a point   (b) "goto" that poi
 Ability to join several files together as a single set of episodes for analysis
 Larger text option - for better screen video capture ...
 Add quick keys for all major / most useful menu options
-Ability to try a new reward function
 (in conjunction with existing analysis an option to display new reward instead of or as well as actual reward)
 Ability to calculate "safe distance ahead" and "visible distance ahead" and hence offer as options for episode route INFO and as a COLOUR SCHEME
 
@@ -84,7 +94,7 @@ Code Quality etc.
 =================
 Implement standards
 Add unit tests!!!
-Standardize graph colours as constants
+Standardize graph colours as constants (esp. the C1, C2 etc.)
 Switch meta file format to JSON    (see new user config file as prototype for JSON approach)
 
 Documentation
@@ -120,7 +130,6 @@ Analysis articles - grab ideas from:
 34-ENH  Show lap times as well as # of steps in open file dialog
 32-ENH  Ability to increase text size of menus and frame-based controls etc. (for better YouTube reproduction)
 31-ENH  Ability to see more stats and info across multiple files (esp. the training hyper parameters)  [export button would be nice] [ main thing is to be able to see/review how I tinkered with the hyper parameters (coupled with a reminder of the defaults - so easy to see what changed, and by how much]
-30-ENH  Provide a "future discounted reward" view of current episode
 26-ENH  Bit of fun - ability to simulate one or more episode as real-time "race" around the track
 23-ENH  Ability to extract episode route details (for use in subsequent reward function)  [esp. focussed on giving ALL the inputs including difficult track position calculations etc]
 22-ENH  Add ability to chose favourite episodes   [ideally keep a record in meta file for next time...]
@@ -130,10 +139,8 @@ Analysis articles - grab ideas from:
 14-ENH  Provide "goto" episode
 13-ENH  Provide link to episode on charts like lap time correlation [e.g. click on the plotted dot and it takes you to route analysis]
 12-ENH  Annotate waypoint charts with track features like left, right, straight, hairpin etc. [perhaps also show in episode graphs so user can recognize positions]
- 9-ENH  Ability to try a new reward function
  8-DOC  Provide help / documentation - help menu and info/help icons on the screen
  7-DOC  Document terminology  [User reported things like "filtered" and also especially the different colour schemes for the episode route analysis]
- 6-BUG  *** Previous log event window stays visible when new episode is selected
  5-ENH  Log event info changes width with each event [improved now except for minor jitter - don't fix yet]
 
 

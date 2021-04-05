@@ -594,3 +594,35 @@ class ActionGroupControl(Control):
     def group_by_steering(self):
         return self._group.get() == ActionGroupControl._STEERING
 
+
+class EpisodeRewardTypeControl(Control):
+    _REWARD_PLUS_TOTAL = "Reward + Total"
+    _REWARD_PLUS_FUTURE = "Reward + Future"
+    _NEW_REWARD_PLUS_TOTAL = "New Reward + Total"
+    _NEW_REWARD_PLUS_FUTURE = "New Reward + Future"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Reward Types")
+
+        self._reward_type = tk.StringVar(value=EpisodeRewardTypeControl._REWARD_PLUS_TOTAL)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(EpisodeRewardTypeControl._REWARD_PLUS_TOTAL, self._reward_type)
+        self.add_radiobutton_improved(EpisodeRewardTypeControl._REWARD_PLUS_FUTURE, self._reward_type)
+        self.add_radiobutton_improved(EpisodeRewardTypeControl._NEW_REWARD_PLUS_TOTAL, self._reward_type)
+        self.add_radiobutton_improved(EpisodeRewardTypeControl._NEW_REWARD_PLUS_FUTURE, self._reward_type)
+
+    def show_reward_plus_total(self):
+        return self._reward_type.get() == EpisodeRewardTypeControl._REWARD_PLUS_TOTAL
+
+    def show_reward_plus_future(self):
+        return self._reward_type.get() == EpisodeRewardTypeControl._REWARD_PLUS_FUTURE
+
+    def show_new_reward_plus_total(self):
+        return self._reward_type.get() == EpisodeRewardTypeControl._NEW_REWARD_PLUS_TOTAL
+
+    def show_new_reward_plus_future(self):
+        return self._reward_type.get() == EpisodeRewardTypeControl._NEW_REWARD_PLUS_FUTURE
+
+
+

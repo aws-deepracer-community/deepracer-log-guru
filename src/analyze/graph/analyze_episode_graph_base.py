@@ -16,7 +16,8 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
     def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg,
                  control_frame :tk.Frame, episode_selector :EpisodeSelector,
                  title_word: str, bar_label :str, line_label :str,
-                 show_step_dots :bool=False, use_second_axis_scale :bool=False):
+                 show_step_dots :bool=False, use_second_axis_scale :bool=False,
+                 second_axis_label: str=""):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
@@ -27,6 +28,7 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
         self.title_word = title_word
         self.bar_label= bar_label
         self.line_label = line_label
+        self.second_axis_label = second_axis_label
 
         self.axis_control = EpisodeAxisControl(guru_parent_redraw, control_frame)
 
@@ -36,7 +38,16 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
         episode_selector_frame = self.episode_selector.get_label_frame(control_frame, self.guru_parent_redraw)
         episode_selector_frame.pack()
 
+    def reset_labels(self, title_word: str, bar_label :str, line_label :str, second_axis_label: str=""):
+        self.title_word = title_word
+        self.bar_label = bar_label
+        self.line_label = line_label
+        if second_axis_label:
+            self.second_axis_label = second_axis_label
+
     def add_plots(self):
+        self.additional_preparation_for_plots()
+
         axes :Axes = self.graph_figure.add_subplot()
         if self.use_second_axis_scale:
             axes2 :Axes = axes.twinx()
@@ -97,9 +108,9 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
         # Setup formatting
         axes.set_title(self.title_word + " " + general_title + " for Episode #" + str(self.episode.id))
         axes.set_xlabel(axis_label)
-        axes.set_ylabel(self.title_word + " per Step")
-        if self.use_second_axis_scale:
-            axes2.set_ylabel("Total Reward")
+        axes.set_ylabel(self.bar_label + " per Step")
+        if self.use_second_axis_scale and self.second_axis_label:
+            axes2.set_ylabel(self.second_axis_label)
             axes2.grid(False)
 
         if max_xscale_override:
@@ -197,4 +208,7 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
         pass
 
     def get_plot_line_values_per_step(self, wrap_point):
+        pass
+
+    def additional_preparation_for_plots(self):
         pass

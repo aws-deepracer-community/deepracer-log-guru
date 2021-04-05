@@ -309,8 +309,11 @@ class Episode:
 
     def _set_new_rewards(self, track: Track):
         if NEW_REWARD_FUNCTION:
+            total = 0.0
             for e in self.events:
                 e.new_reward = NEW_REWARD_FUNCTION(e.get_reward_input_params(track))
+                total += e.new_reward
+                e.new_reward_total = total
 
     def get_closest_event_to_point(self, point):
         (x, y) = point

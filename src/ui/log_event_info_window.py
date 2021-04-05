@@ -120,7 +120,7 @@ class LogEventInfoWindow(tk.Toplevel):
     def make_label_and_value(self, parent_frame, row, label, tk_variable):
         if ":" not in label:
             label += ":"
-        tk.Label(parent_frame, text=label).grid(row=row, column=0, pady=5, padx=5, sticky=tk.E)
+        tk.Label(parent_frame, text=label, anchor=tk.E, justify=tk.RIGHT).grid(row=row, column=0, pady=5, padx=5, sticky=tk.E)
         tk.Label(parent_frame, textvariable=tk_variable).grid(row=row, column=1, pady=5, padx=5, sticky=tk.W)
 
 
@@ -160,6 +160,9 @@ class LogEventInfoWindow(tk.Toplevel):
         self.discounted_future_reward.set(get_pretty_large_integer(event.discounted_future_rewards[0]))
         self.new_reward.set(get_pretty_large_float(round(event.new_reward, 5)))
         self.new_discounted_future_reward.set(get_pretty_large_integer(event.new_discounted_future_reward))
+
+        for i, r in enumerate(self.other_discounted_future_rewards):
+            r.set(get_pretty_large_integer(event.discounted_future_rewards[i + 1]))
 
         # self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80, ["x", "y", "distance_from_center", "closest_waypoints"]))  # TODO - expose configuration
         self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80, []))  # TODO - expose configuration

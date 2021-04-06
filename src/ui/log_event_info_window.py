@@ -37,19 +37,21 @@ class LogEventInfoWindow(tk.Toplevel):
         # The debug frame stretches into column 3 so we tell it to absorb stretch instead of messing up data cols 0-2
         self.columnconfigure(3, weight=1)
 
-        self.waypoint_id = tk.StringVar()
         self.waypoint_lap_position = tk.StringVar()
-        self.waypoint_bearing_to_next = tk.StringVar()
-        self.waypoint_distance_to_next = tk.StringVar()
-        self.waypoint_bearing_from_previous = tk.StringVar()
-        self.waypoint_distance_from_previous = tk.StringVar()
+        self.waypoint_previous_id = tk.StringVar()
+        self.waypoint_closest_id = tk.StringVar()
+        self.waypoint_next_id = tk.StringVar()
+        self.waypoint_previous_bearing = tk.StringVar()
+        self.waypoint_current_bearing = tk.StringVar()
+        self.waypoint_next_bearing = tk.StringVar()
 
-        self.make_label_and_value(waypoint_frame, 0, "Waypoint", self.waypoint_id)
-        self.make_label_and_value(waypoint_frame, 1, "Lap Position", self.waypoint_lap_position)
-        self.make_label_and_value(waypoint_frame, 2, "Bearing to Next", self.waypoint_bearing_to_next)
-        self.make_label_and_value(waypoint_frame, 3, "Distance to Next", self.waypoint_distance_to_next)
-        self.make_label_and_value(waypoint_frame, 4, "Bearing from Previous", self.waypoint_bearing_from_previous)
-        self.make_label_and_value(waypoint_frame, 5, "Distance from Previous", self.waypoint_distance_from_previous)
+        self.make_label_and_value(waypoint_frame, 0, "Lap Position", self.waypoint_lap_position)
+        self.make_label_and_value(waypoint_frame, 1, "Previous Waypoint Id", self.waypoint_previous_id)
+        self.make_label_and_value(waypoint_frame, 2, "Closest Waypoint Id", self.waypoint_closest_id)
+        self.make_label_and_value(waypoint_frame, 3, "Next Waypoint Id", self.waypoint_next_id)
+        self.make_label_and_value(waypoint_frame, 4, "Previous Track Bearing", self.waypoint_previous_bearing)
+        self.make_label_and_value(waypoint_frame, 5, "Closest Track Bearing", self.waypoint_current_bearing)
+        self.make_label_and_value(waypoint_frame, 6, "Next Track Bearing", self.waypoint_next_bearing)
 
         self.state_progress = tk.StringVar()
         self.state_time = tk.StringVar()
@@ -125,16 +127,18 @@ class LogEventInfoWindow(tk.Toplevel):
 
 
     def show_event(self, event :Event, track :Track):
+        (previous_bearing, _) = track.get_bearing_and_distance_from_previous_waypoint(event.before_waypoint_index)
+        (current_bearing, _) = track.get_bearing_and_distance_to_next_waypoint(event.before_waypoint_index)
+        (next_bearing, _) = track.get_bearing_and_distance_to_next_waypoint(event.after_waypoint_index)
 
-        (next_bearing, next_distance) = track.get_bearing_and_distance_to_next_waypoint(event.closest_waypoint_index)
-        (prev_bearing, prev_distance) = track.get_bearing_and_distance_from_previous_waypoint(event.closest_waypoint_index)
-
-        self.waypoint_id.set(str(event.closest_waypoint_index))
         self.waypoint_lap_position.set(str(round(track.get_waypoint_percent_from_race_start(event.closest_waypoint_index), 1)) + "  %")
-        self.waypoint_bearing_to_next.set(str(round(next_bearing)))
-        self.waypoint_distance_to_next.set(str(round(next_distance, 2)) + " m")
-        self.waypoint_bearing_from_previous.set(str(round(prev_bearing)))
-        self.waypoint_distance_from_previous.set(str(round(prev_distance, 2)) + " m")
+        self.waypoint_previous_id.set(str(event.before_waypoint_index))
+        self.waypoint_closest_id.set(str(event.closest_waypoint_index))
+        self.waypoint_next_id.set(str(event.after_waypoint_index))
+
+        self.waypoint_previous_bearing.set(str(round(previous_bearing)))
+        self.waypoint_current_bearing.set(str(round(current_bearing)))
+        self.waypoint_next_bearing.set(str(round(next_bearing)))
 
         self.state_progress.set(str(round(event.progress, 1)) + "  %")
         self.state_time.set(str(round(event.time_elapsed, 1)) + "  secs")
@@ -144,7 +148,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.state_heading.set(str(round(event.heading)))
         self.state_true_bearing.set(str(round(event.true_bearing)))
         self.state_slide.set(str(round(event.slide)))
-        self.state_skew.set("TODO")
+        self.state_skew.set(str(round(event.skew)))
         self.state_side.set(track.get_position_of_point_relative_to_waypoint((event.x, event.y), event.closest_waypoint_index))
         self.state_distance_from_centre.set(str(round(event.distance_from_center, 2)))
         self.state_all_wheels_on_track.set(str(event.all_wheels_on_track))

@@ -63,7 +63,6 @@ class Track:
 
     def prepare(self, all_tracks: dict):
         self._assert_sensible_info()
-        self._make_last_waypoint_complete_loop()
         self._process_raw_waypoints()
         self._calculate_distances()
         self._calculate_range_of_coordinates()
@@ -151,11 +150,7 @@ class Track:
 
     def get_bearing_and_distance_to_next_waypoint(self, waypoint_id: int):
         this_point = self._drawing_points[waypoint_id].middle
-
-        if waypoint_id >= len(self._drawing_points) - 1:
-            next_point = self._drawing_points[0].middle
-        else:
-            next_point = self._drawing_points[waypoint_id + 1].middle
+        next_point = self._drawing_points[self._get_next_waypoint_id(waypoint_id)].middle
 
         distance = geometry.get_distance_between_points(this_point, next_point)
         bearing = geometry.get_bearing_between_points(this_point, next_point)
@@ -163,11 +158,7 @@ class Track:
         return bearing, distance
 
     def get_bearing_and_distance_from_previous_waypoint(self, waypoint_id: int):
-        previous_id = waypoint_id - 1
-        if previous_id < 0:
-            previous_id = len(self._drawing_points) - 1
-
-        return self.get_bearing_and_distance_to_next_waypoint(previous_id)
+        return self.get_bearing_and_distance_to_next_waypoint(self._get_previous_waypoint_id(waypoint_id))
 
     def get_new_visitor_map(self, granularity: float):
         return VisitorMap(
@@ -214,13 +205,33 @@ class Track:
         else:
             return "R"
 
-    def get_waypoint_ids_before_and_after(self, point: Point, waypoint_id: int):
+    def get_waypoint_ids_before_and_after(self, point: Point, closest_waypoint_id: int):
         # TODO - do this properly - cannot assume like this that the current waypoint is always behind us!
-        assert 0 <= waypoint_id < len(self._track_waypoints)
-        if waypoint_id >= len(self._track_waypoints) - 1:
-            return waypoint_id, 0
+        assert 0 <= closest_waypoint_id < len(self._track_waypoints)
+
+        previous_id = self._get_previous_waypoint_id(closest_waypoint_id)
+        next_id = self._get_next_waypoint_id(closest_waypoint_id)
+
+        previous_waypoint = self._drawing_points[previous_id].middle
+        next_waypoint = self._drawing_points[next_id].middle
+        closest_waypoint = self._drawing_points[closest_waypoint_id].middle
+
+        target_dist = geometry.get_distance_between_points(closest_waypoint, previous_waypoint)
+        if target_dist == 0.0:
+            previous_ratio = 99999.0
         else:
-            return waypoint_id, waypoint_id + 1
+            previous_ratio = geometry.get_distance_between_points(point, previous_waypoint) / target_dist
+
+        target_dist = geometry.get_distance_between_points(closest_waypoint, next_waypoint)
+        if target_dist == 0.0:
+            next_ratio = 99999.0
+        else:
+            next_ratio = geometry.get_distance_between_points(point, next_waypoint) / target_dist
+
+        if previous_ratio > next_ratio:
+            return closest_waypoint_id, next_id
+        else:
+            return previous_id, closest_waypoint_id
 
     #
     # PRIVATE implementation
@@ -281,7 +292,7 @@ class Track:
         right_outer = previous
 
         edge_error_tolerance = 0.01
-        for i, w in enumerate(self._track_waypoints):
+        for i, w in enumerate(self._track_waypoints + [self._track_waypoints[0]]):
             # Tracks often contain a repeated waypoint, suspect this is deliberate to mess up waypoint algorithms!
             if previous != w:
                 if i < len(self._track_waypoints)-1:
@@ -351,15 +362,17 @@ class Track:
             self._min_y = min(self._min_y, y1, y2, y3)
             self._max_y = max(self._max_y, y1, y2, y3)
 
-    def _make_last_waypoint_complete_loop(self):
-        last_point = self._track_waypoints[-1]
-        first_point = self._track_waypoints[0]
+    def _get_next_waypoint_id(self, waypoint_id):
+        if waypoint_id >= len(self._track_waypoints) - 1:
+            return 0
+        else:
+            return waypoint_id + 1
 
-        (last_x, last_y) = last_point
-        (first_x, first_y) = first_point
-
-        if abs(last_x - first_x) > 0.0001 or abs(last_y - first_y) > 0.0001:
-            self._track_waypoints.append(first_point)
+    def _get_previous_waypoint_id(self, waypoint_id):
+        if waypoint_id < 1:
+            return len(self._track_waypoints) - 1
+        else:
+            return waypoint_id - 1
 
     @staticmethod
     def _get_sector_name(sector_id: int):

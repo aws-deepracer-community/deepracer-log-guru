@@ -3,15 +3,19 @@ Finish Soon
 ===========
 
 + Finish testing new reward function integration
-+ Correctly populate before & after waypoints
 + Test with complicated DRF style reward functions too
-+ Calculate its future discounted new reward too...
 
-+ Finish support for all the newly added route/heatmap measurement options
-+ Add to them the variety of DF options for current reward (add dynamically to dropdown options etc.)
++ Finish support for all the newly added route/heatmap measurement options (acceleration, steering left etc.)
++ Add the (dynamic) variety of DF options for current reward (add dynamically to dropdown options etc.)
 
-+ Enhance the Episode reward analysis for variations of current/new reward and current/other DF factors
++ Heatmap colours may sometimes be based on PERCENTILEs - esp. for rewards  (or performance-efficient compromise)
+(typically match what episode route does, possibly even share config settings to ensure they give similar colours??)
+
++ Enhance the Episode reward analysis for alternate DF factors
++ Fix episode reward scale so that future reward is measured from 0, not the minimum value
+
 + Simple graph(s) for extra comparison between discount factors
+         (a) traditional weight of each future step (b) steps until end versus future reward
 
 + Finish simple re-org of config in the "personalize" package instead ...
 

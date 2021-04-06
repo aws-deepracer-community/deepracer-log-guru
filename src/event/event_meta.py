@@ -36,6 +36,8 @@ class Event:
         self.debug_log = ""
 
         # Data added separately (everything above comes direct from the log, whereas this is calculated by us ...
+        self.before_waypoint_index = 0
+        self.after_waypoint_index = 0
         self.track_speed = 0.0
         self.progress_speed = 0.0
         self.reward_total = 0.0
@@ -43,6 +45,7 @@ class Event:
         self.time_elapsed = 0.0
         self.total_distance_travelled = 0.0
         self.slide = 0.0
+        self.skew = 0.0
         self.true_bearing = 0.0
         self.distance_from_center = 0.0
         self.sequence_count = 0
@@ -66,7 +69,6 @@ class Event:
     def get_reward_input_params(self, current_track: Track):
         point = (self.x, self.y)
         side = current_track.get_position_of_point_relative_to_waypoint(point, self.closest_waypoint_index)
-        (waypoint_id_before, waypoint_id_after) = current_track.get_waypoint_ids_before_and_after(point, self.closest_waypoint_index)
         params = {
             'all_wheels_on_track': self.all_wheels_on_track,
             'x': self.x,
@@ -81,7 +83,7 @@ class Event:
             'track_width': current_track.get_width(),
             'track_length': float(self.track_length),
             'waypoints': current_track.get_all_waypoints(),
-            'closest_waypoints': [int(waypoint_id_before), int(waypoint_id_after)],
+            'closest_waypoints': [int(self.before_waypoint_index), int(self.after_waypoint_index)],
             'is_left_of_center': side == "L",
             'is_reversed': self.status == _STATUS_REVERSED,
             'is_crashed': self.status == _STATUS_CRASHED,

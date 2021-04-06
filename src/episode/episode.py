@@ -73,6 +73,8 @@ class Episode:
 
         if do_full_analysis:
             self._set_distance_from_center_on_events(track)
+            self._set_before_and_after_waypoints_on_events(track)
+            self._set_skew_on_events(track)   # Relies on before and after
 
             self._set_new_rewards(track)
             self.new_rewards = self._get_list_of_new_rewards()
@@ -226,6 +228,18 @@ class Episode:
                 e.distance_from_center = get_distance_of_point_from_line(current_location, closest_waypoint, next_waypoint)
             else:
                 e.distance_from_center = get_distance_of_point_from_line(current_location, closest_waypoint, previous_waypoint)
+
+    def _set_before_and_after_waypoints_on_events(self, track: Track):
+        e: Event
+        for e in self.events:
+            (e.before_waypoint_index, e.after_waypoint_index) = track.get_waypoint_ids_before_and_after((e.x, e.y),
+                                                                                                        e.closest_waypoint_index)
+
+    def _set_skew_on_events(self, track: Track):
+        e: Event
+        for e in self.events:
+            (track_bearing, _) = track.get_bearing_and_distance_to_next_waypoint(e.before_waypoint_index)
+            e.skew = get_turn_between_directions(track_bearing, e.true_bearing)
 
     def set_reward_total_on_events(self):
         reward_total = 0.0

@@ -625,4 +625,26 @@ class EpisodeRewardTypeControl(Control):
         return self._reward_type.get() == EpisodeRewardTypeControl._NEW_REWARD_PLUS_FUTURE
 
 
+class VideoControls(Control):
+    RESET = "Reset"
+    PLAY = "Play"
+    STOP = "Stop"
+
+    def __init__(self, parent_callback: callable, control_frame: tk.Frame):
+        super().__init__(parent_callback, control_frame, "Play")
+
+    def _add_widgets(self):
+        self.add_horizontal_push_button(VideoControls.RESET, self.callback_reset)
+        self.add_horizontal_push_button(VideoControls.PLAY, self.callback_play)
+        self.add_horizontal_push_button(VideoControls.STOP, self.callback_stop)
+
+    def callback_reset(self):
+        self._guru_parent_redraw(VideoControls.RESET)
+
+    def callback_play(self):
+        self._guru_parent_redraw(VideoControls.PLAY)
+
+    def callback_stop(self):
+        self._guru_parent_redraw(VideoControls.STOP)
+
 

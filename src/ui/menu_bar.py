@@ -125,6 +125,9 @@ class MenuBar():
         menu.add_command(label="Heatmap + Exit Points", command=self.main_app.menu_callback_analyze_exit_points_over_heatmap)
 
         menu.add_separator()
+        menu.add_command(label="Simulate Race", command=self.main_app.menu_callback_analyze_race)
+
+        menu.add_separator()
         menu.add_command(label="Training Progress", command=self.main_app.menu_callback_analyze_training_progress)
         menu.add_command(label="Quarterly Results", command=self.main_app.menu_callback_analyze_quarterly_results)
         menu.add_command(label="Complete Lap Percentage", command=self.main_app.menu_callback_analyze_complete_lap_percentage)

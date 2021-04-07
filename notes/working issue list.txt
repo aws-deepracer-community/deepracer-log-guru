@@ -86,7 +86,6 @@ Make graphs interactive - esp. (a) see the data at a point   (b) "goto" that poi
 Ability to join several files together as a single set of episodes for analysis
 Larger text option - for better screen video capture ...
 Add quick keys for all major / most useful menu options
-(in conjunction with existing analysis an option to display new reward instead of or as well as actual reward)
 Ability to calculate "safe distance ahead" and "visible distance ahead" and hence offer as options for episode route INFO and as a COLOUR SCHEME
 
 
@@ -148,7 +147,4 @@ Analysis articles - grab ideas from:
  8-DOC  Provide help / documentation - help menu and info/help icons on the screen
  7-DOC  Document terminology  [User reported things like "filtered" and also especially the different colour schemes for the episode route analysis]
  5-ENH  Log event info changes width with each event [improved now except for minor jitter - don't fix yet]
-
-
-
 

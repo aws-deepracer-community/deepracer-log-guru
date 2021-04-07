@@ -24,11 +24,13 @@ class Control:
         self._row = None
         self._row_right = None
         self._label_frame = None
+        self._column = None
 
     def add_to_control_frame(self):
         self._label_frame = tk.LabelFrame(self._control_frame, text=self._title)
         self._row = 0
         self._row_right = 0
+        self._column = 0
         self._add_widgets()
         self._label_frame.pack(pady=4, fill=tk.X, padx=10)
 
@@ -86,6 +88,12 @@ class Control:
         tk.OptionMenu(self._label_frame, tk_var, *values,
                       command=callback).grid(column=0, row=self._row + 1, pady=1, padx=5, sticky=tk.W)
         self._row += 2
+
+    def add_horizontal_push_button(self, title: str, callback: callable):
+        tk.Button(self._label_frame, text=title,
+                  command=callback).grid(column=self._column, row=self._row, padx=5, pady=5, sticky="W")
+        self._column += 1
+
 
     #
     # ABSTRACT interface

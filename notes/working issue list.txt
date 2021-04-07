@@ -2,6 +2,9 @@
 Finish Soon
 ===========
 
++ Heatmap when not visit-based is too keen to eliminate stuff (allow /20 or /30 instead of /10 minimum??)
++ Heatmap consider making the "start" exclusion a little bit shorter?
+
 + Finish testing new reward function integration
 + Test with complicated DRF style reward functions too
 
@@ -12,7 +15,6 @@ Finish Soon
 (typically match what episode route does, possibly even share config settings to ensure they give similar colours??)
 
 + Enhance the Episode reward analysis for alternate DF factors
-+ Fix episode reward scale so that future reward is measured from 0, not the minimum value
 
 + Simple graph(s) for extra comparison between discount factors
          (a) traditional weight of each future step (b) steps until end versus future reward

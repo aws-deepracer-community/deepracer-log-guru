@@ -97,7 +97,7 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
         plot_y_bar_values_per_step = self.get_plot_bar_values_per_step(wrap_point)
         plot_y_line_values_per_step = self.get_plot_line_values_per_step(wrap_point)
 
-        axes.fill_between(plot_x, plot_y_bar_values_per_step, step="post", color="C1", label=self.bar_label)
+        axes.fill_between(plot_x, plot_y_bar_values_per_step, step="mid", color="C1", label=self.bar_label)
         if self.show_step_dots:
             axes.plot(plot_x, plot_y_bar_values_per_step, "o", color="black", markersize=3, label="Step")
         if self.use_second_axis_scale:
@@ -112,6 +112,7 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
         if self.use_second_axis_scale and self.second_axis_label:
             axes2.set_ylabel(self.second_axis_label)
             axes2.grid(False)
+            axes2.set_ybound(lower=0)
 
         if max_xscale_override:
             axes.set_xbound(0, max_xscale_override)

@@ -10,7 +10,7 @@ class TrackGraphics:
 
         self.ring_highlight_widgets = []
         self.angle_line_highlight_widgets = []
-
+        self.car_widgets = []
 
     def reset_to_blank(self):
         self.canvas.delete("all")
@@ -81,7 +81,7 @@ class TrackGraphics:
         x2 = (x2 - self.min_x) * self.scale
         y2 = (self.max_y - y2) * self.scale
 
-        self.canvas.create_rectangle(x, y, x2, y2, fill=colour, width=0)
+        return self.canvas.create_rectangle(x, y, x2, y2, fill=colour, width=0)
 
     def plot_polygon(self, points, colour):
 
@@ -93,9 +93,7 @@ class TrackGraphics:
 
         self.canvas.create_polygon(points_as_array, fill=colour, width=2)
 
-
     def get_real_point_for_widget_location(self, x, y):
-
         return (x / self.scale) + self.min_x, self.max_y - (y / self.scale)
 
     def plot_ring_highlight(self, point, r, colour, line_width):
@@ -113,4 +111,12 @@ class TrackGraphics:
     def remove_highlights(self):
         for w in self.ring_highlight_widgets + self.angle_line_highlight_widgets:
             self.canvas.delete(w)
+
+    def draw_car(self, x: float, y: float):
+        self.car_widgets.append(self.plot_box(x - 0.15, y - 0.15, x + 0.15, y + 0.15, "red"))
+
+    def remove_cars(self):
+        for w in self.car_widgets:
+            self.canvas.delete(w)
+        self.car_widgets = []
 

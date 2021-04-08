@@ -35,7 +35,15 @@ class AnalyzeRace(TrackAnalyzer):
         self._timer.redraw()
 
     def _draw(self, simulation_time):
-        print("Time = ", round(simulation_time, 1))
+        # print("Time = ", round(simulation_time, 1))
+        self.track_graphics.remove_cars()
+
+        if self.filtered_episodes:
+            episode = self.filtered_episodes[0]
+            event_index = min(int(simulation_time * 15), len(episode.events) - 1)
+            event = episode.events[event_index]
+            self.track_graphics.draw_car(event.x, event.y)
+        # print("Draw is done")
 
     class Timer:
         def __init__(self, redraw_callback: callable):
@@ -49,7 +57,7 @@ class AnalyzeRace(TrackAnalyzer):
         def stop(self):
             if self._keep_running:
                 self._keep_running = False
-                self._thread.join()
+                # self._thread.join()
 
         def play(self):
             if not self._keep_running:
@@ -58,7 +66,7 @@ class AnalyzeRace(TrackAnalyzer):
                 self._thread.start()
 
         def reset(self):
-            if self._simulation_start_time > 0 or self._simulation_stop_time > 0:
+            if self._simulation_start_time > 0 or self._simulation_stop_time > 0 or self._keep_running:
                 self.stop()
                 self._simulation_stop_time = 0.0
                 self._simulation_start_time = 0.0
@@ -74,10 +82,12 @@ class AnalyzeRace(TrackAnalyzer):
             self._simulation_start_time = self._simulation_stop_time
             self._machine_start_time = time.time()
             while self._keep_running:
-                time.sleep(0.1)
+                time.sleep(0.05)
                 simulation_time = self.get_current_simulation_time()
                 self._redraw_callback(simulation_time)
+                # print("Looping", round(simulation_time, 2))
             self._simulation_stop_time = self.get_current_simulation_time()
+            # print("Thread Ending.....")
 
         def get_current_simulation_time(self):
             return time.time() - self._machine_start_time + self._simulation_start_time

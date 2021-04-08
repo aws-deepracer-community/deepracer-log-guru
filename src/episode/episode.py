@@ -538,6 +538,22 @@ class Episode:
 
         return False
 
+    def get_latest_event_index_on_or_before(self, required_time):
+        if required_time <= 0.0:
+            return 0
+        elif required_time >= self.events[-1].time_elapsed:
+            return len(self.events) - 1
+        else:
+            events_per_second = len(self.events) / self.events[-1].time_elapsed
+            index = int(events_per_second * required_time)
+
+            while self.events[index].time_elapsed < required_time:
+                index += 1
+
+            while self.events[index].time_elapsed > required_time:
+                index -= 1
+
+            return index
 
 def are_close_waypoint_ids(id1, id2, track :Track):
     if abs(id1 - id2) <= 2:

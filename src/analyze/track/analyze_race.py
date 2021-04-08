@@ -37,14 +37,18 @@ class AnalyzeRace(TrackAnalyzer):
     def _draw(self, simulation_time):
         print("Time = ", round(simulation_time, 2))
         self.track_graphics.prepare_to_remove_old_cars()
+        all_done = True
+        colours = ["red", "green", "blue"]
         if self.filtered_episodes:
-            episode = self.filtered_episodes[0]
-            event_index = min(int(simulation_time * 15), len(episode.events) - 1)
-            event = episode.events[event_index]
-            self.track_graphics.draw_car(event.x, event.y)
-            if event_index == len(episode.events) - 1:
-                self._timer.soft_stop()
+            for i, episode in enumerate(self.filtered_episodes[0:3]):
+                event_index = episode.get_latest_event_index_on_or_before(simulation_time)
+                event = episode.events[event_index]
+                self.track_graphics.draw_car(event.x, event.y, colours[i])
+                if event_index < len(episode.events) - 1:
+                    all_done = False
         self.track_graphics.remove_cars()
+        if all_done:
+            self._timer.soft_stop()
 
     class Timer:
         def __init__(self, redraw_callback: callable):
@@ -59,8 +63,9 @@ class AnalyzeRace(TrackAnalyzer):
         def stop(self):
             if self._keep_running:
                 self._keep_running = False
-            while self._is_still_running:
-                time.sleep(0.02)
+            stop_time = time.time()   # Sometimes gets stuck, don't know why
+            while self._is_still_running and time.time() - stop_time < 1:
+                time.sleep(0.05)
 
         def soft_stop(self):
             self._keep_running = False
@@ -90,7 +95,7 @@ class AnalyzeRace(TrackAnalyzer):
             while self._keep_running:
                 simulation_time = self.get_current_simulation_time()
                 self._redraw_callback(simulation_time)
-                time.sleep(0.05)
+                time.sleep(0.02)
             self._simulation_stop_time = self.get_current_simulation_time()
             self._is_still_running = False
 

@@ -35,15 +35,16 @@ class AnalyzeRace(TrackAnalyzer):
         self._timer.redraw()
 
     def _draw(self, simulation_time):
-        # print("Time = ", round(simulation_time, 1))
-        self.track_graphics.remove_cars()
-
+        print("Time = ", round(simulation_time, 2))
+        self.track_graphics.prepare_to_remove_old_cars()
         if self.filtered_episodes:
             episode = self.filtered_episodes[0]
             event_index = min(int(simulation_time * 15), len(episode.events) - 1)
             event = episode.events[event_index]
             self.track_graphics.draw_car(event.x, event.y)
-        # print("Draw is done")
+            if event_index == len(episode.events) - 1:
+                self._timer.soft_stop()
+        self.track_graphics.remove_cars()
 
     class Timer:
         def __init__(self, redraw_callback: callable):
@@ -51,52 +52,47 @@ class AnalyzeRace(TrackAnalyzer):
             self._simulation_start_time = 0.0
             self._simulation_stop_time = 0.0
             self._keep_running = False
+            self._is_still_running = False
             self._thread = None
             self._redraw_callback = redraw_callback
 
         def stop(self):
             if self._keep_running:
                 self._keep_running = False
-                # self._thread.join()
+            while self._is_still_running:
+                time.sleep(0.02)
+
+        def soft_stop(self):
+            self._keep_running = False
 
         def play(self):
-            if not self._keep_running:
+            if not self._keep_running and not self._is_still_running:
                 self._keep_running = True
                 self._thread = threading.Thread(target=self._run_until_stopped)
                 self._thread.start()
 
         def reset(self):
-            if self._simulation_start_time > 0 or self._simulation_stop_time > 0 or self._keep_running:
-                self.stop()
-                self._simulation_stop_time = 0.0
-                self._simulation_start_time = 0.0
-                self._redraw_callback(0.0)
+            self.stop()
+            self._simulation_stop_time = 0.0
+            self._simulation_start_time = 0.0
+            self._redraw_callback(0.0)
 
         def redraw(self):
-            if self._keep_running:
+            if self._is_still_running:
                 self._redraw_callback(self.get_current_simulation_time())
             else:
                 self._redraw_callback(self._simulation_stop_time)
 
         def _run_until_stopped(self):
+            self._is_still_running = True
             self._simulation_start_time = self._simulation_stop_time
             self._machine_start_time = time.time()
             while self._keep_running:
-                time.sleep(0.05)
                 simulation_time = self.get_current_simulation_time()
                 self._redraw_callback(simulation_time)
-                # print("Looping", round(simulation_time, 2))
+                time.sleep(0.05)
             self._simulation_stop_time = self.get_current_simulation_time()
-            # print("Thread Ending.....")
+            self._is_still_running = False
 
         def get_current_simulation_time(self):
             return time.time() - self._machine_start_time + self._simulation_start_time
-
-
-
-
-
-
-
-
-

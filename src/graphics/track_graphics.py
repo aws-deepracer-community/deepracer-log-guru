@@ -11,6 +11,7 @@ class TrackGraphics:
         self.ring_highlight_widgets = []
         self.angle_line_highlight_widgets = []
         self.car_widgets = []
+        self.old_car_widgets = []
 
     def reset_to_blank(self):
         self.canvas.delete("all")
@@ -115,8 +116,11 @@ class TrackGraphics:
     def draw_car(self, x: float, y: float):
         self.car_widgets.append(self.plot_box(x - 0.15, y - 0.15, x + 0.15, y + 0.15, "red"))
 
-    def remove_cars(self):
-        for w in self.car_widgets:
-            self.canvas.delete(w)
+    def prepare_to_remove_old_cars(self):
+        self.old_car_widgets = self.car_widgets.copy()
         self.car_widgets = []
 
+    def remove_cars(self):
+        for w in self.old_car_widgets:
+            self.canvas.delete(w)
+        self.old_car_widgets = []

@@ -113,8 +113,9 @@ class TrackGraphics:
         for w in self.ring_highlight_widgets + self.angle_line_highlight_widgets:
             self.canvas.delete(w)
 
-    def draw_car(self, x: float, y: float, colour: str):
+    def draw_car(self, x: float, y: float, colour: str, heading: float):
         self.car_widgets.append(self.plot_box(x - 0.15, y - 0.15, x + 0.15, y + 0.15, colour))
+        self.car_widgets.append(self.plot_angle_line((x, y), heading, 1, 3, colour))
 
     def prepare_to_remove_old_cars(self):
         self.old_car_widgets = self.car_widgets.copy()

@@ -1,5 +1,6 @@
 import threading
 import time
+import src.utils.geometry as geometry
 
 import tkinter as tk
 
@@ -54,19 +55,21 @@ class AnalyzeRace(TrackAnalyzer):
         before_event = episode.events[event_index]
 
         if event_index == len(episode.events) - 1:
-            self.track_graphics.draw_car(before_event.x, before_event.y, colour)
+            self.track_graphics.draw_car(before_event.x, before_event.y, colour, before_event.heading)
         else:
             after_event = episode.events[event_index + 1]
             event_x_gap = after_event.x - before_event.x
             event_y_gap = after_event.y - before_event.y
             event_time_gap = after_event.time_elapsed - before_event.time_elapsed
+            event_heading_gap = geometry.get_turn_between_directions(before_event.heading, after_event.heading)
 
             ratio = (simulation_time - before_event.time_elapsed) / event_time_gap
 
             x = before_event.x + ratio * event_x_gap
             y = before_event.y + ratio * event_y_gap
+            heading = geometry.get_angle_in_proper_range(before_event.heading + ratio * event_heading_gap)
 
-            self.track_graphics.draw_car(x, y, colour)
+            self.track_graphics.draw_car(x, y, colour, heading)
 
     class Timer:
         def __init__(self, redraw_callback: callable):

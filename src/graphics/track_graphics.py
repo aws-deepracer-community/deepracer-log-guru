@@ -1,5 +1,9 @@
 from tkinter import *
 import math
+import src.utils.geometry as geometry
+
+CAR_LENGTH = 1       # TODO - get more accurate values based on real DeepRacer dimensions
+CAR_WIDTH = 0.5
 
 class TrackGraphics:
     def __init__(self, canvas:Canvas):
@@ -54,16 +58,8 @@ class TrackGraphics:
 
         return self.canvas.create_line(x, y, x2, y2, fill=fill_colour, width=width, dash=dash_pattern)
 
-    def plot_angle_line(self, start_point, heading, distance, width, fill_colour):
-        (x, y) = start_point
-
-        radians_to_target = math.radians(heading)
-
-        x2 = x + math.cos(radians_to_target) * distance
-        y2 = y + math.sin(radians_to_target) * distance
-
-        end_point = (x2, y2)
-
+    def plot_angle_line(self, start_point, bearing, distance, width, fill_colour):
+        end_point = geometry.get_point_at_bearing(start_point, bearing, distance)
         return self.plot_line(start_point, end_point, width, fill_colour)
 
     def plot_text(self, point, text_string, font_size, colour: str):
@@ -92,7 +88,7 @@ class TrackGraphics:
             points_as_array.append((x - self.min_x) * self.scale)
             points_as_array.append((self.max_y - y) * self.scale)
 
-        self.canvas.create_polygon(points_as_array, fill=colour, width=2)
+        return self.canvas.create_polygon(points_as_array, fill=colour, width=2)
 
     def get_real_point_for_widget_location(self, x, y):
         return (x / self.scale) + self.min_x, self.max_y - (y / self.scale)
@@ -114,8 +110,22 @@ class TrackGraphics:
             self.canvas.delete(w)
 
     def draw_car(self, x: float, y: float, colour: str, heading: float):
-        self.car_widgets.append(self.plot_box(x - 0.15, y - 0.15, x + 0.15, y + 0.15, colour))
-        self.car_widgets.append(self.plot_angle_line((x, y), heading, 1, 3, colour))
+
+        middle = (x, y)
+        front_middle = geometry.get_point_at_bearing(middle, heading, CAR_LENGTH / 2)
+        front_left = geometry.get_point_at_bearing(front_middle, heading + 90, CAR_WIDTH / 2)
+        front_right = geometry.get_point_at_bearing(front_middle, heading - 90, CAR_WIDTH / 2)
+
+        rear_middle = geometry.get_point_at_bearing(middle, heading, -CAR_LENGTH / 2)
+        rear_left = geometry.get_point_at_bearing(rear_middle, heading + 90, CAR_WIDTH / 2)
+        rear_right = geometry.get_point_at_bearing(rear_middle, heading - 90, CAR_WIDTH / 2)
+
+        self.car_widgets.append(self.plot_polygon([front_left, front_right, rear_right, rear_left], colour))
+
+
+
+        # self.car_widgets.append(self.plot_box(x - 0.15, y - 0.15, x + 0.15, y + 0.15, colour))
+        # self.car_widgets.append(self.plot_angle_line((x, y), heading, 1, 3, colour))
 
     def prepare_to_remove_old_cars(self):
         self.old_car_widgets = self.car_widgets.copy()

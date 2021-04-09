@@ -12,12 +12,14 @@ def get_distance_between_points(first, second):
 
     return math.sqrt(x_diff * x_diff + y_diff * y_diff)
 
+
 def get_bearing_between_points(start, finish):
     (start_x, start_y) = start
     (finish_x, finish_y) = finish
 
     direction_in_radians = math.atan2(finish_y - start_y, finish_x - start_x)
     return math.degrees(direction_in_radians)
+
 
 def get_angle_in_proper_range(angle):
     if angle >= 180:
@@ -78,3 +80,14 @@ def is_left_bearing(bearing: float) -> bool:
 
 def is_right_bearing(bearing: float) -> bool:
     return bearing < -0.0001
+
+
+def get_point_at_bearing(start_point, bearing: float, distance: float):
+    (x, y) = start_point
+
+    radians_to_target = math.radians(bearing)
+
+    x2 = x + math.cos(radians_to_target) * distance
+    y2 = y + math.sin(radians_to_target) * distance
+
+    return x2, y2

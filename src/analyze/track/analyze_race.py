@@ -4,6 +4,7 @@ import time
 import tkinter as tk
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
+from src.episode.episode import Episode
 from src.graphics.track_graphics import TrackGraphics
 
 from src.analyze.core.controls import VideoControls
@@ -41,14 +42,31 @@ class AnalyzeRace(TrackAnalyzer):
         colours = ["red", "green", "blue"]
         if self.filtered_episodes:
             for i, episode in enumerate(self.filtered_episodes[0:3]):
-                event_index = episode.get_latest_event_index_on_or_before(simulation_time)
-                event = episode.events[event_index]
-                self.track_graphics.draw_car(event.x, event.y, colours[i])
-                if event_index < len(episode.events) - 1:
+                self._draw_episode_car(episode, simulation_time, colours[i])
+                if simulation_time < episode.time_taken:
                     all_done = False
         self.track_graphics.remove_cars()
         if all_done:
             self._timer.soft_stop()
+
+    def _draw_episode_car(self, episode: Episode, simulation_time: float, colour: str):
+        event_index = episode.get_latest_event_index_on_or_before(simulation_time)
+        before_event = episode.events[event_index]
+
+        if event_index == len(episode.events) - 1:
+            self.track_graphics.draw_car(before_event.x, before_event.y, colour)
+        else:
+            after_event = episode.events[event_index + 1]
+            event_x_gap = after_event.x - before_event.x
+            event_y_gap = after_event.y - before_event.y
+            event_time_gap = after_event.time_elapsed - before_event.time_elapsed
+
+            ratio = (simulation_time - before_event.time_elapsed) / event_time_gap
+
+            x = before_event.x + ratio * event_x_gap
+            y = before_event.y + ratio * event_y_gap
+
+            self.track_graphics.draw_car(x, y, colour)
 
     class Timer:
         def __init__(self, redraw_callback: callable):
@@ -63,9 +81,11 @@ class AnalyzeRace(TrackAnalyzer):
         def stop(self):
             if self._keep_running:
                 self._keep_running = False
-            stop_time = time.time()   # Sometimes gets stuck, don't know why
-            while self._is_still_running and time.time() - stop_time < 1:
-                time.sleep(0.05)
+            self._thread.join(0.2)
+            print(self._is_still_running)
+            # stop_time = time.time()   # Sometimes gets stuck, don't know why
+            # while self._is_still_running and time.time() - stop_time < 1:
+            #    time.sleep(0.05)
 
         def soft_stop(self):
             self._keep_running = False
@@ -74,6 +94,7 @@ class AnalyzeRace(TrackAnalyzer):
             if not self._keep_running and not self._is_still_running:
                 self._keep_running = True
                 self._thread = threading.Thread(target=self._run_until_stopped)
+                self._thread.daemon = True   # Set as daemon so thread is killed if main GUI is closed
                 self._thread.start()
 
         def reset(self):

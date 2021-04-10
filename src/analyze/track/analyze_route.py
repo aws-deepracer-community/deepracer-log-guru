@@ -1,16 +1,16 @@
 import tkinter as tk
 
+from src.configuration.real_world import BOX_OBSTACLE_LENGTH, BOX_OBSTACLE_WIDTH, CAMERA_VISION_ANGLE
+from src.personalize.configuration.appearance import EVENT_HIGHLIGHT_COLOUR, TRUE_HEADING_HIGHLIGHT_COLOUR
+
 import src.secret_sauce.glue.glue as ss
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.event.event_meta import Event
 from src.graphics.track_graphics import TrackGraphics
-from src.personalize.configuration.appearance import EVENT_HIGHLIGHT_COLOUR, TRUE_HEADING_HIGHLIGHT_COLOUR
 from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.selector.episode_selector import EpisodeSelector
-
 from src.analyze.core.controls import MeasurementControl, TrackAppearanceControl, MoreFiltersControl
 from src.utils.colors import get_color_for_data, ColorPalette
-from src.configuration.real_world import BOX_OBSTACLE_LENGTH, BOX_OBSTACLE_WIDTH
 
 _WORST_SLIDE = 20
 _HIGHEST_STEERING = 30
@@ -107,10 +107,10 @@ class AnalyzeRoute(TrackAnalyzer):
             if self._show_camera_vision:
                 dash_pattern = (1, 1)
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
-                                                              self.chosen_event.heading + 60, 2, 3,
+                                                              self.chosen_event.heading + CAMERA_VISION_ANGLE / 2, 2, 3,
                                                               EVENT_HIGHLIGHT_COLOUR, dash_pattern)
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
-                                                              self.chosen_event.heading - 60, 2, 3,
+                                                              self.chosen_event.heading - CAMERA_VISION_ANGLE / 2, 2, 3,
                                                               EVENT_HIGHLIGHT_COLOUR, dash_pattern)
             if self._show_true_bearing:
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),

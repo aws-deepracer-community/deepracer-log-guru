@@ -147,9 +147,11 @@ class AnalyzeRoute(TrackAnalyzer):
     def draw_episode(self, episode):
 
         for obj in episode.object_locations:
+            track_bearing = self.current_track.get_track_bearing_at_point(obj)
             (x, y) = obj
-            size = 0.4
-            self.track_graphics.plot_box(x - size/2, y - size/2, x + size/2, y + size/2, "red")
+            BOX_OBSTACLE_WIDTH = 0.38
+            BOX_OBSTACLE_LENGTH = 0.24
+            self.track_graphics.plot_angled_box(x, y, BOX_OBSTACLE_WIDTH, BOX_OBSTACLE_LENGTH, "red", track_bearing)
 
         if self._measurement_control.measure_event_reward():
             plot_event_method = self.colour_scheme_reward

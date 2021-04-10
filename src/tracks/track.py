@@ -33,6 +33,12 @@ class Track:
     def get_all_waypoints(self):
         return self._track_waypoints
 
+    def get_track_bearing_at_point(self, point):
+        closest_waypoint = self._get_closest_waypoint_id(point)
+        (before_waypoint, after_waypoint) = self.get_waypoint_ids_before_and_after(point, closest_waypoint)
+        return geometry.get_bearing_between_points(self._track_waypoints[before_waypoint],
+                                                   self._track_waypoints[after_waypoint])
+
     def get_previous_different_waypoint(self, waypoint_id: int):
         (avoid_x, avoid_y) = self.get_waypoint(waypoint_id)
         (result_x, result_y) = (avoid_x, avoid_y)
@@ -206,7 +212,6 @@ class Track:
             return "R"
 
     def get_waypoint_ids_before_and_after(self, point: Point, closest_waypoint_id: int):
-        # TODO - do this properly - cannot assume like this that the current waypoint is always behind us!
         assert 0 <= closest_waypoint_id < len(self._track_waypoints)
 
         previous_id = self._get_previous_waypoint_id(closest_waypoint_id)
@@ -281,7 +286,7 @@ class Track:
             prev = d
 
     def _process_raw_waypoints(self):
-        previous = self._track_waypoints[-2]   # Must be penultimate since last one is same as first one
+        previous = self._track_waypoints[-2]  # Must be penultimate since last one is same as first one
 
         (self._min_x, self._min_y) = previous
         (self._max_x, self._max_y) = previous
@@ -295,7 +300,7 @@ class Track:
         for i, w in enumerate(self._track_waypoints + [self._track_waypoints[0]]):
             # Tracks often contain a repeated waypoint, suspect this is deliberate to mess up waypoint algorithms!
             if previous != w:
-                if i < len(self._track_waypoints)-1:
+                if i < len(self._track_waypoints) - 1:
                     future = self._track_waypoints[i + 1]
                 else:
                     future = self._track_waypoints[0]
@@ -373,6 +378,16 @@ class Track:
             return len(self._track_waypoints) - 1
         else:
             return waypoint_id - 1
+
+    def _get_closest_waypoint_id(self, point):
+        distance = geometry.get_distance_between_points(self._track_waypoints[0], point)
+        closest_id = 0
+        for i, w in enumerate(self._track_waypoints[1:]):
+            new_distance = geometry.get_distance_between_points(w, point)
+            if new_distance < distance:
+                distance = new_distance
+                closest_id = i + 1
+        return closest_id
 
     @staticmethod
     def _get_sector_name(sector_id: int):

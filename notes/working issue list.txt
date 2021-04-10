@@ -3,7 +3,7 @@ provide camera view projection 60 degreees each side per
 https://docs.aws.amazon.com/deepracer/latest/developerguide/deepracer-choose-race-type.html
 quote "The camera has 120-degree wide angle lens"
 quote "obstacles are cuboid boxes with the same dimensions (9.5" (L) x 15.25" (W) x 10/5" (H)) as the AWS DeepRacer vehicle's package box."
-
+24cm x 38cm
 
 Finish Soon
 ===========

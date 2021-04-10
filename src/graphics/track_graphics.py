@@ -80,6 +80,19 @@ class TrackGraphics:
 
         return self.canvas.create_rectangle(x, y, x2, y2, fill=colour, width=0)
 
+    def plot_angled_box(self, x: float, y: float, width: float, length: float, colour: str, heading: float):
+
+        middle = (x, y)
+        front_middle = geometry.get_point_at_bearing(middle, heading, length / 2)
+        front_left = geometry.get_point_at_bearing(front_middle, heading + 90, width / 2)
+        front_right = geometry.get_point_at_bearing(front_middle, heading - 90, width / 2)
+
+        rear_middle = geometry.get_point_at_bearing(middle, heading, -length / 2)
+        rear_left = geometry.get_point_at_bearing(rear_middle, heading + 90, width / 2)
+        rear_right = geometry.get_point_at_bearing(rear_middle, heading - 90, width / 2)
+
+        return self.plot_polygon([front_left, front_right, rear_right, rear_left], colour)
+
     def plot_polygon(self, points, colour):
 
         points_as_array = []
@@ -110,22 +123,7 @@ class TrackGraphics:
             self.canvas.delete(w)
 
     def draw_car(self, x: float, y: float, colour: str, heading: float):
-
-        middle = (x, y)
-        front_middle = geometry.get_point_at_bearing(middle, heading, CAR_LENGTH / 2)
-        front_left = geometry.get_point_at_bearing(front_middle, heading + 90, CAR_WIDTH / 2)
-        front_right = geometry.get_point_at_bearing(front_middle, heading - 90, CAR_WIDTH / 2)
-
-        rear_middle = geometry.get_point_at_bearing(middle, heading, -CAR_LENGTH / 2)
-        rear_left = geometry.get_point_at_bearing(rear_middle, heading + 90, CAR_WIDTH / 2)
-        rear_right = geometry.get_point_at_bearing(rear_middle, heading - 90, CAR_WIDTH / 2)
-
-        self.car_widgets.append(self.plot_polygon([front_left, front_right, rear_right, rear_left], colour))
-
-
-
-        # self.car_widgets.append(self.plot_box(x - 0.15, y - 0.15, x + 0.15, y + 0.15, colour))
-        # self.car_widgets.append(self.plot_angle_line((x, y), heading, 1, 3, colour))
+        self.car_widgets.append(self.plot_angled_box(x, y, CAR_WIDTH, CAR_LENGTH, colour, heading))
 
     def prepare_to_remove_old_cars(self):
         self.old_car_widgets = self.car_widgets.copy()

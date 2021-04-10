@@ -387,6 +387,11 @@ class Episode:
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
                                         self._get_event_slide)
 
+    def apply_skew_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                               action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_skew)
+
     def apply_steering_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
                                    action_space_filter: ActionSpaceFilter, waypoint_range):
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
@@ -428,6 +433,10 @@ class Episode:
     @staticmethod
     def _get_event_slide(event: Event):
         return abs(event.slide)
+
+    @staticmethod
+    def _get_event_skew(event: Event):
+        return abs(event.skew)
 
     @staticmethod
     def _get_event_steering(event: Event):

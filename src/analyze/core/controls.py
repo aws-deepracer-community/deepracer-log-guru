@@ -235,6 +235,9 @@ class MeasurementControl(Control):
     def measure_slide(self):
         return self._check_if_measurement(MeasurementControl._SLIDE)
 
+    def measure_skew(self):
+        return self._check_if_measurement(MeasurementControl._SKEW)
+
     def measure_seconds(self):
         return self._check_if_measurement(MeasurementControl._SECONDS)
 

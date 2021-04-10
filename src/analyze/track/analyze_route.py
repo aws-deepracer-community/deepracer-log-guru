@@ -14,6 +14,7 @@ from src.utils.colors import get_color_for_data, ColorPalette
 
 _WORST_SLIDE = 20
 _HIGHEST_STEERING = 30
+_WORST_SKEW = 60
 
 class AnalyzeRoute(TrackAnalyzer):
 
@@ -198,6 +199,8 @@ class AnalyzeRoute(TrackAnalyzer):
             plot_event_method = self.colour_scheme_steering
         elif self._measurement_control.measure_slide():
             plot_event_method = self.colour_scheme_slide
+        elif self._measurement_control.measure_skew():
+            plot_event_method = self.colour_scheme_skew
         elif self._measurement_control.measure_seconds():
             plot_event_method = self.colour_scheme_per_second
         elif self._measurement_control.measure_visits():
@@ -272,6 +275,10 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_slide(self, event: Event, max_speed, speed_range):
         brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.slide) / _WORST_SLIDE))
+        self._plot_dot(event, brightness)
+
+    def colour_scheme_skew(self, event: Event, max_speed, speed_range):
+        brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.skew) / _WORST_SKEW))
         self._plot_dot(event, brightness)
 
     def colour_scheme_none(self, event, max_speed, speed_range):

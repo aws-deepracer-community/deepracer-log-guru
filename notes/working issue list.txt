@@ -1,18 +1,24 @@
 
+provide camera view projection 60 degreees each side per
+https://docs.aws.amazon.com/deepracer/latest/developerguide/deepracer-choose-race-type.html
+quote "The camera has 120-degree wide angle lens"
+quote "obstacles are cuboid boxes with the same dimensions (9.5" (L) x 15.25" (W) x 10/5" (H)) as the AWS DeepRacer vehicle's package box."
+
+
 Finish Soon
 ===========
 
 + Heatmap when not visit-based is too keen to eliminate stuff (allow /20 or /30 instead of /10 minimum??)
 + Heatmap consider making the "start" exclusion a little bit shorter?
++ Heatmap colours may sometimes be based on PERCENTILEs - esp. for rewards  (or performance-efficient compromise)
+(typically match what episode route does, possibly even share config settings to ensure they give similar colours??)
+(good test - heatmap for single episode should give same colours, or very similar, as episode route)
 
 + Finish testing new reward function integration
 + Test with complicated DRF style reward functions too
 
 + Finish support for all the newly added route/heatmap measurement options (acceleration, steering left etc.)
 + Add the (dynamic) variety of DF options for current reward (add dynamically to dropdown options etc.)
-
-+ Heatmap colours may sometimes be based on PERCENTILEs - esp. for rewards  (or performance-efficient compromise)
-(typically match what episode route does, possibly even share config settings to ensure they give similar colours??)
 
 + Enhance the Episode reward analysis for alternate DF factors
 

@@ -55,6 +55,8 @@ class AnalyzeHeatmap(TrackAnalyzer):
                 self._heat_map.draw_visits(self.track_graphics, brightness, color_palette)
             elif self._measurement_control.measure_slide():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 14, 0)
+            elif self._measurement_control.measure_skew():
+                self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 60, 0)
             elif self._measurement_control.measure_steering_straight():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 30, 0)
             else:
@@ -139,6 +141,8 @@ class AnalyzeHeatmap(TrackAnalyzer):
                     self._recalculate_measure_new_discounted_future_reward(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_slide():
                     self._recalculate_measure_slide(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
+                elif self._measurement_control.measure_skew():
+                    self._recalculate_measure_skew(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_steering_straight():
                     self._recalculate_measure_steering(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_smoothness():
@@ -196,6 +200,12 @@ class AnalyzeHeatmap(TrackAnalyzer):
         e: Episode
         for i, e in enumerate(episodes):
             e.apply_slide_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
+            self.please_wait.set_progress((i + 1) / len(episodes) * 100)
+
+    def _recalculate_measure_skew(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
+        e: Episode
+        for i, e in enumerate(episodes):
+            e.apply_skew_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
     def _recalculate_measure_steering(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):

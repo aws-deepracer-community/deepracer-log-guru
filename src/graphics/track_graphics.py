@@ -56,9 +56,9 @@ class TrackGraphics:
 
         return self.canvas.create_line(x, y, x2, y2, fill=fill_colour, width=width, dash=dash_pattern)
 
-    def plot_angle_line(self, start_point, bearing, distance, width, fill_colour):
+    def plot_angle_line(self, start_point, bearing, distance, width, fill_colour, dash_pattern=None):
         end_point = geometry.get_point_at_bearing(start_point, bearing, distance)
-        return self.plot_line(start_point, end_point, width, fill_colour)
+        return self.plot_line(start_point, end_point, width, fill_colour, dash_pattern)
 
     def plot_text(self, point, text_string, font_size, colour: str):
         (x, y) = point
@@ -113,8 +113,8 @@ class TrackGraphics:
         self.ring_highlight_widgets.append(self.canvas.create_oval(
             x - r, y - r, x + r, y + r, fill="", width=line_width, outline=colour))
 
-    def plot_angle_line_highlight(self, start_point, heading, distance, width, fill_colour):
-        self.angle_line_highlight_widgets.append(self.plot_angle_line(start_point, heading, distance, width, fill_colour))
+    def plot_angle_line_highlight(self, start_point, heading, distance, width, fill_colour, dash_pattern=None):
+        self.angle_line_highlight_widgets.append(self.plot_angle_line(start_point, heading, distance, width, fill_colour, dash_pattern))
 
     def remove_highlights(self):
         for w in self.ring_highlight_widgets + self.angle_line_highlight_widgets:

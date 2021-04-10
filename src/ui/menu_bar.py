@@ -107,6 +107,9 @@ class MenuBar():
         menu.add_separator()
         menu.add_command(label="True Bearing - On", command=self.main_app.menu_callback_true_bearing_on)
         menu.add_command(label="True Bearing - Off", command=self.main_app.menu_callback_true_bearing_off)
+        menu.add_separator()
+        menu.add_command(label="Camera Vision - On", command=self.main_app.menu_callback_camera_vision_on)
+        menu.add_command(label="Camera Vision - Off", command=self.main_app.menu_callback_camera_vision_off)
 
         self.menubar.add_cascade(label="View", menu=menu)
 

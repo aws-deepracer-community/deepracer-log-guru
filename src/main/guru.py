@@ -622,6 +622,12 @@ class MainApp(tk.Frame):
     def menu_callback_true_bearing_off(self):
         self.analyze_route.set_show_true_bearing(False)
 
+    def menu_callback_camera_vision_on(self):
+        self.analyze_route.set_show_camera_vision(True)
+
+    def menu_callback_camera_vision_off(self):
+        self.analyze_route.set_show_camera_vision(False)
+
     def menu_callback_view_log_file_info(self):
         if self.log:
             ViewLogFileInfo(self, self.log)

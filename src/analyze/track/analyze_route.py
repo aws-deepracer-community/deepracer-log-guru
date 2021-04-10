@@ -4,6 +4,7 @@ import src.secret_sauce.glue.glue as ss
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.event.event_meta import Event
 from src.graphics.track_graphics import TrackGraphics
+from src.personalize.configuration.appearance import EVENT_HIGHLIGHT_COLOUR, TRUE_HEADING_HIGHLIGHT_COLOUR
 from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.selector.episode_selector import EpisodeSelector
 
@@ -35,8 +36,9 @@ class AnalyzeRoute(TrackAnalyzer):
 
         self.floating_window = None
 
-        self.show_heading = False
-        self.show_true_bearing = False
+        self._show_heading = False
+        self._show_true_bearing = False
+        self._show_camera_vision = False
 
         self.single_tone = ""   # Will be populated just in time
         self.dual_tone = ""
@@ -102,20 +104,27 @@ class AnalyzeRoute(TrackAnalyzer):
         self.track_graphics.remove_highlights()
 
         if self.chosen_event:
-            if self.show_heading:
+            if self._show_camera_vision:
+                dash_pattern = (1, 1)
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
-                                                    self.chosen_event.heading, 2, 2, "orange")
-            if self.show_true_bearing:
+                                                              self.chosen_event.heading + 60, 2, 3,
+                                                              EVENT_HIGHLIGHT_COLOUR, dash_pattern)
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
-                                                              self.chosen_event.true_bearing, 2, 2, "purple")
+                                                              self.chosen_event.heading - 60, 2, 3,
+                                                              EVENT_HIGHLIGHT_COLOUR, dash_pattern)
+            if self._show_true_bearing:
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
-                                                              self.chosen_event.true_bearing + 180, 2, 2, "purple")
-            if self.show_heading:
+                                                              self.chosen_event.true_bearing, 2, 3,
+                                                              TRUE_HEADING_HIGHLIGHT_COLOUR)
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
-                                                    self.chosen_event.heading, 2, 2, "orange")
+                                                              self.chosen_event.true_bearing + 180, 2, 3,
+                                                              TRUE_HEADING_HIGHLIGHT_COLOUR)
+            if self._show_heading:
+                self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
+                                                              self.chosen_event.heading, 2, 3, EVENT_HIGHLIGHT_COLOUR)
 
             self.track_graphics.plot_ring_highlight((self.chosen_event.x, self.chosen_event.y),
-                                                    6 + self.get_increased_blob_size(), "orange", 2)
+                                                    6 + self.get_increased_blob_size(), EVENT_HIGHLIGHT_COLOUR, 3)
 
     def display_info_about_chosen_event(self):
 
@@ -260,10 +269,14 @@ class AnalyzeRoute(TrackAnalyzer):
         else:
             self._plot_dot(event, 1.0)
 
-    def set_show_heading(self, setting :bool):
-        self.show_heading = setting
+    def set_show_heading(self, setting: bool):
+        self._show_heading = setting
         self.draw_chosen_event_()
 
-    def set_show_true_bearing(self, setting :bool):
-        self.show_true_bearing = setting
+    def set_show_true_bearing(self, setting: bool):
+        self._show_true_bearing = setting
+        self.draw_chosen_event_()
+
+    def set_show_camera_vision(self, setting: bool):
+        self._show_camera_vision = setting
         self.draw_chosen_event_()

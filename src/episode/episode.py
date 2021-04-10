@@ -13,7 +13,7 @@ from src.utils.geometry import get_bearing_between_points, get_turn_between_dire
 from src.tracks.track import Track
 from src.utils.discount_factors import discount_factors
 
-from src.personalize.configuration import NEW_REWARD_FUNCTION
+from src.personalize.configuration.analysis import NEW_REWARD_FUNCTION
 
 SLIDE_SETTLING_PERIOD = 6
 

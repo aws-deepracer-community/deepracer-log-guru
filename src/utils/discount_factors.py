@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.configuration.personal_configuration import DISCOUNT_FACTORS, DISCOUNT_FACTOR_MAX_STEPS
+from src.personalize.configuration.analysis import DISCOUNT_FACTORS, DISCOUNT_FACTOR_MAX_STEPS
 
 
 class DiscountFactors:

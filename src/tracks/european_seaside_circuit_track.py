@@ -1,5 +1,5 @@
 from src.tracks.track import Track
-import src.configuration.personal_track_annotations as config
+import src.personalize.configuration.personal_track_annotations as config
 
 
 class EuropeanSeasideCircuitTrack(Track):

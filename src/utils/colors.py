@@ -13,7 +13,7 @@ from enum import IntEnum, auto
 from matplotlib.colors import Colormap
 from matplotlib.pyplot import get_cmap
 
-import src.configuration.personal_configuration as config
+import src.personalize.configuration.appearance as config
 
 _COLORMAP_A = get_cmap(config.COLORMAP_A)
 _COLORMAP_B = get_cmap(config.COLORMAP_B)

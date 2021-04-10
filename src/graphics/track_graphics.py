@@ -1,9 +1,7 @@
 from tkinter import *
-import math
 import src.utils.geometry as geometry
+import src.configuration.real_world as config
 
-CAR_LENGTH = 0.36
-CAR_WIDTH = 0.22
 
 class TrackGraphics:
     def __init__(self, canvas:Canvas):
@@ -123,7 +121,7 @@ class TrackGraphics:
             self.canvas.delete(w)
 
     def draw_car(self, x: float, y: float, colour: str, heading: float):
-        self.car_widgets.append(self.plot_angled_box(x, y, CAR_WIDTH, CAR_LENGTH, colour, heading))
+        self.car_widgets.append(self.plot_angled_box(x, y, config.VEHICLE_WIDTH, config.VEHICLE_LENGTH, colour, heading))
 
     def prepare_to_remove_old_cars(self):
         self.old_car_widgets = self.car_widgets.copy()

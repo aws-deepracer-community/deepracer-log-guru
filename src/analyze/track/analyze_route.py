@@ -1,8 +1,4 @@
 import tkinter as tk
-import time
-
-import numpy as np
-
 
 import src.secret_sauce.glue.glue as ss
 from src.analyze.track.track_analyzer import TrackAnalyzer
@@ -13,11 +9,12 @@ from src.analyze.selector.episode_selector import EpisodeSelector
 
 from src.analyze.core.controls import MeasurementControl, TrackAppearanceControl, MoreFiltersControl
 from src.utils.colors import get_color_for_data, ColorPalette
-from src.utils.reward_percentiles import RewardPercentiles
+from src.configuration.real_world import BOX_OBSTACLE_LENGTH, BOX_OBSTACLE_WIDTH
 
 _WORST_SLIDE = 20
 _HIGHEST_STEERING = 30
 _WORST_SKEW = 60
+
 
 class AnalyzeRoute(TrackAnalyzer):
 
@@ -149,8 +146,7 @@ class AnalyzeRoute(TrackAnalyzer):
         for obj in episode.object_locations:
             track_bearing = self.current_track.get_track_bearing_at_point(obj)
             (x, y) = obj
-            BOX_OBSTACLE_WIDTH = 0.38
-            BOX_OBSTACLE_LENGTH = 0.24
+
             self.track_graphics.plot_angled_box(x, y, BOX_OBSTACLE_WIDTH, BOX_OBSTACLE_LENGTH, "red", track_bearing)
 
         if self._measurement_control.measure_event_reward():

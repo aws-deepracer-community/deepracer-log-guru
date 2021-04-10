@@ -2,8 +2,8 @@ from tkinter import *
 import math
 import src.utils.geometry as geometry
 
-CAR_LENGTH = 1       # TODO - get more accurate values based on real DeepRacer dimensions
-CAR_WIDTH = 0.5
+CAR_LENGTH = 0.36
+CAR_WIDTH = 0.22
 
 class TrackGraphics:
     def __init__(self, canvas:Canvas):

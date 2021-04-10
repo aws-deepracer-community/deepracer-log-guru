@@ -71,6 +71,7 @@ class Episode:
         self.max_slide = 0.0
         self.set_true_bearing_and_slide_on_events()
         self.set_sequence_length_on_events()
+        self.set_acceleration_and_braking_on_events()
 
         if do_full_analysis:
             self._set_distance_from_center_on_events(track)
@@ -242,6 +243,19 @@ class Episode:
             (track_bearing, _) = track.get_bearing_and_distance_to_next_waypoint(e.before_waypoint_index)
             e.skew = get_turn_between_directions(track_bearing, e.true_bearing)
 
+    def set_acceleration_and_braking_on_events(self):
+        previous_speeds = [-5, -4, -3, -2, -1]
+        previous_times = [0, 0, 0, 0, 0]
+        for e in self.events:
+            recent_average_speed = sum(previous_speeds) / len(previous_speeds)
+            if e.time_elapsed != previous_times[0]:
+                if e.track_speed > recent_average_speed and e.track_speed > previous_speeds[0]:
+                    e.acceleration = (e.track_speed - previous_speeds[0]) / (e.time_elapsed - previous_times[0])
+                elif e.track_speed < recent_average_speed and e.track_speed < previous_speeds[0]:
+                    e.braking = (previous_speeds[0] - e.track_speed) / (e.time_elapsed - previous_times[0])
+            previous_times = previous_times[1:] + [e.time_elapsed]
+            previous_speeds = previous_speeds[1:] + [e.track_speed]
+
     def set_reward_total_on_events(self):
         reward_total = 0.0
         for e in self.events:
@@ -403,6 +417,16 @@ class Episode:
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
                                         self._get_event_smoothness)
 
+    def apply_acceleration_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                   action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_acceleration)
+
+    def apply_braking_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                   action_space_filter: ActionSpaceFilter, waypoint_range):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_braking)
+
     @staticmethod
     def _get_event_track_speed(event: Event):
         return event.track_speed
@@ -446,6 +470,14 @@ class Episode:
     @staticmethod
     def _get_event_smoothness(event: Event):
         return event.sequence_count - 1
+
+    @staticmethod
+    def _get_event_acceleration(event: Event):
+        return event.acceleration
+
+    @staticmethod
+    def _get_event_braking(event: Event):
+        return event.braking
 
     @staticmethod
     def _get_event_visitor_dummy(event: Event):

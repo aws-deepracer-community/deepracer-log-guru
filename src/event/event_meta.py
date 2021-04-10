@@ -53,6 +53,8 @@ class Event:
         self.new_reward = 0.0
         self.new_reward_total = 0.0
         self.new_discounted_future_reward = 0.0
+        self.acceleration = 0.0
+        self.braking = 0.0
 
         self.dodgy_data = False
 

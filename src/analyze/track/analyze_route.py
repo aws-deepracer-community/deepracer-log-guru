@@ -15,6 +15,8 @@ from src.utils.colors import get_color_for_data, ColorPalette
 _WORST_SLIDE = 20
 _HIGHEST_STEERING = 30
 _WORST_SKEW = 60
+_MAX_ACCELERATION = 2
+_MAX_BRAKING = 2
 
 
 class AnalyzeRoute(TrackAnalyzer):
@@ -182,6 +184,10 @@ class AnalyzeRoute(TrackAnalyzer):
             plot_event_method = self.colour_scheme_skew
         elif self._measurement_control.measure_seconds():
             plot_event_method = self.colour_scheme_per_second
+        elif self._measurement_control.measure_acceleration():
+            plot_event_method = self.colour_scheme_acceleration
+        elif self._measurement_control.measure_braking():
+            plot_event_method = self.colour_scheme_braking
         elif self._measurement_control.measure_visits():
             plot_event_method = self.colour_scheme_none
         else:
@@ -262,6 +268,14 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_none(self, event, max_speed, speed_range):
         self._plot_dot(event, 0.7)
+
+    def colour_scheme_acceleration(self, event, max_speed, speed_range):
+        brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.acceleration) / _MAX_ACCELERATION))
+        self._plot_dot(event, brightness)
+
+    def colour_scheme_braking(self, event, max_speed, speed_range):
+        brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.braking) / _MAX_BRAKING))
+        self._plot_dot(event, brightness)
 
     def colour_scheme_per_second(self, event, max_speed, speed_range):
         if int(event.time_elapsed) % 2 == 0:

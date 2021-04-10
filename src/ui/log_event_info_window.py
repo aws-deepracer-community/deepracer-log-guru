@@ -65,6 +65,8 @@ class LogEventInfoWindow(tk.Toplevel):
         self.state_side = tk.StringVar()
         self.state_distance_from_centre = tk.StringVar()
         self.state_all_wheels_on_track = tk.StringVar()
+        self.state_acceleration = tk.StringVar()
+        self.state_braking = tk.StringVar()
 
         self.make_label_and_value(state_frame, 0, "Progress", self.state_progress)
         self.make_label_and_value(state_frame, 1, "Time", self.state_time)
@@ -78,6 +80,9 @@ class LogEventInfoWindow(tk.Toplevel):
         self.make_label_and_value(state_frame, 9, "Side", self.state_side)
         self.make_label_and_value(state_frame, 10, "Distance from Centre", self.state_distance_from_centre)
         self.make_label_and_value(state_frame, 11, "All Wheels on Track", self.state_all_wheels_on_track)
+        self.make_label_and_value(state_frame, 12, "Acceleration", self.state_acceleration)
+        self.make_label_and_value(state_frame, 13, "Braking", self.state_braking)
+
 
         self.action_id = tk.StringVar()
         self.action_steering = tk.StringVar()
@@ -152,6 +157,14 @@ class LogEventInfoWindow(tk.Toplevel):
         self.state_side.set(track.get_position_of_point_relative_to_waypoint((event.x, event.y), event.closest_waypoint_index))
         self.state_distance_from_centre.set(str(round(event.distance_from_center, 2)))
         self.state_all_wheels_on_track.set(str(event.all_wheels_on_track))
+        if event.acceleration > 0.0:
+            self.state_acceleration.set(str(round(event.acceleration, 1)) + "  m/s/s")
+        else:
+            self.state_acceleration.set("---")
+        if event.braking > 0.0:
+            self.state_braking.set(str(round(event.braking, 1)) + "  m/s/s")
+        else:
+            self.state_braking.set("---")
 
         self.action_id.set(str(event.action_taken))
         self.action_steering.set(get_formatted_steering(event.steering_angle))

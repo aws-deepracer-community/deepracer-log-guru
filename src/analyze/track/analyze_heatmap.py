@@ -147,6 +147,10 @@ class AnalyzeHeatmap(TrackAnalyzer):
                     self._recalculate_measure_steering(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_smoothness():
                     self._recalculate_measure_smoothness(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
+                elif self._measurement_control.measure_acceleration():
+                    self._recalculate_measure_acceleration(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
+                elif self._measurement_control.measure_braking():
+                    self._recalculate_measure_braking(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
 
     def _recalculate_measure_visits(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
         e: Episode
@@ -218,4 +222,16 @@ class AnalyzeHeatmap(TrackAnalyzer):
         e: Episode
         for i, e in enumerate(episodes):
             e.apply_smoothness_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
+            self.please_wait.set_progress((i + 1) / len(episodes) * 100)
+
+    def _recalculate_measure_acceleration(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
+        e: Episode
+        for i, e in enumerate(episodes):
+            e.apply_acceleration_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
+            self.please_wait.set_progress((i + 1) / len(episodes) * 100)
+
+    def _recalculate_measure_braking(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
+        e: Episode
+        for i, e in enumerate(episodes):
+            e.apply_braking_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)

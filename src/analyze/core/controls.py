@@ -244,6 +244,11 @@ class MeasurementControl(Control):
     def measure_visits(self):
         return self._check_if_measurement(MeasurementControl._VISITS)
 
+    def measure_acceleration(self):
+        return self._check_if_measurement(MeasurementControl._ACCELERATION)
+
+    def measure_braking(self):
+        return self._check_if_measurement(MeasurementControl._BRAKING)
 
 
 class ConvergenceGranularityControl(Control):

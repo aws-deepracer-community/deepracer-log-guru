@@ -12,6 +12,7 @@ class Analyzer:
         self.current_track = None
         self.filtered_episodes = None
         self.all_episodes = None
+        self.all_episodes_reward_percentiles = None
         self.action_space = None
         self.action_space_filter = None
         self.sector_filter = None
@@ -35,8 +36,9 @@ class Analyzer:
         self.current_track = current_track
         self.warning_track_changed()
 
-    def set_all_episodes(self, all_episodes):
+    def set_all_episodes(self, all_episodes, all_episodes_reward_percentiles):
         self.all_episodes = all_episodes
+        self.all_episodes_reward_percentiles = all_episodes_reward_percentiles
         self.warning_all_episodes_changed()
 
     def set_log_meta(self, log_meta :LogMeta):

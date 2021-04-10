@@ -38,7 +38,7 @@ from src.ui.please_wait import PleaseWait
 from src.ui.status_frame import StatusFrame
 from src.analyze.selector.episode_selector import EpisodeSelector
 from src.ui.view_log_file_info import ViewLogFileInfo
-
+from src.utils.reward_percentiles import RewardPercentiles
 
 DEFAULT_CANVAS_WIDTH = 900
 DEFAULT_CANVAS_HEIGHT = 650
@@ -258,7 +258,7 @@ class MainApp(tk.Frame):
     def _reset_analyzer(self, analyzer):
         analyzer.set_track(self.current_track)
         analyzer.set_filtered_episodes(None)
-        analyzer.set_all_episodes(None)
+        analyzer.set_all_episodes(None, None)
         analyzer.set_log_meta(None)
         analyzer.set_evaluation_phases(None)
 
@@ -354,6 +354,12 @@ class MainApp(tk.Frame):
         self.status_frame.change_model_name(self.log.get_log_meta().model_name)
         self.apply_new_action_space()
 
+        reward_percentiles = RewardPercentiles(self.log.get_episodes())
+        for v in self.all_analyzers:
+            v.set_all_episodes(self.log.get_episodes(), reward_percentiles)
+            v.set_log_meta(self.log.get_log_meta())
+            v.set_evaluation_phases(self.log.get_evaluation_phases())
+
         self.episode_filter.set_all_episodes(self.log.get_episodes())
         self.reapply_episode_filter()
 
@@ -384,9 +390,6 @@ class MainApp(tk.Frame):
 
         for v in self.all_analyzers:
             v.set_filtered_episodes(self.filtered_episodes)
-            v.set_all_episodes(self.log.get_episodes())
-            v.set_log_meta(self.log.get_log_meta())
-            v.set_evaluation_phases(self.log.get_evaluation_phases())
 
         self.status_frame.change_episodes(len(self.log.get_episodes()), len(self.filtered_episodes))
 

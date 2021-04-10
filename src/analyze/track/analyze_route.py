@@ -1,4 +1,6 @@
 import tkinter as tk
+import time
+
 import numpy as np
 
 
@@ -11,6 +13,7 @@ from src.analyze.selector.episode_selector import EpisodeSelector
 
 from src.analyze.core.controls import MeasurementControl, TrackAppearanceControl, MoreFiltersControl
 from src.utils.colors import get_color_for_data, ColorPalette
+from src.utils.reward_percentiles import RewardPercentiles
 
 _WORST_SLIDE = 20
 _HIGHEST_STEERING = 30
@@ -41,11 +44,6 @@ class AnalyzeRoute(TrackAnalyzer):
         self.single_tone = ""   # Will be populated just in time
         self.dual_tone = ""
         self.color_palette = ColorPalette.MULTI_COLOR_A
-
-        self.reward_percentiles = None
-        self.new_reward_percentiles = None
-        self.discounted_future_reward_percentiles = None
-        self.new_discounted_future_reward_percentiles = None
 
     def build_control_frame(self, control_frame):
 
@@ -139,32 +137,6 @@ class AnalyzeRoute(TrackAnalyzer):
     def warning_filtered_episodes_changed(self):
         self.chosen_event = None
 
-    def warning_all_episodes_changed(self):
-        if self.all_episodes and len(self.all_episodes) >= 1:
-            all_rewards = self.all_episodes[0].rewards
-            for e in self.all_episodes[1:]:
-                all_rewards = np.append(all_rewards, e.rewards)
-            self.reward_percentiles = np.percentile(all_rewards, np.arange(100))
-
-            self.discounted_future_reward_percentiles = []
-            for i in range(len(self.all_episodes[0].discounted_future_rewards)):
-                all_discounted_future_rewards = self.all_episodes[0].discounted_future_rewards[i]
-                for e in self.all_episodes[1:]:
-                    all_discounted_future_rewards = np.append(all_discounted_future_rewards, e.discounted_future_rewards[i])
-                self.discounted_future_reward_percentiles.append(np.percentile(all_discounted_future_rewards, np.arange(100)))
-
-            all_new_rewards = self.all_episodes[0].new_rewards
-            for e in self.all_episodes[1:]:
-                all_new_rewards = np.append(all_new_rewards, e.new_rewards)
-            self.new_reward_percentiles = np.percentile(all_new_rewards, np.arange(100))
-
-            all_new_discounted_future_rewards = self.all_episodes[0].new_discounted_future_rewards
-            for e in self.all_episodes[1:]:
-                all_new_discounted_future_rewards = np.append(all_new_discounted_future_rewards, e.new_discounted_future_rewards)
-            self.new_discounted_future_reward_percentiles = np.percentile(all_new_discounted_future_rewards, np.arange(100))
-        else:
-            self.reward_percentiles = None
-
     def callback_selected_episode_changed(self):
         self.chosen_event = None
         if self.floating_window is not None:
@@ -222,22 +194,22 @@ class AnalyzeRoute(TrackAnalyzer):
                 plot_event_method(e, max_speed, speed_range)
 
     def colour_scheme_reward(self, event, max_speed, speed_range):
-        percentile = np.searchsorted(self.reward_percentiles, event.reward)
+        percentile = self.all_episodes_reward_percentiles.get_reward_percentile(event.reward)
         brightness = min(1, percentile / 100 * 0.9 + 0.1)
         self._plot_dot(event, brightness)
 
     def colour_scheme_new_reward(self, event, max_speed, speed_range):
-        percentile = np.searchsorted(self.new_reward_percentiles, event.new_reward)
+        percentile = self.all_episodes_reward_percentiles.get_new_reward_percentile(event.new_reward)
         brightness = min(1, percentile / 100 * 0.9 + 0.1)
         self._plot_dot(event, brightness)
 
     def colour_scheme_discounted_future_reward(self, event, max_speed, speed_range):
-        percentile = np.searchsorted(self.discounted_future_reward_percentiles[0], event.discounted_future_rewards[0])
+        percentile = self.all_episodes_reward_percentiles.get_discounted_future_reward_percentile(event.discounted_future_rewards[0], 0)
         brightness = min(1, percentile / 100 * 0.9 + 0.1)
         self._plot_dot(event, brightness)
 
     def colour_scheme_new_discounted_future_reward(self, event, max_speed, speed_range):
-        percentile = np.searchsorted(self.new_discounted_future_reward_percentiles, event.new_discounted_future_reward)
+        percentile = self.all_episodes_reward_percentiles.get_new_discounted_future_reward_percentile(event.new_discounted_future_reward)
         brightness = min(1, percentile / 100 * 0.9 + 0.1)
         self._plot_dot(event, brightness)
 

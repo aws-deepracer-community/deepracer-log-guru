@@ -51,8 +51,9 @@ class Episode:
         self.predicted_lap_time = 100 / last_event.progress * self.time_taken  # predicted
 
         self.rewards = self.get_list_of_rewards()
-        self.total_reward = self.rewards.sum()
-        self.average_reward = self.rewards.mean()
+        np_rewards = np.array(self.rewards)
+        self.total_reward = np_rewards.sum()
+        self.average_reward = np_rewards.mean()
         self.predicted_lap_reward = 100 / last_event.progress * self.total_reward  # predicted
 
         self.action_frequency = self._get_action_frequency(action_space)
@@ -290,13 +291,13 @@ class Episode:
         list_of_rewards = []
         for e in self.events:
             list_of_rewards.append(e.reward)
-        return np.array(list_of_rewards)
+        return list_of_rewards
 
     def _get_list_of_new_rewards(self):
         list_of_new_rewards = []
         for e in self.events:
             list_of_new_rewards.append(e.new_reward)
-        return np.array(list_of_new_rewards)
+        return list_of_new_rewards
 
     # List of lists since there is a list of rewards per discount factor (0 = the current DF)
     def _get_lists_of_discounted_future_rewards(self):
@@ -305,7 +306,7 @@ class Episode:
             list_of_rewards = []
             for e in self.events:
                 list_of_rewards.append(e.discounted_future_rewards[i])
-            all_lists.append(np.array(list_of_rewards))
+            all_lists.append(list_of_rewards)
         return all_lists
 
     # Single list since for NEW future rewards we only do the current DF for efficiency
@@ -313,7 +314,7 @@ class Episode:
         list_of_rewards = []
         for e in self.events:
             list_of_rewards.append(e.new_discounted_future_reward)
-        return np.array(list_of_rewards)
+        return list_of_rewards
 
     def _get_action_frequency(self, action_space: ActionSpace):
         action_frequency = action_space.get_new_frequency_counter()

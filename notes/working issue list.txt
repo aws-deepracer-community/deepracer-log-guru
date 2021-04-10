@@ -8,6 +8,8 @@ quote "obstacles are cuboid boxes with the same dimensions (9.5" (L) x 15.25" (W
 Finish Soon
 ===========
 
++ Proto option for hiding half-finished stuff like "race"
+
 + Heatmap when not visit-based is too keen to eliminate stuff (allow /20 or /30 instead of /10 minimum??)
 + Heatmap consider making the "start" exclusion a little bit shorter?
 + Heatmap colours may sometimes be based on PERCENTILEs - esp. for rewards  (or performance-efficient compromise)

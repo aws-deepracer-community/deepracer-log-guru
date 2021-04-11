@@ -1,5 +1,4 @@
 import tkinter as tk
-import numpy as np
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
@@ -27,17 +26,23 @@ class AnalyzeDiscountFactors(GraphAnalyzer):
 
         for i in range(discount_factors.get_number_of_discount_factors()):
             zoom_level = self._zoom_control.get_zoom_level()
-
             if self._analysis_choice_control.show_future_weights():
                 (plot_x, plot_y) = discount_factors.get_weights_plot_data(i, zoom_level)
                 axes.set_title("Discount Factors - Future Reward Weights")
                 axes.set_xlabel("Steps in Future")
                 axes.set_ylabel("Relative Weight")
             elif self._analysis_choice_control.show_remaining_steps():
-                (plot_x, plot_y) = discount_factors.get_time_until_death_plot_data(i, zoom_level)
-                axes.set_title("Discount Factors - Steps Until End of Episode")
-                axes.set_xlabel("Remaining Steps")
-                axes.set_ylabel("Future Reward")
+                (plot_x, plot_y) = discount_factors.get_time_until_death_plot_data(i, zoom_level, 1)
+                self.set_axes_titles_remaining_steps(axes, 1)
+            elif self._analysis_choice_control.show_bonus_10():
+                (plot_x, plot_y) = discount_factors.get_time_until_death_plot_data(i, zoom_level, 10)
+                self.set_axes_titles_remaining_steps(axes, 10)
+            elif self._analysis_choice_control.show_bonus_100():
+                (plot_x, plot_y) = discount_factors.get_time_until_death_plot_data(i, zoom_level, 100)
+                self.set_axes_titles_remaining_steps(axes, 100)
+            elif self._analysis_choice_control.show_bonus_1000():
+                (plot_x, plot_y) = discount_factors.get_time_until_death_plot_data(i, zoom_level, 1000)
+                self.set_axes_titles_remaining_steps(axes, 1000)
             else:
                 return
 
@@ -48,7 +53,16 @@ class AnalyzeDiscountFactors(GraphAnalyzer):
 
         # Format the plot
 
-
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
+    @staticmethod
+    def set_axes_titles_remaining_steps(axes: Axes, bonus: int):
+        if bonus > 1:
+            bonus_str = " + Bonus of x" + str(bonus)
+        else:
+            bonus_str = ""
+
+        axes.set_title("Discount Factors - Steps Until End of Episode" + bonus_str)
+        axes.set_xlabel("Remaining Steps")
+        axes.set_ylabel("Future Reward")

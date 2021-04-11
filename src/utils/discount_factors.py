@@ -59,12 +59,16 @@ class DiscountFactors:
         plot_y = self._multipliers[index][:steps]
         return plot_x, plot_y
 
-    def get_time_until_death_plot_data(self, index: int, zoom_level: int):
+    def get_time_until_death_plot_data(self, index: int, zoom_level: int, bonus_level: int):
+        assert bonus_level >= 1
         steps = self._get_steps_for_plot_zoom_level(zoom_level)
         plot_x = np.arange(steps)
         plot_y = []
         for i in plot_x:
-            plot_y.append(np.sum(self._multipliers[index][:i + 1]))
+            future_reward = np.sum(self._multipliers[index][:i + 1])
+            future_reward += (bonus_level - 1) * self._multipliers[index][i]
+            plot_y.append(future_reward)
+
         return plot_x, plot_y
 
     def _get_steps_for_plot_zoom_level(self, zoom_level: int):

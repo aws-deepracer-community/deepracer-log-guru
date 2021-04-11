@@ -689,6 +689,9 @@ class LapTimeControl(Control):
 class DiscountFactorAnalysisControl(Control):
     _FUTURE_WEIGHTS = "Future Weights"
     _REMAINING_STEPS = "Remaining Steps"
+    _BONUS_10 = "Final Bonus 10"
+    _BONUS_100 = "Final Bonus 100"
+    _BONUS_1000 = "Final Bonus 1,000"
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Comparison")
@@ -698,12 +701,26 @@ class DiscountFactorAnalysisControl(Control):
     def _add_widgets(self):
         self.add_radiobutton_improved(DiscountFactorAnalysisControl._FUTURE_WEIGHTS, self._analysis_choice)
         self.add_radiobutton_improved(DiscountFactorAnalysisControl._REMAINING_STEPS, self._analysis_choice)
+        self.add_radiobutton_improved(DiscountFactorAnalysisControl._BONUS_10, self._analysis_choice)
+        self.add_radiobutton_improved(DiscountFactorAnalysisControl._BONUS_100, self._analysis_choice)
+        self.add_radiobutton_improved(DiscountFactorAnalysisControl._BONUS_1000, self._analysis_choice)
 
     def show_future_weights(self):
         return self._analysis_choice.get() == DiscountFactorAnalysisControl._FUTURE_WEIGHTS
 
     def show_remaining_steps(self):
         return self._analysis_choice.get() == DiscountFactorAnalysisControl._REMAINING_STEPS
+
+    def show_bonus_10(self):
+        return self._analysis_choice.get() == DiscountFactorAnalysisControl._BONUS_10
+
+    def show_bonus_100(self):
+        return self._analysis_choice.get() == DiscountFactorAnalysisControl._BONUS_100
+
+    def show_bonus_1000(self):
+        return self._analysis_choice.get() == DiscountFactorAnalysisControl._BONUS_1000
+
+
 
 
 class ZoomInAndOutControl(Control):

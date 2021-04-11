@@ -71,6 +71,35 @@ class HeatMap:
                     colour = get_color_for_data(data, color_palette)
                     track_graphics.plot_box(x, y, x + self._granularity, y + self._granularity, colour)
 
+    # NEW way - heatmap itself is given the standard brightness calculation
+    def draw_brightness_statistic(self, track_graphics: TrackGraphics, adjust_brightness: int, color_palette: ColorPalette):
+        assert adjust_brightness in [-1, 0, 1, 2]
+
+        threshold = round(self._get_stats_count() / 10)
+
+        if adjust_brightness == 1:
+            threshold /= 2
+            multiplier = 1.1
+        elif adjust_brightness == 2:
+            threshold /= 3.5
+            multiplier = 1.2
+        elif adjust_brightness == -1:
+            threshold *= 1.5
+            multiplier = 0.9
+        else:
+            multiplier = 1.0
+
+        (stats, _, _) = self._get_stats_array(np.median, threshold)
+
+        for yy, stats in enumerate(stats):
+            for xx, stat in enumerate(stats):
+                if not math.isnan(stat):
+                    x = self.min_x + self._granularity * xx
+                    y = self.min_y + self._granularity * yy
+                    colour = get_color_for_data(max(0.1, min(1, stat * multiplier)), color_palette)
+                    track_graphics.plot_box(x, y, x + self._granularity, y + self._granularity, colour)
+
+    # Old way - heatmap contains the stats
     def draw_statistic(self, track_graphics: TrackGraphics, brightness: int, color_palette: ColorPalette,
                        forced_max_stat=-1, forced_min_stat=-1):
         assert brightness in [-1, 0, 1, 2]

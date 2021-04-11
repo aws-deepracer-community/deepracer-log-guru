@@ -408,11 +408,6 @@ class Episode:
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
                                         self._get_event_skew)
 
-    def apply_steering_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
-                                   action_space_filter: ActionSpaceFilter, waypoint_range):
-        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
-                                        self._get_event_steering)
-
     def apply_smoothness_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
                                    action_space_filter: ActionSpaceFilter, waypoint_range):
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
@@ -484,6 +479,22 @@ class Episode:
     def _get_event_visitor_dummy(event: Event):
         return 1
 
+    def apply_event_stat_to_heat_map(self, stat_extractor: callable, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter, waypoint_range):
+        assert min(skip_start, skip_end) >= 0
+        previous = self.events[0]
+        if self.lap_complete:
+            skip_end = self.events[-1].step
+        else:
+            skip_end = self.events[-1].step - skip_end
+        for e in self.events:
+            e: Event
+            stat = stat_extractor(e)
+            if skip_start <= e.step <= skip_end and e.is_within_waypoint_range(waypoint_range) and (
+                    not action_space_filter or action_space_filter.should_show_action(e.action_taken)):
+                self._apply_event_stat_to_heat_map(e, previous, heat_map, stat)
+            previous = e
+
+    # This is now the OLD way to do this
     def _apply_episode_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter, waypoint_range, stat_extractor: callable):
         assert min(skip_start, skip_end) >= 0
         previous = self.events[0]

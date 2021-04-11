@@ -4,6 +4,7 @@ from src.configuration.real_world import BOX_OBSTACLE_LENGTH, BOX_OBSTACLE_WIDTH
 from src.personalize.configuration.appearance import EVENT_HIGHLIGHT_COLOUR, TRUE_HEADING_HIGHLIGHT_COLOUR
 
 import src.secret_sauce.glue.glue as ss
+import src.analyze.core.measurement_brightness as measurement_brightness
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.event.event_meta import Event
 from src.graphics.track_graphics import TrackGraphics
@@ -13,10 +14,10 @@ from src.analyze.core.controls import MeasurementControl, TrackAppearanceControl
 from src.utils.colors import get_color_for_data, ColorPalette
 
 _WORST_SLIDE = 20
-_HIGHEST_STEERING = 30
 _WORST_SKEW = 60
-_MAX_ACCELERATION = 2
-_MAX_BRAKING = 2
+_BEST_ACCELERATION = 2
+_BEST_BRAKING = 2
+
 
 
 class AnalyzeRoute(TrackAnalyzer):
@@ -175,7 +176,11 @@ class AnalyzeRoute(TrackAnalyzer):
         elif self._measurement_control.measure_smoothness():
             plot_event_method = self.colour_scheme_smoothness
         elif self._measurement_control.measure_steering_straight():
-            plot_event_method = self.colour_scheme_steering
+            plot_event_method = self.colour_scheme_straight_steering
+        elif self._measurement_control.measure_steering_left():
+            plot_event_method = self.colour_scheme_left_steering
+        elif self._measurement_control.measure_steering_right():
+            plot_event_method = self.colour_scheme_right_steering
         elif self._measurement_control.measure_slide():
             plot_event_method = self.colour_scheme_slide
         elif self._measurement_control.measure_skew():
@@ -252,8 +257,16 @@ class AnalyzeRoute(TrackAnalyzer):
             brightness = min(1.0, 0.3 + event.sequence_count / 15)
         self._plot_dot(event, brightness)
 
-    def colour_scheme_steering(self, event, max_speed, speed_range):
-        brightness = max(0.1, min(1, 1 - 0.9 * abs(event.steering_angle) / _HIGHEST_STEERING))
+    def colour_scheme_straight_steering(self, event, max_speed, speed_range):
+        brightness = measurement_brightness.get_brightness_for_steering_straight(event)
+        self._plot_dot(event, brightness)
+
+    def colour_scheme_left_steering(self, event, max_speed, speed_range):
+        brightness = measurement_brightness.get_brightness_for_steering_left(event)
+        self._plot_dot(event, brightness)
+
+    def colour_scheme_right_steering(self, event, max_speed, speed_range):
+        brightness = measurement_brightness.get_brightness_for_steering_right(event)
         self._plot_dot(event, brightness)
 
     def colour_scheme_slide(self, event: Event, max_speed, speed_range):
@@ -268,11 +281,11 @@ class AnalyzeRoute(TrackAnalyzer):
         self._plot_dot(event, 0.7)
 
     def colour_scheme_acceleration(self, event, max_speed, speed_range):
-        brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.acceleration) / _MAX_ACCELERATION))
+        brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.acceleration) / _BEST_ACCELERATION))
         self._plot_dot(event, brightness)
 
     def colour_scheme_braking(self, event, max_speed, speed_range):
-        brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.braking) / _MAX_BRAKING))
+        brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.braking) / _BEST_BRAKING))
         self._plot_dot(event, brightness)
 
     def colour_scheme_per_second(self, event, max_speed, speed_range):

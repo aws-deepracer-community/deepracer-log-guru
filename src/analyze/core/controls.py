@@ -232,6 +232,12 @@ class MeasurementControl(Control):
     def measure_steering_straight(self):
         return self._check_if_measurement(MeasurementControl._STEERING_STRAIGHT)
 
+    def measure_steering_left(self):
+        return self._check_if_measurement(MeasurementControl._STEERING_LEFT)
+
+    def measure_steering_right(self):
+        return self._check_if_measurement(MeasurementControl._STEERING_RIGHT)
+
     def measure_slide(self):
         return self._check_if_measurement(MeasurementControl._SLIDE)
 

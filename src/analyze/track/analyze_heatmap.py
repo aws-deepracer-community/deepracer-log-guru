@@ -1,5 +1,7 @@
 import tkinter as tk
 
+import src.analyze.core.measurement_brightness as measurement_brightness
+
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.episode.episode import Episode
 from src.graphics.track_graphics import TrackGraphics
@@ -44,6 +46,7 @@ class AnalyzeHeatmap(TrackAnalyzer):
 
             color_palette = self._appearance_control.get_chosen_color_palette()
 
+
             if self._measurement_control.measure_progress_speed() or self._measurement_control.measure_action_speed() or self._measurement_control.measure_track_speed():
                 max_speed = self.action_space.get_max_speed()
                 min_speed = self.action_space.get_min_speed()
@@ -53,11 +56,14 @@ class AnalyzeHeatmap(TrackAnalyzer):
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, max_speed, min_speed)
             elif self._measurement_control.measure_visits():
                 self._heat_map.draw_visits(self.track_graphics, brightness, color_palette)
+            elif self._measurement_control.measure_steering_straight() or self._measurement_control.measure_steering_left() or self._measurement_control.measure_steering_right():
+                self._heat_map.draw_brightness_statistic(self.track_graphics, brightness, color_palette)
+            ### Otherwise the OLD kludgy way...
             elif self._measurement_control.measure_slide():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 14, 0)
             elif self._measurement_control.measure_skew():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 60, 0)
-            elif self._measurement_control.measure_steering_straight():
+            elif self._measurement_control.measure_steering_left() or self._measurement_control.measure_steering_right():
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 30, 0)
             else:
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
@@ -123,7 +129,25 @@ class AnalyzeHeatmap(TrackAnalyzer):
                 else:
                     waypoint_range = None
 
-                if self._measurement_control.measure_visits():
+                # Plug in brightness method - the new way
+                if self._measurement_control.measure_steering_straight():
+                    brightness_method = measurement_brightness.get_brightness_for_steering_straight
+                elif self._measurement_control.measure_steering_left():
+                    brightness_method = measurement_brightness.get_brightness_for_steering_left
+                elif self._measurement_control.measure_steering_right():
+                    brightness_method = measurement_brightness.get_brightness_for_steering_right
+                else:
+                    brightness_method = None
+
+                if brightness_method:
+                    e: Episode
+                    for i, e in enumerate(episodes):
+                        e.apply_event_stat_to_heat_map(brightness_method, self._heat_map, skip_start, skip_end,
+                                                       action_space_filter, waypoint_range)
+                        self.please_wait.set_progress((i + 1) / len(episodes) * 100)
+
+                # Else still doing it the OLD kludgy way ...
+                elif self._measurement_control.measure_visits():
                     self._recalculate_measure_visits(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_action_speed():
                     self._recalculate_measure_action_speed(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
@@ -143,8 +167,6 @@ class AnalyzeHeatmap(TrackAnalyzer):
                     self._recalculate_measure_slide(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_skew():
                     self._recalculate_measure_skew(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
-                elif self._measurement_control.measure_steering_straight():
-                    self._recalculate_measure_steering(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_smoothness():
                     self._recalculate_measure_smoothness(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_acceleration():
@@ -210,12 +232,6 @@ class AnalyzeHeatmap(TrackAnalyzer):
         e: Episode
         for i, e in enumerate(episodes):
             e.apply_skew_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
-            self.please_wait.set_progress((i + 1) / len(episodes) * 100)
-
-    def _recalculate_measure_steering(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
-        e: Episode
-        for i, e in enumerate(episodes):
-            e.apply_steering_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
     def _recalculate_measure_smoothness(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):

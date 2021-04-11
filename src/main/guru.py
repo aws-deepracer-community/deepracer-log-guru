@@ -24,6 +24,7 @@ from src.analyze.graph.analyze_lap_time_correlations import AnalyzeLapTimeCorrel
 from src.analyze.graph.analyze_sector_time_correlations import AnalyzeSectorTimeCorrelations
 from src.analyze.graph.analyze_lap_time_distribution import AnalyzeLapTimeDistribution
 from src.analyze.graph.analyze_complete_lap_percentage import AnalyzeCompleteLapPercentage
+from src.analyze.graph.analyze_discount_factors import AnalyzeDiscountFactors
 
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.configuration.config_manager import ConfigManager
@@ -147,6 +148,7 @@ class MainApp(tk.Frame):
         self.analyze_sector_time_correlations = AnalyzeSectorTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_lap_time_distribution = AnalyzeLapTimeDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_complete_lap_percentage = AnalyzeCompleteLapPercentage(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_discount_factors = AnalyzeDiscountFactors(self.redraw, matplotlib_canvas, self.inner_control_frame)
 
         self.all_analyzers = [
             self.analyze_route,
@@ -165,7 +167,8 @@ class MainApp(tk.Frame):
             self.analyze_lap_time_correlations,
             self.analyze_sector_time_correlations,
             self.analyze_lap_time_distribution,
-            self.analyze_complete_lap_percentage
+            self.analyze_complete_lap_percentage,
+            self.analyze_discount_factors
         ]
 
         for v in self.all_analyzers:
@@ -335,6 +338,9 @@ class MainApp(tk.Frame):
 
     def menu_callback_analyze_complete_lap_percentage(self):
         self.switch_analyzer(self.analyze_complete_lap_percentage)
+
+    def menu_callback_analyze_discount_factors(self):
+        self.switch_analyzer(self.analyze_discount_factors)
 
     def menu_callback_switch_directory(self):
         result = tk.filedialog.askdirectory(title="Choose the directory where log files are stored",

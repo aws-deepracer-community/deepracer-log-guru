@@ -53,6 +53,10 @@ class DiscountFactors:
         for i, m in enumerate(self._multipliers):
             print(self._discount_factors[i], "->", m)
 
+    def get_weights_plot_data(self, index: int):
+        plot_x = np.arange(self._max_steps)
+        plot_y = self._multipliers[index]
+        return plot_x, plot_y
 
 discount_factors = DiscountFactors()
 

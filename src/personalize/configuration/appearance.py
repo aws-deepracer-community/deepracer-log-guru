@@ -11,3 +11,5 @@ DISCRETE_FIVE_COLOURS = ["Red", "Yellow", "Green", "Blue", "White"]
 
 EVENT_HIGHLIGHT_COLOUR = "Orange"
 TRUE_HEADING_HIGHLIGHT_COLOUR = "Purple"
+
+RACE_COLOURS = ["red", "orange", "yellow", "green", "blue", "gray", "cornflowerblue", "white", "cyan", "magenta"]

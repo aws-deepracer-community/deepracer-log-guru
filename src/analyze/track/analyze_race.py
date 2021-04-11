@@ -9,6 +9,7 @@ from src.episode.episode import Episode
 from src.graphics.track_graphics import TrackGraphics
 
 from src.analyze.core.controls import VideoControls, LapTimeControl
+from src.personalize.configuration.appearance import RACE_COLOURS
 
 
 class AnalyzeRace(TrackAnalyzer):
@@ -42,10 +43,9 @@ class AnalyzeRace(TrackAnalyzer):
         self._display_lap_time.show_time(simulation_time)
         self.track_graphics.prepare_to_remove_old_cars()
         all_done = True
-        colours = ["red", "green", "blue"]
         if self.filtered_episodes:
-            for i, episode in enumerate(self.filtered_episodes[0:3]):
-                self._draw_episode_car(episode, simulation_time, colours[i])
+            for i, episode in enumerate(self.filtered_episodes[0:len(RACE_COLOURS)]):
+                self._draw_episode_car(episode, simulation_time, RACE_COLOURS[i])
                 if simulation_time < episode.time_taken:
                     all_done = False
         self.track_graphics.remove_cars()

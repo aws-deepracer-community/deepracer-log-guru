@@ -19,7 +19,7 @@ class AnalyzeDiscountFactors(GraphAnalyzer):
 
     def add_plots(self):
         axes: Axes = self.graph_figure.add_subplot()
-        
+
         colours = ["blue", "C1", "C2", "C3", "C4", "C5"]
 
         for i in range(discount_factors.get_number_of_discount_factors()):

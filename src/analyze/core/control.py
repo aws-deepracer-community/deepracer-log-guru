@@ -91,7 +91,7 @@ class Control:
 
     def add_horizontal_push_button(self, title: str, callback: callable):
         tk.Button(self._label_frame, text=title,
-                  command=callback).grid(column=self._column, row=self._row, padx=5, pady=5, sticky="W")
+                  command=callback).grid(column=self._column, row=self._row, padx=4, pady=4, sticky="W")
         self._column += 1
 
 

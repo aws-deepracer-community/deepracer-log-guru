@@ -4,6 +4,7 @@ import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
 
+from src.analyze.core.controls import DiscountFactorAnalysisControl, ZoomInAndOutControl
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.discount_factors import discount_factors
 
@@ -14,21 +15,39 @@ class AnalyzeDiscountFactors(GraphAnalyzer):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
+        self._analysis_choice_control = DiscountFactorAnalysisControl(guru_parent_redraw, control_frame)
+        self._zoom_control = ZoomInAndOutControl(guru_parent_redraw, control_frame)
+
     def build_control_frame(self, control_frame):
-        pass   # No controls yet
+        self._analysis_choice_control.add_to_control_frame()
+        self._zoom_control.add_to_control_frame()
 
     def add_plots(self):
         axes: Axes = self.graph_figure.add_subplot()
 
-        colours = ["blue", "C1", "C2", "C3", "C4", "C5"]
-
         for i in range(discount_factors.get_number_of_discount_factors()):
-            (plot_x, plot_y) = discount_factors.get_weights_plot_data(i)
-            axes.plot(plot_x, plot_y, colours[i], label=str(discount_factors.get_discount_factor(i)))
+            zoom_level = self._zoom_control.get_zoom_level()
+
+            if self._analysis_choice_control.show_future_weights():
+                (plot_x, plot_y) = discount_factors.get_weights_plot_data(i, zoom_level)
+                axes.set_title("Discount Factors - Future Reward Weights")
+                axes.set_xlabel("Steps in Future")
+                axes.set_ylabel("Relative Weight")
+            elif self._analysis_choice_control.show_remaining_steps():
+                (plot_x, plot_y) = discount_factors.get_time_until_death_plot_data(i, zoom_level)
+                axes.set_title("Discount Factors - Steps Until End of Episode")
+                axes.set_xlabel("Remaining Steps")
+                axes.set_ylabel("Future Reward")
+            else:
+                return
+
+            label = str(discount_factors.get_discount_factor(i))
+            if i == 0:
+                label += " (current)"
+            axes.plot(plot_x, plot_y, label=label)
 
         # Format the plot
-        axes.set_title("Discount Factors - Future Reward Weights")
-        axes.set_xlabel("Steps in Future")
+
 
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)

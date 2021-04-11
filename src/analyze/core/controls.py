@@ -578,6 +578,7 @@ class GraphLineFittingControl(Control):
     def quadratic_fitting(self):
         return self._smoothing.get() == GraphLineFittingControl._QUADRATIC
 
+
 class ActionGroupControl(Control):
     _NONE = 1
     _SPEED = 2
@@ -683,3 +684,56 @@ class LapTimeControl(Control):
         self._minutes.set(whole_minutes)
         self._seconds.set(("0" + str(whole_seconds))[-2:])
         self._milliseconds.set((str(milliseconds) + "000")[:3])
+
+
+class DiscountFactorAnalysisControl(Control):
+    _FUTURE_WEIGHTS = "Future Weights"
+    _REMAINING_STEPS = "Remaining Steps"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Comparison")
+
+        self._analysis_choice = tk.StringVar(value=DiscountFactorAnalysisControl._FUTURE_WEIGHTS)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(DiscountFactorAnalysisControl._FUTURE_WEIGHTS, self._analysis_choice)
+        self.add_radiobutton_improved(DiscountFactorAnalysisControl._REMAINING_STEPS, self._analysis_choice)
+
+    def show_future_weights(self):
+        return self._analysis_choice.get() == DiscountFactorAnalysisControl._FUTURE_WEIGHTS
+
+    def show_remaining_steps(self):
+        return self._analysis_choice.get() == DiscountFactorAnalysisControl._REMAINING_STEPS
+
+
+class ZoomInAndOutControl(Control):
+    _IN = "In <<"
+    _OUT = "Out >>"
+    _RESET = "Reset"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Zoom")
+
+        self._zoom_level = 0
+
+    def _add_widgets(self):
+        self.add_horizontal_push_button(ZoomInAndOutControl._IN, self.callback_zoom_in)
+        self.add_horizontal_push_button(ZoomInAndOutControl._OUT, self.callback_zoom_out)
+        self.add_horizontal_push_button(ZoomInAndOutControl._RESET, self.callback_zoom_reset)
+
+    def callback_zoom_in(self):
+        self._zoom_level += 1
+        self._guru_parent_redraw()
+
+    def callback_zoom_out(self):
+        if self._zoom_level > 0:
+            self._zoom_level -= 1
+            self._guru_parent_redraw()
+
+    def callback_zoom_reset(self):
+        if self._zoom_level > 0:
+            self._zoom_level = 0
+            self._guru_parent_redraw()
+
+    def get_zoom_level(self):
+        return self._zoom_level

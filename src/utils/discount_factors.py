@@ -53,10 +53,32 @@ class DiscountFactors:
         for i, m in enumerate(self._multipliers):
             print(self._discount_factors[i], "->", m)
 
-    def get_weights_plot_data(self, index: int):
-        plot_x = np.arange(self._max_steps)
-        plot_y = self._multipliers[index]
+    def get_weights_plot_data(self, index: int, zoom_level: int):
+        steps = self._get_steps_for_plot_zoom_level(zoom_level)
+        plot_x = np.arange(steps)
+        plot_y = self._multipliers[index][:steps]
         return plot_x, plot_y
+
+    def get_time_until_death_plot_data(self, index: int, zoom_level: int):
+        steps = self._get_steps_for_plot_zoom_level(zoom_level)
+        plot_x = np.arange(steps)
+        plot_y = []
+        for i in plot_x:
+            plot_y.append(np.sum(self._multipliers[index][:i + 1]))
+        return plot_x, plot_y
+
+    def _get_steps_for_plot_zoom_level(self, zoom_level: int):
+        if zoom_level <= 0:
+            return self._max_steps
+
+        steps = self._max_steps
+        for i in range(zoom_level):
+            if steps > 20:
+                steps /= 2
+            elif steps > 4:
+                steps -= 2
+
+        return int(steps + 1)
 
 discount_factors = DiscountFactors()
 

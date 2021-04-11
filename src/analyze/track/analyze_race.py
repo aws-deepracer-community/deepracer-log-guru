@@ -8,7 +8,7 @@ from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.episode.episode import Episode
 from src.graphics.track_graphics import TrackGraphics
 
-from src.analyze.core.controls import VideoControls
+from src.analyze.core.controls import VideoControls, LapTimeControl
 
 
 class AnalyzeRace(TrackAnalyzer):
@@ -18,11 +18,13 @@ class AnalyzeRace(TrackAnalyzer):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
         self._video_controls = VideoControls(self._button_pressed, control_frame)
+        self._display_lap_time = LapTimeControl(control_frame)
         self._timer = AnalyzeRace.Timer(self._draw)
 
         # self._race_episode = self.all_episodes[0]
 
     def build_control_frame(self, control_frame):
+        self._display_lap_time.add_to_control_frame()
         self._video_controls.add_to_control_frame()
 
     def _button_pressed(self, button_type):
@@ -37,7 +39,7 @@ class AnalyzeRace(TrackAnalyzer):
         self._timer.redraw()
 
     def _draw(self, simulation_time):
-        print("Time = ", round(simulation_time, 2))
+        self._display_lap_time.show_time(simulation_time)
         self.track_graphics.prepare_to_remove_old_cars()
         all_done = True
         colours = ["red", "green", "blue"]

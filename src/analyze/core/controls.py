@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2021 dmh23
 #
-
+import math
 import tkinter as tk
 from enum import IntEnum
 
@@ -656,3 +656,30 @@ class VideoControls(Control):
         self._guru_parent_redraw(VideoControls.STOP)
 
 
+class LapTimeControl(Control):
+
+    def __init__(self, control_frame: tk.Frame):
+        super().__init__(self.no_callback, control_frame, "Time")
+
+        self._minutes = tk.IntVar(value=0)
+        self._seconds = tk.IntVar(value=0)
+        self._milliseconds = tk.IntVar(value=0)
+
+    def _add_widgets(self):
+        tk.Label(self._label_frame, textvariable=self._minutes).grid(column=0, row=0, pady=0, padx=5, sticky=tk.W)
+        tk.Label(self._label_frame, text=":").grid(column=1, row=0, pady=0, padx=5, sticky=tk.W)
+        tk.Label(self._label_frame, textvariable=self._seconds).grid(column=2, row=0, pady=0, padx=5, sticky=tk.W)
+        tk.Label(self._label_frame, text=":").grid(column=3, row=0, pady=0, padx=5, sticky=tk.W)
+        tk.Label(self._label_frame, textvariable=self._milliseconds).grid(column=4, row=0, pady=0, padx=5, sticky=tk.W)
+
+    def no_callback(self):
+        pass
+
+    def show_time(self, seconds: float):
+        whole_seconds = math.floor(seconds)
+        whole_minutes = math.floor(seconds / 60)
+        milliseconds = int(1000 * (seconds - whole_seconds))
+
+        self._minutes.set(whole_minutes)
+        self._seconds.set(("0" + str(whole_seconds))[-2:])
+        self._milliseconds.set((str(milliseconds) + "000")[:3])

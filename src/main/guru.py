@@ -37,7 +37,7 @@ from src.tracks.tracks import get_all_tracks
 from src.ui.menu_bar import MenuBar
 from src.ui.please_wait import PleaseWait
 from src.ui.status_frame import StatusFrame
-from src.analyze.selector.episode_selector import EpisodeSelector
+from src.analyze.core.episode_selector import EpisodeSelector
 from src.ui.view_log_file_info import ViewLogFileInfo
 from src.utils.reward_percentiles import RewardPercentiles
 

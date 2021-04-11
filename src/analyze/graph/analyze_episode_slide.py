@@ -5,7 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
-from src.analyze.selector.episode_selector import EpisodeSelector
+from src.analyze.core.episode_selector import EpisodeSelector
 from src.episode.episode import Episode
 
 
@@ -21,8 +21,7 @@ class AnalyzeEpisodeSlide(GraphAnalyzer):
         self.episode_selector = episode_selector
 
     def build_control_frame(self, control_frame):
-        episode_selector_frame = self.episode_selector.get_label_frame(control_frame, self.guru_parent_redraw)
-        episode_selector_frame.pack()
+        self.episode_selector.add_to_control_frame(control_frame, self.guru_parent_redraw)
 
     def add_plots(self):
         axes :Axes = self.graph_figure.add_subplot()

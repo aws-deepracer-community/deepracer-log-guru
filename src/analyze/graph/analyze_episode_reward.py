@@ -6,7 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from src.analyze.core.controls import EpisodeRewardTypeControl
 from src.analyze.graph.analyze_episode_graph_base import AnalyzeEpisodeStat
-from src.analyze.selector.episode_selector import EpisodeSelector
+from src.analyze.core.episode_selector import EpisodeSelector
 
 class AnalyzeEpisodeReward(AnalyzeEpisodeStat):
 

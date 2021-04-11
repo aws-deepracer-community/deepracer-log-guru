@@ -6,8 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
-from src.analyze.selector.episode_selector import EpisodeSelector
-from src.episode.episode import Episode
+from src.analyze.core.episode_selector import EpisodeSelector
 from src.analyze.core.controls import EpisodeAxisControl
 
 
@@ -35,8 +34,7 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
     def build_control_frame(self, control_frame):
         self.axis_control.add_to_control_frame()
 
-        episode_selector_frame = self.episode_selector.get_label_frame(control_frame, self.guru_parent_redraw)
-        episode_selector_frame.pack()
+        self.episode_selector.add_to_control_frame(control_frame, self.guru_parent_redraw)
 
     def reset_labels(self, title_word: str, bar_label :str, line_label :str, second_axis_label: str=""):
         self.title_word = title_word

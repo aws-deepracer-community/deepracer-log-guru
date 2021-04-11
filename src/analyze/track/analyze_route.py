@@ -8,7 +8,7 @@ from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.event.event_meta import Event
 from src.graphics.track_graphics import TrackGraphics
 from src.ui.log_event_info_window import LogEventInfoWindow
-from src.analyze.selector.episode_selector import EpisodeSelector
+from src.analyze.core.episode_selector import EpisodeSelector
 from src.analyze.core.controls import MeasurementControl, TrackAppearanceControl, MoreFiltersControl
 from src.utils.colors import get_color_for_data, ColorPalette
 
@@ -52,9 +52,7 @@ class AnalyzeRoute(TrackAnalyzer):
         self._appearance_control.add_to_control_frame()
         self._more_filters_control.add_to_control_frame()
 
-        episode_selector_frame = self.episode_selector.get_label_frame(
-            control_frame, self.callback_selected_episode_changed)
-        episode_selector_frame.pack()
+        self.episode_selector.add_to_control_frame(control_frame, self.guru_parent_redraw)
 
     def left_button_pressed(self, track_point):
         episode = self.episode_selector.get_selected_episode()

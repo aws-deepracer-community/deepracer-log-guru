@@ -1,5 +1,6 @@
 import tkinter as tk
 
+
 class EpisodeSelector:
 
     def __init__(self):
@@ -11,6 +12,7 @@ class EpisodeSelector:
         self.filtered_episodes_ = None
         self.callback_method_ = None
         self.filtered_episodes_ = None
+        self.episode_info = None
 
     #
     # Public Methods
@@ -28,7 +30,7 @@ class EpisodeSelector:
         else:
             return None
 
-    def get_label_frame(self, parent_frame, callback_method):
+    def add_to_control_frame(self, parent_frame, callback_method):
         self.callback_method_ = callback_method
 
         label_frame = tk.LabelFrame(parent_frame, text="Episode", padx=5, pady=5)
@@ -45,13 +47,12 @@ class EpisodeSelector:
         first_button["command"] = self.button_press_first
         first_button.grid(column=2, row=0, pady=5, padx=3)
 
-        self.episode_info = tk.Label(label_frame, text="", textvariable=self.tk_episode_info_var_)
-        self.episode_info.grid(column=0, row=1, columnspan=3, pady=3)
+        self.episode_info = tk.Label(label_frame, text="", textvariable=self.tk_episode_info_var_, justify=tk.LEFT)
+        self.episode_info.grid(column=0, row=1, columnspan=3, pady=3, sticky=tk.W)
 
         self.update_episode_info_in_ui_()
 
-        return label_frame
-
+        label_frame.pack(pady=4, fill=tk.X, padx=10)
 
     #
     # Private methods
@@ -105,10 +106,3 @@ class EpisodeSelector:
                 "# " + str(episode.id) + "\n" +
                 str(round(episode.predicted_lap_time, 1)) + " secs\n" +
                 str(average_speed) + " m/s")
-
-
-
-
-
-
-

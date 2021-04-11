@@ -1,36 +1,39 @@
 
-provide camera view projection 60 degreees each side per
-https://docs.aws.amazon.com/deepracer/latest/developerguide/deepracer-choose-race-type.html
-quote "The camera has 120-degree wide angle lens"
-quote "obstacles are cuboid boxes with the same dimensions (9.5" (L) x 15.25" (W) x 10/5" (H)) as the AWS DeepRacer vehicle's package box."
-24cm x 38cm
-
 Finish Soon
 ===========
 
-+ Proto option for hiding half-finished stuff like "race"
++ Add support for different future discount rewards & DF (dynamic controls) for
+      (a) episode route  (b) heatmap    (c) episode reward
 
-+ Heatmap when not visit-based is too keen to eliminate stuff (allow /20 or /30 instead of /10 minimum??)
-+ Heatmap consider making the "start" exclusion a little bit shorter?
++ Ability (in personalize config) to turn off the DF and/or new reward pre-calculations (to speed up file loading)
+    (remember to make menus & controls respond accordingly)
+
++ Migrate all heatmap/routes to the new approach used for steering straight/left/right
++ Extensive re-testing ... NB heatmap for single episode should give same colours, or very similar, as episode route)
+
 + Heatmap colours may sometimes be based on PERCENTILEs - esp. for rewards  (or performance-efficient compromise)
-(typically match what episode route does, possibly even share config settings to ensure they give similar colours??)
-(good test - heatmap for single episode should give same colours, or very similar, as episode route)
+
++ Heatmap issues (a) tune visit based inclusion, especially when starts are shown - eliminates too much stuff??
+                 (b) try a shorter start exclusion - and in any case, move its config into the personalize area
+
++ Consistent support for 0.2 sec delay before first event ... in conjunction with adding as a measurement option
+
++ Load files (a) space a bit closer for more files to be visible
+             (b) show training mins/hrs and seconds for best/mid lap
+             (c) flag (with a * or colour) the best file for each stat (certainly laps)
+             
++ Move zoom to its own zoom menu, and add some convenience zooms for each sector
+
++ Move sector definitions into new personalization area (same approach as for track annotations)
+
++ Fix the example track annotation for Reinvent 2018 (since the waypoints changed ... !)
 
 + Finish testing new reward function integration
 + Test with complicated DRF style reward functions too
 
-+ Finish support for all the newly added route/heatmap measurement options (acceleration, steering left etc.)
-+ Add the (dynamic) variety of DF options for current reward (add dynamically to dropdown options etc.)
-
-+ Enhance the Episode reward analysis for alternate DF factors
-
-+ Simple graph(s) for extra comparison between discount factors
-         (a) traditional weight of each future step (b) steps until end versus future reward
-
 + Finish simple re-org of config in the "personalize" package instead ...
 
 + professionalise and standardize remaining (graph) colours to match excellent quality of new heatmaps
-+ more testing of colours and heatmaps
 
 + pressing a button when screen is already drawing does not redraw but does still press the button - VERY ODD BUG FOR THE USER
 
@@ -53,8 +56,6 @@ Track-only view - with facilities like measuring distance between points, inside
 Curve fitting - as special feature of track-only view?
 Best possible lap time predictor - by piecing together fastest sections
 Time Animations of esp. lap time distribution or action distribution
-Ability to "race" episodes against each other (episodes chosen by filter or favourites per ****)
--> similarly, or object avoidance, could animate the moving bots (IF get position info at every debug step...)
 
 Existing Analysis Enhancements
 =============================
@@ -77,6 +78,7 @@ Maximise space around graphs (see how quarterly view did it)
 Colour-code quarterly progress to see at a glance if learning or not - and then can add a LOT of new indicators - like a true dashboard...
 Enhance action space analysis to show distribution within each sector (multiple graphs on screen at same time ...)
 Perhaps use caching to speed up repeated flicking between heatmap options
+Race might be able to move bots (would need to be for ONE episode only ... )?
 
 Filters
 =======

@@ -244,17 +244,18 @@ class Episode:
             e.skew = get_turn_between_directions(track_bearing, e.true_bearing)
 
     def set_acceleration_and_braking_on_events(self):
-        previous_speeds = [-5, -4, -3, -2, -1]
-        previous_times = [0, 0, 0, 0, 0]
-        for e in self.events:
-            recent_average_speed = sum(previous_speeds) / len(previous_speeds)
-            if e.time_elapsed != previous_times[0]:
-                if e.track_speed > recent_average_speed and e.track_speed > previous_speeds[0]:
-                    e.acceleration = (e.track_speed - previous_speeds[0]) / (e.time_elapsed - previous_times[0])
-                elif e.track_speed < recent_average_speed and e.track_speed < previous_speeds[0]:
-                    e.braking = (previous_speeds[0] - e.track_speed) / (e.time_elapsed - previous_times[0])
-            previous_times = previous_times[1:] + [e.time_elapsed]
-            previous_speeds = previous_speeds[1:] + [e.track_speed]
+        previous_time = -1
+        max_event_id = len(self.events) - 1
+        for i, e in enumerate(self.events):
+            if e.time_elapsed != previous_time:
+                earlier_event = self.events[max(0, i - 2)]
+                later_event = self.events[min(max_event_id, i + 2)]
+                time_difference = later_event.time_elapsed - earlier_event.time_elapsed
+                if e.speed < 1.05 * e.track_speed and earlier_event.track_speed > later_event.track_speed:
+                    e.braking = (earlier_event.track_speed - later_event.track_speed) / time_difference
+                elif e.speed > 0.95 * e.track_speed and earlier_event.track_speed < later_event.track_speed:
+                    e.acceleration = (later_event.track_speed - earlier_event.track_speed) / time_difference
+            previous_time = e.time_elapsed
 
     def set_reward_total_on_events(self):
         reward_total = 0.0

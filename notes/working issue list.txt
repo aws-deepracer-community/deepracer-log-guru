@@ -19,14 +19,13 @@ Finish Soon
 + Consistent support for 0.2 sec delay before first event ... in conjunction with adding as a measurement option
 
 + Load files (a) space a bit closer for more files to be visible
-             (b) show training mins/hrs and seconds for best/mid lap
-             (c) flag (with a * or colour) the best file for each stat (certainly laps)
-             
+             (b) show training mins/hrs
+             (c) show seconds for best/mid lap    (ENH-34)
+             (d) flag (with a * or colour) the best file for each stat (certainly laps)
+
 + Move zoom to its own zoom menu, and add some convenience zooms for each sector
 
 + Move sector definitions into new personalization area (same approach as for track annotations)
-
-+ Fix the example track annotation for Reinvent 2018 (since the waypoints changed ... !)
 
 + Finish testing new reward function integration
 + Test with complicated DRF style reward functions too
@@ -145,8 +144,6 @@ Analysis articles - grab ideas from:
 34-ENH  Show lap times as well as # of steps in open file dialog
 32-ENH  Ability to increase text size of menus and frame-based controls etc. (for better YouTube reproduction)
 31-ENH  Ability to see more stats and info across multiple files (esp. the training hyper parameters)  [export button would be nice] [ main thing is to be able to see/review how I tinkered with the hyper parameters (coupled with a reminder of the defaults - so easy to see what changed, and by how much]
-26-ENH  Bit of fun - ability to simulate one or more episode as real-time "race" around the track
-23-ENH  Ability to extract episode route details (for use in subsequent reward function)  [esp. focussed on giving ALL the inputs including difficult track position calculations etc]
 22-ENH  Add ability to chose favourite episodes   [ideally keep a record in meta file for next time...]
 19-ENH  Optimize performance & check button response in "convergence" analysis  [CONTAINS A HOST OF ISSUES AND IDEAS ...]
 17-ENH  Add filtered/all option to ALL analysis screens, including episode route [Think again about whether applying all/filtered option to the "video" controls is viable]

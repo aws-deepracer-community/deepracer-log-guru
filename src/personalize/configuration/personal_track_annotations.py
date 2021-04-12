@@ -6,27 +6,25 @@ from src.graphics.track_annotations import Dot, Line, Cone, Route, RoutePoint, W
 
 
 reinvent_2018_annotations = [
-    Dot(7, "L", 0, "green"),
-    Dot(7, "L", 0.1, "yellow"),
-    Dot(7, "R", 0.1, "yellow"),
-    Dot(7, "L", 0.2, "red"),
-    Dot(7, "R", 0.2, "red"),
-    Line(22, "L", 0.25, "magenta", 154, 5),
-    Cone(50, "R", 0.1, "orange", -100, 3, 10),
+    Dot(15, "L", 0, "green"),
+    Dot(15, "L", 0.12, "yellow"),
+    Dot(15, "R", 0.12, "yellow"),
+    Dot(15, "L", 0.24, "red"),
+    Dot(15, "R", 0.24, "red"),
+    Line(37, "L", 0.25, "magenta", 154, 5),
+    Cone(81, "R", 0.1, "orange", -100, 3, 10),
     WorldDot(6, 2, "white"),
 
     Route("grey", [
-        RoutePoint(8, "L", 0.15, "R", 0.15),
-        RoutePoint(10, "L", 0.2, "R", 0.1),
-        RoutePoint(11, "L", 0.22, "R", 0.08),
-        RoutePoint(12, "L", 0.24, "R", 0.06),
-        RoutePoint(13, "L", 0.26, "R", 0.04),
-        RoutePoint(14, "L", 0.28, "R", 0.02),
-        RoutePoint(15, "L", 0.30, "R", 0.00),
-        RoutePoint(16, "L", 0.30, "R", 0.00),
-        RoutePoint(17, "L", 0.30, "R", 0.00),
-        RoutePoint(18, "L", 0.30, "L", 0.05),
-        RoutePoint(21, "L", 0.30, "L", 0.10),
+        RoutePoint(16, "L", 0.15, "R", 0.15),
+        RoutePoint(22, "L", 0.2, "R", 0.1),
+        RoutePoint(24, "L", 0.22, "R", 0.08),
+        RoutePoint(26, "L", 0.24, "R", 0.06),
+        RoutePoint(28, "L", 0.26, "R", 0.03),
+        RoutePoint(30, "L", 0.28, "R", 0.00),
+        RoutePoint(32, "L", 0.30, "L", 0.03),
+        RoutePoint(34, "L", 0.32, "L", 0.06),
+        RoutePoint(36, "L", 0.34, "L", 0.09),
 
     ])
 ]

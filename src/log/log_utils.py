@@ -23,7 +23,7 @@ def import_new_logs(log_files, please_wait, log_directory):
 
 def get_model_info_for_open_model_dialog(track, log_directory):
     model_names = []
-    model_files = {}
+    model_logs = {}
     for f in os.listdir(log_directory):
         if f.endswith(META_FILE_SUFFIX):
             log = Log(log_directory)
@@ -32,8 +32,8 @@ def get_model_info_for_open_model_dialog(track, log_directory):
             if track.has_world_name(log.get_log_meta().world_name):
                 model_name = log.get_log_meta().model_name
                 model_names.append(model_name)
-                model_files[model_name] = f
-    return model_files, model_names
+                model_logs[model_name] = log
+    return model_logs, model_names
 
 
 def get_possible_new_model_log_files(log_directory: str):

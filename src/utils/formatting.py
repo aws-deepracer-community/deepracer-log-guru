@@ -1,7 +1,7 @@
-def get_pretty_small_float(number, max, decimal_places):
+def get_pretty_small_float(number, max_value, decimal_places):
     assert 0 <= decimal_places <= 1
 
-    if max >= 10 and abs(round(number, decimal_places)) < 10:
+    if max_value >= 10 and abs(round(number, decimal_places)) < 10:
         prepend = " "
     else:
         prepend = ""
@@ -17,10 +17,14 @@ def get_pretty_small_float(number, max, decimal_places):
     else:
         return full_str
 
+
 def get_pretty_large_integer(number):
     return "{:,}".format(round(number))
+
 
 def get_pretty_large_float(number):
     return "{:,}".format(number)
 
 
+def get_pretty_whole_percentage(number):
+    return str(round(number)) + " %"

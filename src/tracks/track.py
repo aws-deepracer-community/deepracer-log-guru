@@ -1,6 +1,7 @@
 import src.utils.geometry as geometry
 from src.analyze.util.heatmap import HeatMap
 from src.analyze.util.visitor import VisitorMap
+from src.configuration.real_world import VEHICLE_LENGTH, VEHICLE_WIDTH
 from src.graphics.track_graphics import TrackGraphics
 from src.utils.types import Point
 
@@ -238,6 +239,25 @@ class Track:
         else:
             return previous_id, closest_waypoint_id
 
+    def get_projected_distance_on_track(self, point: Point, heading: float, closest_waypoint_id: int):
+
+        travel_distance = 0
+
+        for w in self._drawing_points[closest_waypoint_id:] + self._drawing_points[:closest_waypoint_id]:
+            direction_to_left_target = geometry.get_bearing_between_points(point, w.left_safe)
+            direction_to_right_target = geometry.get_bearing_between_points(point, w.right_safe)
+
+            relative_direction_to_left_target = geometry.get_turn_between_directions(heading, direction_to_left_target)
+            relative_direction_to_right_target = geometry.get_turn_between_directions(heading, direction_to_right_target)
+
+            if relative_direction_to_left_target >= 0 and relative_direction_to_right_target <= 0:
+                if abs(relative_direction_to_left_target) < abs(relative_direction_to_right_target):
+                    travel_distance = geometry.get_distance_between_points(point, w.left_safe)
+                else:
+                    travel_distance = geometry.get_distance_between_points(point, w.right_safe)
+            else:
+                return travel_distance
+
     #
     # PRIVATE implementation
     #
@@ -295,8 +315,13 @@ class Track:
         right = previous
         left_outer = previous
         right_outer = previous
+        left_safe = previous
+        right_safe = previous
 
         edge_error_tolerance = 0.01
+        safe_car_overhang = min(VEHICLE_LENGTH, VEHICLE_WIDTH) / 2
+        outer_distance = 0.08
+
         for i, w in enumerate(self._track_waypoints + [self._track_waypoints[0]]):
             # Tracks often contain a repeated waypoint, suspect this is deliberate to mess up waypoint algorithms!
             if previous != w:
@@ -311,19 +336,22 @@ class Track:
                 if geometry.get_distance_between_points(previous_left, left) < edge_error_tolerance:
                     left = previous_left
                 else:
-                    left_outer = geometry.get_edge_point(previous, w, future, 90, self._track_width / 2 + 0.08)
+                    left_outer = geometry.get_edge_point(previous, w, future, 90, self._track_width / 2 + outer_distance)
+                    left_safe = geometry.get_edge_point(previous, w, future, 90, self._track_width / 2 + safe_car_overhang)
                 right = geometry.get_edge_point(previous, w, future, -90, self._track_width / 2)
                 if geometry.get_distance_between_points(previous_right, right) < edge_error_tolerance:
                     right = previous_right
                 else:
-                    right_outer = geometry.get_edge_point(previous, w, future, -90, self._track_width / 2 + 0.08)
+                    right_outer = geometry.get_edge_point(previous, w, future, -90, self._track_width / 2 + outer_distance)
+                    right_safe = geometry.get_edge_point(previous, w, future, -90, self._track_width / 2 + safe_car_overhang)
                 self._consider_new_point_in_area(left_outer)
                 self._consider_new_point_in_area(w)
                 self._consider_new_point_in_area(right_outer)
                 previous = w
 
             is_divider = (i in self._track_sector_dividers)
-            self._drawing_points.append(Track.DrawingPoint(left, w, right, left_outer, right_outer, is_divider))
+            self._drawing_points.append(Track.DrawingPoint(left, w, right, left_outer, right_outer,
+                                                           left_safe, right_safe, is_divider))
 
         self._mid_x = (self._min_x + self._max_x) / 2
         self._mid_y = (self._min_y + self._max_y) / 2
@@ -396,10 +424,13 @@ class Track:
     class DrawingPoint:
         def __init__(self, left: Point, middle: Point, right: Point,
                      left_outer: Point, right_outer: Point,
+                     left_safe: Point, right_safe: Point,
                      is_divider: bool):
             self.left = left
             self.middle = middle
             self.right = right
             self.left_outer = left_outer
             self.right_outer = right_outer
+            self.left_safe = left_safe
+            self.right_safe = right_safe
             self.is_divider = is_divider

@@ -74,6 +74,7 @@ class Episode:
         self.set_acceleration_and_braking_on_events()
 
         if do_full_analysis:
+            self.set_projected_distances_on_events(track)
             self._set_distance_from_center_on_events(track)
             self._set_before_and_after_waypoints_on_events(track)
             self._set_skew_on_events(track)   # Relies on before and after
@@ -256,6 +257,11 @@ class Episode:
                 elif e.speed > 0.95 * e.track_speed and earlier_event.track_speed < later_event.track_speed:
                     e.acceleration = (later_event.track_speed - earlier_event.track_speed) / time_difference
             previous_time = e.time_elapsed
+
+    def set_projected_distances_on_events(self, track: Track):
+        e: Event
+        for e in self.events:
+            e.projected_travel_distance = track.get_projected_distance_on_track((e.x, e.y), e.true_bearing, e.closest_waypoint_index)
 
     def set_reward_total_on_events(self):
         reward_total = 0.0

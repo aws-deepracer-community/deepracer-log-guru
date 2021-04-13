@@ -2,6 +2,10 @@
 Finish Soon
 ===========
 
++ Bug: change episode wth << or >> etc. and previous event is still highlighted in the middle of nowhere!
+
++ Add projection distance as yet another measure we can plot for
+
 + Add support for different future discount rewards & DF (dynamic controls) for
       (a) episode route  (b) heatmap    (c) episode reward
 

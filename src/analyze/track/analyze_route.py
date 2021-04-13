@@ -105,8 +105,8 @@ class AnalyzeRoute(TrackAnalyzer):
         self.track_graphics.remove_highlights()
 
         if self.chosen_event:
+            dash_pattern = (1, 1)
             if self._show_camera_vision:
-                dash_pattern = (1, 1)
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
                                                               self.chosen_event.heading + CAMERA_VISION_ANGLE / 2, 2, 3,
                                                               EVENT_HIGHLIGHT_COLOUR, dash_pattern)
@@ -115,11 +115,12 @@ class AnalyzeRoute(TrackAnalyzer):
                                                               EVENT_HIGHLIGHT_COLOUR, dash_pattern)
             if self._show_true_bearing:
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
-                                                              self.chosen_event.true_bearing, 2, 3,
+                                                              self.chosen_event.true_bearing,
+                                                              self.chosen_event.projected_travel_distance, 3,
                                                               TRUE_HEADING_HIGHLIGHT_COLOUR)
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
                                                               self.chosen_event.true_bearing + 180, 2, 3,
-                                                              TRUE_HEADING_HIGHLIGHT_COLOUR)
+                                                              TRUE_HEADING_HIGHLIGHT_COLOUR, dash_pattern)
             if self._show_heading:
                 self.track_graphics.plot_angle_line_highlight((self.chosen_event.x, self.chosen_event.y),
                                                               self.chosen_event.heading, 2, 3, EVENT_HIGHLIGHT_COLOUR)

@@ -55,6 +55,7 @@ class Event:
         self.new_discounted_future_reward = 0.0
         self.acceleration = 0.0
         self.braking = 0.0
+        self.projected_travel_distance = 0.0
 
         self.dodgy_data = False
 

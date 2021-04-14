@@ -56,7 +56,10 @@ class AnalyzeHeatmap(TrackAnalyzer):
                 self._heat_map.draw_statistic(self.track_graphics, brightness, color_palette, max_speed, min_speed)
             elif self._measurement_control.measure_visits():
                 self._heat_map.draw_visits(self.track_graphics, brightness, color_palette)
-            elif self._measurement_control.measure_steering_straight() or self._measurement_control.measure_steering_left() or self._measurement_control.measure_steering_right():
+            elif self._measurement_control.measure_steering_straight() or \
+                    self._measurement_control.measure_steering_left() or \
+                    self._measurement_control.measure_steering_right() or \
+                    self._measurement_control.measure_projected_travel_distance():
                 self._heat_map.draw_brightness_statistic(self.track_graphics, brightness, color_palette)
             ### Otherwise the OLD kludgy way...
             elif self._measurement_control.measure_slide():
@@ -136,6 +139,8 @@ class AnalyzeHeatmap(TrackAnalyzer):
                     brightness_method = measurement_brightness.get_brightness_for_steering_left
                 elif self._measurement_control.measure_steering_right():
                     brightness_method = measurement_brightness.get_brightness_for_steering_right
+                elif self._measurement_control.measure_projected_travel_distance():
+                    brightness_method = measurement_brightness.get_brightness_for_projected_travel_distance
                 else:
                     brightness_method = None
 

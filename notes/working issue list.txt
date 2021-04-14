@@ -4,8 +4,6 @@ Finish Soon
 
 + Bug: change episode wth << or >> etc. and previous event is still highlighted in the middle of nowhere!
 
-+ Add projection distance as yet another measure we can plot for
-
 + Add support for different future discount rewards & DF (dynamic controls) for
       (a) episode route  (b) heatmap    (c) episode reward
 
@@ -22,10 +20,8 @@ Finish Soon
 
 + Consistent support for 0.2 sec delay before first event ... in conjunction with adding as a measurement option
 
-+ Load files (a) space a bit closer for more files to be visible
-             (b) show training mins/hrs
-             (c) show seconds for best/mid lap    (ENH-34)
-             (d) flag (with a * or colour) the best file for each stat (certainly laps)
++ Load files (a) show training mins/hrs
+             (b) show seconds for best/mid lap    (ENH-34)
 
 + Move zoom to its own zoom menu, and add some convenience zooms for each sector
 

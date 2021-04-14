@@ -67,6 +67,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.state_all_wheels_on_track = tk.StringVar()
         self.state_acceleration = tk.StringVar()
         self.state_braking = tk.StringVar()
+        self.state_projected_travel_distance = tk.StringVar()
 
         self.make_label_and_value(state_frame, 0, "Progress", self.state_progress)
         self.make_label_and_value(state_frame, 1, "Time", self.state_time)
@@ -82,6 +83,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.make_label_and_value(state_frame, 11, "All Wheels on Track", self.state_all_wheels_on_track)
         self.make_label_and_value(state_frame, 12, "Acceleration", self.state_acceleration)
         self.make_label_and_value(state_frame, 13, "Braking", self.state_braking)
+        self.make_label_and_value(state_frame, 14, "Projected Travel", self.state_projected_travel_distance)
 
 
         self.action_id = tk.StringVar()
@@ -165,6 +167,7 @@ class LogEventInfoWindow(tk.Toplevel):
             self.state_braking.set(str(round(event.braking, 1)) + "  m/s/s")
         else:
             self.state_braking.set("---")
+        self.state_projected_travel_distance.set(str(round(event.projected_travel_distance, 1)) + " m")
 
         self.action_id.set(str(event.action_taken))
         self.action_steering.set(get_formatted_steering(event.steering_angle))

@@ -143,7 +143,7 @@ class GraphFormatControl(Control):
 
 
 class MeasurementControl(Control):
-
+    _VISITS = "Visits"
     _EVENT_REWARD = "Event Reward"
     _FUTURE_REWARD = "Future Reward"
     _NEW_EVENT_REWARD = "New Event Reward"
@@ -160,14 +160,14 @@ class MeasurementControl(Control):
     _STEERING_RIGHT = "Steering Right"
     _SKEW = "Skew"
     _SLIDE = "Slide"
+    _PROJECTED_TRAVEL_DISTANCE = "Projected Travel"
     _SECONDS = "Seconds"
-    _VISITS = "Visits"
     _OTHER = "Other:"
 
     _ALL_MEASUREMENTS_EXCEPT_SECONDS = [
-        _EVENT_REWARD, _FUTURE_REWARD, _NEW_EVENT_REWARD, _NEW_FUTURE_REWARD, _ACTION_SPEED, _TRACK_SPEED,
+        _VISITS, _EVENT_REWARD, _FUTURE_REWARD, _NEW_EVENT_REWARD, _NEW_FUTURE_REWARD, _ACTION_SPEED, _TRACK_SPEED,
         _PROGRESS_SPEED, _ACCELERATION, _BRAKING, _PREDICTED_LAP, _SMOOTHNESS, _STEERING_STRAIGHT, _STEERING_LEFT,
-        _STEERING_RIGHT, _SKEW, _SLIDE, _VISITS
+        _STEERING_RIGHT, _SKEW, _SLIDE, _PROJECTED_TRAVEL_DISTANCE
                                         ]
 
     def __init__(self, redraw_callback: callable, control_frame: tk.Frame, measure_seconds: bool):
@@ -255,6 +255,9 @@ class MeasurementControl(Control):
 
     def measure_braking(self):
         return self._check_if_measurement(MeasurementControl._BRAKING)
+
+    def measure_projected_travel_distance(self):
+        return self._check_if_measurement(MeasurementControl._PROJECTED_TRAVEL_DISTANCE)
 
 
 class ConvergenceGranularityControl(Control):

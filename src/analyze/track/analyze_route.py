@@ -192,6 +192,8 @@ class AnalyzeRoute(TrackAnalyzer):
             plot_event_method = self.colour_scheme_acceleration
         elif self._measurement_control.measure_braking():
             plot_event_method = self.colour_scheme_braking
+        elif self._measurement_control.measure_projected_travel_distance():
+            plot_event_method = self.colour_scheme_projected_travel_distance
         elif self._measurement_control.measure_visits():
             plot_event_method = self.colour_scheme_none
         else:
@@ -268,6 +270,10 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def colour_scheme_right_steering(self, event, max_speed, speed_range):
         brightness = measurement_brightness.get_brightness_for_steering_right(event)
+        self._plot_dot(event, brightness)
+
+    def colour_scheme_projected_travel_distance(self, event, max_speed, speed_range):
+        brightness = measurement_brightness.get_brightness_for_projected_travel_distance(event)
         self._plot_dot(event, brightness)
 
     def colour_scheme_slide(self, event: Event, max_speed, speed_range):

@@ -399,6 +399,11 @@ class Episode:
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
                                         self._get_event_future_discounted_reward)
 
+    def apply_alternate_discounted_future_reward_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
+                                 action_space_filter: ActionSpaceFilter, waypoint_range, discount_factor_index):
+        self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
+                                        self._get_event_alternate_future_discounted_reward, discount_factor_index)
+
     def apply_new_discounted_future_reward_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end,
                                  action_space_filter: ActionSpaceFilter, waypoint_range):
         self._apply_episode_to_heat_map(heat_map, skip_start, skip_end, action_space_filter, waypoint_range,
@@ -454,6 +459,10 @@ class Episode:
         return max(0, event.discounted_future_rewards[0])
 
     @staticmethod
+    def _get_event_alternate_future_discounted_reward(event: Event, discount_factor_index: int):
+        return max(0, event.discounted_future_rewards[discount_factor_index])
+
+    @staticmethod
     def _get_event_new_future_discounted_reward(event: Event):
         return max(0, event.new_discounted_future_reward)
 
@@ -501,7 +510,7 @@ class Episode:
             previous = e
 
     # This is now the OLD way to do this
-    def _apply_episode_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter, waypoint_range, stat_extractor: callable):
+    def _apply_episode_to_heat_map(self, heat_map: HeatMap, skip_start, skip_end, action_space_filter: ActionSpaceFilter, waypoint_range, stat_extractor: callable, optional_parameter=None):
         assert min(skip_start, skip_end) >= 0
         previous = self.events[0]
         if self.lap_complete:
@@ -510,7 +519,10 @@ class Episode:
             skip_end = self.events[-1].step - skip_end
         for e in self.events:
             e: Event
-            stat = stat_extractor(e)
+            if optional_parameter is None:
+                stat = stat_extractor(e)
+            else:
+                stat = stat_extractor(e, optional_parameter)
             if skip_start <= e.step <= skip_end and e.is_within_waypoint_range(waypoint_range) and (
                     not action_space_filter or action_space_filter.should_show_action(e.action_taken)):
                 self._apply_event_stat_to_heat_map(e, previous, heat_map, stat)

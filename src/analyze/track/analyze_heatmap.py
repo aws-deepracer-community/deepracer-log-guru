@@ -26,6 +26,8 @@ class AnalyzeHeatmap(TrackAnalyzer):
         self._heat_map = None
         self.please_wait = please_wait
 
+        self._alternate_discount_factor_index = None
+
     def build_control_frame(self, control_frame):
         self._episodes_control.add_to_control_frame()
         self._measurement_control.add_to_control_frame()
@@ -178,6 +180,11 @@ class AnalyzeHeatmap(TrackAnalyzer):
                     self._recalculate_measure_acceleration(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
                 elif self._measurement_control.measure_braking():
                     self._recalculate_measure_braking(episodes, skip_start, skip_end, action_space_filter, waypoint_range)
+                else:
+                    self._alternate_discount_factor_index = self._measurement_control.get_alternate_discount_factor_index()
+                    if self._alternate_discount_factor_index is not None:
+                        self._recalculate_measure_alternate_discounted_future_reward(episodes, skip_start, skip_end,
+                                                                                     action_space_filter, waypoint_range)
 
     def _recalculate_measure_visits(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
         e: Episode
@@ -219,6 +226,14 @@ class AnalyzeHeatmap(TrackAnalyzer):
         e: Episode
         for i, e in enumerate(episodes):
             e.apply_discounted_future_reward_to_heat_map(self._heat_map, skip_start, skip_end, action_space_filter, waypoint_range)
+            self.please_wait.set_progress((i + 1) / len(episodes) * 100)
+
+    def _recalculate_measure_alternate_discounted_future_reward(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):
+        e: Episode
+        for i, e in enumerate(episodes):
+            e.apply_alternate_discounted_future_reward_to_heat_map(self._heat_map, skip_start, skip_end,
+                                                                   action_space_filter, waypoint_range,
+                                                                   self._alternate_discount_factor_index)
             self.please_wait.set_progress((i + 1) / len(episodes) * 100)
 
     def _recalculate_measure_new_discounted_future_reward(self, episodes, skip_start, skip_end, action_space_filter, waypoint_range):

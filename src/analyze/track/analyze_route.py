@@ -35,6 +35,8 @@ class AnalyzeRoute(TrackAnalyzer):
 
         self.episode_selector = episode_selector
 
+        self._alternate_discount_factor_index = None
+
         self.chosen_event = None
 
         self.floating_window = None
@@ -197,8 +199,11 @@ class AnalyzeRoute(TrackAnalyzer):
         elif self._measurement_control.measure_visits():
             plot_event_method = self.colour_scheme_none
         else:
-            print("OOOPS - unknown colour scheme!")
-            return
+            self._alternate_discount_factor_index = self._measurement_control.get_alternate_discount_factor_index()
+            if self._alternate_discount_factor_index is not None:
+                plot_event_method = self.colour_scheme_alternate_discount_factor
+            else:
+                return
 
         max_speed = self.action_space.get_max_speed()
         speed_range = self.action_space.get_speed_range()
@@ -275,6 +280,15 @@ class AnalyzeRoute(TrackAnalyzer):
     def colour_scheme_projected_travel_distance(self, event, max_speed, speed_range):
         brightness = measurement_brightness.get_brightness_for_projected_travel_distance(event)
         self._plot_dot(event, brightness)
+
+    # FINISH THIS - WHERE'S THE PERCENTILE???
+    def colour_scheme_alternate_discount_factor(self, event, max_speed, speed_range):
+        df_index = self._measurement_control.get_alternate_discount_factor_index()
+        percentile = self.all_episodes_reward_percentiles.get_discounted_future_reward_percentile(
+            event.discounted_future_rewards[df_index], df_index)
+        brightness = min(1, percentile / 100 * 0.9 + 0.1)
+        self._plot_dot(event, brightness)
+    # ###########
 
     def colour_scheme_slide(self, event: Event, max_speed, speed_range):
         brightness = max(0.1, min(1, 0.1 + 0.9 * abs(event.slide) / _WORST_SLIDE))

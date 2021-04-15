@@ -369,6 +369,9 @@ class MainApp(tk.Frame):
         self.episode_filter.set_all_episodes(self.log.get_episodes())
         self.reapply_episode_filter()
 
+        # Re-issue control to current analyzer so it has the chance to redraw its controls for the new log
+        self.analyzer.take_control()
+
         if redraw_menu_afterwards:
             self.menu_bar = MenuBar(root, self, True)
             self.update()

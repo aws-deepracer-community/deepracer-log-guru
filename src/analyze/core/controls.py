@@ -11,6 +11,7 @@ from enum import IntEnum
 
 from src.analyze.core.control import Control
 from src.utils.colors import ColorPalette
+from src.utils.discount_factors import discount_factors
 
 
 class EpisodeCheckButtonControl(Control):
@@ -163,6 +164,7 @@ class MeasurementControl(Control):
     _PROJECTED_TRAVEL_DISTANCE = "Projected Travel"
     _SECONDS = "Seconds"
     _OTHER = "Other:"
+    _ALTERNATE_DISCOUNT_FACTOR = "Future DF = "
 
     _ALL_MEASUREMENTS_EXCEPT_SECONDS = [
         _VISITS, _EVENT_REWARD, _FUTURE_REWARD, _NEW_EVENT_REWARD, _NEW_FUTURE_REWARD, _ACTION_SPEED, _TRACK_SPEED,
@@ -176,6 +178,7 @@ class MeasurementControl(Control):
         self._current_measurement_dropdown = tk.StringVar()
         self._show_measure_seconds = measure_seconds
         self._redraw_callback = redraw_callback
+        self._alternate_discount_factor_dict = dict()
 
     def _add_widgets(self):
         self.add_radiobutton_improved(MeasurementControl._VISITS, self._current_measurement_button)
@@ -190,6 +193,13 @@ class MeasurementControl(Control):
         all_measurements = MeasurementControl._ALL_MEASUREMENTS_EXCEPT_SECONDS.copy()
         if self._show_measure_seconds:
             all_measurements.append(MeasurementControl._SECONDS)
+
+        self._alternate_discount_factor_dict = dict()
+        for i in range(0, discount_factors.get_number_of_discount_factors()):
+            name = MeasurementControl._ALTERNATE_DISCOUNT_FACTOR + str(discount_factors.get_discount_factor(i))
+            self._alternate_discount_factor_dict[name] = i
+            if i > 0:
+                all_measurements.append(name)
 
         self.add_dropdown(
             "", self._current_measurement_dropdown,
@@ -258,6 +268,16 @@ class MeasurementControl(Control):
 
     def measure_projected_travel_distance(self):
         return self._check_if_measurement(MeasurementControl._PROJECTED_TRAVEL_DISTANCE)
+
+    def get_alternate_discount_factor_index(self):
+        if self._current_measurement_button.get() == MeasurementControl._OTHER:
+            choice = self._current_measurement_dropdown.get()
+        else:
+            choice = self._current_measurement_button.get()
+        if choice.startswith(MeasurementControl._ALTERNATE_DISCOUNT_FACTOR):
+            return self._alternate_discount_factor_dict[choice]
+        else:
+            return None
 
 
 class ConvergenceGranularityControl(Control):
@@ -728,8 +748,6 @@ class DiscountFactorAnalysisControl(Control):
 
     def show_bonus_1000(self):
         return self._analysis_choice.get() == DiscountFactorAnalysisControl._BONUS_1000
-
-
 
 
 class ZoomInAndOutControl(Control):

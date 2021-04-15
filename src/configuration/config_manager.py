@@ -16,7 +16,7 @@ class ConfigManager:
         else:
             self._configuration_dictionary = {}
 
-        self._ensure_field_set(_KEY_LOG_DIRECTORY, "")
+        self._ensure_field_set(_KEY_LOG_DIRECTORY, ".")
         self._ensure_field_set(_KEY_LAST_OPEN_TRACK, "reinvent_base")
 
         if not config_exists:

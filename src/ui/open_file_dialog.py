@@ -25,10 +25,18 @@ class OpenFileDialog(Dialog):
             all_progress_percent.append(self._get_progress_percent(log_meta))
             all_success_percent.append(self._get_success_percent(log_meta))
 
-        best_best_steps = min(all_best_steps)
-        best_average_steps = min(all_average_steps)
-        best_progress_percent = max(all_progress_percent)
-        best_success_percent = max(all_success_percent)
+        if len(all_progress_percent) == 0:
+            return
+        else:
+            best_progress_percent = max(all_progress_percent)
+            best_success_percent = max(all_success_percent)
+
+        if show_laps:
+            best_best_steps = min(all_best_steps)
+            best_average_steps = min(all_average_steps)
+        else:
+            best_best_steps = None
+            best_average_steps = None
 
         self._place_in_grid(0, 3, tk.Label(master, text="Episodes", justify=tk.CENTER))
         self._place_in_grid(0, 4, tk.Label(master, text="Average\nProgress", justify=tk.CENTER))

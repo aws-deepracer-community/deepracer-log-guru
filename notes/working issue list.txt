@@ -4,9 +4,6 @@ Finish Soon
 
 + Bug: change episode wth << or >> etc. and previous event is still highlighted in the middle of nowhere!
 
-+ Add support for different future discount rewards & DF (dynamic controls) for
-      (a) episode route  (b) heatmap    (c) episode reward
-
 + Ability (in personalize config) to turn off the DF and/or new reward pre-calculations (to speed up file loading)
     (remember to make menus & controls respond accordingly)
 

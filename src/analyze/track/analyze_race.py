@@ -87,7 +87,6 @@ class AnalyzeRace(TrackAnalyzer):
             if self._keep_running:
                 self._keep_running = False
             self._thread.join(0.2)
-            print(self._is_still_running)
             # stop_time = time.time()   # Sometimes gets stuck, don't know why
             # while self._is_still_running and time.time() - stop_time < 1:
             #    time.sleep(0.05)

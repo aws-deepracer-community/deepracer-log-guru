@@ -638,6 +638,7 @@ class EpisodeRewardTypeControl(Control):
     _REWARD_PLUS_FUTURE = "Reward + Future"
     _NEW_REWARD_PLUS_TOTAL = "New Reward + Total"
     _NEW_REWARD_PLUS_FUTURE = "New Reward + Future"
+    _ALL_DISCOUNT_FACTORS = "All Discount Factors"
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Reward Types")
@@ -649,6 +650,7 @@ class EpisodeRewardTypeControl(Control):
         self.add_radiobutton_improved(EpisodeRewardTypeControl._REWARD_PLUS_FUTURE, self._reward_type)
         self.add_radiobutton_improved(EpisodeRewardTypeControl._NEW_REWARD_PLUS_TOTAL, self._reward_type)
         self.add_radiobutton_improved(EpisodeRewardTypeControl._NEW_REWARD_PLUS_FUTURE, self._reward_type)
+        self.add_radiobutton_improved(EpisodeRewardTypeControl._ALL_DISCOUNT_FACTORS, self._reward_type)
 
     def show_reward_plus_total(self):
         return self._reward_type.get() == EpisodeRewardTypeControl._REWARD_PLUS_TOTAL
@@ -661,6 +663,9 @@ class EpisodeRewardTypeControl(Control):
 
     def show_new_reward_plus_future(self):
         return self._reward_type.get() == EpisodeRewardTypeControl._NEW_REWARD_PLUS_FUTURE
+
+    def show_all_discount_factors(self):
+        return self._reward_type.get() == EpisodeRewardTypeControl._ALL_DISCOUNT_FACTORS
 
 
 class VideoControls(Control):

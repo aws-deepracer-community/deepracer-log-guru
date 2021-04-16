@@ -7,6 +7,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from src.analyze.core.controls import EpisodeRewardTypeControl
 from src.analyze.graph.analyze_episode_graph_base import AnalyzeEpisodeStat
 from src.analyze.core.episode_selector import EpisodeSelector
+from src.utils.discount_factors import discount_factors
+
 
 class AnalyzeEpisodeReward(AnalyzeEpisodeStat):
 
@@ -26,12 +28,13 @@ class AnalyzeEpisodeReward(AnalyzeEpisodeStat):
 
         rewards = []
 
-        if self._rewardTypeControl.show_reward_plus_total() or self._rewardTypeControl.show_reward_plus_future():
-            for v in self.episode.events:
-                rewards.append(v.reward)
-        elif self._rewardTypeControl.show_new_reward_plus_total() or self._rewardTypeControl.show_new_reward_plus_future():
+        if self._rewardTypeControl.show_new_reward_plus_total() or self._rewardTypeControl.show_new_reward_plus_future():
             for v in self.episode.events:
                 rewards.append(v.new_reward)
+        else:
+            for v in self.episode.events:
+                rewards.append(v.reward)
+
         if wrap_point:
             rewards = rewards[wrap_point:] + [math.nan] + rewards[:wrap_point]
 
@@ -47,7 +50,7 @@ class AnalyzeEpisodeReward(AnalyzeEpisodeStat):
         elif self._rewardTypeControl.show_new_reward_plus_total():
             for v in self.episode.events:
                 rewards.append(v.new_reward_total)
-        elif self._rewardTypeControl.show_reward_plus_future():
+        elif self._rewardTypeControl.show_reward_plus_future() or self._rewardTypeControl.show_all_discount_factors():
             for v in self.episode.events:
                 rewards.append(v.discounted_future_rewards[0])
         elif self._rewardTypeControl.show_new_reward_plus_future():
@@ -58,6 +61,23 @@ class AnalyzeEpisodeReward(AnalyzeEpisodeStat):
             rewards = rewards[wrap_point:] + [math.nan] + rewards[:wrap_point]
 
         return np.array(rewards)
+
+    def get_any_additional_plot_lines(self, wrap_point):
+        if not self._rewardTypeControl.show_all_discount_factors():
+            return
+
+        all_lines = []
+        colours = ["C3", "C4", "C5", "C6", "C7", "C8", "C9"]
+        for i in range(1, discount_factors.get_number_of_discount_factors()):
+            rewards = []
+            for v in self.episode.events:
+                rewards.append(v.discounted_future_rewards[i])
+            if wrap_point:
+                rewards = rewards[wrap_point:] + [math.nan] + rewards[:wrap_point]
+            all_info = (colours[i - 1], "DF = " + str(discount_factors.get_discount_factor(i)), np.array(rewards))
+            all_lines.append(all_info)
+
+        return all_lines
 
     def additional_preparation_for_plots(self):
         if self._rewardTypeControl.show_reward_plus_total():

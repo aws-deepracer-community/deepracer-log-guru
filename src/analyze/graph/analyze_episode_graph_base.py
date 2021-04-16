@@ -100,8 +100,10 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
             axes.plot(plot_x, plot_y_bar_values_per_step, "o", color="black", markersize=3, label="Step")
         if self.use_second_axis_scale:
             axes2.plot(plot_x, plot_y_line_values_per_step, color="C2", label=self.line_label, linewidth=3)
+            self._plot_any_additional_lines(axes2, plot_x, wrap_point)
         else:
             axes.plot(plot_x, plot_y_line_values_per_step, color="C2", label=self.line_label, linewidth=3)
+            self._plot_any_additional_lines(axes, plot_x, wrap_point)
 
         # Setup formatting
         axes.set_title(self.title_word + " " + general_title + " for Episode #" + str(self.episode.id))
@@ -117,14 +119,18 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
         else:
             axes.set_xbound(0, max(plot_x))
 
-
         if axes.has_data():
             if self.use_second_axis_scale:
                 axes2.legend(frameon=True, framealpha=0.8, shadow=True)
             else:
                 axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
-
+    def _plot_any_additional_lines(self, axes, plot_x, wrap_point):
+        all_extra_lines = self.get_any_additional_plot_lines(wrap_point)
+        if all_extra_lines is not None:
+            for extra_line in all_extra_lines:
+                (colour, label, plot_y) = extra_line
+                axes.plot(plot_x, plot_y, label=label, color=colour, linewidth=3)
 
     def get_plot_data_steps(self):
 
@@ -202,11 +208,13 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
 
         return np.array(waypoints), wrap_point
 
-
     def get_plot_bar_values_per_step(self, wrap_point):
         pass
 
     def get_plot_line_values_per_step(self, wrap_point):
+        pass
+
+    def get_any_additional_plot_lines(self, wrap_point):
         pass
 
     def additional_preparation_for_plots(self):

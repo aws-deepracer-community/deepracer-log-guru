@@ -27,6 +27,7 @@ class MenuBar():
             self.add_sector_menu()
             self.add_analyze_menu()
 
+        self.add_zoom_menu()
         self.add_view_menu()
         self.add_secret_sauce_menu()
         self.add_admin_menu()
@@ -73,10 +74,14 @@ class MenuBar():
 
         self.menubar.add_cascade(label="File", menu=menu)
 
-    def add_view_menu(self):
+    def add_zoom_menu(self):
         menu = Menu(self.menubar, tearoff=0)
         menu.add_command(label="Zoom - In/Out", command=self.main_app.menu_callback_zoom_in_out)
-        menu.add_separator()
+
+        self.menubar.add_cascade(label="Zoom", menu=menu)
+
+    def add_view_menu(self):
+        menu = Menu(self.menubar, tearoff=0)
         menu.add_command(label="Grid - Front", command=self.main_app.menu_callback_grid_front)
         menu.add_command(label="Grid - Back", command=self.main_app.menu_callback_grid_back)
         menu.add_command(label="Grid - Off", command=self.main_app.menu_callback_grid_off)

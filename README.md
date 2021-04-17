@@ -16,6 +16,8 @@ create a two line batch script (e.g. .".bat" if using windows):
 ( the directory should be the one containing the "src" folder etc. )
 
 
+Trial Link to other documentation:
+[Terminology](docs/terminology.md)
 
 
 

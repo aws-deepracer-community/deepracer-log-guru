@@ -1,6 +1,6 @@
 # Installation Instructions
 
-Download and install [Python 3.9.1](https://www.python.org/downloads/release/python-391)
+Download and install [Python 3.9.1](https://www.python.org/downloads/release/python-391/)
 
 
 

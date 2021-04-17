@@ -1,12 +1,12 @@
 # Installation Instructions
 
-Download and install [Python 3.9.1](https://www.python.org/downloads/release/python-391/)
+Download and install [Python 3.9.4](https://www.python.org/downloads/release/python-394/)
 
+Download additional packages by running this command in the directory where you just installed Python:
 
-
-cd C:\Program Files (x86)\Python\3.9.1
-python -m pip install matplotlib==3.3.3 numpy==1.19.3 scipy==1.6.0
-
+    python -m pip install matplotlib==3.3.3 numpy==1.19.3 scipy==1.6.0
+    
+<< screenshot goes here >>
 
 https://github.com/dmh23/deep_racer_guru/releases
 ( download and unzip )

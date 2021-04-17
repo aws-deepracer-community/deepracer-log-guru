@@ -3,6 +3,7 @@ Finish Soon
 ===========
 
 + Load files (a) show training mins/hrs
+             (b) offer "fast load" - does not do new reward or alternate future discount calculations
 
 + Ability (in personalize config) to turn off the DF and/or new reward pre-calculations (to speed up file loading)
     (remember to make menus & controls respond accordingly)

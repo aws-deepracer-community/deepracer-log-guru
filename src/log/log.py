@@ -220,6 +220,10 @@ class Log:
             self._log_meta.episode_stats.average_percent_complete = \
                 total_percent_complete / self._log_meta.episode_stats.episode_count
 
+        training_start_time = self._episodes[0].events[0].time
+        training_end_time = self._episodes[-1].events[-1].time
+        self._log_meta.episode_stats.training_minutes = int(round((training_end_time - training_start_time) / 60))
+
     def _divide_episodes_into_quarters(self, please_wait: PleaseWait,
                                        min_progress_percent: float, max_progress_percent: float):
         total_iterations = self._episodes[-1].iteration + 1

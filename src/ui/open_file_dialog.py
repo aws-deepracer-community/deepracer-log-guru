@@ -2,7 +2,7 @@ import tkinter as tk
 from src.ui.dialog import Dialog
 from src.log.log_utils import get_model_info_for_open_model_dialog
 
-from src.utils.formatting import get_pretty_whole_percentage, get_pretty_large_integer
+from src.utils.formatting import get_pretty_whole_percentage, get_pretty_large_integer, get_pretty_hours_and_minutes
 
 
 class OpenFileDialog(Dialog):
@@ -38,12 +38,13 @@ class OpenFileDialog(Dialog):
             best_best_steps = None
             best_average_steps = None
 
-        self._place_in_grid(0, 3, tk.Label(master, text="Episodes", justify=tk.CENTER))
-        self._place_in_grid(0, 4, tk.Label(master, text="Average\nProgress", justify=tk.CENTER))
-        self._place_in_grid(0, 5, tk.Label(master, text="Full\nLaps", justify=tk.CENTER))
+        self._place_in_grid(0, 3, tk.Label(master, text="Training\nTime", justify=tk.CENTER))
+        self._place_in_grid(0, 4, tk.Label(master, text="Episodes", justify=tk.CENTER))
+        self._place_in_grid(0, 5, tk.Label(master, text="Average\nProgress", justify=tk.CENTER))
+        self._place_in_grid(0, 6, tk.Label(master, text="Full\nLaps", justify=tk.CENTER))
         if show_laps:
-            self._place_in_grid(0, 6, tk.Label(master, text="Best\nLap", justify=tk.CENTER))
-            self._place_in_grid(0, 7, tk.Label(master, text="Average\nLap", justify=tk.CENTER))
+            self._place_in_grid(0, 7, tk.Label(master, text="Best\nLap", justify=tk.CENTER))
+            self._place_in_grid(0, 8, tk.Label(master, text="Average\nLap", justify=tk.CENTER))
 
         row = 1
 
@@ -60,15 +61,17 @@ class OpenFileDialog(Dialog):
             self._place_in_grid(row, 0, tk.Button(master, text=log_meta.model_name, command=callback), "E")
             self._place_in_grid(row, 1, tk.Label(master, text=log_meta.race_type), "E")
             self._place_in_grid(row, 2, tk.Label(master, text=log_meta.job_type), "E")
-            self._place_in_grid(row, 3, self._make_large_integer_label(master, log_meta.episode_stats.episode_count))
 
-            self._place_in_grid(row, 4, self._make_percent_label(master, progress_percent, best_progress_percent))
-            self._place_in_grid(row, 5, self._make_percent_label(master, success_percent, best_success_percent))
+            self._place_in_grid(row, 3, self._make_hours_and_minutes_label(master, log_meta.episode_stats.training_minutes))
+            self._place_in_grid(row, 4, self._make_large_integer_label(master, log_meta.episode_stats.episode_count))
+
+            self._place_in_grid(row, 5, self._make_percent_label(master, progress_percent, best_progress_percent))
+            self._place_in_grid(row, 6, self._make_percent_label(master, success_percent, best_success_percent))
             if show_laps:
-                self._place_in_grid(row, 6, self._make_lap_time_label(master, log_meta.episode_stats.best_steps,
+                self._place_in_grid(row, 7, self._make_lap_time_label(master, log_meta.episode_stats.best_steps,
                                                                       log_meta.episode_stats.best_time,
                                                                       best_best_steps))
-                self._place_in_grid(row, 7, self._make_lap_time_label(master, log_meta.episode_stats.average_steps,
+                self._place_in_grid(row, 8, self._make_lap_time_label(master, log_meta.episode_stats.average_steps,
                                                                       log_meta.episode_stats.average_time,
                                                                       best_average_steps))
 
@@ -87,7 +90,7 @@ class OpenFileDialog(Dialog):
         formatted_text = get_pretty_whole_percentage(value)
         if value >= 0.99 * best_value and value > 0.0:
             return tk.Label(master, text=formatted_text, background="palegreen", justify=tk.CENTER)
-        elif value >= 0.98 * best_value and value > 0.0:
+        elif value >= 0.97 * best_value and value > 0.0:
             return tk.Label(master, text=formatted_text, background="lightblue1", justify=tk.CENTER)
         else:
             return tk.Label(master, text=formatted_text, justify=tk.CENTER)
@@ -101,7 +104,7 @@ class OpenFileDialog(Dialog):
 
         if best_value >= 0.99 * steps and steps > 0.0:
             return tk.Label(master, text=formatted_text, background="palegreen", justify=tk.CENTER)
-        elif best_value >= 0.98 * steps and steps > 0.0:
+        elif best_value >= 0.97 * steps and steps > 0.0:
             return tk.Label(master, text=formatted_text, background="lightblue1", justify=tk.CENTER)
         else:
             return tk.Label(master, text=formatted_text, justify=tk.CENTER)
@@ -109,6 +112,10 @@ class OpenFileDialog(Dialog):
     @staticmethod
     def _make_large_integer_label(master, value):
         return tk.Label(master, text=get_pretty_large_integer(value), justify=tk.CENTER)
+
+    @staticmethod
+    def _make_hours_and_minutes_label(master, minutes):
+        return tk.Label(master, text=get_pretty_hours_and_minutes(minutes), justify=tk.CENTER)
 
     def buttonbox(self):
         box = tk.Frame(self)

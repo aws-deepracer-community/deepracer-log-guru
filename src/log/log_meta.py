@@ -55,6 +55,8 @@ class LogMeta:
             self.average_reward = 0.0
             self.worst_reward = 0.0
 
+            self.training_minutes = 0
+
         def display_for_debug(self):
             print("    Episode count = ", self.episode_count)
             print("    Iteration count = ", self.iteration_count)
@@ -74,6 +76,8 @@ class LogMeta:
             print("    Best distance = ", round(self.best_distance, 2))
             print("    Average distance = ", round(self.average_distance, 2))
             print("    Worst distance = ", round(self.worst_distance, 2))
+
+            print("    Training minutes = ", self.training_minutes)
 
     class HyperMeta:
         def __init__(self):

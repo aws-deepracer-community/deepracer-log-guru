@@ -77,6 +77,11 @@ class MenuBar():
     def add_zoom_menu(self):
         menu = Menu(self.menubar, tearoff=0)
         menu.add_command(label="Zoom - In/Out", command=self.main_app.menu_callback_zoom_in_out)
+        menu.add_separator()
+
+        for s in self.main_app.current_track.get_all_sector_names():
+            menu.add_command(label="Sector " + s,
+                             command=lambda sector=s: self.zoom_sector(sector))
 
         self.menubar.add_cascade(label="Zoom", menu=menu)
 
@@ -226,6 +231,9 @@ class MenuBar():
 
     def choose_sector(self, sector: str):
         self.main_app.menu_callback_sector_filter(sector)
+
+    def zoom_sector(self, sector: str):
+        self.main_app.menu_callback_sector_zoom(sector)
 
     def _choose_episode_filter_sector(self, sector: str):
         self.main_app.menu_callback_episodes_sector(sector)

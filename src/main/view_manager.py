@@ -4,6 +4,7 @@ from src.episode.episode_filter import EpisodeFilter
 
 COLOUR_GREY = "Grey30"
 COLOUR_BLUE = "Blue"
+SECTOR_BORDER = 0.2
 
 class ViewManager:
 
@@ -148,6 +149,14 @@ class ViewManager:
         self.zoom_y = min(real_y, real_y2)
         self.zoom_y2 = max(real_y, real_y2)
 
+        self.zoom_in = True
+
+    def zoom_sector(self, track: Track, sector: str):
+        (self.zoom_x, self.zoom_y, self.zoom_x2, self.zoom_y2) = track.get_sector_coordinates(sector)
+        self.zoom_x -= SECTOR_BORDER
+        self.zoom_y -= SECTOR_BORDER
+        self.zoom_x2 += SECTOR_BORDER
+        self.zoom_y2 += SECTOR_BORDER
         self.zoom_in = True
 
     def zoom_toggle(self):

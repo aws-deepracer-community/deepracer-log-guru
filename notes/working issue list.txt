@@ -20,8 +20,6 @@ Finish Soon
 + Load files (a) show training mins/hrs
              (b) show seconds for best/mid lap    (ENH-34)
 
-+ Move zoom to its own zoom menu, and add some convenience zooms for each sector
-
 + Move sector definitions into new personalization area (same approach as for track annotations)
 
 + Finish testing new reward function integration

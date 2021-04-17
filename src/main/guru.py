@@ -543,6 +543,11 @@ class MainApp(tk.Frame):
         self.sector_filter = sector
         self.reapply_sector_filter()
 
+    def menu_callback_sector_zoom(self, sector: str):
+        assert len(sector) == 1
+        self.view_manager.zoom_sector(self.current_track, sector)
+        self.redraw()
+
     def menu_callback_zoom_in_out(self):
         self.view_manager.zoom_toggle()
         self.redraw()

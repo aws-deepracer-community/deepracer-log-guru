@@ -258,6 +258,24 @@ class Track:
             else:
                 return travel_distance
 
+    def get_sector_coordinates(self, sector: str):
+        start, finish = self.get_sector_start_and_finish(sector)
+        (x1, y1) = self._drawing_points[start].middle
+        (x2, y2) = self._drawing_points[start].middle
+        p: Track.DrawingPoint
+        for p in self._drawing_points[start:finish+1]:
+            (x, y) = p.left_outer
+            x1 = min(x1, x)
+            x2 = max(x2, x)
+            y1 = min(y1, y)
+            y2 = max(y2, y)
+            (x, y) = p.right_outer
+            x1 = min(x1, x)
+            x2 = max(x2, x)
+            y1 = min(y1, y)
+            y2 = max(y2, y)
+        return x1, y1, x2, y2
+
     #
     # PRIVATE implementation
     #

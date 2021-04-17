@@ -1,8 +1,8 @@
 
 Finish Soon
 ===========
-
-+ Load files (a) show training mins/hrs
+***NEW BUG***
++ Load files **** addition of seconds does NOT match steps - choose seconds as primary decision for FASTEST LAP
              (b) offer "fast load" - does not do new reward or alternate future discount calculations
 
 + Ability (in personalize config) to turn off the DF and/or new reward pre-calculations (to speed up file loading)

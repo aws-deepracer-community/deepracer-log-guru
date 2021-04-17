@@ -1,3 +1,3 @@
-# Heading Level One
+# Terminology
 ## Hello
 testing testing hello ...

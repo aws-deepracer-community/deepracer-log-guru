@@ -43,6 +43,10 @@ class LogMeta:
             self.average_steps = 0
             self.worst_steps = 0
 
+            self.best_time = 0.0
+            self.average_time = 0.0
+            self.worst_time = 0.0
+
             self.best_distance = 0.0
             self.average_distance = 0.0
             self.worst_distance = 0.0
@@ -62,6 +66,10 @@ class LogMeta:
             print("    Best steps = ", self.best_steps)
             print("    Average steps = ", self.average_steps)
             print("    Worst steps = ", self.worst_steps)
+
+            print("    Best time = ", self.best_time)
+            print("    Average time = ", self.average_time)
+            print("    Worst time = ", self.worst_time)
 
             print("    Best distance = ", round(self.best_distance, 2))
             print("    Average distance = ", round(self.average_distance, 2))

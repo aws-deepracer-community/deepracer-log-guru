@@ -170,6 +170,7 @@ class Log:
         self._log_meta.episode_stats.episode_count = len(self._episodes)
 
         total_success_steps = 0
+        total_success_time = 0
         total_success_distance = 0.0
         total_percent_complete = 0.0
 
@@ -183,14 +184,17 @@ class Log:
                 self._log_meta.episode_stats.success_count += 1
 
                 total_success_steps += e.step_count
+                total_success_time += e.time_taken
                 total_success_distance += e.distance_travelled
 
                 if self._log_meta.episode_stats.best_steps == 0 or \
                         e.step_count < self._log_meta.episode_stats.best_steps:
                     self._log_meta.episode_stats.best_steps = e.step_count
+                    self._log_meta.episode_stats.best_time = e.time_taken
 
                 if self._log_meta.episode_stats.worst_steps < e.step_count:
                     self._log_meta.episode_stats.worst_steps = e.step_count
+                    self._log_meta.episode_stats.worst_time = e.time_taken
 
                 if self._log_meta.episode_stats.best_distance == 0.0 or \
                         e.distance_travelled < self._log_meta.episode_stats.best_distance:
@@ -208,6 +212,7 @@ class Log:
         if self._log_meta.episode_stats.success_count > 0:
             self._log_meta.episode_stats.average_steps = int(
                 round(total_success_steps / self._log_meta.episode_stats.success_count))
+            self._log_meta.episode_stats.average_time = total_success_time / self._log_meta.episode_stats.success_count
             self._log_meta.episode_stats.average_distance = \
                 total_success_distance / self._log_meta.episode_stats.success_count
 

@@ -66,8 +66,10 @@ class OpenFileDialog(Dialog):
             self._place_in_grid(row, 5, self._make_percent_label(master, success_percent, best_success_percent))
             if show_laps:
                 self._place_in_grid(row, 6, self._make_lap_time_label(master, log_meta.episode_stats.best_steps,
+                                                                      log_meta.episode_stats.best_time,
                                                                       best_best_steps))
                 self._place_in_grid(row, 7, self._make_lap_time_label(master, log_meta.episode_stats.average_steps,
+                                                                      log_meta.episode_stats.average_time,
                                                                       best_average_steps))
 
             row += 1
@@ -83,21 +85,26 @@ class OpenFileDialog(Dialog):
     @staticmethod
     def _make_percent_label(master, value, best_value):
         formatted_text = get_pretty_whole_percentage(value)
-        if value >= 0.99 * best_value:
+        if value >= 0.99 * best_value and value > 0.0:
             return tk.Label(master, text=formatted_text, background="palegreen", justify=tk.CENTER)
-        elif value >= 0.98 * best_value:
+        elif value >= 0.98 * best_value and value > 0.0:
             return tk.Label(master, text=formatted_text, background="lightblue1", justify=tk.CENTER)
         else:
             return tk.Label(master, text=formatted_text, justify=tk.CENTER)
 
     @staticmethod
-    def _make_lap_time_label(master, value, best_value):
-        if best_value >= 0.99 * value:
-            return tk.Label(master, text=value, background="palegreen", justify=tk.CENTER)
-        elif best_value >= 0.98 * value:
-            return tk.Label(master, text=value, background="lightblue1", justify=tk.CENTER)
+    def _make_lap_time_label(master, steps, seconds, best_value):
+        if steps > 0.0:
+            formatted_text = str(steps) + " / " + str(round(seconds, 1)) + "s"
         else:
-            return tk.Label(master, text=value, justify=tk.CENTER)
+            formatted_text = "---"
+
+        if best_value >= 0.99 * steps and steps > 0.0:
+            return tk.Label(master, text=formatted_text, background="palegreen", justify=tk.CENTER)
+        elif best_value >= 0.98 * steps and steps > 0.0:
+            return tk.Label(master, text=formatted_text, background="lightblue1", justify=tk.CENTER)
+        else:
+            return tk.Label(master, text=formatted_text, justify=tk.CENTER)
 
     @staticmethod
     def _make_large_integer_label(master, value):

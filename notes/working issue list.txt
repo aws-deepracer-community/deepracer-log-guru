@@ -2,6 +2,8 @@
 Finish Soon
 ===========
 
++ Load files (a) show training mins/hrs
+
 + Ability (in personalize config) to turn off the DF and/or new reward pre-calculations (to speed up file loading)
     (remember to make menus & controls respond accordingly)
 
@@ -16,9 +18,6 @@ Finish Soon
                  (b) try a shorter start exclusion - and in any case, move its config into the personalize area
 
 + Consistent support for 0.2 sec delay before first event ... in conjunction with adding as a measurement option
-
-+ Load files (a) show training mins/hrs
-             (b) show seconds for best/mid lap    (ENH-34)
 
 + Move sector definitions into new personalization area (same approach as for track annotations)
 
@@ -137,7 +136,6 @@ Analysis articles - grab ideas from:
 40-ENH  Event selection as per route analysis should be "shared" with other route analysis (e.g. speed)   [for example, on speed analysis, the action dot can be highlighted, and also the same arrow keys can be used to navigate backwards or forwards along the actions/steps]
 36-ENH  Add shortcut keys for menu options - especially analysis views and common filters
 35-ENH  Provide quick switch buttons between useful/related analysis views (more convenient than menus)
-34-ENH  Show lap times as well as # of steps in open file dialog
 32-ENH  Ability to increase text size of menus and frame-based controls etc. (for better YouTube reproduction)
 31-ENH  Ability to see more stats and info across multiple files (esp. the training hyper parameters)  [export button would be nice] [ main thing is to be able to see/review how I tinkered with the hyper parameters (coupled with a reminder of the defaults - so easy to see what changed, and by how much]
 22-ENH  Add ability to chose favourite episodes   [ideally keep a record in meta file for next time...]

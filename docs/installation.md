@@ -2,7 +2,7 @@
 
 TODO - Improve using these notes:
 
-https://www.python.org/downloads/
+[Python Downloads](https://www.python.org/downloads/)
 
 
 cd C:\Program Files (x86)\Python\3.9.1

@@ -55,7 +55,7 @@ class AnalyzeRoute(TrackAnalyzer):
         self._appearance_control.add_to_control_frame()
         self._more_filters_control.add_to_control_frame()
 
-        self.episode_selector.add_to_control_frame(control_frame, self.guru_parent_redraw)
+        self.episode_selector.add_to_control_frame(control_frame, self.callback_selected_episode_changed)
 
     def left_button_pressed(self, track_point):
         episode = self.episode_selector.get_selected_episode()
@@ -143,16 +143,22 @@ class AnalyzeRoute(TrackAnalyzer):
 
     def warning_track_changed(self):
         self.chosen_event = None
+        self._close_floating_window()
 
     def warning_filtered_episodes_changed(self):
         self.chosen_event = None
+        self._close_floating_window()
+        self.guru_parent_redraw()
 
     def callback_selected_episode_changed(self):
         self.chosen_event = None
+        self._close_floating_window()
+        self.guru_parent_redraw()
+
+    def _close_floating_window(self):
         if self.floating_window is not None:
             self.floating_window.destroy()
             self.floating_window = None
-        self.guru_parent_redraw()
 
     def draw_episode(self, episode):
 

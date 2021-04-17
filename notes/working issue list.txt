@@ -2,10 +2,10 @@
 Finish Soon
 ===========
 
-+ Bug: change episode wth << or >> etc. and previous event is still highlighted in the middle of nowhere!
-
 + Ability (in personalize config) to turn off the DF and/or new reward pre-calculations (to speed up file loading)
     (remember to make menus & controls respond accordingly)
+
++ Save meta as JSON so it is easier to manage future upgrades without technical errors for old logs
 
 + Migrate all heatmap/routes to the new approach used for steering straight/left/right
 + Extensive re-testing ... NB heatmap for single episode should give same colours, or very similar, as episode route)
@@ -43,6 +43,7 @@ Display ROUTE log info, then go to different analysis and change the episode sel
 + Test a lot, comparing where possible with v2.0.5 for regression issues
 + (to help with this, consider .. )Grab best sample logs per track & per best model into one place in clear dir. structure
 
++ Improve analyse race - certainly ensure that selecting a new filter or differnet file etc. does a "reset"
 
 Brand New Analysis Views
 ======================

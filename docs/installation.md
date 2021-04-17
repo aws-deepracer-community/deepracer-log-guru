@@ -1,8 +1,7 @@
 # Installation Instructions
 
-TODO - Improve using these notes:
+Download and install [Python 3.9.1](https://www.python.org/downloads/release/python-391)
 
-[Python Downloads](https://www.python.org/downloads/)
 
 
 cd C:\Program Files (x86)\Python\3.9.1

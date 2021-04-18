@@ -3,14 +3,21 @@
 ## Install Python
 Download and install [Python 3.9.4](https://www.python.org/downloads/release/python-394/)
 
-If you change the install options, be sure you still install pip and tkinter:
-[](pictures/Python Install Correct Options.png)
+Note - If you change the install options, be sure you still install *pip* and *tkinter*:
+
+![](pictures/python_install_options.png)
+
+## Install Additional Python Packages
 
 Download additional packages by running this command in the directory where you just installed Python:
 
     python -m pip install matplotlib==3.3.3 numpy==1.19.3 scipy==1.6.0
     
-<< screenshot goes here >>
+For example:
+
+![](pictures/pip_install.png)
+
+## Rest - TODO
 
 https://github.com/dmh23/deep_racer_guru/releases
 ( download and unzip )

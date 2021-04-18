@@ -1,14 +1,34 @@
 
-Finish Soon
-===========
-***NEW BUG***
-+ Load files **** addition of seconds does NOT match steps - choose seconds as primary decision for FASTEST LAP
-             (b) offer "fast load" - does not do new reward or alternate future discount calculations
+Essential Before Tentative v3 Release
+=====================================
 
+Either/or
++ Load files offer "fast load" - does not do new reward or alternate future discount calculations
 + Ability (in personalize config) to turn off the DF and/or new reward pre-calculations (to speed up file loading)
     (remember to make menus & controls respond accordingly)
 
 + Save meta as JSON so it is easier to manage future upgrades without technical errors for old logs
+
++ Consistent support for 0.2 sec delay before first event ... in conjunction with adding as a measurement option
+(do now because of ongoing impact on metadata file accuracy)
+
++ Minimal fixes for analyse race - certainly ensure that selecting a new filter or differnet file etc. does a "reset"
++ Flag it as a new/prototype feature in UI
+
+Fix this bug:
+Display ROUTE log info, then go to different analysis and change the episode selector << or >> (log info should close), and return to ROUTE circle highlight is still there!!
+
+Finish some docs especially:
++ Rewrite the proposed simpler installation documentation (remember no clunky setting of log dir now ...)
++ Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?
+( NB some docs like terminology & key/mouse can wait until 3.0.1 but installation instructions are essential doh ... )
+
+
+v3.0.1 Improvements
+===================
+
++ Median lap time should be added to the quarterly view
++ Lap time distribution should be able to show how it evolves per quarter
 
 + Migrate all heatmap/routes to the new approach used for steering straight/left/right
 + Extensive re-testing ... NB heatmap for single episode should give same colours, or very similar, as episode route)
@@ -17,8 +37,6 @@ Finish Soon
 
 + Heatmap issues (a) tune visit based inclusion, especially when starts are shown - eliminates too much stuff??
                  (b) try a shorter start exclusion - and in any case, move its config into the personalize area
-
-+ Consistent support for 0.2 sec delay before first event ... in conjunction with adding as a measurement option
 
 + Move sector definitions into new personalization area (same approach as for track annotations)
 
@@ -33,15 +51,10 @@ Finish Soon
 
 Fix old bugs:
 45-BUG  *** Don't show the final iteration, if incomplete, in certain training stats and similar  [ noting that AWS console may include incomplete EVALUATION runs, but not an incomplete training ]
-Display ROUTE log info, then go to different analysis and change the episode selector << or >> (log info should close), and return to ROUTE circle highlight is still there!!
-
-+ Rewrite the proposed simpler installation documentation (remember no clunky setting of log dir now ...)
-+ Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?
 
 + Test a lot, comparing where possible with v2.0.5 for regression issues
 + (to help with this, consider .. )Grab best sample logs per track & per best model into one place in clear dir. structure
 
-+ Improve analyse race - certainly ensure that selecting a new filter or differnet file etc. does a "reset"
 
 Brand New Analysis Views
 ======================

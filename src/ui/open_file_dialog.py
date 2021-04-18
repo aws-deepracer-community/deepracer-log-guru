@@ -10,8 +10,8 @@ class OpenFileDialog(Dialog):
     def body(self, master):
         model_logs, model_names = get_model_info_for_open_model_dialog(self.parent.current_track,
                                                                        self.parent.get_log_directory())
-        all_best_steps = []
-        all_average_steps = []
+        all_best_times = []
+        all_average_times = []
         all_progress_percent = []
         all_success_percent = []
 
@@ -19,8 +19,8 @@ class OpenFileDialog(Dialog):
         for log in model_logs.values():
             log_meta = log.get_log_meta()
             if log_meta.episode_stats.average_steps > 0:
-                all_best_steps.append(log_meta.episode_stats.best_steps)
-                all_average_steps.append(log_meta.episode_stats.average_steps)
+                all_best_times.append(log_meta.episode_stats.best_time)
+                all_average_times.append(log_meta.episode_stats.average_time)
                 show_laps = True
             all_progress_percent.append(self._get_progress_percent(log_meta))
             all_success_percent.append(self._get_success_percent(log_meta))
@@ -32,11 +32,11 @@ class OpenFileDialog(Dialog):
             best_success_percent = max(all_success_percent)
 
         if show_laps:
-            best_best_steps = min(all_best_steps)
-            best_average_steps = min(all_average_steps)
+            best_best_times = min(all_best_times)
+            best_average_times = min(all_average_times)
         else:
-            best_best_steps = None
-            best_average_steps = None
+            best_best_times = None
+            best_average_times = None
 
         self._place_in_grid(0, 3, tk.Label(master, text="Training\nTime", justify=tk.CENTER))
         self._place_in_grid(0, 4, tk.Label(master, text="Episodes", justify=tk.CENTER))
@@ -68,12 +68,12 @@ class OpenFileDialog(Dialog):
             self._place_in_grid(row, 5, self._make_percent_label(master, progress_percent, best_progress_percent))
             self._place_in_grid(row, 6, self._make_percent_label(master, success_percent, best_success_percent))
             if show_laps:
-                self._place_in_grid(row, 7, self._make_lap_time_label(master, log_meta.episode_stats.best_steps,
+                self._place_in_grid(row, 7, self._make_lap_time_label(master,
                                                                       log_meta.episode_stats.best_time,
-                                                                      best_best_steps))
-                self._place_in_grid(row, 8, self._make_lap_time_label(master, log_meta.episode_stats.average_steps,
+                                                                      best_best_times))
+                self._place_in_grid(row, 8, self._make_lap_time_label(master,
                                                                       log_meta.episode_stats.average_time,
-                                                                      best_average_steps))
+                                                                      best_average_times))
 
             row += 1
 
@@ -96,15 +96,15 @@ class OpenFileDialog(Dialog):
             return tk.Label(master, text=formatted_text, justify=tk.CENTER)
 
     @staticmethod
-    def _make_lap_time_label(master, steps, seconds, best_value):
-        if steps > 0.0:
-            formatted_text = str(steps) + " / " + str(round(seconds, 1)) + "s"
+    def _make_lap_time_label(master, seconds, best_seconds):
+        if seconds > 0.0:
+            formatted_text = str(round(seconds, 1)) + " s"
         else:
             formatted_text = "---"
 
-        if best_value >= 0.99 * steps and steps > 0.0:
+        if best_seconds >= 0.99 * seconds and seconds > 0.0:
             return tk.Label(master, text=formatted_text, background="palegreen", justify=tk.CENTER)
-        elif best_value >= 0.97 * steps and steps > 0.0:
+        elif best_seconds >= 0.97 * seconds and seconds > 0.0:
             return tk.Label(master, text=formatted_text, background="lightblue1", justify=tk.CENTER)
         else:
             return tk.Label(master, text=formatted_text, justify=tk.CENTER)

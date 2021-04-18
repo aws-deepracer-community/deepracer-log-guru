@@ -1,6 +1,10 @@
 # Installation Instructions
 
+## Install Python
 Download and install [Python 3.9.4](https://www.python.org/downloads/release/python-394/)
+
+If you change the install options, be sure you still install pip and tkinter:
+[](pictures/Python Install Correct Options.png)
 
 Download additional packages by running this command in the directory where you just installed Python:
 

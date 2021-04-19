@@ -3,6 +3,7 @@ import tkinter as tk
 import src.analyze.core.measurement_brightness as measurement_brightness
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
+from src.configuration.config_manager import ConfigManager
 from src.episode.episode import Episode
 from src.graphics.track_graphics import TrackGraphics
 from src.ui.please_wait import PleaseWait
@@ -12,10 +13,11 @@ from src.analyze.core.controls import ConvergenceGranularityControl, TrackAppear
 
 class AnalyzeHeatmap(TrackAnalyzer):
 
-    def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame, please_wait :PleaseWait):
+    def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics, control_frame :tk.Frame,
+                 please_wait :PleaseWait, config_manager: ConfigManager):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
-        self._measurement_control = MeasurementControl(self._callback_full_recalculate, control_frame, False)
+        self._measurement_control = MeasurementControl(self._callback_full_recalculate, control_frame, False, config_manager)
         self._episodes_control = EpisodeRadioButtonControl(self._callback_full_recalculate, control_frame, False)
         self._granularity_control = ConvergenceGranularityControl(self._callback_full_recalculate, control_frame)
         self._appearance_control = TrackAppearanceControl(guru_parent_redraw, control_frame,

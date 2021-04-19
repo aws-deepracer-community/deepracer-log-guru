@@ -7,18 +7,19 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from src.analyze.core.controls import EpisodeRewardTypeControl
 from src.analyze.graph.analyze_episode_graph_base import AnalyzeEpisodeStat
 from src.analyze.core.episode_selector import EpisodeSelector
+from src.configuration.config_manager import ConfigManager
 from src.utils.discount_factors import discount_factors
 
 
 class AnalyzeEpisodeReward(AnalyzeEpisodeStat):
 
     def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg,
-                 control_frame :tk.Frame, episode_selector :EpisodeSelector):
+                 control_frame :tk.Frame, episode_selector :EpisodeSelector, config_manager: ConfigManager):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame, episode_selector,
                          "Reward", "Step Reward", "Total Reward", False, True)
 
-        self._rewardTypeControl = EpisodeRewardTypeControl(guru_parent_redraw, control_frame)
+        self._rewardTypeControl = EpisodeRewardTypeControl(guru_parent_redraw, control_frame, config_manager)
 
     def build_control_frame(self, control_frame):
         self._rewardTypeControl.add_to_control_frame()

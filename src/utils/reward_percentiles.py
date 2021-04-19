@@ -4,7 +4,7 @@ import numpy as np
 
 class RewardPercentiles:
 
-    def __init__(self, episodes: list[Episode]):
+    def __init__(self, episodes: list[Episode], calculate_new_reward: bool):
         percents = np.arange(100)
 
         all_rewards = episodes[0].rewards
@@ -13,15 +13,21 @@ class RewardPercentiles:
         self._reward_percentiles = np.percentile(np.array(all_rewards), percents)
 
         all_new_rewards = episodes[0].new_rewards
-        for e in episodes[1:]:
-            all_new_rewards += e.new_rewards
-        self._new_reward_percentiles = np.percentile(np.array(all_new_rewards), percents)
+        if calculate_new_reward:
+            for e in episodes[1:]:
+                all_new_rewards += e.new_rewards
+            self._new_reward_percentiles = np.percentile(np.array(all_new_rewards), percents)
+        else:
+            self._new_reward_percentiles = None
 
         all_new_discounted_future_rewards = episodes[0].new_discounted_future_rewards
-        for e in episodes[1:]:
-            all_new_discounted_future_rewards += e.new_discounted_future_rewards
-        self._new_discounted_future_reward_percentiles = np.percentile(np.array(all_new_discounted_future_rewards),
-                                                                       percents)
+        if calculate_new_reward:
+            for e in episodes[1:]:
+                all_new_discounted_future_rewards += e.new_discounted_future_rewards
+            self._new_discounted_future_reward_percentiles = np.percentile(np.array(all_new_discounted_future_rewards),
+                                                                           percents)
+        else:
+            self._new_discounted_future_reward_percentiles = None
 
         self._discounted_future_reward_percentiles = []
         for i in range(len(episodes[0].discounted_future_rewards)):

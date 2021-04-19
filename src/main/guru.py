@@ -131,8 +131,8 @@ class MainApp(tk.Frame):
         self.track_graphics = TrackGraphics(self.track_canvas)
         self.current_track.configure_track_graphics(self.track_graphics)
 
-        self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.inner_control_frame, self.episode_selector)
-        self.analyze_track_heatmap = AnalyzeHeatmap(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
+        self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.inner_control_frame, self.episode_selector, self._config_manager)
+        self.analyze_track_heatmap = AnalyzeHeatmap(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track, self._config_manager)
         self.analyze_exit_points = AnalyzeExitPoints(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_race = AnalyzeRace(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame)
@@ -141,7 +141,7 @@ class MainApp(tk.Frame):
         self.analyze_common_rewards = AnalyzeCommonRewards(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_rewards_per_waypoint = AnalyzeRewardsPerWaypoint(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_episode_speed = AnalyzeEpisodeSpeed(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
-        self.analyze_episode_reward = AnalyzeEpisodeReward(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
+        self.analyze_episode_reward = AnalyzeEpisodeReward(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector, self._config_manager)
         self.analyze_episode_slide = AnalyzeEpisodeSlide(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
         self.analyze_episode_action_distribution = AnalyzeEpisodeActionDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
         self.analyze_lap_time_correlations = AnalyzeLapTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
@@ -216,7 +216,6 @@ class MainApp(tk.Frame):
 
         self.status_frame.pack_propagate(0)
         self.status_frame.grid_propagate(0)
-
 
     def layout_ui_for_track_analyzer(self):
         self.status_frame.pack(fill=tk.BOTH, side=tk.BOTTOM)
@@ -355,12 +354,14 @@ class MainApp(tk.Frame):
         redraw_menu_afterwards = not self.log
 
         self.log = Log(self._config_manager.get_log_directory())
-        self.log.load_all(file_name, self.please_wait, self.current_track)
+        self.log.load_all(file_name, self.please_wait, self.current_track,
+                          self._config_manager.get_calculate_new_reward(),
+                          self._config_manager.get_calculate_alternate_discount_factors())
 
         self.status_frame.change_model_name(self.log.get_log_meta().model_name)
         self.apply_new_action_space()
 
-        reward_percentiles = RewardPercentiles(self.log.get_episodes())
+        reward_percentiles = RewardPercentiles(self.log.get_episodes(), self._config_manager.get_calculate_new_reward())
         for v in self.all_analyzers:
             v.set_all_episodes(self.log.get_episodes(), reward_percentiles)
             v.set_log_meta(self.log.get_log_meta())
@@ -410,6 +411,20 @@ class MainApp(tk.Frame):
             self.view_manager.redraw(self.current_track, self.track_graphics, self.analyzer, self.background_analyzer, self.episode_filter)
             self.please_wait.stop()
             self.already_drawing = False
+
+    def refresh_analysis_controls(self):
+        self.analyzer.take_control()
+
+    def close_file(self):
+        self.log = None
+        self.filtered_episodes = None
+        self.status_frame.reset()
+        self.episode_selector.set_filtered_episodes(None)
+        self._reset_analyzer(self.analyzer)
+        if self.background_analyzer:
+            self._reset_analyzer(self.background_analyzer)
+        self.menu_bar = MenuBar(root, self, False)
+        self.redraw()
 
     def right_button_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)

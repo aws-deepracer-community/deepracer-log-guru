@@ -27,13 +27,15 @@ class Log:
         with open(self._log_directory + "\\" + meta_file_name, 'rb') as file:
             self._log_meta = pickle.load(file)
 
-    def load_all(self, meta_file_name, please_wait: PleaseWait, track: Track):
+    def load_all(self, meta_file_name, please_wait: PleaseWait, track: Track,
+                 calculate_new_reward=False, calculate_alternate_discount_factors=False):
         please_wait.start("Loading")
         self.load_meta(meta_file_name)
         self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
         discount_factors.reset_for_log(self._log_meta.hyper.discount_factor)
         please_wait.set_progress(2)
-        self._parse_episode_events(please_wait, 2, 50, 95, True, track)
+        self._parse_episode_events(please_wait, 2, 50, 95, True, track,
+                                   calculate_new_reward, calculate_alternate_discount_factors)
         self._divide_episodes_into_quarters(please_wait, 95, 100)
         please_wait.set_progress(100)
         please_wait.stop(0.3)
@@ -92,7 +94,8 @@ class Log:
 
     def _parse_episode_events(self, please_wait: PleaseWait,
                               min_progress_percent: float, mid_progress_percent: float, max_progress_percent: float,
-                              do_full_analysis: bool, track: Track = None):
+                              do_full_analysis: bool, track: Track = None,
+                              calculate_new_reward=False, calculate_alternate_discount_factors=False):
         episode_events = []
         episode_iterations = []
         episode_object_locations = []
@@ -162,7 +165,8 @@ class Log:
 
         for i, e in enumerate(episode_events[:-1]):
             self._episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i],
-                                          self._log_meta.action_space, do_full_analysis, track))
+                                          self._log_meta.action_space, do_full_analysis, track,
+                                          calculate_new_reward, calculate_alternate_discount_factors))
             please_wait.set_progress(
                 mid_progress_percent + i / total_episodes * (max_progress_percent - mid_progress_percent))
 

@@ -2,11 +2,6 @@
 Essential Before Tentative v3 Release
 =====================================
 
-Either/or
-+ Load files offer "fast load" - does not do new reward or alternate future discount calculations
-+ Ability (in personalize config) to turn off the DF and/or new reward pre-calculations (to speed up file loading)
-    (remember to make menus & controls respond accordingly)
-
 + Save meta as JSON so it is easier to manage future upgrades without technical errors for old logs
 
 + Consistent support for 0.2 sec delay before first event ... in conjunction with adding as a measurement option

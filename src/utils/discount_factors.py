@@ -38,7 +38,7 @@ class DiscountFactors:
                 factor *= df
             self._multipliers.append(np.array(multiplier))
 
-    def get_discounted_future_rewards(self, rewards: np.ndarray, multi_discount_factor: bool):
+    def get_discounted_future_rewards(self, rewards: np.ndarray, multi_discount_factor: bool, force_list: bool):
         look_ahead = min(self._max_steps, len(rewards))
         if multi_discount_factor:
             discounted_future_rewards = []
@@ -47,7 +47,11 @@ class DiscountFactors:
             return discounted_future_rewards
         else:
             m = self._multipliers[0]
-            return np.sum(np.multiply(rewards[:look_ahead], m[:look_ahead]))
+            value = np.sum(np.multiply(rewards[:look_ahead], m[:look_ahead]))
+            if force_list:
+                return [value]
+            else:
+                return value
 
     def print_for_debug(self):
         for i, m in enumerate(self._multipliers):

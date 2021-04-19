@@ -51,8 +51,11 @@ class FileOptionsDialog(Dialog):
             turned_on_some_analysis = turned_on_some_analysis or new_value
             self._configManager.set_calculate_alternate_discount_factors(new_value)
 
+        self.parent.refresh_analysis_controls()
+
         if turned_on_some_analysis:
-            messagebox.showinfo(title="Options Reminder", message="New analysis options will be available\nnext time you open a log file")
+            messagebox.showinfo(title="Options Reminder", message="You now need to re-open a log file to perform new analysis")
+            self.parent.close_file()
 
     def validate(self):
         return True

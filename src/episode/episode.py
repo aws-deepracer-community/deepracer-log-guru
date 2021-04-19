@@ -21,7 +21,8 @@ SLIDE_SETTLING_PERIOD = 6
 class Episode:
 
     def __init__(self, episode_id, iteration, events, object_locations, action_space: ActionSpace,
-                 do_full_analysis: bool, track: Track=None):
+                 do_full_analysis: bool, track: Track=None,
+                 calculate_new_reward=False, calculate_alternate_discount_factors=False):
 
         assert track is not None or not do_full_analysis
 
@@ -79,14 +80,18 @@ class Episode:
             self._set_before_and_after_waypoints_on_events(track)
             self._set_skew_on_events(track)   # Relies on before and after
 
-            self._set_new_rewards(track)
-            self.new_rewards = self._get_list_of_new_rewards()
+            if calculate_new_reward:
+                self._set_new_rewards(track)
+                self.new_rewards = self._get_list_of_new_rewards()
+                self._set_new_discounted_future_reward()
+                self.new_discounted_future_rewards = self._get_list_of_new_discounted_future_rewards()
+            else:
+                self.new_rewards = None
+                self.new_discounted_future_rewards = None
 
-            self._set_discounted_future_rewards()
+            self._set_discounted_future_rewards(calculate_alternate_discount_factors)
             self.discounted_future_rewards = self._get_lists_of_discounted_future_rewards()
 
-            self._set_new_discounted_future_reward()
-            self.new_discounted_future_rewards = self._get_list_of_new_discounted_future_rewards()
         else:
             self.new_rewards = []
             self.new_discounted_future_rewards = []
@@ -298,15 +303,15 @@ class Episode:
                 previous_action_id = e.action_taken
             e.sequence_count = sequence
 
-    def _set_discounted_future_rewards(self):
+    def _set_discounted_future_rewards(self, calculate_alternate_discount_factors: bool):
         for i in range(len(self.events)):
             self.events[i].discounted_future_rewards = discount_factors.get_discounted_future_rewards(
-                self.rewards[i:], True)
+                self.rewards[i:], calculate_alternate_discount_factors, True)
 
     def _set_new_discounted_future_reward(self):
         for i in range(len(self.events)):
             self.events[i].new_discounted_future_reward = discount_factors.get_discounted_future_rewards(
-                self.new_rewards[i:], False)
+                self.new_rewards[i:], False, False)
 
     def get_list_of_rewards(self):
         list_of_rewards = []

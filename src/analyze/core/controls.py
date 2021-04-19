@@ -10,6 +10,7 @@ import tkinter as tk
 from enum import IntEnum
 
 from src.analyze.core.control import Control
+from src.configuration.config_manager import ConfigManager
 from src.utils.colors import ColorPalette
 from src.utils.discount_factors import discount_factors
 
@@ -172,13 +173,15 @@ class MeasurementControl(Control):
         _STEERING_RIGHT, _SKEW, _SLIDE, _PROJECTED_TRAVEL_DISTANCE
                                         ]
 
-    def __init__(self, redraw_callback: callable, control_frame: tk.Frame, measure_seconds: bool):
+    def __init__(self, redraw_callback: callable, control_frame: tk.Frame, measure_seconds: bool,
+                 config_manager: ConfigManager):
         super().__init__(redraw_callback, control_frame, "Measure")
         self._current_measurement_button = tk.StringVar(value=MeasurementControl._VISITS)
         self._current_measurement_dropdown = tk.StringVar()
         self._show_measure_seconds = measure_seconds
         self._redraw_callback = redraw_callback
         self._alternate_discount_factor_dict = dict()
+        self._config_manager = config_manager
 
     def _add_widgets(self):
         self.add_radiobutton_improved(MeasurementControl._VISITS, self._current_measurement_button)
@@ -193,13 +196,20 @@ class MeasurementControl(Control):
         all_measurements = MeasurementControl._ALL_MEASUREMENTS_EXCEPT_SECONDS.copy()
         if self._show_measure_seconds:
             all_measurements.append(MeasurementControl._SECONDS)
+        if not self._config_manager.get_calculate_new_reward():
+            all_measurements.remove(MeasurementControl._NEW_EVENT_REWARD)
+            all_measurements.remove(MeasurementControl._NEW_FUTURE_REWARD)
 
-        self._alternate_discount_factor_dict = dict()
-        for i in range(0, discount_factors.get_number_of_discount_factors()):
-            name = MeasurementControl._ALTERNATE_DISCOUNT_FACTOR + str(discount_factors.get_discount_factor(i))
-            self._alternate_discount_factor_dict[name] = i
-            if i > 0:
-                all_measurements.append(name)
+        if self._config_manager.get_calculate_alternate_discount_factors():
+            self._alternate_discount_factor_dict = dict()
+            for i in range(0, discount_factors.get_number_of_discount_factors()):
+                name = MeasurementControl._ALTERNATE_DISCOUNT_FACTOR + str(discount_factors.get_discount_factor(i))
+                self._alternate_discount_factor_dict[name] = i
+                if i > 0:
+                    all_measurements.append(name)
+
+        if self._current_measurement_dropdown.get() not in all_measurements:
+            self._current_measurement_dropdown.set("")
 
         self.add_dropdown(
             "", self._current_measurement_dropdown,
@@ -640,17 +650,26 @@ class EpisodeRewardTypeControl(Control):
     _NEW_REWARD_PLUS_FUTURE = "New Reward + Future"
     _ALL_DISCOUNT_FACTORS = "All Discount Factors"
 
-    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, config_manager: ConfigManager):
         super().__init__(guru_parent_redraw, control_frame, "Reward Types")
 
         self._reward_type = tk.StringVar(value=EpisodeRewardTypeControl._REWARD_PLUS_TOTAL)
+        self._config_manager = config_manager
 
     def _add_widgets(self):
         self.add_radiobutton_improved(EpisodeRewardTypeControl._REWARD_PLUS_TOTAL, self._reward_type)
         self.add_radiobutton_improved(EpisodeRewardTypeControl._REWARD_PLUS_FUTURE, self._reward_type)
-        self.add_radiobutton_improved(EpisodeRewardTypeControl._NEW_REWARD_PLUS_TOTAL, self._reward_type)
-        self.add_radiobutton_improved(EpisodeRewardTypeControl._NEW_REWARD_PLUS_FUTURE, self._reward_type)
-        self.add_radiobutton_improved(EpisodeRewardTypeControl._ALL_DISCOUNT_FACTORS, self._reward_type)
+
+        if self._config_manager.get_calculate_new_reward():
+            self.add_radiobutton_improved(EpisodeRewardTypeControl._NEW_REWARD_PLUS_TOTAL, self._reward_type)
+            self.add_radiobutton_improved(EpisodeRewardTypeControl._NEW_REWARD_PLUS_FUTURE, self._reward_type)
+        elif self._reward_type.get() in [EpisodeRewardTypeControl._NEW_REWARD_PLUS_TOTAL, EpisodeRewardTypeControl._NEW_REWARD_PLUS_FUTURE]:
+            self._reward_type.set(EpisodeRewardTypeControl._REWARD_PLUS_TOTAL)
+
+        if self._config_manager.get_calculate_alternate_discount_factors():
+            self.add_radiobutton_improved(EpisodeRewardTypeControl._ALL_DISCOUNT_FACTORS, self._reward_type)
+        elif self._reward_type.get() == EpisodeRewardTypeControl._ALL_DISCOUNT_FACTORS:
+            self._reward_type.set(EpisodeRewardTypeControl._REWARD_PLUS_TOTAL)
 
     def show_reward_plus_total(self):
         return self._reward_type.get() == EpisodeRewardTypeControl._REWARD_PLUS_TOTAL

@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from src.configuration.config_manager import ConfigManager
 from src.configuration.real_world import BOX_OBSTACLE_LENGTH, BOX_OBSTACLE_WIDTH, CAMERA_VISION_ANGLE
 from src.personalize.configuration.appearance import EVENT_HIGHLIGHT_COLOUR, TRUE_HEADING_HIGHLIGHT_COLOUR
 
@@ -23,11 +24,11 @@ _BEST_BRAKING = 2
 class AnalyzeRoute(TrackAnalyzer):
 
     def __init__(self, guru_parent_redraw, track_graphics :TrackGraphics,
-                 control_frame :tk.Frame, episode_selector :EpisodeSelector):
+                 control_frame :tk.Frame, episode_selector :EpisodeSelector, config_manager: ConfigManager):
 
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
-        self._measurement_control = MeasurementControl(guru_parent_redraw, control_frame, True)
+        self._measurement_control = MeasurementControl(guru_parent_redraw, control_frame, True, config_manager)
         self._appearance_control = TrackAppearanceControl(guru_parent_redraw, control_frame,
                                                           self.redraw_new_appearance, self.redraw_new_appearance,
                                                           None)

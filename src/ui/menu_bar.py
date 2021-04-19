@@ -1,6 +1,7 @@
 from tkinter import Menu, messagebox
 
 import src.log.log_utils
+from src.ui.file_options_dialog import FileOptionsDialog
 from src.ui.open_file_dialog import OpenFileDialog
 from src.ui.new_files_dialog import NewFilesDialog
 from src.ui.episode_filter_dialog import EpisodeFilterDialog
@@ -67,8 +68,9 @@ class MenuBar():
         menu = Menu(self.menubar, tearoff=0)
         menu.add_command(label="New File(s)", command=self.new_files)
         menu.add_command(label="Open File", command=self.open_file)
-        menu.add_separator()
         menu.add_command(label="Switch Directory", command=self.main_app.menu_callback_switch_directory)
+        menu.add_separator()
+        menu.add_command(label="Options", command=self.file_options)
         menu.add_separator()
         menu.add_command(label="Exit", command=self.root.quit)
 
@@ -225,6 +227,9 @@ class MenuBar():
 
     def open_file(self):
         OpenFileDialog(self.main_app, "Open File")
+
+    def file_options(self):
+        FileOptionsDialog(self.main_app)
 
     def choose_track(self, track):
         self.main_app.menu_callback_switch_track(track)

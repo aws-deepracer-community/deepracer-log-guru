@@ -649,6 +649,9 @@ class MainApp(tk.Frame):
     def get_log_directory(self):
         return self._config_manager.get_log_directory()
 
+    def get_config_manager(self):
+        return self._config_manager
+
 
 root = tk.Tk()
 app = MainApp(root)

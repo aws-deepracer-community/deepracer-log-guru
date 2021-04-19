@@ -1,4 +1,6 @@
 import tkinter as tk
+
+from src.personalize.configuration.analysis import TIME_BEFORE_FIRST_STEP
 from src.ui.dialog import Dialog
 from src.log.log_utils import get_model_info_for_open_model_dialog
 
@@ -19,8 +21,8 @@ class OpenFileDialog(Dialog):
         for log in model_logs.values():
             log_meta = log.get_log_meta()
             if log_meta.episode_stats.average_steps > 0:
-                all_best_times.append(log_meta.episode_stats.best_time)
-                all_average_times.append(log_meta.episode_stats.average_time)
+                all_best_times.append(log_meta.episode_stats.best_time + TIME_BEFORE_FIRST_STEP)
+                all_average_times.append(log_meta.episode_stats.average_time + TIME_BEFORE_FIRST_STEP)
                 show_laps = True
             all_progress_percent.append(self._get_progress_percent(log_meta))
             all_success_percent.append(self._get_success_percent(log_meta))
@@ -98,6 +100,7 @@ class OpenFileDialog(Dialog):
     @staticmethod
     def _make_lap_time_label(master, seconds, best_seconds):
         if seconds > 0.0:
+            seconds += TIME_BEFORE_FIRST_STEP
             formatted_text = str(round(seconds, 1)) + " s"
         else:
             formatted_text = "---"

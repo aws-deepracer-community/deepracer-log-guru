@@ -2,10 +2,10 @@
 Essential Before Tentative v3 Release
 =====================================
 
-+ Save meta as JSON so it is easier to manage future upgrades without technical errors for old logs
++ Consistent support for 0.2 sec delay before first event
+JUST FINISH IN META DATA (REMOVE before storing, and add again on loading)
 
-+ Consistent support for 0.2 sec delay before first event ... in conjunction with adding as a measurement option
-(do now because of ongoing impact on metadata file accuracy)
++ Save meta as JSON so it is easier to manage future upgrades without technical errors for old logs
 
 + Minimal fixes for analyse race - certainly ensure that selecting a new filter or differnet file etc. does a "reset"
 + Flag it as a new/prototype feature in UI

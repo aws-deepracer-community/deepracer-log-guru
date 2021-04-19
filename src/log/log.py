@@ -8,6 +8,7 @@ from src.log.evaluation_phase import EvaluationPhase
 from src.log.log_meta import LogMeta
 
 from src.episode.episode import Episode
+from src.personalize.configuration.analysis import TIME_BEFORE_FIRST_STEP
 from src.ui.please_wait import PleaseWait
 from src.tracks.track import Track
 
@@ -187,18 +188,19 @@ class Log:
             if e.lap_complete:
                 self._log_meta.episode_stats.success_count += 1
 
+                raw_time_taken = e.time_taken - TIME_BEFORE_FIRST_STEP
                 total_success_steps += e.step_count
-                total_success_time += e.time_taken
+                total_success_time += raw_time_taken
                 total_success_distance += e.distance_travelled
 
                 if self._log_meta.episode_stats.best_steps == 0 or \
                         e.step_count < self._log_meta.episode_stats.best_steps:
                     self._log_meta.episode_stats.best_steps = e.step_count
-                    self._log_meta.episode_stats.best_time = e.time_taken
+                    self._log_meta.episode_stats.best_time = raw_time_taken
 
                 if self._log_meta.episode_stats.worst_steps < e.step_count:
                     self._log_meta.episode_stats.worst_steps = e.step_count
-                    self._log_meta.episode_stats.worst_time = e.time_taken
+                    self._log_meta.episode_stats.worst_time = raw_time_taken
 
                 if self._log_meta.episode_stats.best_distance == 0.0 or \
                         e.distance_travelled < self._log_meta.episode_stats.best_distance:

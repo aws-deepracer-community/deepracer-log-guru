@@ -50,6 +50,8 @@ class AnalyzeRoute(TrackAnalyzer):
         self.dual_tone = ""
         self.color_palette = ColorPalette.MULTI_COLOR_A
 
+        self._config_manager = config_manager
+
     def build_control_frame(self, control_frame):
 
         self._measurement_control.add_to_control_frame()
@@ -134,7 +136,7 @@ class AnalyzeRoute(TrackAnalyzer):
     def display_info_about_chosen_event(self):
 
         if not self.floating_window or self.floating_window.winfo_exists() == 0:
-            self.floating_window = LogEventInfoWindow(self.track_graphics.canvas)
+            self.floating_window = LogEventInfoWindow(self.track_graphics.canvas, self._config_manager)
 
         self.floating_window.show_event(self.chosen_event, self.current_track)
 

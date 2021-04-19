@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from src.configuration.config_manager import ConfigManager
 from src.event.event_meta import Event
 from src.tracks.track import Track
 from src.ui.debug_text_formatter import get_formatted_debug
@@ -11,11 +12,13 @@ from src.utils.discount_factors import discount_factors
 
 class LogEventInfoWindow(tk.Toplevel):
 
-    def __init__(self, parent):
+    def __init__(self, parent, config_manager: ConfigManager):
 
         tk.Toplevel.__init__(self)
 
         self.title("Detailed Event Info")
+
+        self._config_manager = config_manager
 
         event_reward_frame = tk.LabelFrame(self, text="Event Reward")
         new_event_reward_frame = tk.LabelFrame(self, text="Alternate Reward")
@@ -27,8 +30,10 @@ class LogEventInfoWindow(tk.Toplevel):
 
         stickiness = tk.NW+tk.E
         event_reward_frame.grid(row=0, column=0, pady=5, padx=5, sticky=stickiness)
-        new_event_reward_frame.grid(row=1, column=0, pady=5, padx=5, sticky=stickiness)
-        discount_factors_frame.grid(row=2, column=0, pady=5, padx=5, sticky=stickiness)
+        if self._config_manager.get_calculate_new_reward():
+            new_event_reward_frame.grid(row=1, column=0, pady=5, padx=5, sticky=stickiness)
+        if self._config_manager.get_calculate_alternate_discount_factors():
+            discount_factors_frame.grid(row=2, column=0, pady=5, padx=5, sticky=stickiness)
         state_frame.grid(row=0, column=1, rowspan=3, pady=5, padx=5, sticky=stickiness)
         waypoint_frame.grid(row=0, column=2, rowspan=2, pady=5, padx=5, sticky=stickiness)
         action_frame.grid(row=2, column=2, pady=5, padx=5, sticky=stickiness)
@@ -110,15 +115,17 @@ class LogEventInfoWindow(tk.Toplevel):
 
         self.new_reward = tk.StringVar()
         self.new_discounted_future_reward = tk.StringVar()
-        self.make_label_and_value(new_event_reward_frame, 0, "Reward", self.new_reward)
-        self.make_label_and_value(new_event_reward_frame, 1, df_title, self.new_discounted_future_reward)
+        if self._config_manager.get_calculate_new_reward():
+            self.make_label_and_value(new_event_reward_frame, 0, "Reward", self.new_reward)
+            self.make_label_and_value(new_event_reward_frame, 1, df_title, self.new_discounted_future_reward)
 
         self.other_discounted_future_rewards = []
-        for i in range(discount_factors.get_number_of_discount_factors() - 1):
-            new_tk_var = tk.StringVar()
-            self.other_discounted_future_rewards.append(new_tk_var)
-            df_title = self._make_short_discount_factor_title(i + 1)
-            self.make_label_and_value(discount_factors_frame, i, df_title, new_tk_var)
+        if self._config_manager.get_calculate_alternate_discount_factors():
+            for i in range(discount_factors.get_number_of_discount_factors() - 1):
+                new_tk_var = tk.StringVar()
+                self.other_discounted_future_rewards.append(new_tk_var)
+                df_title = self._make_short_discount_factor_title(i + 1)
+                self.make_label_and_value(discount_factors_frame, i, df_title, new_tk_var)
 
         self.debug_output = tk.StringVar()
 
@@ -126,14 +133,14 @@ class LogEventInfoWindow(tk.Toplevel):
 
         self.geometry("+%d+%d" % (parent.winfo_rootx(), parent.winfo_rooty()))
 
-    def make_label_and_value(self, parent_frame, row, label, tk_variable):
+    @staticmethod
+    def make_label_and_value(parent_frame, row, label, tk_variable):
         if ":" not in label:
             label += ":"
         tk.Label(parent_frame, text=label, anchor=tk.E, justify=tk.RIGHT).grid(row=row, column=0, pady=5, padx=5, sticky=tk.E)
         tk.Label(parent_frame, textvariable=tk_variable).grid(row=row, column=1, pady=5, padx=5, sticky=tk.W)
 
-
-    def show_event(self, event :Event, track :Track):
+    def show_event(self, event: Event, track: Track):
         (previous_bearing, _) = track.get_bearing_and_distance_from_previous_waypoint(event.before_waypoint_index)
         (current_bearing, _) = track.get_bearing_and_distance_to_next_waypoint(event.before_waypoint_index)
         (next_bearing, _) = track.get_bearing_and_distance_to_next_waypoint(event.after_waypoint_index)
@@ -178,13 +185,14 @@ class LogEventInfoWindow(tk.Toplevel):
         self.reward_average.set(get_pretty_large_integer(event.average_reward_so_far))
         self.reward_total.set(get_pretty_large_integer(event.reward_total))
         self.discounted_future_reward.set(get_pretty_large_integer(event.discounted_future_rewards[0]))
-        self.new_reward.set(get_pretty_large_float(round(event.new_reward, 5)))
-        self.new_discounted_future_reward.set(get_pretty_large_integer(event.new_discounted_future_reward))
+        if self._config_manager.get_calculate_new_reward():
+            self.new_reward.set(get_pretty_large_float(round(event.new_reward, 5)))
+            self.new_discounted_future_reward.set(get_pretty_large_integer(event.new_discounted_future_reward))
 
-        for i, r in enumerate(self.other_discounted_future_rewards):
-            r.set(get_pretty_large_integer(event.discounted_future_rewards[i + 1]))
+        if self._config_manager.get_calculate_alternate_discount_factors():
+            for i, r in enumerate(self.other_discounted_future_rewards):
+                r.set(get_pretty_large_integer(event.discounted_future_rewards[i + 1]))
 
-        # self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80, ["x", "y", "distance_from_center", "closest_waypoints"]))  # TODO - expose configuration
         self.debug_output.set(get_formatted_debug(event.debug_log, 10, 80, []))  # TODO - expose configuration
         self.lift()
 

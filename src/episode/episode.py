@@ -13,7 +13,7 @@ from src.utils.geometry import get_bearing_between_points, get_turn_between_dire
 from src.tracks.track import Track
 from src.utils.discount_factors import discount_factors
 
-from src.personalize.configuration.analysis import NEW_REWARD_FUNCTION
+from src.personalize.configuration.analysis import NEW_REWARD_FUNCTION, TIME_BEFORE_FIRST_STEP
 
 SLIDE_SETTLING_PERIOD = 6
 
@@ -48,8 +48,8 @@ class Episode:
         self.step_count = len(events)
         self.is_real_start = first_event.closest_waypoint_index <= 1
 
-        self.time_taken = last_event.time - first_event.time
-        self.predicted_lap_time = 100 / last_event.progress * self.time_taken  # predicted
+        self.time_taken = last_event.time - first_event.time + TIME_BEFORE_FIRST_STEP
+        self.predicted_lap_time = 100 / last_event.progress * self.time_taken
 
         self.rewards = self.get_list_of_rewards()
         np_rewards = np.array(self.rewards)
@@ -278,7 +278,7 @@ class Episode:
     def set_time_elapsed_on_events(self):
         start_time = self.events[0].time
         for e in self.events:
-            e.time_elapsed = e.time - start_time
+            e.time_elapsed = e.time - start_time + TIME_BEFORE_FIRST_STEP
 
     def set_total_distance_travelled_on_events(self):
         distance = 0.0

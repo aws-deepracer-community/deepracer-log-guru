@@ -1,6 +1,6 @@
-import pickle
 import numpy as np
 import os
+import json
 
 import src.log.parse as parse
 
@@ -14,7 +14,7 @@ from src.tracks.track import Track
 
 from src.utils.discount_factors import discount_factors
 
-META_FILE_SUFFIX = ".v3.meta"
+META_FILE_SUFFIX = ".meta.json"
 LOG_FILE_SUFFIX = ".log"
 
 
@@ -26,7 +26,8 @@ class Log:
     def load_meta(self, meta_file_name: str):
         self._meta_file_name = meta_file_name
         with open(self._log_directory + "\\" + meta_file_name, 'rb') as file:
-            self._log_meta = pickle.load(file)
+            received_json = json.load(file)
+            self._log_meta.set_from_json(received_json)
 
     def load_all(self, meta_file_name, please_wait: PleaseWait, track: Track,
                  calculate_new_reward=False, calculate_alternate_discount_factors=False):
@@ -55,8 +56,9 @@ class Log:
         self._analyze_episode_details()
 
     def save(self):
-        with open(self._log_directory + "\\" + self._meta_file_name, "wb") as meta_file:
-            pickle.dump(self._log_meta, meta_file)
+        with open(self._log_directory + "\\" + self._meta_file_name, "w+") as meta_file:
+            log_json = self._log_meta.get_as_json()
+            json.dump(log_json, meta_file, indent=2)
 
     def get_meta_file_name(self):
         return self._meta_file_name

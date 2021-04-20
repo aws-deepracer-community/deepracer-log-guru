@@ -627,7 +627,7 @@ class Episode:
             while self.events[index].time_elapsed < required_time:
                 index += 1
 
-            while self.events[index].time_elapsed > required_time:
+            while index > 0 and self.events[index].time_elapsed > required_time:
                 index -= 1
 
             return index

@@ -1,7 +1,7 @@
 import json
 import os
 
-_FILENAME = "DRG.cfg"
+_FILENAME = "DRG_config.json"
 
 _KEY_LOG_DIRECTORY = "log_directory"
 _KEY_LAST_OPEN_TRACK = "last_open_track"
@@ -32,7 +32,7 @@ class ConfigManager:
 
     def _save(self):
         with open(_FILENAME, "w+") as outfile:
-            json.dump(self._configuration_dictionary, outfile)
+            json.dump(self._configuration_dictionary, outfile, indent=2)
 
     def get_log_directory(self):
         return self._configuration_dictionary[_KEY_LOG_DIRECTORY]

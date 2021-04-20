@@ -79,4 +79,3 @@ class ActionSpace:
 
     def is_low_speed_action(self, action: Action):
         return self.is_low_speed(action.get_speed())
-

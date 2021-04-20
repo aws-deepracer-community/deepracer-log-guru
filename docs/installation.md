@@ -17,18 +17,39 @@ For example:
 
 ![](pictures/pip_install.png)
 
-## Rest - TODO
+## Download Deep Racer Guru
 
-https://github.com/dmh23/deep_racer_guru/releases
-( download and unzip )
+Either:
+* Download the latest release zip file from the [Releases section](https://github.com/dmh23/deep_racer_guru/releases) of Github
+* Unzip the entire contents of the zip file into a convenient location
 
-create a two line batch script (e.g. .".bat" if using windows):
-    cd C:\Users\david\PycharmProjects\deep_racer_guru
-    "C:\Program Files (x86)\Python\3.9.1\python.exe" -m src.main.guru
-( the directory should be the one containing the "src" folder etc. )
+Or:
+* Git "clone" the [Source code](https://github.com/dmh23/deep_racer_guru) directly from Github
+* Make sure you use the __master__ branch to run the most recent released code
 
+## Launch Deep Racer Guru
+### Manual Launch
 
+Run it manually using the following example commands:
 
-### Upgrade Instructions From Old Versions
+    cd C:\DRG-Demo\projects\deep_racer_guru
+    C:\DRG-Demo\python\3.9.4\python.exe -m src.main.guru
 
-* Run DRG, and go to the Admin menu and choose "Re-calculate Log Meta"
+Note:
+* You must "cd" to the root directory/folder where you unzipped or cloned the Deep Racer Guru code
+* If you are in the right place, it contains the __README.md__ file and several sub-directories/folders including __src__
+* Make sure you are running exactly the copy of Python that was installed in the previous steps (check the path carefully)
+* Obviously you may want to create a simple batch/shell script for this
+
+### Using an IDE
+
+Configure the IDE to use the version of Python interpreter that you installed in the previous steps.
+
+As an example, here is a screenshot from PyCharm:
+![](pictures/pycharm_setup_python_interpreter.png)
+
+Then you can simply "run" the main application from the __src/main/guru.py file__
+
+Again as an example, here is a screenshot from PyCharm:
+![](pictures/pycharm_run.png)
+

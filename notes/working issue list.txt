@@ -2,12 +2,9 @@
 Essential Before Tentative v3 Release
 =====================================
 
-+ Consistent support for 0.2 sec delay before first event
-JUST FINISH IN META DATA (REMOVE before storing, and add again on loading)
-
 + Save meta as JSON so it is easier to manage future upgrades without technical errors for old logs
 
-+ Minimal fixes for analyse race - certainly ensure that selecting a new filter or differnet file etc. does a "reset"
++ Minimal fixes for analyse race - certainly ensure that selecting a new filter or different file etc. does a "reset"
 + Flag it as a new/prototype feature in UI
 
 Fix this bug:
@@ -53,7 +50,7 @@ Fix old bugs:
 
 Brand New Analysis Views
 ======================
-Newest idea - ability to show relatioship between reward and characteristics like speed and pos from centre - 1D and 2D (coloured)
+Newest idea - ability to show relationship between reward and characteristics like speed and pos from centre - 1D and 2D (coloured)
 Detailed drilldown into "outcomes" at a particular waypoint - esp. graphs to show outcome of different positions (e.g. success % beyond point)
 Track-only view - with facilities like measuring distance between points, inside versus outside distance, ability to draw and measure a path etc.
 Curve fitting - as special feature of track-only view?

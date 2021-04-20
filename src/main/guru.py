@@ -265,6 +265,8 @@ class MainApp(tk.Frame):
         analyzer.set_evaluation_phases(None)
 
     def switch_analyzer(self, new_analyzer, new_background_analyzer=None):
+        self.analyzer.lost_control()
+
         if new_background_analyzer:
             assert new_background_analyzer.uses_track_graphics() and new_analyzer.uses_track_graphics()
 

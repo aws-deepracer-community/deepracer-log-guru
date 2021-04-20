@@ -19,9 +19,7 @@ class Analyzer:
         self.log_meta = None
         self.evaluation_phases = None
 
-
     def take_control(self):
-
         for widget in self.control_frame.winfo_children():
             widget.destroy()
 
@@ -31,6 +29,9 @@ class Analyzer:
         tk.Label(self.control_frame, text="                                                          ").pack()
 
         self.control_frame.pack(side=tk.RIGHT)
+
+    def lost_control(self):
+        self.warning_lost_control()
 
     def set_track(self, current_track):
         self.current_track = current_track
@@ -100,6 +101,10 @@ class Analyzer:
     def warning_all_episodes_changed(self):
         # You MIGHT override this to manage cached or pre-calculated data structures
         # Do not override to redraw() since Guru already calls redraw() at the right times!
+        pass
+
+    def warning_lost_control(self):
+        # You MIGHT override this to stop activities such an animation if another analyser has just been chosen
         pass
 
     def warning_action_space_changed(self):

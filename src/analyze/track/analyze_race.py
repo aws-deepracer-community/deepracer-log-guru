@@ -39,6 +39,12 @@ class AnalyzeRace(TrackAnalyzer):
     def redraw(self):
         self._timer.redraw()
 
+    def warning_filtered_episodes_changed(self):
+        self._timer.reset()
+
+    def warning_lost_control(self):
+        self._timer.stop()
+
     def _draw(self, simulation_time):
         self._display_lap_time.show_time(simulation_time)
         self.track_graphics.prepare_to_remove_old_cars()
@@ -86,10 +92,8 @@ class AnalyzeRace(TrackAnalyzer):
         def stop(self):
             if self._keep_running:
                 self._keep_running = False
-            self._thread.join(0.2)
-            # stop_time = time.time()   # Sometimes gets stuck, don't know why
-            # while self._is_still_running and time.time() - stop_time < 1:
-            #    time.sleep(0.05)
+            if self._is_still_running:
+                self._thread.join(0.2)
 
         def soft_stop(self):
             self._keep_running = False

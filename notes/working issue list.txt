@@ -2,9 +2,6 @@
 Essential Before Tentative v3 Release
 =====================================
 
-+ Minimal fixes for analyse race - certainly ensure that selecting a new filter or different file etc. does a "reset"
-+ Flag it as a new/prototype feature in UI
-
 Fix this bug:
 Display ROUTE log info, then go to different analysis and change the episode selector << or >> (log info should close), and return to ROUTE circle highlight is still there!!
 

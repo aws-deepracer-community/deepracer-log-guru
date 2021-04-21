@@ -809,3 +809,33 @@ class ZoomInAndOutControl(Control):
 
     def get_zoom_level(self):
         return self._zoom_level
+
+
+class QuarterlyDistributionControl(Control):
+    _NONE = "None"
+    _BARS = "Bars"
+    _STACKED = "Stacked"
+    _LINES = "Lines"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Show Quarterly")
+
+        self._distribution_choice = tk.StringVar(value=QuarterlyDistributionControl._NONE)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(QuarterlyDistributionControl._NONE, self._distribution_choice)
+        self.add_radiobutton_improved(QuarterlyDistributionControl._BARS, self._distribution_choice)
+        self.add_radiobutton_improved(QuarterlyDistributionControl._STACKED, self._distribution_choice)
+        self.add_radiobutton_improved(QuarterlyDistributionControl._LINES, self._distribution_choice)
+
+    def show_none(self):
+        return self._distribution_choice.get() == QuarterlyDistributionControl._NONE
+
+    def show_bars(self):
+        return self._distribution_choice.get() == QuarterlyDistributionControl._BARS
+
+    def show_stacked(self):
+        return self._distribution_choice.get() == QuarterlyDistributionControl._STACKED
+
+    def show_lines(self):
+        return self._distribution_choice.get() == QuarterlyDistributionControl._LINES

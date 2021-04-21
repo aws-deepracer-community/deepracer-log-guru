@@ -1,11 +1,3 @@
-
-
-
-Trial Link to other documentation:
-[Terminology](docs/terminology.md)
-
-
-
 # deep_racer_guru
 
 ## Special Announcement
@@ -35,10 +27,6 @@ Read the [Installation Instructions](docs/installation.md) and [Getting Started 
 * [Terminology](docs/terminology.md)
 * [Special Mouse and Keyboard Actions](docs/mouse_and_keyboard.md)
 * [Troubleshooting](docs/trouble_shooting.md)
-
-
-
-
 
 
 

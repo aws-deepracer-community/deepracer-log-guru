@@ -1,8 +1,6 @@
 # Getting Started
 
-## Getting Started
-
-### Download Logs
+## Download Logs
 You'll first need to download some log files as follows:
 * Go to the DeepRacer console and view the training info for a model
 * Click the "**Download logs**" button at the top of the training section 
@@ -13,19 +11,19 @@ You'll first need to download some log files as follows:
 * Extract/save it locally
 * If you wish, repeat this process to download log file(s) for other model(s) too
 
-### Configure DRG
-Tell DRG where you have saved your log files by editing:
-* src/configuration/personal_configuration.py
-
 ![](pictures/personal_config_file.png)
 
-### Run DRG
+## Run DRG
 Run the main DRG application class from here:
 * src/main/guru.py
 
 ![](pictures/how_to_run.png)
 
-### Import Log Files
+## Configure DRG
+Tell DRG where you have saved your log files by:
+* TODO
+
+## Import Log Files
 You must "Import" new log files before you can open them for analysis:
 * In the Deep Racer Guru application, go to the **File -> New** menu option
 * It will display a list of the new files, if it is correct then click OK to import them into DRG

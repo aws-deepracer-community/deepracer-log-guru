@@ -7,7 +7,10 @@ TODO
 TODO
 
 ## Displaying Obstacles for Object Avoidance
-TODO
+TODO - need to add following to your reward function:
+
+        if params['steps'] == 1:
+            print("DRG-OBJECTS:", params['objects_location'])
 
 ## Parsing Debug Output
 TODO

@@ -5,17 +5,14 @@ Essential Before Tentative v3 Release
 Fix this bug:
 Display ROUTE log info, then go to different analysis and change the episode selector << or >> (log info should close), and return to ROUTE circle highlight is still there!!
 
-Finish some docs especially:
-+ Rewrite the proposed simpler installation documentation (remember no clunky setting of log dir now ...)
-+ Refresh the sales "collage" and provide a new "Gallery" of images instead ..... ?
-( NB some docs like terminology & key/mouse can wait until 3.0.1 but installation instructions are essential doh ... )
-
+Finish the most important docs
+     - Gallery
+     - Getting Started
 
 v3.0.1 Improvements
 ===================
 
 + Median lap time should be added to the quarterly view
-+ Lap time distribution should be able to show how it evolves per quarter
 
 + Migrate all heatmap/routes to the new approach used for steering straight/left/right
 + Extensive re-testing ... NB heatmap for single episode should give same colours, or very similar, as episode route)

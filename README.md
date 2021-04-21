@@ -26,6 +26,7 @@ Read the [Installation Instructions](docs/installation.md) and [Getting Started 
 
 * [Terminology](docs/terminology.md)
 * [Special Mouse and Keyboard Actions](docs/mouse_and_keyboard.md)
+* [Special Topics](docs/special_topics.md)
 * [Troubleshooting](docs/trouble_shooting.md)
 
 

@@ -22,6 +22,10 @@ Look at the new [Gallery](docs/gallery.md)
 
 Read the [Installation Instructions](docs/installation.md) and [Getting Started Guide](docs/getting_started.md)
 
+## Want to Write Reward Functions More Easily?
+
+See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_racer_framework) (DRF)
+
 ## Additional Documentation
 
 * [Terminology](docs/terminology.md)

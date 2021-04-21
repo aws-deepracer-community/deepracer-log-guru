@@ -332,16 +332,17 @@ class SpeedControl(Control):
 
 
 class TrackAppearanceControl(Control):
-    _BLOB_SIZE_SMALL = "Small       "
-    _BLOB_SIZE_MEDIUM = "Medium   "
-    _BLOB_SIZE_LARGE = "Large       "
-    _BLOB_SIZES = [_BLOB_SIZE_SMALL, _BLOB_SIZE_MEDIUM, _BLOB_SIZE_LARGE]
+    _BLOB_SIZE_SMALL = "Small            "
+    _BLOB_SIZE_SMALL_PLUS_SIDES = "Small + Sides"
+    _BLOB_SIZE_MEDIUM = "Medium       "
+    _BLOB_SIZE_LARGE = "Large            "
+    _BLOB_SIZES = [_BLOB_SIZE_SMALL, _BLOB_SIZE_SMALL_PLUS_SIDES, _BLOB_SIZE_MEDIUM, _BLOB_SIZE_LARGE]
 
-    _PALETTE_GREYS = "Greys       "
+    _PALETTE_GREYS = "Greys        "
     _PALETTE_3_COLOURS = "3 Colours "
     _PALETTE_5_COLOURS = "5 Colours "
-    _PALETTE_MULTI_A = "Multi-A"
-    _PALETTE_MULTI_B = "Multi-B"
+    _PALETTE_MULTI_A = "Multi-A    "
+    _PALETTE_MULTI_B = "Multi-B    "
     _PALETTES = [_PALETTE_GREYS, _PALETTE_3_COLOURS, _PALETTE_5_COLOURS, _PALETTE_MULTI_A, _PALETTE_MULTI_B]
 
     _BRIGHTNESS_FAINT = "Faint      "
@@ -379,6 +380,9 @@ class TrackAppearanceControl(Control):
 
     def small_blob_size(self):
         return self._blob_size.get() == TrackAppearanceControl._BLOB_SIZE_SMALL
+
+    def small_blob_plus_sides(self):
+        return self._blob_size.get() == TrackAppearanceControl._BLOB_SIZE_SMALL_PLUS_SIDES
 
     def medium_blob_size(self):
         return self._blob_size.get() == TrackAppearanceControl._BLOB_SIZE_MEDIUM

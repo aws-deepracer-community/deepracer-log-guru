@@ -4,6 +4,8 @@ from src.configuration.config_manager import ConfigManager
 from src.configuration.real_world import BOX_OBSTACLE_LENGTH, BOX_OBSTACLE_WIDTH, CAMERA_VISION_ANGLE
 from src.personalize.configuration.appearance import EVENT_HIGHLIGHT_COLOUR, TRUE_HEADING_HIGHLIGHT_COLOUR
 
+import src.configuration.real_world as real_world_config
+
 import src.secret_sauce.glue.glue as ss
 import src.analyze.core.measurement_brightness as measurement_brightness
 from src.analyze.track.track_analyzer import TrackAnalyzer
@@ -95,12 +97,12 @@ class AnalyzeRoute(TrackAnalyzer):
         self.draw_chosen_event_()
 
     def get_increased_blob_size(self):
-        if self._appearance_control.small_blob_size():
-            return 0
-        elif self._appearance_control.medium_blob_size():
+        if self._appearance_control.medium_blob_size():
             return 1
         elif self._appearance_control.large_blob_size():
             return 2
+        else:
+            return 0
 
     def redraw_new_appearance(self, new_value):
         self.guru_parent_redraw()
@@ -255,6 +257,11 @@ class AnalyzeRoute(TrackAnalyzer):
     def _plot_dot(self, event, brightness):
         colour = get_color_for_data(brightness, self.color_palette)
         self.track_graphics.plot_dot((event.x, event.y), 3 + self.get_increased_blob_size(), colour)
+
+        if self._appearance_control.small_blob_plus_sides():
+            self.track_graphics.plot_angled_box_left_and_right_sides_only(
+                event.x, event.y, real_world_config.VEHICLE_WIDTH, real_world_config.VEHICLE_LENGTH,
+                colour, event.heading, 1)
 
     def colour_scheme_track_speed(self, event, max_speed, speed_range):
         self._plot_speed_dot(event, event.track_speed, max_speed, speed_range)

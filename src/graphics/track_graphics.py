@@ -91,6 +91,22 @@ class TrackGraphics:
 
         return self.plot_polygon([front_left, front_right, rear_right, rear_left], colour)
 
+    def plot_angled_box_left_and_right_sides_only(self, x: float, y: float, box_width: float, box_length: float,
+                                                  colour: str, heading: float, line_width: int):
+
+        middle = (x, y)
+        front_middle = geometry.get_point_at_bearing(middle, heading, box_length / 2)
+        front_left = geometry.get_point_at_bearing(front_middle, heading + 90, box_width / 2)
+        front_right = geometry.get_point_at_bearing(front_middle, heading - 90, box_width / 2)
+
+        rear_middle = geometry.get_point_at_bearing(middle, heading, -box_length / 2)
+        rear_left = geometry.get_point_at_bearing(rear_middle, heading + 90, box_width / 2)
+        rear_right = geometry.get_point_at_bearing(rear_middle, heading - 90, box_width / 2)
+
+        self.plot_line(front_left, rear_left, line_width, colour)
+        self.plot_line(front_right, rear_right, line_width, colour)
+
+
     def plot_polygon(self, points, colour):
 
         points_as_array = []

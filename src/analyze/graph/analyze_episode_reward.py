@@ -89,3 +89,5 @@ class AnalyzeEpisodeReward(AnalyzeEpisodeStat):
             self.reset_labels("New Reward and Total New Reward", "New Reward", "Total New Reward", "Total New Reward")
         elif self._rewardTypeControl.show_new_reward_plus_future():
             self.reset_labels("New Reward and Future Discounted New Reward", "New Reward", "Future New Reward", "Future New Reward")
+        elif self._rewardTypeControl.show_all_discount_factors():
+            self.reset_labels("Comparison of Future Rewards using Alternate Discount Factors", "Reward", "Current Future Reward", "Future Reward")

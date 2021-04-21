@@ -2,7 +2,7 @@
 
 ## Special Announcement
 
-Version 3 has now arrived (21st April 2021), with many new features and fixes
+Version 3 has now arrived (24th April 2021), with many new features and fixes
 
 ## Introduction
 

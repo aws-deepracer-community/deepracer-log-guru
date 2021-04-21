@@ -3,7 +3,10 @@
 ## Download Logs
 You'll first need to download some log files as follows:
 * Go to the DeepRacer console and view the training info for a model
-* Click the "**Download logs**" button at the top of the training section 
+* Click the "**Download logs**" button at the top of the training section
+
+TODO - provide new screenshot here
+
 * Open the zip archive and locate the **robomaker** log file in the **logs/training** folder
 
 ![](pictures/find_correct_log_file.png)
@@ -11,17 +14,14 @@ You'll first need to download some log files as follows:
 * Extract/save it locally
 * If you wish, repeat this process to download log file(s) for other model(s) too
 
-![](pictures/personal_config_file.png)
+TODO - mention that logs can also be brought across from non-console training ... 
 
 ## Run DRG
-Run the main DRG application class from here:
-* src/main/guru.py
-
-![](pictures/how_to_run.png)
+Run the main DRG application ... cross reference installation instructions TODO ...
 
 ## Configure DRG
 Tell DRG where you have saved your log files by:
-* TODO
+* TODO   file -> change directory
 
 ## Import Log Files
 You must "Import" new log files before you can open them for analysis:

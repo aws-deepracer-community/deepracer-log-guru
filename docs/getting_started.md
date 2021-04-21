@@ -30,5 +30,6 @@ You must "Import" new log files before you can open them for analysis:
 
 ### Open Log Files
 * Use the Track menu to select the correct track
+* Hint: tracks with log files are at the top of the list, above the divider
 * Now go to the **File -> Open** menu to choose from log files you have downloaded for that selected track
 

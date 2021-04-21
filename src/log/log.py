@@ -159,14 +159,19 @@ class Log:
                 scaled_percent_read = (mid_progress_percent - min_progress_percent) / 100 * percent_read
                 please_wait.set_progress(min_progress_percent + scaled_percent_read)
 
-        assert not saved_events
+        if saved_events:
+            episode_events = episode_events[:-1]
+
+        last_episode = episode_events[-1]
+        if len(last_episode) == 0 or not last_episode[-1].job_completed:
+            episode_events = episode_events[:-1]
 
         total_episodes = len(episode_events)
 
         while len(episode_events) > len(episode_iterations):
             episode_iterations.append(iteration_id)
 
-        for i, e in enumerate(episode_events[:-1]):
+        for i, e in enumerate(episode_events):
             self._episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i],
                                           self._log_meta.action_space, do_full_analysis, track,
                                           calculate_new_reward, calculate_alternate_discount_factors))

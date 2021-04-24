@@ -12,8 +12,6 @@ Finish the most important docs
 v3.0.1 Improvements
 ===================
 
-+ Median lap time should be added to the quarterly view
-
 + Migrate all heatmap/routes to the new approach used for steering straight/left/right
 + Extensive re-testing ... NB heatmap for single episode should give same colours, or very similar, as episode route)
 

@@ -6,6 +6,7 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
+from src.episode.episodes_plot_data import get_lap_times_per_quarter
 from src.utils.lists import get_list_of_empty_lists
 
 from src.analyze.core.controls import EpisodeRadioButtonControl
@@ -44,7 +45,7 @@ class AnalyzeQuarterlyResults(GraphAnalyzer):
 
         self.plot_minimum_percents(episodes, gs, 100, 2, 0)
 
-
+        self.plot_lap_times_stat(episodes, gs, np.median, 2, 1)
 
     def plot_minimum_percents(self, episodes, gs, minimum_percent, graph_x, graph_y):
         axes :Axes = self.graph_figure.add_subplot(gs[graph_x, graph_y])
@@ -147,6 +148,37 @@ class AnalyzeQuarterlyResults(GraphAnalyzer):
             border = 0.15 * (max_value - min_value)
             axes.set_ybound(max(0.0, min_value - border), max_value + border)
 
+    def plot_lap_times_stat(self, episodes, gs, stat_method, graph_x, graph_y):
+        axes :Axes = self.graph_figure.add_subplot(gs[graph_x, graph_y])
+
+        axes.set_title("Lap Time " + stat_method.__name__)
+
+        axes.get_xaxis().set_ticklabels([])
+        axes.get_yaxis().set_ticklabels([])
+
+        if not episodes:
+            return
+
+        plot_x = np.array([1, 2, 3, 4])
+        plot_y = get_data_lap_times_stat(episodes, stat_method)
+
+        bars = axes.bar(plot_x, plot_y, color="C1")
+
+        for bar in bars:
+            height = bar.get_height()
+            if height > 0:
+                axes.annotate(round(height, 1),
+                            xy=(bar.get_x() + bar.get_width() / 2, height),
+                            xytext=(0, 2),  # 3 points vertical offset
+                            textcoords="offset points",
+                            ha='center', va='bottom')
+
+        max_value = np.max(plot_y)
+        min_value = np.min(plot_y)
+        if max_value != min_value:
+            border = 0.15 * (max_value - min_value)
+            axes.set_ybound(max(0.0, min_value - border), max_value + border)
+
 
 def get_data_minimum_percents(episodes, minimum_percent):
     result = np.zeros((4,), dtype=int)
@@ -170,6 +202,7 @@ def get_data_percent_stat(episodes, stat_method):
 
     return plot_data
 
+
 def get_data_episode_reward_stat(episodes, stat_method):
     # Gather all the percentage completions into a list per iteration
     quarterly_total_rewards = get_list_of_empty_lists(4)
@@ -180,5 +213,14 @@ def get_data_episode_reward_stat(episodes, stat_method):
     for i, ipc in enumerate(quarterly_total_rewards):
         if ipc:
             plot_data[i] = stat_method(np.array(ipc))
+
+    return plot_data
+
+
+def get_data_lap_times_stat(episodes, stat_method):
+    plot_data = np.zeros(4)
+    for i, times in enumerate(get_lap_times_per_quarter(episodes)):
+        if times.any():
+            plot_data[i] = stat_method(np.array(times))
 
     return plot_data

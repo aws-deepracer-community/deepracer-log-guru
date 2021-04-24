@@ -7,6 +7,7 @@ from matplotlib.axes import Axes
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.analyze.core.controls import EpisodeRadioButtonControl, QuarterlyDistributionControl, \
     ShowMeanOrMedianStatControl
+from src.episode.episodes_plot_data import get_lap_times, get_lap_times_per_quarter
 
 
 class AnalyzeLapTimeDistribution(GraphAnalyzer):
@@ -43,8 +44,8 @@ class AnalyzeLapTimeDistribution(GraphAnalyzer):
         else:
             return
 
-        plot_data = get_plot_data_lap_times(episodes)
-        quarterly_plot_data = get_plot_data_lap_times_per_quarter(episodes)
+        plot_data = get_lap_times(episodes)
+        quarterly_plot_data = get_lap_times_per_quarter(episodes)
 
         q_labels = ("Q1", "Q2", "Q3", "Q4")
         q_colours = ["C3", "C4", "C5", "C6"]
@@ -89,23 +90,4 @@ class AnalyzeLapTimeDistribution(GraphAnalyzer):
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
-
-def get_plot_data_lap_times(episodes: list):
-    lap_times = []
-
-    for e in episodes:
-        if e.lap_complete:
-            lap_times.append(e.time_taken)
-
-    return np.array(lap_times)
-
-
-def get_plot_data_lap_times_per_quarter(episodes: list):
-    lap_times = [[], [], [], []]
-
-    for e in episodes:
-        if e.lap_complete:
-            lap_times[e.quarter - 1].append(e.time_taken)
-
-    return [np.array(lap_times[0]), np.array(lap_times[1]), np.array(lap_times[2]), np.array(lap_times[3])]
 

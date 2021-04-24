@@ -1,37 +1,29 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from src.tracks.track import Track
-import src.configuration.personal_track_annotations as config
-
-# Other people might want to change/personalize these values
-
-PRIVATE_DESCRIPTION = "Asia Pacific Bay - Nov 2020"
-PRIVATE_SECTION_DIVIDERS = []
+import src.personalize.configuration.personal_track_annotations as config
 
 
 class EuropeanSeasideCircuitTrack(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "European Seaside Circuit"
+        self._ui_name = "European Seaside Circuit"
+        self._ui_description = "A highly technical track, the European Seaside Circuit’s tight turns weave through a timeless Mediterranean cliffside village"
+        self._ui_length_in_m = 60.0  # metres
+        self._ui_width_in_cm = 128  # centimetres
+        self._world_name = "Monaco"
+        self._track_sector_dividers = [55, 118, 180]
+        self._annotations = config.european_seaside_circuit_annotations
+        self._track_width = 1.45
 
-        self.ui_description = "A highly technical track, the European Seaside Circuit’s tight turns weave through a timeless Mediterranean cliffside village"
-        self.ui_length_in_m = 60.0  # metres
-        self.ui_width_in_cm = 128  # centimetres
-        self.ui_difficulty = "*NONE*"
-
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "Monaco"
-
-        # Divide track into sections
-        self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.european_seaside_circuit_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 1.45
-        self.track_waypoints = \
+        self._track_waypoints = \
             [(-7.328797578811646, 0.7067412286996826), (-7.174184083938599, 0.9988523125648499),
              (-7.014955043792725, 1.2884796857833862), (-6.852129220962524, 1.5760955214500427),
              (-6.69096302986145, 1.8646469712257385), (-6.549050569534302, 2.133627951145172),

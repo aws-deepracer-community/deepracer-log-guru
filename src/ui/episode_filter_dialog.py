@@ -1,19 +1,36 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
 
-from tkinter import Label, LabelFrame, Entry, Button, StringVar, BooleanVar, Checkbutton, W, E, ACTIVE
-from src.ui.dialog import Dialog
+from tkinter import *
+
+from src.tracks.track import Track
+from src.ui.dialog import Dialog, on_validate_waypoint_id
 from src.episode.episode_filter import EpisodeFilter
+
+OPTION_NO_SECTOR = "n/a"
 
 class EpisodeFilterDialog(Dialog):
     def __init__(self, parent):
 
         self.episode_filter :EpisodeFilter = parent.episode_filter
+        self._current_track: Track = parent.current_track
+
+        # Instead of the usual "validate_waypoint_id" frm our parent, this one can do the clever stuff
+        # to keep the sector name updated with any edits to the waypoint ids
+        self.validate_section_start_waypoint_id = (parent.register(self._validate_modified_section_start), '%P')
+        self.validate_section_finish_waypoint_id = (parent.register(self._validate_modified_section_finish), '%P')
 
         self.filter_from_start_line = BooleanVar(value=self.episode_filter.filter_from_start_line)
         self.filter_max_steps = make_nullable_var(self.episode_filter.filter_max_steps)
         self.filter_min_percent = make_nullable_var(self.episode_filter.filter_min_percent)
         self.filter_min_average_reward = make_nullable_var(self.episode_filter.filter_min_average_reward)
         self.filter_peak_track_speed = make_nullable_var(self.episode_filter.filter_peak_track_speed)
-        self.filter_max_skew = make_nullable_var(self.episode_filter.filter_max_skew)
+        self.filter_max_slide = make_nullable_var(self.episode_filter.filter_max_slide)
 
         self.filter_specific_waypoint_id = make_nullable_var(self.episode_filter.filter_specific_waypoint_id)
         self.filter_specific_waypoint_min_reward = make_nullable_var(self.episode_filter.filter_specific_waypoint_min_reward)
@@ -34,13 +51,15 @@ class EpisodeFilterDialog(Dialog):
 
         self.filter_debug_contains = make_nullable_var(self.episode_filter.filter_debug_contains)
 
+        self._filter_sector = StringVar(value=self._deduce_name_of_filter_sector(
+            self.filter_complete_section_start.get(), self.filter_complete_section_finish.get()))
+
         super().__init__(parent, "Episode Filter")
 
     def body(self, master):
 
         reset_button = Button(master, text="Reset to All", width=15, command=self.reset_to_all, default=ACTIVE)
         reset_button.grid(column=0, row=0, pady=5, padx=5, sticky=W)
-
 
         #
 
@@ -98,9 +117,9 @@ class EpisodeFilterDialog(Dialog):
             episode_stat_group, textvariable=self.filter_peak_track_speed,
             validate="key", validatecommand=self.validate_simple_float).grid(column=1, row=5, pady=5, padx=5)
 
-        Label(episode_stat_group, text="Max Skew <=").grid(column=0, row=6, pady=5, padx=5, sticky=E)
+        Label(episode_stat_group, text="Max Slide <=").grid(column=0, row=6, pady=5, padx=5, sticky=E)
         Entry(
-            episode_stat_group, textvariable=self.filter_max_skew,
+            episode_stat_group, textvariable=self.filter_max_slide,
             validate="key", validatecommand=self.validate_positive_integer).grid(column=1, row=6, pady=5, padx=5)
 
         #
@@ -120,32 +139,35 @@ class EpisodeFilterDialog(Dialog):
 
         #
 
-        completed_section_group = LabelFrame(master, text="Completed Section", padx=5, pady=5)
+        completed_section_group = LabelFrame(master, text="Completed Section/Sector", padx=5, pady=5)
         completed_section_group.grid(column=1, row=3, pady=5, padx=5, sticky=W)
 
-        Label(completed_section_group, text="Start Waypoint Id").grid(column=0, row=0, pady=5, padx=5, sticky=E)
+        menu_values = [OPTION_NO_SECTOR] + self._current_track.get_all_sector_names()
+        Label(completed_section_group, text="Sector").grid(column=0, row=0, pady=5, padx=5, sticky=E)
+        OptionMenu(completed_section_group, self._filter_sector, *menu_values,
+                   command=self._chose_sector).grid(column=1, row=0, pady=5, padx=5)
+
+        Label(completed_section_group, text="Start Waypoint Id").grid(column=0, row=1, pady=5, padx=5, sticky=E)
         Entry(
             completed_section_group, textvariable=self.filter_complete_section_start,
-            validate="key", validatecommand=self.validate_waypoint_id).grid(column=1, row=0, pady=5, padx=5)
+            validate="key", validatecommand=self.validate_section_start_waypoint_id).grid(column=1, row=1, pady=5, padx=5)
 
-        Label(completed_section_group, text="Finish Waypoint Id").grid(column=0, row=1, pady=5, padx=5, sticky=E)
+        Label(completed_section_group, text="Finish Waypoint Id").grid(column=0, row=2, pady=5, padx=5, sticky=E)
         Entry(
             completed_section_group, textvariable=self.filter_complete_section_finish,
-            validate="key", validatecommand=self.validate_waypoint_id).grid(column=1, row=1, pady=5, padx=5)
+            validate="key", validatecommand=self.validate_section_finish_waypoint_id).grid(column=1, row=2, pady=5, padx=5)
 
-        Label(completed_section_group, text="Time (secs) <=").grid(column=0, row=2, pady=5, padx=5, sticky=E)
+        Label(completed_section_group, text="Time (secs) <=").grid(column=0, row=3, pady=5, padx=5, sticky=E)
         Entry(
             completed_section_group, textvariable=self.filter_complete_section_time,
-            validate="key", validatecommand=self.validate_simple_float).grid(column=1, row=2, pady=5, padx=5)
+            validate="key", validatecommand=self.validate_simple_float).grid(column=1, row=3, pady=5, padx=5)
 
-        Label(completed_section_group, text="Steps <=").grid(column=0, row=3, pady=5, padx=5, sticky=E)
+        Label(completed_section_group, text="Steps <=").grid(column=0, row=4, pady=5, padx=5, sticky=E)
         Entry(
             completed_section_group, textvariable=self.filter_complete_section_steps,
-            validate="key", validatecommand=self.validate_positive_integer).grid(column=1, row=3, pady=5, padx=5)
-
+            validate="key", validatecommand=self.validate_positive_integer).grid(column=1, row=4, pady=5, padx=5)
 
         return default    # Returns widget to have initial focus
-
 
     def apply(self):
         self.episode_filter.filter_from_start_line = self.filter_from_start_line.get()
@@ -154,7 +176,7 @@ class EpisodeFilterDialog(Dialog):
         self.episode_filter.filter_min_percent = get_nullable_int_entry(self.filter_min_percent)
         self.episode_filter.filter_min_average_reward = get_nullable_float_entry(self.filter_min_average_reward)
         self.episode_filter.filter_peak_track_speed = get_nullable_float_entry(self.filter_peak_track_speed)
-        self.episode_filter.filter_max_skew = get_nullable_int_entry(self.filter_max_skew)
+        self.episode_filter.filter_max_slide = get_nullable_int_entry(self.filter_max_slide)
 
         self.episode_filter.set_filter_specific_waypoint_reward(
             get_nullable_int_entry(self.filter_specific_waypoint_id),
@@ -182,7 +204,7 @@ class EpisodeFilterDialog(Dialog):
         self.filter_min_percent.set("")
         self.filter_min_average_reward.set("")
         self.filter_peak_track_speed.set("")
-        self.filter_max_skew.set("")
+        self.filter_max_slide.set("")
 
         self.filter_specific_waypoint_id.set("")
         self.filter_specific_waypoint_min_reward.set("")
@@ -198,6 +220,36 @@ class EpisodeFilterDialog(Dialog):
         self.filter_q4.set(True)
 
         self.filter_debug_contains.set("")
+
+    def _deduce_name_of_filter_sector(self, filter_start: str, filter_finish: str):
+        if filter_start and filter_finish:
+            filter_start = int(filter_start)
+            filter_finish = int(filter_finish)
+            sector_names = self._current_track.get_all_sector_names()
+            for s in sector_names:
+                (start, finish) = self._current_track.get_sector_start_and_finish(s)
+                if start == filter_start and finish == filter_finish:
+                    return s
+
+        return OPTION_NO_SECTOR
+
+    def _chose_sector(self, value):
+        if value != OPTION_NO_SECTOR:
+            (start, finish) = self._current_track.get_sector_start_and_finish(value)
+            self.filter_complete_section_start.set(start)
+            self.filter_complete_section_finish.set(finish)
+
+    def _validate_modified_section_start(self, value):
+        is_good = on_validate_waypoint_id(value)
+        if is_good:
+            self._filter_sector.set(self._deduce_name_of_filter_sector(value, self.filter_complete_section_finish.get()))
+        return is_good
+
+    def _validate_modified_section_finish(self, value):
+        is_good = on_validate_waypoint_id(value)
+        if is_good:
+            self._filter_sector.set(self._deduce_name_of_filter_sector(self.filter_complete_section_start.get(), value))
+        return is_good
 
 
 def make_nullable_var(initial_value):

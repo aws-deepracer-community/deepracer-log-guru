@@ -1,4 +1,13 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from tkinter import *
+from re import fullmatch
 
 # Simple base class for dialogues copied from:
 #       https://effbot.org/tkinterbook/tkinter-dialog-windows.htm
@@ -111,13 +120,13 @@ class Dialog(Toplevel):
     #
 
 def on_validate_waypoint_id(new_value):
-    return len(new_value) <= 3 and re.fullmatch('\d*', new_value) is not None
+    return len(new_value) <= 3 and fullmatch('\d*', new_value) is not None
 
 def on_validate_positive_integer(new_value):
-    return len(new_value) <= 6 and re.fullmatch('[1-9]\d*', new_value) is not None or new_value == ""
+    return len(new_value) <= 6 and fullmatch('[1-9]\d*', new_value) is not None or new_value == ""
 
 def on_validate_whole_percent(new_value):
-    return (len(new_value) <= 2 and re.fullmatch('\d*', new_value) is not None) or new_value == "100"
+    return (len(new_value) <= 2 and fullmatch('\d*', new_value) is not None) or new_value == "100"
 
 def on_validate_simple_float(new_value):
-    return re.fullmatch('[-]{0,1}\d*[.]{0,1}\d*', new_value) is not None
+    return fullmatch('[-]{0,1}\d*[.]{0,1}\d*', new_value) is not None

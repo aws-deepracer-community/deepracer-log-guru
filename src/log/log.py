@@ -1,78 +1,112 @@
-import pickle
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import numpy as np
 import os
-
-import time
+import json
 
 import src.log.parse as parse
 
-from src.episode.episode import Episode
+from src.log.evaluation_phase import EvaluationPhase
 from src.log.log_meta import LogMeta
-from src.ui.please_wait import PleaseWait
 
-META_FILE_SUFFIX = ".meta"
+from src.episode.episode import Episode
+from src.personalize.configuration.analysis import TIME_BEFORE_FIRST_STEP
+from src.ui.please_wait import PleaseWait
+from src.tracks.track import Track
+
+from src.utils.discount_factors import discount_factors
+
+META_FILE_SUFFIX = ".meta.json"
 LOG_FILE_SUFFIX = ".log"
 
 
-
-class EvaluationPhase:
-    def __init__(self, rewards, progresses):
-        assert len(rewards) == len(progresses)
-
-        self.length = len(rewards)
-        self.rewards = np.array(rewards)
-        self.progresses = np.array(progresses)
-
-
 class Log:
-    def __init__(self):
-        self.log_meta = LogMeta()
-        self.episodes = []
-        self.evaluation_phases = []
-        self.log_file_name = ""
-        self.meta_file_name = ""
+    #
+    # PUBLIC interface
+    #
 
-    def load_meta(self, meta_file_name):
-        self.meta_file_name = meta_file_name
-        with open(meta_file_name, 'rb') as file:
-            self.log_meta = pickle.load(file)
+    def load_meta(self, meta_file_name: str):
+        self._meta_file_name = meta_file_name
+        with open(self._log_directory + "\\" + meta_file_name, 'rb') as file:
+            received_json = json.load(file)
+            self._log_meta.set_from_json(received_json)
 
-        # TODO assert log_info is the of the correct LogInfo type
-
-    def load_all(self, meta_file_name, please_wait :PleaseWait):
+    def load_all(self, meta_file_name, please_wait: PleaseWait, track: Track,
+                 calculate_new_reward=False, calculate_alternate_discount_factors=False):
         please_wait.start("Loading")
         self.load_meta(meta_file_name)
-        self.log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
-        self.parse_episode_events(please_wait, 0, 85, 95)
-        self.divide_episodes_into_quarters(please_wait, 95, 100)
-        please_wait.stop(0.2)
+        self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
+        discount_factors.reset_for_log(self._log_meta.hyper.discount_factor)
+        please_wait.set_progress(2)
+        self._parse_episode_events(please_wait, 2, 50, 95, True, track,
+                                   calculate_new_reward, calculate_alternate_discount_factors)
+        self._divide_episodes_into_quarters(please_wait, 95, 100)
+        please_wait.set_progress(100)
+        please_wait.stop(0.3)
 
-    def parse(self, log_file_name, please_wait :PleaseWait, min_progress_percent, max_progress_percent):
-        self.log_file_name = log_file_name
-        self.meta_file_name = log_file_name + META_FILE_SUFFIX
+    def parse(self, log_file_name, please_wait: PleaseWait, min_progress_percent: float, max_progress_percent: float):
+        self._log_file_name = log_file_name
+        self._meta_file_name = log_file_name + META_FILE_SUFFIX
 
-        self.parse_intro_events()
-        self.parse_episode_events(
+        self._parse_intro_events()
+        self._parse_episode_events(
             please_wait,
             min_progress_percent,
             min_progress_percent + 0.9 * (max_progress_percent - min_progress_percent),
-            max_progress_percent)
+            max_progress_percent, False)
 
-        self.analyze_episode_details()
+        self._analyze_episode_details()
 
     def save(self):
-        with open(self.meta_file_name, "wb") as meta_file:
-            pickle.dump(self.log_meta, meta_file)
+        with open(self._log_directory + "\\" + self._meta_file_name, "w+") as meta_file:
+            log_json = self._log_meta.get_as_json()
+            json.dump(log_json, meta_file, indent=2)
 
-    def parse_intro_events(self):
-        with open(self.log_file_name, "r") as file:
-            for str in file:
-                if str.startswith(parse.EPISODE_STARTS_WITH):
+    def get_meta_file_name(self):
+        return self._meta_file_name
+
+    def get_log_file_name(self):
+        return self._log_file_name
+
+    def get_evaluation_phases(self):
+        return self._evaluation_phases
+
+    def get_log_meta(self):
+        return self._log_meta
+
+    def get_episodes(self):
+        return self._episodes
+
+    #
+    # PRIVATE implementation
+    #
+
+    def __init__(self, log_directory: str):
+        self._log_meta = LogMeta()
+        self._episodes = []
+        self._evaluation_phases = []
+        self._log_file_name = ""
+        self._meta_file_name = ""
+        self._log_directory = log_directory
+
+    def _parse_intro_events(self):
+        with open(self._log_directory + "\\" + self._log_file_name, "r") as file:
+            for line_of_text in file:
+                if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
                     break
                 else:
-                    parse.parse_intro_event(str, self.log_meta)
+                    parse.parse_intro_event(line_of_text, self._log_meta)
 
-    def parse_episode_events(self, please_wait :PleaseWait, min_progress_percent, mid_progress_percent, max_progress_percent):
+    def _parse_episode_events(self, please_wait: PleaseWait,
+                              min_progress_percent: float, mid_progress_percent: float, max_progress_percent: float,
+                              do_full_analysis: bool, track: Track = None,
+                              calculate_new_reward=False, calculate_alternate_discount_factors=False):
         episode_events = []
         episode_iterations = []
         episode_object_locations = []
@@ -83,122 +117,145 @@ class Log:
         saved_object_locations = None
         iteration_id = 0
 
-        file_size = os.path.getsize(self.log_file_name)
+        file_size = os.path.getsize(self._log_directory + "\\" + self._log_file_name)
         file_amount_read = 0
 
-        with open(self.log_file_name, "r") as file:
-            for str in file:
-                if str.startswith(parse.EPISODE_STARTS_WITH):
+        with open(self._log_directory + "\\" + self._log_file_name, "r") as file:
+            for line_of_text in file:
+                if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
                     intro = False
-                    parse.parse_episode_event(str, episode_events, episode_object_locations, saved_events, saved_debug, saved_object_locations)
+                    parse.parse_episode_event(line_of_text, episode_events, episode_object_locations,
+                                              saved_events, saved_debug, saved_object_locations)
                     saved_debug = ""
                     saved_object_locations = None
-                elif parse.EPISODE_STARTS_WITH in str and parse.SENT_SIGTERM in str:
-                    end_of_str = str[str.find(parse.EPISODE_STARTS_WITH):]
+                elif parse.EPISODE_STARTS_WITH in line_of_text and (len(line_of_text) > 1000 or parse.SENT_SIGTERM in line_of_text):
+                    end_of_str = line_of_text[line_of_text.find(parse.EPISODE_STARTS_WITH):]
                     intro = False
-                    parse.parse_episode_event(end_of_str, episode_events, episode_object_locations, saved_events, saved_debug, saved_object_locations)
+                    parse.parse_episode_event(end_of_str, episode_events, episode_object_locations,
+                                              saved_events, saved_debug, saved_object_locations)
                     saved_debug = ""
                     saved_object_locations = None
                 elif not intro:
-                    evaluation_reward = parse.parse_evaluation_reward_info(str)
-                    evaluation_count, evaluation_progresses = parse.parse_evaluation_progress_info(str)
-                    object_locations = parse.parse_object_locations(str)
+                    evaluation_reward = parse.parse_evaluation_reward_info(line_of_text)
+                    evaluation_count, evaluation_progresses = parse.parse_evaluation_progress_info(line_of_text)
+                    object_locations = parse.parse_object_locations(line_of_text)
 
-                    if evaluation_reward != None:
+                    if evaluation_reward is not None:
                         evaluation_rewards.append(evaluation_reward)
                     elif evaluation_count and evaluation_progresses:
                         assert evaluation_count == len(evaluation_rewards)
-                        self.evaluation_phases.append(EvaluationPhase(evaluation_rewards, evaluation_progresses))
+                        self._evaluation_phases.append(EvaluationPhase(evaluation_rewards, evaluation_progresses))
                         evaluation_rewards = []
-                        while len(episode_events) > len(episode_iterations):
+                        while len(episode_events) - 1 > len(episode_iterations):  # Minus 1 avoids counting next (empty) one
                             episode_iterations.append(iteration_id)
                         iteration_id += 1
-                    elif str.startswith(parse.STILL_EVALUATING):
-                        saved_debug = ""    # Make sure debug info doesn't include any output from evaluation phase
+                    elif line_of_text.startswith(parse.STILL_EVALUATING):
+                        saved_debug = ""  # Make sure debug info doesn't include any output from evaluation phase
                         saved_object_locations = None
                     elif object_locations:
                         saved_object_locations = object_locations
                     else:
-                        saved_debug += str
+                        saved_debug += line_of_text
                 else:
-                    object_locations = parse.parse_object_locations(str)
+                    object_locations = parse.parse_object_locations(line_of_text)
                     if object_locations:
                         saved_object_locations = object_locations
                         intro = False
 
-
-
-                file_amount_read += len(str)
+                file_amount_read += len(line_of_text)
                 percent_read = file_amount_read / file_size * 100
                 scaled_percent_read = (mid_progress_percent - min_progress_percent) / 100 * percent_read
                 please_wait.set_progress(min_progress_percent + scaled_percent_read)
 
-        assert not saved_events
+        if saved_events:
+            episode_events = episode_events[:-1]
+
+        last_episode = episode_events[-1]
+        if len(last_episode) == 0 or not last_episode[-1].job_completed:
+            episode_events = episode_events[:-1]
 
         total_episodes = len(episode_events)
 
         while len(episode_events) > len(episode_iterations):
             episode_iterations.append(iteration_id)
 
-        for i, e in enumerate(episode_events[:-1]):
-            self.episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i]))
+        for i, e in enumerate(episode_events):
+            self._episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i],
+                                          self._log_meta.action_space, do_full_analysis, track,
+                                          calculate_new_reward, calculate_alternate_discount_factors))
             please_wait.set_progress(
                 mid_progress_percent + i / total_episodes * (max_progress_percent - mid_progress_percent))
 
-    def analyze_episode_details(self):
-
-        self.log_meta.episode_stats.episode_count = len(self.episodes)
+    def _analyze_episode_details(self):
+        self._log_meta.episode_stats.episode_count = len(self._episodes)
 
         total_success_steps = 0
+        total_success_time = 0
         total_success_distance = 0.0
         total_percent_complete = 0.0
 
         reward_list = []
 
-        for e in self.episodes:
+        for e in self._episodes:
             total_percent_complete += e.percent_complete
             reward_list.append(e.total_reward)
 
             if e.lap_complete:
-                self.log_meta.episode_stats.success_count += 1
+                self._log_meta.episode_stats.success_count += 1
 
+                raw_time_taken = e.time_taken - TIME_BEFORE_FIRST_STEP
                 total_success_steps += e.step_count
+                total_success_time += raw_time_taken
                 total_success_distance += e.distance_travelled
 
-                if self.log_meta.episode_stats.best_steps == 0 or e.step_count < self.log_meta.episode_stats.best_steps:
-                    self.log_meta.episode_stats.best_steps = e.step_count
+                if self._log_meta.episode_stats.best_steps == 0 or \
+                        e.step_count < self._log_meta.episode_stats.best_steps:
+                    self._log_meta.episode_stats.best_steps = e.step_count
+                    self._log_meta.episode_stats.best_time = raw_time_taken
 
-                if self.log_meta.episode_stats.worst_steps < e.step_count:
-                    self.log_meta.episode_stats.worst_steps = e.step_count
+                if self._log_meta.episode_stats.worst_steps < e.step_count:
+                    self._log_meta.episode_stats.worst_steps = e.step_count
+                    self._log_meta.episode_stats.worst_time = raw_time_taken
 
-                if self.log_meta.episode_stats.best_distance == 0.0 or e.distance_travelled < self.log_meta.episode_stats.best_distance:
-                    self.log_meta.episode_stats.best_distance = e.distance_travelled
+                if self._log_meta.episode_stats.best_distance == 0.0 or \
+                        e.distance_travelled < self._log_meta.episode_stats.best_distance:
+                    self._log_meta.episode_stats.best_distance = e.distance_travelled
 
-                if self.log_meta.episode_stats.worst_distance < e.distance_travelled:
-                    self.log_meta.episode_stats.worst_distance = e.distance_travelled
+                if self._log_meta.episode_stats.worst_distance < e.distance_travelled:
+                    self._log_meta.episode_stats.worst_distance = e.distance_travelled
 
         if reward_list:
             r = np.array(reward_list)
-            self.log_meta.episode_stats.best_reward = np.max(r)
-            self.log_meta.episode_stats.average_reward = np.mean(r)
-            self.log_meta.episode_stats.worst_reward = np.min(r)
+            self._log_meta.episode_stats.best_reward = np.max(r)
+            self._log_meta.episode_stats.average_reward = np.mean(r)
+            self._log_meta.episode_stats.worst_reward = np.min(r)
 
-        if self.log_meta.episode_stats.success_count > 0:
-            self.log_meta.episode_stats.average_steps = int(
-                round(total_success_steps / self.log_meta.episode_stats.success_count))
-            self.log_meta.episode_stats.average_distance = total_success_distance / self.log_meta.episode_stats.success_count
+        if self._log_meta.episode_stats.success_count > 0:
+            self._log_meta.episode_stats.average_steps = int(
+                round(total_success_steps / self._log_meta.episode_stats.success_count))
+            self._log_meta.episode_stats.average_time = total_success_time / self._log_meta.episode_stats.success_count
+            self._log_meta.episode_stats.average_distance = \
+                total_success_distance / self._log_meta.episode_stats.success_count
 
-        if self.log_meta.episode_stats.episode_count > 0:
-            self.log_meta.episode_stats.average_percent_complete = total_percent_complete / self.log_meta.episode_stats.episode_count
+        if self._log_meta.episode_stats.episode_count > 0:
+            self._log_meta.episode_stats.average_percent_complete = \
+                total_percent_complete / self._log_meta.episode_stats.episode_count
 
-    def divide_episodes_into_quarters(self, please_wait :PleaseWait, min_progress_percent, max_progress_percent):
-        total_iterations = self.episodes[-1].iteration + 1
+        training_start_time = self._episodes[0].events[0].time
+        training_end_time = self._episodes[-1].events[-1].time
+        self._log_meta.episode_stats.training_minutes = int(round((training_end_time - training_start_time) / 60))
+
+    def _divide_episodes_into_quarters(self, please_wait: PleaseWait,
+                                       min_progress_percent: float, max_progress_percent: float):
+        total_iterations = self._episodes[-1].iteration + 1
 
         if total_iterations < 4:
-            self.divide_episodes_into_quarters_ignoring_iteration(please_wait, min_progress_percent, max_progress_percent)
+            self._divide_episodes_into_quarters_ignoring_iteration(please_wait,
+                                                                   min_progress_percent, max_progress_percent)
         else:
-            for e in self.episodes:
-                please_wait.set_progress(min_progress_percent + e.iteration / total_iterations * (max_progress_percent - min_progress_percent))
+            for e in self._episodes:
+                please_wait.set_progress(min_progress_percent +
+                                         e.iteration / total_iterations * (max_progress_percent - min_progress_percent))
 
                 if e.iteration <= round(total_iterations * 0.25) - 1:
                     e.set_quarter(1)
@@ -209,12 +266,12 @@ class Log:
                 else:
                     e.set_quarter(4)
 
-    def divide_episodes_into_quarters_ignoring_iteration(self, please_wait :PleaseWait, min_progress_percent, max_progress_percent):
-        e: Episode = None
-
-        total_episodes = len(self.episodes)
-
-        for e in self.episodes:
+    def _divide_episodes_into_quarters_ignoring_iteration(self, please_wait: PleaseWait,
+                                                          min_progress_percent: float,
+                                                          max_progress_percent: float):
+        total_episodes = len(self._episodes)
+        e: Episode
+        for e in self._episodes:
             please_wait.set_progress(
                 min_progress_percent + e.id / total_episodes * (max_progress_percent - min_progress_percent))
 
@@ -226,47 +283,3 @@ class Log:
                 e.set_quarter(3)
             else:
                 e.set_quarter(4)
-
-
-def refresh_all_log_meta(please_wait):
-    please_wait.start("Refreshing")
-    log_files = []
-    for f in os.listdir(os.curdir):
-        if f.endswith(LOG_FILE_SUFFIX):
-            log_files.append(f)
-    import_new_logs(log_files, please_wait)
-
-
-def import_new_logs(log_files, please_wait):
-    please_wait.start("Importing")
-    total_count = len(log_files)
-    for i, f in enumerate(log_files):
-        log = Log()
-        log.parse(f, please_wait, i / total_count * 100, (i+1) / total_count * 100)
-        log.save()
-
-def get_model_info_for_open_model_dialog(track):
-    model_names = []
-    model_files = {}
-    for f in os.listdir(os.curdir):
-        if f.endswith(META_FILE_SUFFIX):
-            log = Log()
-            log.load_meta(f)
-
-            if log.log_meta.world_name == track.world_name:
-                model_name = log.log_meta.model_name
-                model_names.append(model_name)
-                model_files[model_name] = f
-    return model_files, model_names
-
-def get_possible_new_model_log_files():
-    new_log_files = []
-
-    all_files = os.listdir(os.curdir)
-    for f in all_files:
-        if f.endswith(LOG_FILE_SUFFIX):
-            expected_meta = f + META_FILE_SUFFIX
-            if not expected_meta in all_files:
-                new_log_files.append(f)
-
-    return new_log_files

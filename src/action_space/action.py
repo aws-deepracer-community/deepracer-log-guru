@@ -1,40 +1,87 @@
-from src.action_space.action_util import is_left_turn, is_right_turn
-from src.utils.formatting import get_pretty_small_float
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
 
-MAX_POSSIBLE_ACTIONS = 30
+import src.utils.formatting as formatting
+import src.utils.geometry as geometry
+
 
 class Action:
+    #
+    # PUBLIC interface
+    #
 
     def __init__(self, index, speed, steering_angle):
-        assert index < MAX_POSSIBLE_ACTIONS
+        self._index = index
+        self._speed = speed
+        self._steering_angle = steering_angle
 
-        self.index = index
-        self.speed = speed
-        self.steering_angle = steering_angle
+        self._is_left = geometry.is_left_bearing(steering_angle)
+        self._is_right = geometry.is_right_bearing(steering_angle)
+        self._is_straight = not (self._is_left or self._is_right)
 
-        self.is_left = is_left_turn(steering_angle)
-        self.is_right = is_right_turn(steering_angle)
-
-        if self.is_left:
-            self.print_str_ = "L +" + get_pretty_small_float(steering_angle, 30, 0)
-        elif self.is_right:
-            self.print_str_ = "R -" + get_pretty_small_float(-steering_angle, 30, 0)
+        if self._is_left:
+            self._print_steering = "L +" + formatting.get_pretty_small_float(steering_angle, 30, 0)
+        elif self._is_right:
+            self._print_steering = "R -" + formatting.get_pretty_small_float(-steering_angle, 30, 0)
         else:
-            self.print_str_ = "AHEAD"
+            self._print_steering = "AHEAD"
 
-        self.print_str_ += " @ " + get_pretty_small_float(speed, 4, 1) + " m/s"
+        self._print_speed = formatting.get_pretty_small_float(speed, 4, 1) + " m/s"
+        self._print_str = self._print_steering + " @ " + self._print_speed
 
-    def get_readable_without_index(self):
-        return self.print_str_
+    def get_index(self) -> int:
+        return self._index
 
-    def get_readable_with_index(self):
-        if self.index < 10:
+    def get_speed(self) -> float:
+        return self._speed
+
+    def get_steering_angle(self) -> float:
+        return self._steering_angle
+
+    def is_steering_left(self) -> bool:
+        return self._is_left
+
+    def is_steering_right(self) -> bool:
+        return self._is_right
+
+    def is_steering_straight(self) -> bool:
+        return self._is_straight
+
+    def get_steering_group_name(self) -> str:
+        if self._is_straight:
+            return "Ahead"
+        elif abs(self._steering_angle) <= 15:
+            severity = "Gentle"
+        else:
+            severity = "Hard"
+        if self._is_left:
+            return severity + " Left"
+        else:
+            return severity + " Right"
+
+    def get_speed_group_name(self) -> str:
+        return self._print_speed
+
+    def get_readable_without_index(self) -> str:
+        return self._print_str
+
+    def get_readable_with_index(self) -> str:
+        if self._index < 10:
             prepend = " "
         else:
             prepend = ""
-        return prepend + str(self.index) + ": " + self.print_str_
+        return prepend + str(self._index) + ": " + self._print_str
 
-    def is_same_as(self, another_action):
-        return self.speed == another_action.speed and\
-               self.steering_angle == another_action.steering_angle and\
-               self.index == another_action.index
+    def get_readable_for_x_axis(self) -> str:
+        return str(self._index) + ": \n" + self._print_steering + "\n" + self._print_speed
+
+    def is_same_as(self, another_action: 'Action') -> bool:
+        return self._speed == another_action.get_speed() and \
+               self._steering_angle == another_action.get_steering_angle() and \
+               self._index == another_action.get_index()
+

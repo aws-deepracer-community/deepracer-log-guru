@@ -1,37 +1,29 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from src.tracks.track import Track
-import src.configuration.personal_track_annotations as config
-
-# Other people might want to change/personalize these values
-
-PRIVATE_DESCRIPTION = "American Hills - Nov 2020"
-PRIVATE_SECTION_DIVIDERS = []
+import src.personalize.configuration.personal_track_annotations as config
 
 
 class AmericanHillsSpeedwayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "American Hills Speedway"
+        self._ui_name = "American Hills Speedway"
+        self._ui_description = "Set in the Southern United States, the American Hills Speedway is a classic circuit, featuring two technical turn sections and three high speed straightaways"
+        self._ui_length_in_m = 59.0  # metres
+        self._ui_width_in_cm = 131  # centimetres
+        self._world_name = "Austin"
+        self._track_sector_dividers = [73, 117, 179]
+        self._annotations = config.american_speedway_annotations
+        self._track_width = 1.44
 
-        self.ui_description = "Set in the Southern United States, the American Hills Speedway is a classic circuit, featuring two technical turn sections and three high speed straightaways"
-        self.ui_length_in_m = 59.0  # metres
-        self.ui_width_in_cm = 131  # centimetres
-        self.ui_difficulty = "*NONE*"
-
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "Austin"
-
-        # Divide track into sections
-        self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.american_speedway_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 1.44
-        self.track_waypoints = \
+        self._track_waypoints = \
             [(-8.721938610076904, -1.364508032798767), (-8.586678504943848, -1.6246190071105957),
              (-8.451693534851074, -1.8848654627799988), (-8.318925142288208, -2.1461880207061768),
              (-8.1847825050354, -2.4068459272384644), (-8.048007249832153, -2.6661975383758545),

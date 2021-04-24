@@ -1,39 +1,29 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from src.tracks.track import Track
-import src.configuration.personal_track_annotations as config
-
-
-
-# Other people might want to change/personalize these values
-
-PRIVATE_DESCRIPTION = "Baadal - April 2020"
-PRIVATE_SECTION_DIVIDERS = []
+import src.personalize.configuration.personal_track_annotations as config
 
 
 class Baadal2020Track(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "Baadal Track"
+        self._ui_name = "Baadal Track"
+        self._ui_description = "Baadal is the Hindi word for cloud. The Baadal track combines long arching straightaways perfect for passing opportunities coupled with tight windings corners."
+        self._ui_length_in_m = 39.0  # metres
+        self._ui_width_in_cm = 107  # centimetres
+        self._world_name = "AmericasGenerated..."
+        self._track_sector_dividers = [90, 160, 210]
+        self._annotations = config.baadal_2020_annotations
+        self._track_width = 1.07
 
-        self.ui_description = "Baadal is the Hindi word for cloud. The Baadal track combines long arching straightaways perfect for passing opportunities coupled with tight windings corners."
-        self.ui_length_in_m = 39.0 # metres
-        self.ui_width_in_cm = 107 # centimetres
-        self.ui_difficulty = "*NONE*"
-
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "AmericasGenerated..."
-
-        # Divide track into sections
-        self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.baadal_2020_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 1.07
-        self.track_waypoints = [
+        self._track_waypoints = [
             [-5.66000294685364, 3.958880424499509],
             [-5.7570354938507045, 3.8440994024276773],
             [-5.85366678237915, 3.728980541229248],

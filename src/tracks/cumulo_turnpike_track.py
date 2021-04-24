@@ -1,34 +1,29 @@
-from src.tracks.track import Track
-import src.configuration.personal_track_annotations as config
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
 
-# Other people might want to change/personalize this value
-PRIVATE_DESCRIPTION = "Cumulo - Sep 2020"
+from src.tracks.track import Track
+import src.personalize.configuration.personal_track_annotations as config
 
 
 class CumuloTurnpikeTrack(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "Cumulo Turnpike"
-        self.ui_description = "The Cumulo Turnpike features numerous high speed straightaways interspersed between multiple challenging corners, requiring exceptional speed control to navigate"
-        self.ui_length_in_m = 60  # metres
-        self.ui_width_in_cm = 107  # centimetres
-        self.ui_difficulty = "*NONE*"
+        self._ui_name = "Cumulo Turnpike"
+        self._ui_description = "The Cumulo Turnpike features numerous high speed straightaways interspersed between multiple challenging corners, requiring exceptional speed control to navigate"
+        self._ui_length_in_m = 60  # metres
+        self._ui_width_in_cm = 107  # centimetres
+        self._world_name = "Belille"
+        self._track_sector_dividers = [61, 178, 250, 335]
+        self._annotations = config.cumulo_turnpike_annotations
+        self._track_width = 1.066
 
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "Belille"
-
-        # Divide track into sections
-        self.track_section_dividers = [0]
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.cumulo_turnpike_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 1.066
-        self.track_waypoints = [
+        self._track_waypoints = [
             (-2.2433555126190186, -5.3092265129089355), (-2.3801075220108032, -5.3720526695251465),
             (-2.5168585777282715, -5.434880495071411), (-2.6536084413528442, -5.497710466384888),
             (-2.7903579473495483, -5.560542583465576), (-2.927107095718384, -5.62337589263916),

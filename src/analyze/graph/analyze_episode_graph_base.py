@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import tkinter as tk
 import numpy as np
 import math
@@ -6,8 +14,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
-from src.analyze.selector.episode_selector import EpisodeSelector
-from src.episode.episode import Episode
+from src.analyze.core.episode_selector import EpisodeSelector
 from src.analyze.core.controls import EpisodeAxisControl
 
 
@@ -16,7 +23,8 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
     def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg,
                  control_frame :tk.Frame, episode_selector :EpisodeSelector,
                  title_word: str, bar_label :str, line_label :str,
-                 show_step_dots :bool=False, use_second_axis_scale :bool=False):
+                 show_step_dots :bool=False, use_second_axis_scale :bool=False,
+                 second_axis_label: str=""):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
@@ -27,19 +35,25 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
         self.title_word = title_word
         self.bar_label= bar_label
         self.line_label = line_label
+        self.second_axis_label = second_axis_label
 
         self.axis_control = EpisodeAxisControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
-
         self.axis_control.add_to_control_frame()
 
-        ####
+        self.episode_selector.add_to_control_frame(control_frame, self.guru_parent_redraw)
 
-        episode_selector_frame = self.episode_selector.get_label_frame(control_frame, self.guru_parent_redraw)
-        episode_selector_frame.pack()
+    def reset_labels(self, title_word: str, bar_label :str, line_label :str, second_axis_label: str=""):
+        self.title_word = title_word
+        self.bar_label = bar_label
+        self.line_label = line_label
+        if second_axis_label:
+            self.second_axis_label = second_axis_label
 
     def add_plots(self):
+        self.additional_preparation_for_plots()
+
         axes :Axes = self.graph_figure.add_subplot()
         if self.use_second_axis_scale:
             axes2 :Axes = axes.twinx()
@@ -84,32 +98,34 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
             plot_x, wrap_point = self.get_plot_data_waypoints()
             general_title = "by Waypoint Id"
             axis_label = "Waypoint Id"
-            max_xscale_override = len(self.current_track.track_waypoints)
+            max_xscale_override = self.current_track.get_number_of_waypoints()
 
         plot_y_bar_values_per_step = self.get_plot_bar_values_per_step(wrap_point)
         plot_y_line_values_per_step = self.get_plot_line_values_per_step(wrap_point)
 
-        axes.fill_between(plot_x, plot_y_bar_values_per_step, step="post", color="C1", label=self.bar_label)
+        axes.fill_between(plot_x, plot_y_bar_values_per_step, step="mid", color="C1", label=self.bar_label)
         if self.show_step_dots:
             axes.plot(plot_x, plot_y_bar_values_per_step, "o", color="black", markersize=3, label="Step")
         if self.use_second_axis_scale:
             axes2.plot(plot_x, plot_y_line_values_per_step, color="C2", label=self.line_label, linewidth=3)
+            self._plot_any_additional_lines(axes2, plot_x, wrap_point)
         else:
             axes.plot(plot_x, plot_y_line_values_per_step, color="C2", label=self.line_label, linewidth=3)
+            self._plot_any_additional_lines(axes, plot_x, wrap_point)
 
         # Setup formatting
         axes.set_title(self.title_word + " " + general_title + " for Episode #" + str(self.episode.id))
         axes.set_xlabel(axis_label)
-        axes.set_ylabel(self.title_word + " per Step")
-        if self.use_second_axis_scale:
-            axes2.set_ylabel("Total Reward")
+        axes.set_ylabel(self.bar_label + " per Step")
+        if self.use_second_axis_scale and self.second_axis_label:
+            axes2.set_ylabel(self.second_axis_label)
             axes2.grid(False)
+            axes2.set_ybound(lower=0)
 
         if max_xscale_override:
             axes.set_xbound(0, max_xscale_override)
         else:
             axes.set_xbound(0, max(plot_x))
-
 
         if axes.has_data():
             if self.use_second_axis_scale:
@@ -117,7 +133,12 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
             else:
                 axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
-
+    def _plot_any_additional_lines(self, axes, plot_x, wrap_point):
+        all_extra_lines = self.get_any_additional_plot_lines(wrap_point)
+        if all_extra_lines is not None:
+            for extra_line in all_extra_lines:
+                (colour, label, plot_y) = extra_line
+                axes.plot(plot_x, plot_y, label=label, color=colour, linewidth=3)
 
     def get_plot_data_steps(self):
 
@@ -185,19 +206,24 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
             waypoint_id = v.closest_waypoint_index
             waypoints.append(waypoint_id)
 
-            if not wrap_point and was_near_end and waypoint_id < len(self.current_track.track_waypoints) * 0.2:
+            if not wrap_point and was_near_end and waypoint_id < self.current_track.get_number_of_waypoints() * 0.2:
                 wrap_point = i
 
-            was_near_end = waypoint_id > len(self.current_track.track_waypoints) * 0.8
+            was_near_end = waypoint_id > self.current_track.get_number_of_waypoints() * 0.8
 
         if wrap_point:
             waypoints = waypoints[wrap_point:] + [math.nan] + waypoints[:wrap_point]
 
         return np.array(waypoints), wrap_point
 
-
     def get_plot_bar_values_per_step(self, wrap_point):
         pass
 
     def get_plot_line_values_per_step(self, wrap_point):
+        pass
+
+    def get_any_additional_plot_lines(self, wrap_point):
+        pass
+
+    def additional_preparation_for_plots(self):
         pass

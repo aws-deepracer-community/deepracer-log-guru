@@ -1,0 +1,56 @@
+(1) Copyright header
+
+(2) Imports well organized, with standard libraries first
+
+(3) Use of _ prefix on all private variables and methods
+
+(4) Organize classes as public interface, (then abstract, IF ANY), followed by private interface,
+    ... using standardized separator comment
+    ... ensuring __init__ is first function
+
+(5) Type hints on all methods where possible, including RETURN TYPE too
+
+(6) Ideally type hints on local variables, esp. looping vars - so that auto completion of methods work
+
+(7) Enforce abstract methods using enforce()
+
+(8) Use IntEnum type for enums ... but may need avoid using auto() which causes issues with type hints (MORE INFO??)
+
+(8) No lint issues
+
+
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
+
+
+#
+# PUBLIC interface
+#
+
+#
+# ABSTRACT interface
+#
+
+#
+# PRIVATE implementation
+#
+
+
+import src.utils.abstract_method as abstract_method
+...
+abstract_method.enforce(self)
+
+
+
+from enum import IntEnum
+...
+class Color(IntEnum):
+    RED = 1
+    BLUE = 2
+    GREEN = 3

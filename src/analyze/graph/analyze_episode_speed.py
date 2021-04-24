@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import tkinter as tk
 import numpy as np
 import math
@@ -5,7 +13,7 @@ import math
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from src.analyze.graph.analyze_episode_graph_base import AnalyzeEpisodeStat
-from src.analyze.selector.episode_selector import EpisodeSelector
+from src.analyze.core.episode_selector import EpisodeSelector
 
 
 class AnalyzeEpisodeSpeed(AnalyzeEpisodeStat):

@@ -1,88 +1,64 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import tkinter as tk
 import numpy as np
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.gridspec import GridSpec
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
 
+from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl
 
 
 class AnalyzeRewardsPerWaypoint(GraphAnalyzer):
 
-    def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg, control_frame :tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
-        self.show_all = tk.BooleanVar(value=True)
-        self.show_filtered = tk.BooleanVar()
-
-        self.show_mean = tk.BooleanVar(value=True)
-        self.show_median = tk.BooleanVar()
-        self.show_best = tk.BooleanVar()
-
+        self._episodes_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame)
+        self._stats_control = StatsControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
-        episodes_group = tk.LabelFrame(control_frame, text="Episodes", padx=5, pady=5)
-        episodes_group.pack()
-
-        tk.Checkbutton(
-            episodes_group, text="All",
-            variable=self.show_all,
-            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
-
-        tk.Checkbutton(
-            episodes_group, text="Filtered",
-            variable=self.show_filtered,
-            command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
-
-        stats_group = tk.LabelFrame(control_frame, text="Stats", padx=5, pady=5)
-        stats_group.pack()
-
-        tk.Checkbutton(
-            stats_group, text="Mean",
-            variable=self.show_mean,
-            command=self.guru_parent_redraw).grid(column=0, row=0, pady=5, padx=5)
-
-        tk.Checkbutton(
-            stats_group, text="Median",
-            variable=self.show_median,
-            command=self.guru_parent_redraw).grid(column=0, row=1, pady=5, padx=5)
-
-        tk.Checkbutton(
-            stats_group, text="Best",
-            variable=self.show_best,
-            command=self.guru_parent_redraw).grid(column=0, row=2, pady=5, padx=5)
-
+        self._episodes_control.add_to_control_frame()
+        self._stats_control.add_to_control_frame()
 
     def add_plots(self):
         if self.all_episodes:
-            axes :Axes = self.graph_figure.add_subplot()
+            axes: Axes = self.graph_figure.add_subplot()
             self.plot_rewards_per_waypoint(axes)
 
-
-    def plot_rewards_per_waypoint(self, axes :Axes):
+    def plot_rewards_per_waypoint(self, axes: Axes):
         # Plot data
 
-        num_waypoints = len(self.current_track.track_waypoints)
+        num_waypoints = self.current_track.get_number_of_waypoints()
 
-        if self.show_all.get():
-            if self.show_median.get():
+        if self.all_episodes and self._episodes_control.show_all():
+            if self._stats_control.show_median():
                 add_plot_for_rewards_per_waypoint(axes, "All - Median", self.all_episodes, np.median, "C5", num_waypoints)
-            if self.show_mean.get():
+            if self._stats_control.show_mean():
                 add_plot_for_rewards_per_waypoint(axes, "All - Mean", self.all_episodes, np.mean, "C6", num_waypoints)
-            if self.show_best.get():
+            if self._stats_control.show_best():
                 add_plot_for_rewards_per_waypoint(axes, "All - Best", self.all_episodes, np.max, "C7", num_waypoints)
-
-        if self.filtered_episodes and self.show_filtered.get():
-            if self.show_median.get():
+            if self._stats_control.show_worst():
+                add_plot_for_rewards_per_waypoint(axes, "All - Worst", self.all_episodes, np.min, "C8", num_waypoints)
+        if self.filtered_episodes and self._episodes_control.show_filtered():
+            if self._stats_control.show_median():
                 add_plot_for_rewards_per_waypoint(axes, "Filtered - Median", self.filtered_episodes, np.median, "C1", num_waypoints)
-            if self.show_mean.get():
+            if self._stats_control.show_mean():
                 add_plot_for_rewards_per_waypoint(axes, "Filtered - Mean", self.filtered_episodes, np.mean, "C2", num_waypoints)
-            if self.show_best.get():
+            if self._stats_control.show_best():
                 add_plot_for_rewards_per_waypoint(axes, "Filtered - Best", self.filtered_episodes, np.max, "C3", num_waypoints)
+            if self._stats_control.show_worst():
+                add_plot_for_rewards_per_waypoint(axes, "Filtered - Worst", self.filtered_episodes, np.min, "C4", num_waypoints)
 
         # Format the plot
         axes.set_title("Rewards per Waypoint")
@@ -110,7 +86,6 @@ def get_plot_data_for_rewards_per_waypoint(episodes, stat_method, num_waypoints)
             plot_rewards[i] = None
 
     return plot_waypoints, plot_rewards
-
 
 
 def add_plot_for_rewards_per_waypoint(axes: Axes, label, episodes, stat_method, colour, num_waypoints):

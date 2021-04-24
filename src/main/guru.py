@@ -1,43 +1,57 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import tkinter as tk
-from os import chdir
+from tkinter import filedialog
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
-import src.configuration.personal_configuration as config
 import src.secret_sauce.glue.glue as ss
 
-from src.analyze.track.analyze_convergence import AnalyzeConvergence
+from src.analyze.track.analyze_heatmap import AnalyzeHeatmap
+from src.analyze.track.analyze_exit_points import AnalyzeExitPoints
+from src.analyze.track.analyze_route import AnalyzeRoute
+from src.analyze.track.analyze_race import AnalyzeRace
+
 from src.analyze.graph.analyze_training_progress import AnalyzeTrainingProgress
 from src.analyze.graph.analyze_quarterly_results import AnalyzeQuarterlyResults
-from src.analyze.track.analyze_favourite_speed import AnalyzeFavouriteSpeed
-from src.analyze.track.analyze_exit_points import AnalyzeExitPoints
 from src.analyze.graph.analyze_reward_distribution import AnalyzeRewardDistribution
 from src.analyze.graph.analyze_common_rewards import AnalyzeCommonRewards
 from src.analyze.graph.analyze_rewards_per_waypoint import AnalyzeRewardsPerWaypoint
 from src.analyze.graph.analyze_episode_speed import AnalyzeEpisodeSpeed
 from src.analyze.graph.analyze_episode_reward import AnalyzeEpisodeReward
-from src.analyze.graph.analyze_episode_skew import AnalyzeEpisodeSkew
+from src.analyze.graph.analyze_episode_slide import AnalyzeEpisodeSlide
+from src.analyze.graph.analyze_episode_action_distribution import AnalyzeEpisodeActionDistribution
 from src.analyze.graph.analyze_lap_time_correlations import AnalyzeLapTimeCorrelations
-from src.analyze.graph.analyze_section_time_correlations import AnalyzeSectionTimeCorrelations
+from src.analyze.graph.analyze_sector_time_correlations import AnalyzeSectorTimeCorrelations
+from src.analyze.graph.analyze_lap_time_distribution import AnalyzeLapTimeDistribution
 from src.analyze.graph.analyze_complete_lap_percentage import AnalyzeCompleteLapPercentage
+from src.analyze.graph.analyze_discount_factors import AnalyzeDiscountFactors
 
 from src.action_space.action_space_filter import ActionSpaceFilter
-from src.analyze.track.analyze_route import AnalyzeRoute
+from src.configuration.config_manager import ConfigManager
 from src.episode.episode_filter import EpisodeFilter
 from src.graphics.track_graphics import TrackGraphics
 from src.log.log import Log
+from src.main.version import VERSION
 from src.main.view_manager import ViewManager
 from src.tracks.tracks import get_all_tracks
 from src.ui.menu_bar import MenuBar
 from src.ui.please_wait import PleaseWait
 from src.ui.status_frame import StatusFrame
-from src.analyze.selector.episode_selector import EpisodeSelector
+from src.analyze.core.episode_selector import EpisodeSelector
 from src.ui.view_log_file_info import ViewLogFileInfo
-
+from src.utils.reward_percentiles import RewardPercentiles
 
 DEFAULT_CANVAS_WIDTH = 900
-DEFAULT_CANVAS_HEIGHT = 600
+DEFAULT_CANVAS_HEIGHT = 650
+
 
 class MainApp(tk.Frame):
     def __init__(self, root):
@@ -47,13 +61,18 @@ class MainApp(tk.Frame):
 
         super().__init__(root)
 
+        #
+        # First of all, get config manager up and running so we have access to any settings that it manages for us
+        #
+
+        self._config_manager = ConfigManager()
 
         #
         # Initialise all internal settings not related to UI components
         #
 
         self.tracks = get_all_tracks()
-        self.current_track = self.tracks["reinvent_base"]
+        self.current_track = self.tracks[self._config_manager.get_last_open_track()]
 
         self.log = None
         self.filtered_episodes = None
@@ -62,14 +81,7 @@ class MainApp(tk.Frame):
         self.view_manager = ViewManager()
         self.action_space_filter = ActionSpaceFilter()
         self.episode_selector = EpisodeSelector()
-
-
-        #
-        # Go to the correct directory where the log files are located, ready to load or save them there
-        #
-
-        chdir(config.LOG_DIRECTORY)
-
+        self.sector_filter = ""
 
         #
         # Create the simple high level UI components (the canvas, control frame and status frame)
@@ -127,27 +139,30 @@ class MainApp(tk.Frame):
         self.track_graphics = TrackGraphics(self.track_canvas)
         self.current_track.configure_track_graphics(self.track_graphics)
 
-        self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.inner_control_frame, self.episode_selector)
-        self.analyze_convergence = AnalyzeConvergence(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
-        self.analyze_favourite_speed = AnalyzeFavouriteSpeed(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track)
+        self.analyze_route = AnalyzeRoute(self.redraw, self.track_graphics, self.inner_control_frame, self.episode_selector, self._config_manager)
+        self.analyze_track_heatmap = AnalyzeHeatmap(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track, self._config_manager)
         self.analyze_exit_points = AnalyzeExitPoints(self.redraw, self.track_graphics, self.inner_control_frame)
+        self.analyze_race = AnalyzeRace(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_quarterly_results = AnalyzeQuarterlyResults(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_reward_distribution = AnalyzeRewardDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_common_rewards = AnalyzeCommonRewards(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_rewards_per_waypoint = AnalyzeRewardsPerWaypoint(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_episode_speed = AnalyzeEpisodeSpeed(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
-        self.analyze_episode_reward = AnalyzeEpisodeReward(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
-        self.analyze_episode_skew = AnalyzeEpisodeSkew(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
+        self.analyze_episode_reward = AnalyzeEpisodeReward(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector, self._config_manager)
+        self.analyze_episode_slide = AnalyzeEpisodeSlide(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
+        self.analyze_episode_action_distribution = AnalyzeEpisodeActionDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
         self.analyze_lap_time_correlations = AnalyzeLapTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
-        self.analyze_section_time_correlations = AnalyzeSectionTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_sector_time_correlations = AnalyzeSectorTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_lap_time_distribution = AnalyzeLapTimeDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_complete_lap_percentage = AnalyzeCompleteLapPercentage(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_discount_factors = AnalyzeDiscountFactors(self.redraw, matplotlib_canvas, self.inner_control_frame)
 
         self.all_analyzers = [
             self.analyze_route,
-            self.analyze_convergence,
-            self.analyze_favourite_speed,
+            self.analyze_track_heatmap,
             self.analyze_exit_points,
+            self.analyze_race,
             self.analyze_training_progress,
             self.analyze_quarterly_results,
             self.analyze_reward_distribution,
@@ -155,16 +170,20 @@ class MainApp(tk.Frame):
             self.analyze_rewards_per_waypoint,
             self.analyze_episode_speed,
             self.analyze_episode_reward,
-            self.analyze_episode_skew,
+            self.analyze_episode_slide,
+            self.analyze_episode_action_distribution,
             self.analyze_lap_time_correlations,
-            self.analyze_section_time_correlations,
-            self.analyze_complete_lap_percentage
+            self.analyze_sector_time_correlations,
+            self.analyze_lap_time_distribution,
+            self.analyze_complete_lap_percentage,
+            self.analyze_discount_factors
         ]
 
         for v in self.all_analyzers:
             v.set_track(self.current_track)
 
         self.analyzer = self.analyze_route
+        self.background_analyzer = None
         self.analyzer.take_control()
 
         if ss.SHOW_SS:
@@ -184,7 +203,7 @@ class MainApp(tk.Frame):
         # Configure the rest of the application window and then make it appear
         #
 
-        self.master.title("Deep Racer Guru")
+        self.master.title("Deep Racer Guru v" + VERSION)
         self.menu_bar = MenuBar(root, self, False)
 
 
@@ -205,7 +224,6 @@ class MainApp(tk.Frame):
 
         self.status_frame.pack_propagate(0)
         self.status_frame.grid_propagate(0)
-
 
     def layout_ui_for_track_analyzer(self):
         self.status_frame.pack(fill=tk.BOTH, side=tk.BOTTOM)
@@ -230,23 +248,35 @@ class MainApp(tk.Frame):
         self.status_frame.reset()
 
         self.current_track = new_track
+        self._config_manager.set_last_open_track(new_track.get_world_name())
 
         for v in self.all_analyzers:
             v.set_track(new_track)
 
         self.episode_selector.set_filtered_episodes(None)
 
-        self.analyzer.set_track(self.current_track)
-        self.analyzer.set_filtered_episodes(None)
-        self.analyzer.set_all_episodes(None)
-        self.analyzer.set_log_meta(None)
-        self.analyzer.set_evaluation_phases(None)
+        self._reset_analyzer(self.analyzer)
+        if self.background_analyzer:
+            self._reset_analyzer(self.background_analyzer)
 
         self.view_manager.zoom_clear()
 
+        self.menu_bar = MenuBar(root, self, False)
+
         self.redraw()
 
-    def switch_analyzer(self, new_analyzer):
+    def _reset_analyzer(self, analyzer):
+        analyzer.set_track(self.current_track)
+        analyzer.set_filtered_episodes(None)
+        analyzer.set_all_episodes(None, None)
+        analyzer.set_log_meta(None)
+        analyzer.set_evaluation_phases(None)
+
+    def switch_analyzer(self, new_analyzer, new_background_analyzer=None):
+        self.analyzer.lost_control()
+
+        if new_background_analyzer:
+            assert new_background_analyzer.uses_track_graphics() and new_analyzer.uses_track_graphics()
 
         if new_analyzer.uses_graph_canvas() and not self.analyzer.uses_graph_canvas():
             self.track_canvas.pack_forget()
@@ -256,21 +286,28 @@ class MainApp(tk.Frame):
             self.layout_ui_for_track_analyzer()
 
         self.analyzer = new_analyzer
+        self.background_analyzer = new_background_analyzer
         self.analyzer.take_control()
 
         self.redraw()
 
-    def menu_callback_analyze_convergence(self):
-        self.switch_analyzer(self.analyze_convergence)
-
-    def menu_callback_analyze_favourite_speed(self):
-        self.switch_analyzer(self.analyze_favourite_speed)
+    def menu_callback_analyze_track_heatmap(self):
+        self.switch_analyzer(self.analyze_track_heatmap)
 
     def menu_callback_analyze_exit_points(self):
         self.switch_analyzer(self.analyze_exit_points)
 
+    def menu_callback_analyze_race(self):
+        self.switch_analyzer(self.analyze_race)
+
     def menu_callback_analyze_route(self):
         self.switch_analyzer(self.analyze_route)
+
+    def menu_callback_analyze_route_over_heatmap(self):
+        self.switch_analyzer(self.analyze_route, self.analyze_track_heatmap)
+
+    def menu_callback_analyze_exit_points_over_heatmap(self):
+        self.switch_analyzer(self.analyze_exit_points, self.analyze_track_heatmap)
 
     def menu_callback_analyze_training_progress(self):
         self.switch_analyzer(self.analyze_training_progress)
@@ -293,44 +330,77 @@ class MainApp(tk.Frame):
     def menu_callback_analyze_episode_reward(self):
         self.switch_analyzer(self.analyze_episode_reward)
 
-    def menu_callback_analyze_episode_skew(self):
-        self.switch_analyzer(self.analyze_episode_skew)
+    def menu_callback_analyze_episode_slide(self):
+        self.switch_analyzer(self.analyze_episode_slide)
+
+    def menu_callback_analyze_episode_action_distribution(self):
+        self.switch_analyzer(self.analyze_episode_action_distribution)
 
     def menu_callback_analyze_lap_time_correlations(self):
         self.switch_analyzer(self.analyze_lap_time_correlations)
 
-    def menu_callback_analyze_section_time_correlations(self):
-        self.switch_analyzer(self.analyze_section_time_correlations)
+    def menu_callback_analyze_sector_time_correlations(self):
+        self.switch_analyzer(self.analyze_sector_time_correlations)
+
+    def menu_callback_analyze_lap_time_distribution(self):
+        self.switch_analyzer(self.analyze_lap_time_distribution)
 
     def menu_callback_analyze_complete_lap_percentage(self):
         self.switch_analyzer(self.analyze_complete_lap_percentage)
+
+    def menu_callback_analyze_discount_factors(self):
+        self.switch_analyzer(self.analyze_discount_factors)
+
+    def menu_callback_switch_directory(self):
+        result = tk.filedialog.askdirectory(title="Choose the directory where log files are stored",
+                                            mustexist=True,
+                                            initialdir=self._config_manager.get_log_directory())
+        if result:
+            self._config_manager.set_log_directory(result)
+            self.menu_bar.refresh()
 
     def callback_open_this_file(self, file_name):
 
         redraw_menu_afterwards = not self.log
 
-        self.log = Log()
-        self.log.load_all(file_name, self.please_wait)
+        self.log = Log(self._config_manager.get_log_directory())
+        self.log.load_all(file_name, self.please_wait, self.current_track,
+                          self._config_manager.get_calculate_new_reward(),
+                          self._config_manager.get_calculate_alternate_discount_factors())
 
-        self.status_frame.change_model_name(self.log.log_meta.model_name)
+        self.status_frame.change_model_name(self.log.get_log_meta().model_name)
         self.apply_new_action_space()
 
-        self.episode_filter.set_all_episodes(self.log.episodes)
+        reward_percentiles = RewardPercentiles(self.log.get_episodes(), self._config_manager.get_calculate_new_reward())
+        for v in self.all_analyzers:
+            v.set_all_episodes(self.log.get_episodes(), reward_percentiles)
+            v.set_log_meta(self.log.get_log_meta())
+            v.set_evaluation_phases(self.log.get_evaluation_phases())
+
+        self.episode_filter.set_all_episodes(self.log.get_episodes())
         self.reapply_episode_filter()
+
+        # Re-issue control to current analyzer so it has the chance to redraw its controls for the new log
+        self.analyzer.take_control()
 
         if redraw_menu_afterwards:
             self.menu_bar = MenuBar(root, self, True)
             self.update()
 
     def apply_new_action_space(self):
-        self.action_space_filter.set_new_action_space(self.log.log_meta.action_space)
+        self.action_space_filter.set_new_action_space(self.log.get_log_meta().action_space)
         for v in self.all_analyzers:
-            v.set_action_space(self.log.log_meta.action_space)
+            v.set_action_space(self.log.get_log_meta().action_space)
             v.set_action_space_filter(self.action_space_filter)
 
     def reapply_action_space_filter(self):
         for v in self.all_analyzers:
             v.set_action_space_filter(self.action_space_filter)
+        self.redraw()
+
+    def reapply_sector_filter(self):
+        for v in self.all_analyzers:
+            v.set_sector_filter(self.sector_filter)
         self.redraw()
 
     def reapply_episode_filter(self):
@@ -340,20 +410,31 @@ class MainApp(tk.Frame):
 
         for v in self.all_analyzers:
             v.set_filtered_episodes(self.filtered_episodes)
-            v.set_all_episodes(self.log.episodes)
-            v.set_log_meta(self.log.log_meta)
-            v.set_evaluation_phases(self.log.evaluation_phases)
 
-        self.status_frame.change_episodes(len(self.log.episodes), len(self.filtered_episodes))
+        self.status_frame.change_episodes(len(self.log.get_episodes()), len(self.filtered_episodes))
 
         self.redraw()
 
     def redraw(self, event=None):
         if not self.already_drawing:   # Nasty workaround to avoid multiple calls due to "please wait"
             self.already_drawing = True
-            self.view_manager.redraw(self.current_track, self.track_graphics, self.analyzer, self.episode_filter)
+            self.view_manager.redraw(self.current_track, self.track_graphics, self.analyzer, self.background_analyzer, self.episode_filter)
             self.please_wait.stop()
             self.already_drawing = False
+
+    def refresh_analysis_controls(self):
+        self.analyzer.take_control()
+
+    def close_file(self):
+        self.log = None
+        self.filtered_episodes = None
+        self.status_frame.reset()
+        self.episode_selector.set_filtered_episodes(None)
+        self._reset_analyzer(self.analyzer)
+        if self.background_analyzer:
+            self._reset_analyzer(self.background_analyzer)
+        self.menu_bar = MenuBar(root, self, False)
+        self.redraw()
 
     def right_button_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)
@@ -373,7 +454,9 @@ class MainApp(tk.Frame):
     def left_button_released_on_track_canvas(self, event):
         if self.zoom_widget:
             self.track_canvas.delete(self.zoom_widget)
-            if self.zoom_start_x != event.x and self.zoom_start_y !=event.y:
+            x_diff = abs(self.zoom_start_x - event.x)
+            y_diff = abs(self.zoom_start_y - event.y)
+            if x_diff > 10 and y_diff > 10:
                 self.view_manager.zoom_set(self.track_graphics, self.zoom_start_x, self.zoom_start_y, event.x, event.y)
                 self.redraw()
 
@@ -400,7 +483,7 @@ class MainApp(tk.Frame):
         self.reapply_episode_filter()
 
     def menu_callback_episodes_fast_laps(self):
-        es = self.log.log_meta.episode_stats
+        es = self.log.get_log_meta().episode_stats
         target_steps = round((es.average_steps + es.best_steps) / 2)
 
         self.episode_filter.reset()
@@ -454,6 +537,12 @@ class MainApp(tk.Frame):
         self.episode_filter.set_filter_quarters(False, False, False, True)
         self.reapply_episode_filter()
 
+    def menu_callback_episodes_sector(self, sector):
+        self.episode_filter.reset()
+        (start, finish) = self.current_track.get_sector_start_and_finish(sector)
+        self.episode_filter.set_filter_complete_section_and_time(start, finish, None, None)
+        self.reapply_episode_filter()
+
     def menu_callback_actions_all(self):
         self.action_space_filter.set_filter_all()
         self.reapply_action_space_filter()
@@ -473,6 +562,16 @@ class MainApp(tk.Frame):
     def menu_callback_actions_straight(self):
         self.action_space_filter.set_filter_straight()
         self.reapply_action_space_filter()
+
+    def menu_callback_sector_filter(self, sector: str):
+        assert len(sector) == 1
+        self.sector_filter = sector
+        self.reapply_sector_filter()
+
+    def menu_callback_sector_zoom(self, sector: str):
+        assert len(sector) == 1
+        self.view_manager.zoom_sector(self.current_track, sector)
+        self.redraw()
 
     def menu_callback_zoom_in_out(self):
         self.view_manager.zoom_toggle()
@@ -504,6 +603,14 @@ class MainApp(tk.Frame):
 
     def menu_callback_track_blue(self):
         self.view_manager.set_track_colour_blue()
+        self.redraw()
+
+    def menu_callback_sectors_on(self):
+        self.view_manager.set_sectors_on()
+        self.redraw()
+
+    def menu_callback_sectors_off(self):
+        self.view_manager.set_sectors_off()
         self.redraw()
 
     def menu_callback_waypoints_large(self):
@@ -554,9 +661,21 @@ class MainApp(tk.Frame):
     def menu_callback_true_bearing_off(self):
         self.analyze_route.set_show_true_bearing(False)
 
+    def menu_callback_camera_vision_on(self):
+        self.analyze_route.set_show_camera_vision(True)
+
+    def menu_callback_camera_vision_off(self):
+        self.analyze_route.set_show_camera_vision(False)
+
     def menu_callback_view_log_file_info(self):
         if self.log:
             ViewLogFileInfo(self, self.log)
+
+    def get_log_directory(self):
+        return self._config_manager.get_log_directory()
+
+    def get_config_manager(self):
+        return self._config_manager
 
 
 root = tk.Tk()

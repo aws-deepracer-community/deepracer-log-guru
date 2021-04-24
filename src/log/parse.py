@@ -1,119 +1,93 @@
-import math
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import json
 
 from src.event.event_meta import Event
 from src.log.log_meta import LogMeta
-from src.action_space.action import  Action
+from src.action_space.action import Action
+
+
+#
+# PUBLIC Constants and Interface
+#
 
 EPISODE_STARTS_WITH = "SIM_TRACE_LOG"
 SENT_SIGTERM = "Sent SIGTERM"
 STILL_EVALUATING = "Reset agent"
 
-HYPER_BATCH_SIZE = "batch_size"
-HYPER_ENTROPY = "beta_entropy"
-HYPER_DISCOUNT_FACTOR = "discount_factor"
-HYPER_LOSS_TYPE = "loss_type"
-HYPER_LEARNING_RATE = "lr"
-HYPER_EPISODES_BETWEEN_TRAINING = "num_episodes_between_training"
-HYPER_EPOCHS = "num_epochs"
 
-PARAM_WORLD_NAME = "WORLD_NAME"
-PARAM_RACE_TYPE = "RACE_TYPE"
-PARAM_JOB_TYPE = "JOB_TYPE"
+def parse_intro_event(line_of_text: str, log_meta: LogMeta):
+    if _contains_hyper(line_of_text, HYPER_BATCH_SIZE):
+        log_meta.hyper.batch_size = _get_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE)
 
-MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-metadata/"
-MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
-MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
+    if _contains_hyper(line_of_text, HYPER_ENTROPY):
+        log_meta.hyper.entropy = _get_hyper_float_value(line_of_text, HYPER_ENTROPY)
 
-# For handling cloud, here are the example of cloud and non-cloud
-#   cloud       [s3] Successfully downloaded yaml file from s3 key DMH-Champ-Round1-OA-B-3/training-params.yaml
-#   non-cloud   [s3] Successfully downloaded yaml file from s3 key data-56b52007-8142-46cd-a9cc-370feb620f0c/models/Champ-Obj-Avoidance-03/sagemaker-robomaker-artifacts/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml to local ./custom_files/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml.
+    if _contains_hyper(line_of_text, HYPER_DISCOUNT_FACTOR):
+        log_meta.hyper.discount_factor = _get_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR)
 
-MISC_MODEL_NAME_CLOUD_LOGS = "[s3] Successfully downloaded yaml file from s3 key"
-CLOUD_TRAINING_YAML_FILENAME = "training-params.yaml"
+    if _contains_hyper(line_of_text, HYPER_LOSS_TYPE):
+        log_meta.hyper.loss_type = _get_hyper_string_value(line_of_text, HYPER_LOSS_TYPE)
 
-MISC_ACTION_SPACE_A = "Loaded action space from file: "
-MISC_ACTION_SPACE_B = "Action space from file: "
+    if _contains_hyper(line_of_text, HYPER_LEARNING_RATE):
+        log_meta.hyper.learning_rate = _get_hyper_float_value(line_of_text, HYPER_LEARNING_RATE)
 
-OBJECT_LOCATIONS = "DRG-OBJECTS:"
+    if _contains_hyper(line_of_text, HYPER_EPISODES_BETWEEN_TRAINING):
+        log_meta.hyper.episodes_between_training = _get_hyper_integer_value(line_of_text,
+                                                                            HYPER_EPISODES_BETWEEN_TRAINING)
 
-EVALUATION_REWARD_START = "## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = "
-EVALUATION_PROGRESSES_START = "Number of evaluations: "
+    if _contains_hyper(line_of_text, HYPER_EPOCHS):
+        log_meta.hyper.epochs = _get_hyper_integer_value(line_of_text, HYPER_EPOCHS)
 
-def parse_intro_event(str, log_meta :LogMeta):
-    if contains_hyper(str, HYPER_BATCH_SIZE):
-        log_meta.hyper.batch_size = get_hyper_integer_value(str, HYPER_BATCH_SIZE)
+    if _contains_parameter(line_of_text, PARAM_WORLD_NAME):
+        log_meta.world_name = _get_parameter_string_value(line_of_text, PARAM_WORLD_NAME)
 
-    if contains_hyper(str, HYPER_ENTROPY):
-        log_meta.hyper.entropy = get_hyper_float_value(str, HYPER_ENTROPY)
+    if _contains_parameter(line_of_text, PARAM_RACE_TYPE):
+        log_meta.race_type = _get_parameter_string_value(line_of_text, PARAM_RACE_TYPE)
 
-    if contains_hyper(str, HYPER_DISCOUNT_FACTOR):
-        log_meta.hyper.discount_factor = get_hyper_float_value(str, HYPER_DISCOUNT_FACTOR)
-
-    if contains_hyper(str, HYPER_LOSS_TYPE):
-        log_meta.hyper.loss_type = get_hyper_string_value(str, HYPER_LOSS_TYPE)
-
-    if contains_hyper(str, HYPER_LEARNING_RATE):
-        log_meta.hyper.learning_rate = get_hyper_float_value(str, HYPER_LEARNING_RATE)
-
-    if contains_hyper(str, HYPER_EPISODES_BETWEEN_TRAINING):
-        log_meta.hyper.episodes_between_training = get_hyper_integer_value(str, HYPER_EPISODES_BETWEEN_TRAINING)
-
-    if contains_hyper(str, HYPER_EPOCHS):
-        log_meta.hyper.epochs = get_hyper_integer_value(str, HYPER_EPOCHS)
-
-    if contains_parameter(str, PARAM_WORLD_NAME):
-        log_meta.world_name = get_parameter_string_value(str, PARAM_WORLD_NAME)
-
-    if contains_parameter(str, PARAM_RACE_TYPE):
-        log_meta.race_type = get_parameter_string_value(str, PARAM_RACE_TYPE)
-
-    if contains_parameter(str, PARAM_JOB_TYPE):
-        log_meta.job_type = get_parameter_string_value(str, PARAM_JOB_TYPE)
+    if _contains_parameter(line_of_text, PARAM_JOB_TYPE):
+        log_meta.job_type = _get_parameter_string_value(line_of_text, PARAM_JOB_TYPE)
 
     if log_meta.model_name == "":
-        if str.startswith(MISC_MODEL_NAME_OLD_LOGS):
-            log_meta.model_name = str.split("/")[1]
+        if line_of_text.startswith(MISC_MODEL_NAME_OLD_LOGS):
+            log_meta.model_name = line_of_text.split("/")[1]
 
-        if str.startswith(MISC_MODEL_NAME_NEW_LOGS_A) and not str.startswith(MISC_MODEL_NAME_OLD_LOGS):
-            log_meta.model_name = str.split("/")[2]
+        if line_of_text.startswith(MISC_MODEL_NAME_NEW_LOGS_A) and \
+                not line_of_text.startswith(MISC_MODEL_NAME_OLD_LOGS):
+            log_meta.model_name = line_of_text.split("/")[2]
 
-        if str.startswith(MISC_MODEL_NAME_NEW_LOGS_B):
-            log_meta.model_name = str.split("/")[2]
+        if line_of_text.startswith(MISC_MODEL_NAME_NEW_LOGS_B):
+            log_meta.model_name = line_of_text.split("/")[2]
 
-        if str.startswith(MISC_MODEL_NAME_CLOUD_LOGS):
-            split_parts = str[len(MISC_MODEL_NAME_CLOUD_LOGS):].split("/")
+        if line_of_text.startswith(MISC_MODEL_NAME_CLOUD_LOGS):
+            split_parts = line_of_text[len(MISC_MODEL_NAME_CLOUD_LOGS):].split("/")
             if split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME):
                 log_meta.model_name = split_parts[0]
 
-    if str.startswith(MISC_ACTION_SPACE_A):
-        parse_actions(str, log_meta, MISC_ACTION_SPACE_A)
+    if line_of_text.startswith(MISC_ACTION_SPACE_A):
+        _parse_actions(line_of_text, log_meta, MISC_ACTION_SPACE_A)
 
-    if str.startswith(MISC_ACTION_SPACE_B):
-        parse_actions(str, log_meta, MISC_ACTION_SPACE_B)
+    if line_of_text.startswith(MISC_ACTION_SPACE_B):
+        _parse_actions(line_of_text, log_meta, MISC_ACTION_SPACE_B)
 
 
-def parse_actions(str, log_meta :LogMeta, starts_with):
-    raw_actions = str[len(starts_with):].replace("'", "\"")
-
-    actions = json.loads(raw_actions)
-    for index, a in enumerate(actions):
-        if "index" in a:
-            assert a["index"] == index
-        new_action = Action(index, a["speed"], a["steering_angle"])
-        log_meta.action_space[index] = new_action
-
-def parse_object_locations(str):
-    if str.startswith(OBJECT_LOCATIONS):
-        return json.loads(str[len(OBJECT_LOCATIONS):])
+def parse_object_locations(line_of_text: str):
+    if line_of_text.startswith(OBJECT_LOCATIONS):
+        return json.loads(line_of_text[len(OBJECT_LOCATIONS):])
     else:
         return None
 
 
-def parse_episode_event(input, episode_events, episode_object_locations, saved_events, saved_debug, saved_object_locations):
-
+def parse_episode_event(line_of_text: str, episode_events, episode_object_locations,
+                        saved_events, saved_debug, saved_object_locations):
     if len(saved_events) > 15:
-        print(input)
+        print(line_of_text)
 
     assert len(saved_events) < 20
 
@@ -121,7 +95,8 @@ def parse_episode_event(input, episode_events, episode_object_locations, saved_e
         episode_events.append([])
         episode_object_locations.append([])
 
-    input = input.split("\n", 1)[0]
+    input_line = line_of_text.split("\n", 1)[0]
+    split_input = input_line[14:].split(",")[:16]
 
     (episode,
      step,
@@ -138,7 +113,7 @@ def parse_episode_event(input, episode_events, episode_object_locations, saved_e
      closest_waypoint_index,
      track_length,
      time,
-     status) = input[14:].split(",")
+     status) = split_input
 
     event_meta = Event()
 
@@ -169,7 +144,8 @@ def parse_episode_event(input, episode_events, episode_object_locations, saved_e
     assert len(episode_events) == len(episode_object_locations)
 
     if event_meta.step != len(episode_events[-1]) + 1:
-        print("WARNING - something wrong near step " + str(event_meta.step) + " of episode " + str(len(episode_events) - 1))
+        print("WARNING - something wrong near step " + str(event_meta.step) +
+              " of episode " + str(len(episode_events) - 1))
 
     episode_events[-1].append(event_meta)
     if event_meta.job_completed:
@@ -192,15 +168,23 @@ def parse_episode_event(input, episode_events, episode_object_locations, saved_e
                     episode_object_locations.append([])
                 break
 
-def parse_evaluation_reward_info(str):
-    if str.startswith(EVALUATION_REWARD_START):
-        return float(str[len(EVALUATION_REWARD_START):])
+
+def parse_evaluation_reward_info(line_of_text: str):
+    if line_of_text.startswith(EVALUATION_REWARD_START):
+        return float(line_of_text[len(EVALUATION_REWARD_START):])
     else:
         return None
 
-def parse_evaluation_progress_info(str):
-    if str.startswith(EVALUATION_PROGRESSES_START):
-        info = str[len(EVALUATION_PROGRESSES_START):]
+
+def parse_evaluation_progress_info(line_of_text: str):
+    start_str_len = 0
+    if line_of_text.startswith(EVALUATION_PROGRESSES_START_OLD):
+        start_str_len = len(EVALUATION_PROGRESSES_START_OLD)
+    elif line_of_text.startswith(EVALUATION_PROGRESSES_START):
+        start_str_len = len(EVALUATION_PROGRESSES_START)
+
+    if start_str_len > 0:
+        info = line_of_text[start_str_len:]
         count = int(info.split(" ")[0])
 
         progresses_as_strings = info[:-2].split("[")[1].split(",")
@@ -215,34 +199,81 @@ def parse_evaluation_progress_info(str):
         return None, None
 
 
+#
+# PRIVATE Constants and Implementation
+#
+
+HYPER_BATCH_SIZE = "batch_size"
+HYPER_ENTROPY = "beta_entropy"
+HYPER_DISCOUNT_FACTOR = "discount_factor"
+HYPER_LOSS_TYPE = "loss_type"
+HYPER_LEARNING_RATE = "lr"
+HYPER_EPISODES_BETWEEN_TRAINING = "num_episodes_between_training"
+HYPER_EPOCHS = "num_epochs"
+
+PARAM_WORLD_NAME = "WORLD_NAME"
+PARAM_RACE_TYPE = "RACE_TYPE"
+PARAM_JOB_TYPE = "JOB_TYPE"
+
+MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-metadata/"
+MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
+MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
+
+# For handling cloud, here are the example of cloud and non-cloud
+#   cloud       [s3] Successfully downloaded yaml file from s3 key DMH-Champ-Round1-OA-B-3/training-params.yaml
+#   non-cloud   [s3] Successfully downloaded yaml file from s3 key data-56b52007-8142-46cd-a9cc-370feb620f0c/models/Champ-Obj-Avoidance-03/sagemaker-robomaker-artifacts/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml to local ./custom_files/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml.
+
+MISC_MODEL_NAME_CLOUD_LOGS = "[s3] Successfully downloaded yaml file from s3 key"
+CLOUD_TRAINING_YAML_FILENAME = "training-params.yaml"
+
+MISC_ACTION_SPACE_A = "Loaded action space from file: "
+MISC_ACTION_SPACE_B = "Action space from file: "
+
+OBJECT_LOCATIONS = "DRG-OBJECTS:"
+
+EVALUATION_REWARD_START = "## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = "
+EVALUATION_PROGRESSES_START_OLD = "Number of evaluations: "
+EVALUATION_PROGRESSES_START = "[BestModelSelection] Number of evaluations: "
+
+
+def _parse_actions(line_of_text: str, log_meta: LogMeta, starts_with: str):
+    raw_actions = line_of_text[len(starts_with):].replace("'", "\"")
+
+    actions = json.loads(raw_actions)
+    for index, a in enumerate(actions):
+        if "index" in a:
+            assert a["index"] == index
+        new_action = Action(index, a["speed"], a["steering_angle"])
+        log_meta.action_space.add_action(new_action)
 
 
 # Parse hyper parameters
 
-def contains_hyper(str, hyper_name):
-    return str.startswith('  "' + hyper_name + '": ')
+def _contains_hyper(line_of_text: str, hyper_name: str):
+    return line_of_text.startswith('  "' + hyper_name + '": ')
 
-def get_hyper_integer_value(str, hyper_name):
+
+def _get_hyper_integer_value(line_of_text: str, hyper_name: str):
     chop_chars = len(hyper_name) + 6
+    return int(line_of_text[chop_chars:].split(",")[0])
 
-    return int(str[chop_chars:].split(",")[0])
 
-def get_hyper_float_value(str, hyper_name):
+def _get_hyper_float_value(line_of_text: str, hyper_name: str):
     chop_chars = len(hyper_name) + 6
+    return float(line_of_text[chop_chars:].split(",")[0])
 
-    return float(str[chop_chars:].split(",")[0])
 
-def get_hyper_string_value(str, hyper_name):
+def _get_hyper_string_value(line_of_text: str, hyper_name: str):
     chop_chars = len(hyper_name) + 6
-    return str[chop_chars:].split('"')[1]
+    return line_of_text[chop_chars:].split('"')[1]
 
 
 # Parse the high level training settings
 
-def contains_parameter(str, parameter_name):
-    return str.startswith(" * /" + parameter_name + ": ")
+def _contains_parameter(line_of_text: str, parameter_name: str):
+    return line_of_text.startswith(" * /" + parameter_name + ": ")
 
-def get_parameter_string_value(str, parameter_name):
+
+def _get_parameter_string_value(line_of_text: str, parameter_name: str):
     chop_chars = len(parameter_name) + 6
-    return str[chop_chars:].split("\n")[0]
-
+    return line_of_text[chop_chars:].split("\n")[0]

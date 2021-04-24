@@ -1,5 +1,16 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from src.graphics.track_graphics import TrackGraphics
 import math
+
+from src.utils.colors import get_color_for_data, ColorPalette
+
 
 class VisitorMap:
 
@@ -33,8 +44,10 @@ class VisitorMap:
             self.last_visitor[y_index][x_index] = visitor
             self.visits[y_index][x_index] += 1
 
-    def draw(self, track_graphics :TrackGraphics, extra_bright :bool):
+    def draw(self, track_graphics :TrackGraphics, brightness: int, color_palette: ColorPalette):
         # self.print_debug()
+
+        assert brightness in [-1, 0, 1, 2]
 
         max_visits = max(max(x) for x in self.visits)
 
@@ -44,9 +57,15 @@ class VisitorMap:
         colour_multiplier = 255 / max_visits / max_visits * 2
         min_visits = max_visits / 10
 
-        if extra_bright:
+        if brightness == 1:
             colour_multiplier *= 2
             min_visits /= 2
+        elif brightness == 2:
+            colour_multiplier *= 3.5
+            min_visits /= 3.5
+        elif brightness == -1:
+            colour_multiplier /= 2
+            min_visits *= 1.5
 
         for yy, visits in enumerate(self.visits):
             for xx, visit in enumerate(visits):
@@ -54,16 +73,9 @@ class VisitorMap:
                     x = self.min_x + self.granularity * xx
                     y = self.min_y + self.granularity * yy
 
-                    h = hex(round(min(255, 30 + colour_multiplier * visit * visit)))[2:]
-
-                    if len(h) == 1:
-                        h = "0" + h
-
-                    colour = "#" + h*3
-
+                    data = min(1.0, 30/255 + colour_multiplier / 255 * visit * visit)
+                    colour = get_color_for_data(data, color_palette)
                     track_graphics.plot_box(x, y, x + self.granularity, y + self.granularity, colour)
-
-
 
     def print_debug(self):
         for v in reversed(self.visits):
@@ -111,6 +123,7 @@ def test_it():
     print(map.get_x_index(1.49))
     print(map.get_x_index(1.51))
 
+    print("-------------------------")
 
     map.visit(1, 1, "aaa")
     map.visit(6, 7, "bbb")
@@ -135,7 +148,7 @@ def test_it():
 
 
 # RUN TEST
-#test_it()
+# test_it()
 
 
 

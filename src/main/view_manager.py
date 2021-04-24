@@ -1,9 +1,18 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from src.tracks.track import Track
-from src.graphics.track_graphics import TrackGraphics
 from src.episode.episode_filter import EpisodeFilter
 
 COLOUR_GREY = "Grey30"
 COLOUR_BLUE = "Blue"
+SECTOR_BORDER = 0.2
+
 
 class ViewManager:
 
@@ -14,12 +23,13 @@ class ViewManager:
         self.waypoint_minor_size = 0
 
         self.waypoints_on = True
-        self.grid_on = True
+        self.grid_on = False
         self.annotations_on = False
+        self.sectors_on = False
 
         self.drawing_order = [ "G", "A", "T", "N" ]
 
-        self.set_track_colour_blue()
+        self.set_track_colour_grey()
         self.set_waypoint_sizes_micro()
 
         self.zoom_x = None
@@ -95,8 +105,16 @@ class ViewManager:
     def set_annotations_off(self):
         self.annotations_on = False
 
-    def redraw(self, current_track :Track, track_graphics, analyzer, episode_filter: EpisodeFilter):
+    def set_sectors_on(self):
+        self.sectors_on = True
+
+    def set_sectors_off(self):
+        self.sectors_on = False
+
+    def redraw(self, current_track :Track, track_graphics, analyzer, background_analyser, episode_filter: EpisodeFilter):
         analyzer.recalculate()
+        if background_analyser:
+            background_analyser.recalculate()
 
         track_graphics.reset_to_blank()
 
@@ -116,10 +134,15 @@ class ViewManager:
                     current_track.draw_section_highlight(track_graphics, self.track_colour, start, finish)
 
                 current_track.draw_starting_line(track_graphics, self.track_colour)
+                if self.sectors_on:
+                    current_track.draw_sector_dividers(track_graphics, self.track_colour)
+                    current_track.draw_sector_labels(track_graphics, self.track_colour)
                 if self.waypoints_on:
                     current_track.draw_waypoints(track_graphics, self.track_colour, self.waypoint_minor_size, self.waypoint_major_size)
 
             if do == "A":
+                if background_analyser:
+                    background_analyser.redraw()
                 analyzer.redraw()
 
             if do == "N" and self.annotations_on:
@@ -136,6 +159,14 @@ class ViewManager:
 
         self.zoom_in = True
 
+    def zoom_sector(self, track: Track, sector: str):
+        (self.zoom_x, self.zoom_y, self.zoom_x2, self.zoom_y2) = track.get_sector_coordinates(sector)
+        self.zoom_x -= SECTOR_BORDER
+        self.zoom_y -= SECTOR_BORDER
+        self.zoom_x2 += SECTOR_BORDER
+        self.zoom_y2 += SECTOR_BORDER
+        self.zoom_in = True
+
     def zoom_toggle(self):
         self.zoom_in = not self.zoom_in
 
@@ -146,6 +177,5 @@ class ViewManager:
         self.zoom_y2 = None
 
         self.zoom_in = False
-
 
 

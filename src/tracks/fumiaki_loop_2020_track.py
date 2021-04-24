@@ -1,41 +1,29 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from src.tracks.track import Track
-import src.configuration.personal_track_annotations as config
-
-# TODO - check whether waypoints end is correct or not ************ although not important now
-
-
-
-# Other people might want to change/personalize these values
-
-PRIVATE_DESCRIPTION = "Fumiaki - June 2020"
-PRIVATE_SECTION_DIVIDERS = []
+import src.personalize.configuration.personal_track_annotations as config
 
 
 class FumiakiLoop2020Track(Track):
     def __init__(self):
         super().__init__()
 
-        # Details of the track as it appears on the training UI
-        self.ui_name = "Fumiaki Loop"
+        self._ui_name = "Fumiaki Loop"
+        self._ui_description = "The Fumiaki Loop, is dedicated to our runner up at the 2019 Championship Cup, and inspired by Fuji Speedway."
+        self._ui_length_in_m = 53.0  # metres
+        self._ui_width_in_cm = 107  # centimetres
+        self._world_name = "FS_June2020"
+        self._track_sector_dividers = [60, 113, 198, 307]
+        self._annotations = config.fumiaki_loop_annotations
+        self._track_width = 0.914
 
-        self.ui_description = "The Fumiaki Loop, is dedicated to our runner up at the 2019 Championship Cup, and inspired by Fuji Speedway."
-        self.ui_length_in_m = 53.0 # metres
-        self.ui_width_in_cm = 107 # centimetres
-        self.ui_difficulty = "*NONE*"
-
-        # Other bits of basic info
-        self.private_description = PRIVATE_DESCRIPTION
-        self.world_name = "FS_June2020"
-
-        # Divide track into sections
-        self.track_section_dividers = PRIVATE_SECTION_DIVIDERS
-
-        # Grab the optional personal annotations from the special annotations configuration file
-        self.annotations = config.fumiaki_loop_annotations
-
-        # Now the track definition info - as given to the reward function
-        self.track_width = 0.914
-        self.track_waypoints = [
+        self._track_waypoints = [
             [1.3333835005760193, -2.8131200075149536],
             [1.183136522769928, -2.8104419708251953],
             [1.0328985452651978, -2.8073339462280273],

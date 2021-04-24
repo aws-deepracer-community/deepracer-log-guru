@@ -11,6 +11,7 @@ from src.utils.geometry import get_bearing_between_points, get_turn_between_dire
     get_distance_between_points, get_distance_of_point_from_line
 
 from src.tracks.track import Track
+from src.sequences.sequence import Sequence
 from src.utils.discount_factors import discount_factors
 
 from src.personalize.configuration.analysis import NEW_REWARD_FUNCTION, TIME_BEFORE_FIRST_STEP
@@ -631,6 +632,15 @@ class Episode:
                 index -= 1
 
             return index
+
+    def extract_all_sequences(self, min_sequence_length):
+        sequences = []
+        for i, e in enumerate(self.events):
+            if e.sequence_count == 1 and self.events[i-1].sequence_count >= min_sequence_length:
+                sequences.append(Sequence(self.events[i - min_sequence_length:i]))
+
+        return sequences
+
 
 def are_close_waypoint_ids(id1, id2, track :Track):
     if abs(id1 - id2) <= 2:

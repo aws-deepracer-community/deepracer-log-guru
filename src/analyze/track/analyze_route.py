@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import tkinter as tk
 
 from src.configuration.config_manager import ConfigManager

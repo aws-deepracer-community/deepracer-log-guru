@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import numpy as np
 
 from src.personalize.configuration.analysis import DISCOUNT_FACTORS, DISCOUNT_FACTOR_MAX_STEPS

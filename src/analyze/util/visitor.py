@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from src.graphics.track_graphics import TrackGraphics
 import math
 

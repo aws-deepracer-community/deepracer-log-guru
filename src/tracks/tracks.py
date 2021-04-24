@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from src.tracks.summit_raceway_track import SummitRacewayTrack
 from src.tracks.reinvent_2018_track import Reinvent2018Track
 from src.tracks.sola_2020_track import Sola2020Track

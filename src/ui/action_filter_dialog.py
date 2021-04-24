@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from tkinter import BooleanVar, Checkbutton
 from src.ui.dialog import Dialog
 from src.action_space.action_space_filter import ActionSpaceFilter

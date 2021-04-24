@@ -1,4 +1,10 @@
-
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
 
 
 # See: https://matplotlib.org/stable/tutorials/colors/colormaps.html

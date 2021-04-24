@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import os
 
 from src.log.log import LOG_FILE_SUFFIX, Log, META_FILE_SUFFIX

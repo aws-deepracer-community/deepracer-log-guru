@@ -1,3 +1,10 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
 
 _WORST_STRAIGHT_STEERING = 8
 _IDEAL_PROJECTED_TRAVEL_DISTANCE = 3

@@ -1,10 +1,18 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from src.tracks.track import Track
-from src.graphics.track_graphics import TrackGraphics
 from src.episode.episode_filter import EpisodeFilter
 
 COLOUR_GREY = "Grey30"
 COLOUR_BLUE = "Blue"
 SECTOR_BORDER = 0.2
+
 
 class ViewManager:
 

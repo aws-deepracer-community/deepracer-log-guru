@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 from src.tracks.track import Track
 import src.personalize.configuration.personal_track_annotations as config
 

@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
+
 import src.utils.geometry as geometry
 from src.analyze.util.heatmap import HeatMap
 from src.analyze.util.visitor import VisitorMap

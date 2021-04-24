@@ -1,4 +1,10 @@
-
+#
+# DeepRacer Guru
+#
+# Version 3.0 onwards
+#
+# Copyright (c) 2021 dmh23
+#
 
 def get_formatted_debug(debug: str, max_lines, max_length, fields: list):
     if max_length == 0 or max_lines == 0 or not debug:

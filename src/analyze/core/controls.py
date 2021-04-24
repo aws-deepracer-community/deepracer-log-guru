@@ -5,6 +5,7 @@
 #
 # Copyright (c) 2021 dmh23
 #
+
 import math
 import tkinter as tk
 from enum import IntEnum
@@ -839,3 +840,28 @@ class QuarterlyDistributionControl(Control):
 
     def show_lines(self):
         return self._distribution_choice.get() == QuarterlyDistributionControl._LINES
+
+
+class ShowMeanOrMedianStatControl(Control):
+    _NONE = "None"
+    _MEAN = "Mean"
+    _MEDIAN = "Median"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Show Statistic")
+
+        self._distribution_choice = tk.StringVar(value=ShowMeanOrMedianStatControl._NONE)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(ShowMeanOrMedianStatControl._NONE, self._distribution_choice)
+        self.add_radiobutton_improved(ShowMeanOrMedianStatControl._MEAN, self._distribution_choice)
+        self.add_radiobutton_improved(ShowMeanOrMedianStatControl._MEDIAN, self._distribution_choice)
+
+    def show_none(self):
+        return self._distribution_choice.get() == ShowMeanOrMedianStatControl._NONE
+
+    def show_mean(self):
+        return self._distribution_choice.get() == ShowMeanOrMedianStatControl._MEAN
+
+    def show_median(self):
+        return self._distribution_choice.get() == ShowMeanOrMedianStatControl._MEDIAN

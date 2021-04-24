@@ -5,7 +5,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
-from src.analyze.core.controls import EpisodeRadioButtonControl, QuarterlyDistributionControl
+from src.analyze.core.controls import EpisodeRadioButtonControl, QuarterlyDistributionControl, \
+    ShowMeanOrMedianStatControl
 
 
 class AnalyzeLapTimeDistribution(GraphAnalyzer):
@@ -15,10 +16,12 @@ class AnalyzeLapTimeDistribution(GraphAnalyzer):
 
         self._episodes_control = EpisodeRadioButtonControl(guru_parent_redraw, control_frame)
         self._distribution_control = QuarterlyDistributionControl(guru_parent_redraw, control_frame)
+        self._mean_or_median_control = ShowMeanOrMedianStatControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame: tk.Frame):
         self._episodes_control.add_to_control_frame()
         self._distribution_control.add_to_control_frame()
+        self._mean_or_median_control.add_to_control_frame()
 
     def add_plots(self):
         if not self.all_episodes:
@@ -58,6 +61,25 @@ class AnalyzeLapTimeDistribution(GraphAnalyzer):
         elif self._distribution_control.show_lines():
             axes.hist(plot_data, label=label, color=colour, bins=min_bins * 2, histtype="step", linewidth=3)
             axes.hist(quarterly_plot_data, label=q_labels, color=q_colours, bins=min_bins, histtype="step", linewidth=3)
+
+        if not self._mean_or_median_control.show_none() and len(plot_data) > 0:
+            if self._mean_or_median_control.show_median():
+                stat_method = np.median
+            else:
+                stat_method = np.mean
+            _, top_y = axes.get_ybound()
+            stat_y = top_y * 0.95
+            stat_x = stat_method(plot_data)
+            axes.plot(stat_x, stat_y, marker="o", markersize=12, color="Black")
+            axes.plot(stat_x, stat_y, marker="o", markersize=10, color=colour)
+
+            if not self._distribution_control.show_none():
+                for i in range(4):
+                    if len(quarterly_plot_data[i] > 0):
+                        stat_y = top_y * (0.75 + i * 0.05)
+                        stat_x = stat_method(quarterly_plot_data[i])
+                        axes.plot(stat_x, stat_y, marker="o", markersize=9, color="Black")
+                        axes.plot(stat_x, stat_y, marker="o", markersize=7, color=q_colours[i])
 
         # Format the plot
         axes.set_title("Lap Time Distribution")

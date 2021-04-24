@@ -39,8 +39,8 @@ Make sure you have obtainded the correct type of log file which should mostly co
 
 Also make sure you do NOT delete the information at the start of the log, since this contains the hyperparameters, track name, action space and so on - which are essential for DRG.
 
-## Run DRG
-Run the main DRG application, as per the [Installation Instructions](docs/installation.md)
+## Launch DRG
+Run the main DRG application, as per the [Installation Instructions](installation.md#launch-deep-racer-guru)
 
 ## Configure DRG
 Tell DRG where you have saved your log files by:

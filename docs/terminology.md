@@ -1,3 +1,2 @@
 # Terminology
-## Hello
-testing testing hello ...
+Coming here soon

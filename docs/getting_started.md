@@ -2,7 +2,7 @@
 
 ## Download Logs
 
-DRG works with logs from either the AWS DeepRacer console, or your own indepedent training if you have moved away from the offical console.
+DRG works with logs from either the AWS DeepRacer console, or your own indepedent training if you have moved away from the official console.
 
 You just need to make sure you extract the correct **robomaker** log file and then you can store it wherever you want to organize your log files.
 
@@ -16,18 +16,20 @@ Download a log file as follows:
 
 ![](pictures/download_logs.png)
 
-* After it has downloaded, open the zip archive and locate the **robomaker** log file in the **logs/training** folder
+* After it has downloaded, open the zip archive and locate the single **robomaker** log file in the **logs/training** folder
 
 ![](pictures/find_correct_log_file.png)
 
 * Extract/save it locally
+* Note - DRG does NOT require any other files in the zip archive
 * If you wish, repeat this process to download log file(s) for other model(s) too
 
 ### Download Logs from Other Sources
 
 Simply transfer or copy **robomaker** log files into a directory/folder that DRG can access.
 
-Make sure you have obtainded the correct log file which should mostly contain log entries like this:
+Make sure you have obtainded the correct type of log file which should mostly contain entries like this:
+
     SIM_TRACE_LOG:0,1,-2.2896,-4.6243,2.7800,0.00,3.80,7,0.0000,False,True,0.1577,0,89.24,35.413,prepare,0.00
     SIM_TRACE_LOG:0,2,-2.2896,-4.6243,2.7823,-2.50,2.50,6,0.1577,False,True,0.1577,0,89.24,35.462,in_progress,0.00
     SIM_TRACE_LOG:0,3,-2.2885,-4.6243,2.7954,-2.50,2.50,6,0.0012,False,True,0.1588,0,89.24,35.526,in_progress,0.00
@@ -35,10 +37,10 @@ Make sure you have obtainded the correct log file which should mostly contain lo
     SIM_TRACE_LOG:0,5,-2.2586,-4.6262,1.9827,-10.00,1.80,4,0.0258,False,True,0.1922,1,89.24,35.63,in_progress,0.00
     SIM_TRACE_LOG:0,6,-2.2342,-4.6286,1.1980,-2.50,2.50,6,0.0271,False,True,0.2194,1,89.24,35.703,in_progress,0.00
 
-Also make sure you do NOT delete the information at the start of the log, since this contains information about the hyperparameters, track, action space and so on - which are essential for DRG.
+Also make sure you do NOT delete the information at the start of the log, since this contains the hyperparameters, track name, action space and so on - which are essential for DRG.
 
 ## Run DRG
-Run the main DRG application ... cross reference installation instructions TODO ...
+Run the main DRG application, as per the [Installation Instructions](docs/installation.md)
 
 ## Configure DRG
 Tell DRG where you have saved your log files by:

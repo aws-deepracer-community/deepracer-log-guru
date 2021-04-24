@@ -2,7 +2,7 @@
 
 ## Download Logs
 
-DRG works with logs from either the AWS DeepRacer console, or your own indepedent training if you have moved away from the official console.
+DRG works with logs from either the AWS DeepRacer console, or your own independent training if you have moved away from the official console.
 
 You just need to make sure you extract the correct **robomaker** log file and then you can store it wherever you want to organize your log files.
 

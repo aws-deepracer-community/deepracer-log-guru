@@ -5,9 +5,7 @@ Essential Before Tentative v3 Release
 Fix this bug:
 Display ROUTE log info, then go to different analysis and change the episode selector << or >> (log info should close), and return to ROUTE circle highlight is still there!!
 
-Finish the most important docs
-     - Gallery
-     - Getting Started
+Finish the Gallery document
 
 v3.0.1 Improvements
 ===================

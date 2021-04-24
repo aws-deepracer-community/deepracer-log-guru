@@ -52,17 +52,21 @@ You must then "Import" new log files before you can open them for analysis, usin
 
 ![](pictures/file_menu_new_files.png)
 
-* It will display a list of the new files, if it is correct then click OK to import them into DRG:
+It will display a list of the new files, if it is correct then click OK to import them into DRG:
 
 ![](pictures/import_new_log_files.png)
 
 
 ### Open Log Files
-* Use the Track menu to select the correct track - note that tracks with log files are at the top of the list, above the divider
+Use the "Track" menu to select the correct track - note that tracks with log files are at the top of the list, above the divider
   
 ![](pictures/choose_track.png)
 
-* View and open any log file for your selected track using "Open File":
+View all imported log files for your selected track using "Open File":
+
+![](pictures/file_menu_open_files.png)
+
+Click on the model name to open its log file:
 
 ![](pictures/choose_file_to_open.png)
 

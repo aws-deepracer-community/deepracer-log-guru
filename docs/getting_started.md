@@ -28,7 +28,7 @@ Download a log file as follows:
 
 Simply transfer or copy **robomaker** log files into a directory/folder that DRG can access.
 
-Make sure you have obtainded the correct type of log file which should mostly contain entries like this:
+Make sure you have obtained the correct type of log file which should mostly contain entries like this:
 
     SIM_TRACE_LOG:0,1,-2.2896,-4.6243,2.7800,0.00,3.80,7,0.0000,False,True,0.1577,0,89.24,35.413,prepare,0.00
     SIM_TRACE_LOG:0,2,-2.2896,-4.6243,2.7823,-2.50,2.50,6,0.1577,False,True,0.1577,0,89.24,35.462,in_progress,0.00
@@ -43,16 +43,27 @@ Also make sure you do NOT delete the information at the start of the log, since 
 Run the main DRG application, as per the [Installation Instructions](installation.md#launch-deep-racer-guru)
 
 ## Configure DRG
-Tell DRG where you have saved your log files by:
-* TODO   file -> change directory
+Tell DRG where you have saved your log files using "Switch Directory":
+
+![](pictures/file_menu_switch_directory.png)
 
 ## Import Log Files
-You must "Import" new log files before you can open them for analysis:
-* In the Deep Racer Guru application, go to the **File -> New** menu option
-* It will display a list of the new files, if it is correct then click OK to import them into DRG
+You must then "Import" new log files before you can open them for analysis, using "New File(s)":
+
+![](pictures/file_menu_new_files.png)
+
+* It will display a list of the new files, if it is correct then click OK to import them into DRG:
+
+![](pictures/import_new_log_files.png)
+
 
 ### Open Log Files
-* Use the Track menu to select the correct track
-* Hint: tracks with log files are at the top of the list, above the divider
-* Now go to the **File -> Open** menu to choose from log files you have downloaded for that selected track
+* Use the Track menu to select the correct track - note that tracks with log files are at the top of the list, above the divider
+  
+![](pictures/choose_track.png)
+
+* View and open any log file for your selected track using "Open File":
+
+![](pictures/choose_file_to_open.png)
+
 

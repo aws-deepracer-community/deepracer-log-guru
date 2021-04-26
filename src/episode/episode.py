@@ -641,11 +641,13 @@ class Episode:
 
             return index
 
-    def extract_all_sequences(self, min_sequence_length):
+    def extract_all_sequences(self, min_sequence_length: int):
         sequences = []
         for i, e in enumerate(self.events):
-            if e.sequence_count == 1 and self.events[i-1].sequence_count >= min_sequence_length:
-                sequences.append(Sequence(self.events[i - min_sequence_length:i]))
+            if e.sequence_count == 1:
+                previous_event: Event = self.events[i-1]
+                if previous_event.steering_angle != 0 and previous_event.sequence_count >= min_sequence_length:
+                    sequences.append(Sequence(self.events[i - min_sequence_length:i]))
 
         return sequences
 
@@ -659,5 +661,11 @@ def are_close_waypoint_ids(id1, id2, track :Track):
     else:
         return False
 
+
+def extract_all_sequences(episodes: list[Episode], min_sequence_length: int):
+    result = []
+    for e in episodes:
+        result += e.extract_all_sequences(min_sequence_length)
+    return result
 
 

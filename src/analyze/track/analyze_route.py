@@ -70,7 +70,7 @@ class AnalyzeRoute(TrackAnalyzer):
 
         self.episode_selector.add_to_control_frame(control_frame, self.callback_selected_episode_changed)
 
-    def left_button_pressed(self, track_point):
+    def right_button_pressed(self, track_point):
         episode = self.episode_selector.get_selected_episode()
 
         if episode:

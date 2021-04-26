@@ -18,6 +18,8 @@ from src.analyze.track.analyze_heatmap import AnalyzeHeatmap
 from src.analyze.track.analyze_exit_points import AnalyzeExitPoints
 from src.analyze.track.analyze_route import AnalyzeRoute
 from src.analyze.track.analyze_race import AnalyzeRace
+from src.analyze.track.analyze_curve_fitting import AnalyzeCurveFitting
+from src.analyze.track.analyze_straight_fitting import AnalyzeStraightFitting
 
 from src.analyze.graph.analyze_training_progress import AnalyzeTrainingProgress
 from src.analyze.graph.analyze_quarterly_results import AnalyzeQuarterlyResults
@@ -36,6 +38,7 @@ from src.analyze.graph.analyze_discount_factors import AnalyzeDiscountFactors
 
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.configuration.config_manager import ConfigManager
+from src.episode.episode import extract_all_sequences
 from src.episode.episode_filter import EpisodeFilter
 from src.graphics.track_graphics import TrackGraphics
 from src.log.log import Log
@@ -143,6 +146,8 @@ class MainApp(tk.Frame):
         self.analyze_track_heatmap = AnalyzeHeatmap(self.redraw, self.track_graphics, self.inner_control_frame, self.please_wait_track, self._config_manager)
         self.analyze_exit_points = AnalyzeExitPoints(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_race = AnalyzeRace(self.redraw, self.track_graphics, self.inner_control_frame)
+        self.analyze_curve_fitting = AnalyzeCurveFitting(self.redraw, self.track_graphics, self.inner_control_frame)
+        self.analyze_straight_fitting = AnalyzeStraightFitting(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_quarterly_results = AnalyzeQuarterlyResults(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_reward_distribution = AnalyzeRewardDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame)
@@ -163,6 +168,8 @@ class MainApp(tk.Frame):
             self.analyze_track_heatmap,
             self.analyze_exit_points,
             self.analyze_race,
+            self.analyze_curve_fitting,
+            self.analyze_straight_fitting,
             self.analyze_training_progress,
             self.analyze_quarterly_results,
             self.analyze_reward_distribution,
@@ -300,6 +307,12 @@ class MainApp(tk.Frame):
     def menu_callback_analyze_race(self):
         self.switch_analyzer(self.analyze_race)
 
+    def menu_callback_analyze_curve_fitting(self):
+        self.switch_analyzer(self.analyze_curve_fitting)
+
+    def menu_callback_analyze_straight_fitting(self):
+        self.switch_analyzer(self.analyze_straight_fitting)
+
     def menu_callback_analyze_route(self):
         self.switch_analyzer(self.analyze_route)
 
@@ -387,6 +400,10 @@ class MainApp(tk.Frame):
             self.menu_bar = MenuBar(root, self, True)
             self.update()
 
+        # Temporary code for sequences until we can save them together from all log files
+        sequences = extract_all_sequences(self.log.get_episodes(), 7)
+        self.analyze_curve_fitting.set_all_sequences(sequences)
+
     def apply_new_action_space(self):
         self.action_space_filter.set_new_action_space(self.log.get_log_meta().action_space)
         for v in self.all_analyzers:
@@ -438,7 +455,7 @@ class MainApp(tk.Frame):
 
     def right_button_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)
-        self.analyzer.left_button_pressed(track_point)
+        self.analyzer.right_button_pressed(track_point)
         self.track_canvas.focus_set() # Set focus so we will now receive keyboard events too
 
     def left_button_pressed_on_track_canvas(self, event):

@@ -79,23 +79,22 @@ class Sequence:
         return inversion
 
     def print_debug(self):
-        print("Length = ", self.get_length())
-        print("Key = ", self.get_simple_key())
+        print("Action: ", self.action_speed, self.action_steering_angle, "Entry speed/slide:", self.initial_track_speed, self.initial_slide)
 
     def matches(self, initial_track_speed, initial_slide, action_speed, action_steering_angle):
-        return self._matches_value(initial_track_speed, self.initial_track_speed, SPEED_ROUNDING) and \
-               self._matches_value(initial_slide, self.initial_slide, SLIDE_ROUNDING) and \
-               self._matches_value(action_speed, self.action_speed, SPEED_ROUNDING) and \
-               self._matches_value(action_steering_angle, self.action_steering_angle, ANGLE_ROUNDING)
+        return self._matches_value(initial_track_speed, self.initial_track_speed) and \
+               self._matches_value(initial_slide, self.initial_slide) and \
+               self._matches_value(action_speed, self.action_speed) and \
+               self._matches_value(action_steering_angle, self.action_steering_angle)
 
     @staticmethod
-    def _matches_value(filter_value, real_value, rounding: int):
+    def _matches_value(filter_value, real_value):
         if filter_value is None:
             return True
         else:
             (value1, value2) = filter_value
-            min_value = round(min(value1, value2), rounding)
-            max_value = round(max(value1, value2), rounding)
+            min_value = min(value1, value2)
+            max_value = max(value1, value2)
             return min_value <= real_value <= max_value
 
     class Step:

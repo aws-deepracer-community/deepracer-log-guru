@@ -865,3 +865,51 @@ class ShowMeanOrMedianStatControl(Control):
 
     def show_median(self):
         return self._distribution_choice.get() == ShowMeanOrMedianStatControl._MEDIAN
+
+
+class CurveDirectionControl(Control):
+    _LEFT = "Left"
+    _RIGHT = "Right"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Direction")
+
+        self._direction = tk.StringVar(value=CurveDirectionControl._LEFT)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(CurveDirectionControl._LEFT, self._direction)
+        self.add_radiobutton_improved(CurveDirectionControl._RIGHT, self._direction)
+
+    def direction_left(self):
+        return self._direction.get() == CurveDirectionControl._LEFT
+
+    def direction_right(self):
+        return self._direction.get() == CurveDirectionControl._RIGHT
+
+
+class CurveSteeringDegreesControl(Control):
+    _LOW = "0 - 10"
+    _MEDIUM = "11 - 20"
+    _HIGH = "21 - 30"
+    _ALL = "All"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Steering Degrees")
+
+        self._degrees = tk.StringVar(value=CurveSteeringDegreesControl._ALL)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(CurveSteeringDegreesControl._LOW, self._degrees)
+        self.add_radiobutton_improved(CurveSteeringDegreesControl._MEDIUM, self._degrees)
+        self.add_radiobutton_improved(CurveSteeringDegreesControl._HIGH, self._degrees)
+        self.add_radiobutton_improved(CurveSteeringDegreesControl._ALL, self._degrees)
+
+    def get_steering_range(self):
+        if self._degrees.get() == CurveSteeringDegreesControl._LOW:
+            return 0, 10.5
+        elif self._degrees.get() == CurveSteeringDegreesControl._MEDIUM:
+            return 10.5, 20.5
+        elif self._degrees.get() == CurveSteeringDegreesControl._HIGH:
+            return 20.5, 30
+        else:
+            return 0, 30

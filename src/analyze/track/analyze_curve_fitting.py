@@ -8,19 +8,24 @@
 
 import tkinter as tk
 import src.utils.geometry as geometry
+from src.analyze.core.controls import CurveDirectionControl, CurveSteeringDegreesControl
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.configuration.real_world import VEHICLE_WIDTH
 from src.graphics.track_graphics import TrackGraphics
-from src.sequences.sequence import Sequence
 from src.sequences.sequences import Sequences
 
 BACKWARDS_DISTANCE = 2
+
 
 class AnalyzeCurveFitting(TrackAnalyzer):
 
     def __init__(self, guru_parent_redraw, track_graphics: TrackGraphics, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
+
+        self._curve_direction_control = CurveDirectionControl(guru_parent_redraw, control_frame)
+        self._curve_steering_degrees_control = CurveSteeringDegreesControl(guru_parent_redraw, control_frame)
+
         self._all_sequences = Sequences()
 
         self._chosen_point = None
@@ -28,13 +33,21 @@ class AnalyzeCurveFitting(TrackAnalyzer):
         self._backwards_point = None
 
     def build_control_frame(self, control_frame):
-        pass
+        self._curve_direction_control.add_to_control_frame()
+        self._curve_steering_degrees_control.add_to_control_frame()
 
     def redraw(self):
         if self._chosen_point and self._chosen_bearing:
             self.track_graphics.plot_angle_line(self._chosen_point, self._chosen_bearing - 180, BACKWARDS_DISTANCE, 2, "green")
-            for s in self._all_sequences.get_all():
-                # for s in self._all_sequences.get_matches(None, None, None, (-20, -30)):
+
+            steering_match = self._curve_steering_degrees_control.get_steering_range()
+            if self._curve_direction_control.direction_right():
+                (s1, s2) = steering_match
+                steering_match = (-s1, -s2)
+
+            sequences = self._all_sequences.get_matches(None, None, None, steering_match)
+
+            for s in sequences:
                 points = s.get_plot_points(self._chosen_point, self._chosen_bearing)
                 for p in points:
                     self.track_graphics.plot_dot(p, 2, "green")

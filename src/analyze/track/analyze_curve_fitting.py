@@ -13,19 +13,29 @@ from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.configuration.real_world import VEHICLE_WIDTH
 from src.graphics.track_graphics import TrackGraphics
 from src.sequences.sequence import Sequence
+from src.sequences.sequences import Sequences
 
 
 class AnalyzeCurveFitting(TrackAnalyzer):
 
     def __init__(self, guru_parent_redraw, track_graphics: TrackGraphics, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
-        self._all_sequences = []
+        self._all_sequences = Sequences()
+
+        self._chosen_point = None
+        self._chosen_bearing = None
 
     def build_control_frame(self, control_frame):
         pass
 
     def redraw(self):
-        pass
+        if self._chosen_point and self._chosen_bearing:
+            self.track_graphics.plot_angle_line(self._chosen_point, self._chosen_bearing - 180, 2, 2, "green")
+            for s in self._all_sequences.get_all():
+                # for s in self._all_sequences.get_matches(None, None, None, (-20, -30)):
+                points = s.get_plot_points(self._chosen_point, self._chosen_bearing)
+                for p in points:
+                    self.track_graphics.plot_dot(p, 2, "green")
 
     def right_button_pressed(self, chosen_point):
         waypoint_id = self.current_track.get_closest_waypoint_id(chosen_point)
@@ -36,22 +46,13 @@ class AnalyzeCurveFitting(TrackAnalyzer):
 
         if distance_from_waypoint > max_distance_from_centre:
             bearing_of_point = geometry.get_bearing_between_points(waypoint, chosen_point)
-            chosen_point = geometry.get_point_at_bearing(waypoint, bearing_of_point, max_distance_from_centre)
+            self._chosen_point = geometry.get_point_at_bearing(waypoint, bearing_of_point, max_distance_from_centre)
+        else:
+            self._chosen_point = chosen_point
 
-        # self.track_graphics.plot_dot(waypoint, 3, "blue")
-        # self.track_graphics.plot_dot(chosen_point, 3, "red")
+        self._chosen_bearing = self.current_track.get_bearing_at_waypoint(waypoint_id)
 
-        default_bearing = self.current_track.get_bearing_at_waypoint(waypoint_id)
+        self.guru_parent_redraw()
 
-        # self.track_graphics.plot_angle_line(chosen_point, default_bearing, 1, 3, "red")
-
-        print(len(self._all_sequences))
-
-        for s in self._all_sequences:
-            if not s.dodgy_data:
-                points = s.get_plot_points(chosen_point, default_bearing)
-                for p in points:
-                    self.track_graphics.plot_dot(p, 2, "green")
-
-    def set_all_sequences(self, sequences: list[Sequence]):
+    def set_all_sequences(self, sequences: Sequences):
         self._all_sequences = sequences

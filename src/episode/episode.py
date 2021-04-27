@@ -15,6 +15,7 @@ from src.action_space.action_space_filter import ActionSpaceFilter
 from src.action_space.action_space import ActionSpace
 from src.analyze.util.heatmap import HeatMap
 from src.event.event_meta import Event
+from src.sequences.sequences import Sequences
 from src.utils.geometry import get_bearing_between_points, get_turn_between_directions,\
     get_distance_between_points, get_distance_of_point_from_line
 
@@ -642,12 +643,12 @@ class Episode:
             return index
 
     def extract_all_sequences(self, min_sequence_length: int):
-        sequences = []
+        sequences = Sequences()
         for i, e in enumerate(self.events):
             if e.sequence_count == 1 and i >= min_sequence_length:
                 previous_event: Event = self.events[i-1]
                 if previous_event.steering_angle != 0 and previous_event.sequence_count >= min_sequence_length:
-                    sequences.append(Sequence(self.events[i - previous_event.sequence_count:i]))
+                    sequences.add(Sequence(self.events[i - previous_event.sequence_count:i]))
         return sequences
 
 
@@ -662,9 +663,9 @@ def are_close_waypoint_ids(id1, id2, track :Track):
 
 
 def extract_all_sequences(episodes: list[Episode], min_sequence_length: int):
-    result = []
+    result = Sequences()
     for e in episodes:
-        result += e.extract_all_sequences(min_sequence_length)
+        result.add_sequences(e.extract_all_sequences(min_sequence_length))
     return result
 
 

@@ -401,7 +401,7 @@ class MainApp(tk.Frame):
             self.update()
 
         # Temporary code for sequences until we can save them together from all log files
-        sequences = extract_all_sequences(self.log.get_episodes(), 7)
+        sequences = extract_all_sequences(self.log.get_episodes(), 10)
         self.analyze_curve_fitting.set_all_sequences(sequences)
 
     def apply_new_action_space(self):

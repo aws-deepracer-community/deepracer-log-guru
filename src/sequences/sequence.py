@@ -8,7 +8,7 @@
 
 
 from src.event.event_meta import Event
-from src.utils.geometry import get_bearing_between_points, get_distance_between_points, get_angle_in_proper_range
+from src.utils.geometry import get_bearing_between_points, get_distance_between_points, get_angle_in_proper_range, get_point_at_bearing
 
 MINIMUM_USEFUL_SEQUENCE_LENGTH = 5
 
@@ -38,6 +38,14 @@ class Sequence:
             original_bearing = e.true_bearing
             relative_bearing = get_angle_in_proper_range(original_bearing - first_event.true_bearing)
             self.steps.append(Sequence.Step(distance, relative_bearing))
+            previous_location = current_location
+
+    def get_plot_points(self, point, initial_heading):
+        points = [point]
+        for s in self.steps:
+            point = get_point_at_bearing(point, s.bearing + initial_heading, s.distance)
+            points.append(point)
+        return points
 
     class Step:
         def __init__(self, distance, bearing):

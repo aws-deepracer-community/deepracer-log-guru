@@ -38,14 +38,20 @@ class AnalyzeCurveFitting(TrackAnalyzer):
             bearing_of_point = geometry.get_bearing_between_points(waypoint, chosen_point)
             chosen_point = geometry.get_point_at_bearing(waypoint, bearing_of_point, max_distance_from_centre)
 
-        self.track_graphics.plot_dot(waypoint, 3, "blue")
-        self.track_graphics.plot_dot(chosen_point, 3, "red")
+        # self.track_graphics.plot_dot(waypoint, 3, "blue")
+        # self.track_graphics.plot_dot(chosen_point, 3, "red")
 
         default_bearing = self.current_track.get_bearing_at_waypoint(waypoint_id)
 
-        self.track_graphics.plot_angle_line(chosen_point, default_bearing, 1, 3, "red")
+        # self.track_graphics.plot_angle_line(chosen_point, default_bearing, 1, 3, "red")
 
         print(len(self._all_sequences))
+
+        for s in self._all_sequences:
+            if not s.dodgy_data:
+                points = s.get_plot_points(chosen_point, default_bearing)
+                for p in points:
+                    self.track_graphics.plot_dot(p, 2, "green")
 
     def set_all_sequences(self, sequences: list[Sequence]):
         self._all_sequences = sequences

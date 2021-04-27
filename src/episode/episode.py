@@ -644,11 +644,10 @@ class Episode:
     def extract_all_sequences(self, min_sequence_length: int):
         sequences = []
         for i, e in enumerate(self.events):
-            if e.sequence_count == 1:
+            if e.sequence_count == 1 and i >= min_sequence_length:
                 previous_event: Event = self.events[i-1]
                 if previous_event.steering_angle != 0 and previous_event.sequence_count >= min_sequence_length:
-                    sequences.append(Sequence(self.events[i - min_sequence_length:i]))
-
+                    sequences.append(Sequence(self.events[i - previous_event.sequence_count:i]))
         return sequences
 
 

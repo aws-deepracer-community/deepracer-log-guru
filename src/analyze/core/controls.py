@@ -872,7 +872,7 @@ class CurveDirectionControl(Control):
     _RIGHT = "Right"
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
-        super().__init__(guru_parent_redraw, control_frame, "Direction")
+        super().__init__(guru_parent_redraw, control_frame, "Steering Direction")
 
         self._direction = tk.StringVar(value=CurveDirectionControl._LEFT)
 
@@ -913,3 +913,35 @@ class CurveSteeringDegreesControl(Control):
             return 20.5, 30
         else:
             return 0, 30
+
+
+class CurveSpeedControl(Control):
+    _L1 = "< 1.0"
+    _L2 = "1.0 - 1.9"
+    _L3 = "2.0 - 2.9"
+    _L4 = ">= 3.0"
+    _ALL = "All"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, speed_type: str):
+        super().__init__(guru_parent_redraw, control_frame, speed_type + " Speed")
+
+        self._speed = tk.StringVar(value=CurveSpeedControl._ALL)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(CurveSpeedControl._L1, self._speed)
+        self.add_radiobutton_improved(CurveSpeedControl._L2, self._speed)
+        self.add_radiobutton_improved(CurveSpeedControl._L3, self._speed)
+        self.add_radiobutton_improved(CurveSpeedControl._L4, self._speed)
+        self.add_radiobutton_improved(CurveSpeedControl._ALL, self._speed)
+
+    def get_speed_range(self):
+        if self._speed.get() == CurveSpeedControl._L1:
+            return 0, 0.9
+        elif self._speed.get() == CurveSpeedControl._L2:
+            return 1.0, 1.9
+        elif self._speed.get() == CurveSpeedControl._L3:
+            return 2.0, 2.9
+        elif self._speed.get() == CurveSpeedControl._L4:
+            return 3.0, 99
+        else:
+            return None

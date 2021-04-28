@@ -16,22 +16,26 @@ SPEED_ROUNDING = 1
 ANGLE_ROUNDING = 0
 SLIDE_ROUNDING = 0
 
+
 class Sequence:
     def __init__(self, events: list[Event]):
         assert len(events) >= MINIMUM_USEFUL_SEQUENCE_LENGTH >= 2
         first_event = events[0]
         last_event = events[-1]
 
-        self.initial_track_speed = round(first_event.track_speed, SPEED_ROUNDING)
-        self.initial_slide = round(first_event.slide, SLIDE_ROUNDING)
+        self.initial_track_speed = round(first_event.track_speed / 2, SPEED_ROUNDING) * 2
+        self.initial_slide = round(first_event.slide / 2, SLIDE_ROUNDING) * 2
         self.action_speed = round(first_event.speed, SPEED_ROUNDING)
         self.action_steering_angle = round(first_event.steering_angle, ANGLE_ROUNDING)
 
-        self.final_track_speed = round(last_event.track_speed, SPEED_ROUNDING)
-        self.final_slide = round(last_event.slide, SLIDE_ROUNDING)
+        self.final_track_speed = round(last_event.track_speed / 2, SPEED_ROUNDING) * 2
+        self.final_slide = round(last_event.slide / 2, SLIDE_ROUNDING) * 2
+
+        self.max_slide = abs(round(first_event.slide, SLIDE_ROUNDING))
 
         self.steps = []
         self._is_invalid = first_event.dodgy_data
+        self._add_on = None
 
         previous_location = (first_event.x, first_event.y)
         for e in events[1:]:
@@ -43,13 +47,16 @@ class Sequence:
             original_bearing = e.true_bearing
             relative_bearing = get_angle_in_proper_range(original_bearing - first_event.true_bearing)
             self.steps.append(Sequence.Step(distance, relative_bearing))
+            self.max_slide = max(self.max_slide, abs(round(e.slide, SLIDE_ROUNDING)))
             previous_location = current_location
 
-    def get_plot_points(self, point, initial_heading):
+    def get_plot_points(self, point, initial_heading, with_add_on=True):
         points = [point]
         for s in self.steps:
             point = get_point_at_bearing(point, s.bearing + initial_heading, s.distance)
             points.append(point)
+        if with_add_on and self._add_on is not None:
+            points += self._add_on.get_plot_points(point, self.steps[-1].bearing + initial_heading, False)
         return points
 
     def is_valid(self):
@@ -62,6 +69,10 @@ class Sequence:
     def get_simple_inverted_key(self):
         return str(self.initial_track_speed) + "#" + str(-self.initial_slide) + "#" + str(
             self.action_speed) + "#" + str(-self.action_steering_angle)
+
+    def get_simple_key_for_add_on(self):
+        return str(self.final_track_speed) + "#" + str(self.final_slide) + "#" + str(
+            self.action_speed) + "#" + str(self.action_steering_angle)
 
     def get_length(self):
         return len(self.steps)
@@ -78,8 +89,18 @@ class Sequence:
         inversion.invert()
         return inversion
 
+    def set_add_on(self, add_on):
+        self._add_on = add_on
+
     def print_debug(self):
-        print("Action: ", self.action_speed, self.action_steering_angle, "Entry speed/slide:", self.initial_track_speed, self.initial_slide)
+        print(
+            "Action: ", self.action_speed, self.action_steering_angle,
+            "Entry speed/slide:", self.initial_track_speed, self.initial_slide,
+            "Final speed/slide:", self.final_track_speed, self.final_slide,
+            "Max slide:", self.max_slide,
+            "Length:", self.get_length(),
+            "Has Add-on", self._add_on is not None
+        )
 
     def matches(self, initial_track_speed, initial_slide, action_speed, action_steering_angle):
         return self._matches_value(initial_track_speed, self.initial_track_speed) and \

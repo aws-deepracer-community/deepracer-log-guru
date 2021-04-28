@@ -8,7 +8,7 @@
 
 import tkinter as tk
 import src.utils.geometry as geometry
-from src.analyze.core.controls import CurveDirectionControl, CurveSteeringDegreesControl
+from src.analyze.core.controls import CurveDirectionControl, CurveSteeringDegreesControl, CurveSpeedControl
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.configuration.real_world import VEHICLE_WIDTH
@@ -25,6 +25,8 @@ class AnalyzeCurveFitting(TrackAnalyzer):
 
         self._curve_direction_control = CurveDirectionControl(guru_parent_redraw, control_frame)
         self._curve_steering_degrees_control = CurveSteeringDegreesControl(guru_parent_redraw, control_frame)
+        self._entry_speed_control = CurveSpeedControl(guru_parent_redraw, control_frame, "Entry")
+        self._action_speed_control = CurveSpeedControl(guru_parent_redraw, control_frame, "Action")
 
         self._all_sequences = Sequences()
 
@@ -35,22 +37,29 @@ class AnalyzeCurveFitting(TrackAnalyzer):
     def build_control_frame(self, control_frame):
         self._curve_direction_control.add_to_control_frame()
         self._curve_steering_degrees_control.add_to_control_frame()
+        self._action_speed_control.add_to_control_frame()
+        self._entry_speed_control.add_to_control_frame()
 
     def redraw(self):
         if self._chosen_point and self._chosen_bearing:
             self.track_graphics.plot_angle_line(self._chosen_point, self._chosen_bearing - 180, BACKWARDS_DISTANCE, 2, "green")
 
-            steering_match = self._curve_steering_degrees_control.get_steering_range()
+            action_steering_angle_match = self._curve_steering_degrees_control.get_steering_range()
             if self._curve_direction_control.direction_right():
-                (s1, s2) = steering_match
-                steering_match = (-s1, -s2)
+                (s1, s2) = action_steering_angle_match
+                action_steering_angle_match = (-s1, -s2)
 
-            sequences = self._all_sequences.get_matches(None, None, None, steering_match)
+            initial_track_speed_match = self._entry_speed_control.get_speed_range()
+            initial_slide_match = None
+            action_speed_match = self._action_speed_control.get_speed_range()
+
+            sequences = self._all_sequences.get_matches(initial_track_speed_match, initial_slide_match, action_speed_match, action_steering_angle_match)
 
             for s in sequences:
                 points = s.get_plot_points(self._chosen_point, self._chosen_bearing)
+                colour = "green"
                 for p in points:
-                    self.track_graphics.plot_dot(p, 2, "green")
+                    self.track_graphics.plot_dot(p, 2, colour)
 
     def right_button_pressed(self, chosen_point):
         chose_backwards_point = False
@@ -82,3 +91,9 @@ class AnalyzeCurveFitting(TrackAnalyzer):
 
     def set_all_sequences(self, sequences: Sequences):
         self._all_sequences = sequences
+        self.guru_parent_redraw()
+
+    def warning_track_changed(self):
+        self._chosen_point = None
+        self._backwards_point = None
+

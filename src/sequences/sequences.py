@@ -44,6 +44,11 @@ class Sequences:
         result = []
         for s in self.get_all():
             if s.matches(initial_track_speed, initial_slide, action_speed, action_steering_angle):
+                add_on_key = s.get_simple_key_for_add_on()
+                if add_on_key in self._sequences:
+                    s.set_add_on(self._sequences[add_on_key])
+                else:
+                    s.set_add_on(None)
                 result.append(s)
         return result
 

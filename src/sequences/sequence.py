@@ -18,7 +18,19 @@ SLIDE_ROUNDING = 0
 
 
 class Sequence:
-    def __init__(self, events: list[Event]):
+    def __init__(self):
+        self.initial_track_speed = 0
+        self.initial_slide = 0
+        self.action_speed = 0
+        self.action_steering_angle = 0
+        self.final_track_speed = 0
+        self.final_slide = 0
+        self.max_slide = 0
+        self.steps = []
+        self._is_invalid = True
+        self._add_on = None
+
+    def set_from_events(self, events: list[Event]):
         assert len(events) >= MINIMUM_USEFUL_SEQUENCE_LENGTH >= 2
         first_event = events[0]
         last_event = events[-1]
@@ -102,6 +114,41 @@ class Sequence:
             "Has Add-on", self._add_on is not None
         )
 
+    def get_as_json(self):
+        new_json = dict()
+        new_json["initial_track_speed"] = self.initial_track_speed
+        new_json["initial_slide"] = self.initial_slide
+        new_json["action_speed"] = self.action_speed
+        new_json["action_steering_angle"] = self.action_steering_angle
+        new_json["final_track_speed"] = self.final_track_speed
+        new_json["final_slide"] = self.final_slide
+        new_json["max_slide"] = self.max_slide
+
+        steps_json = []
+        for s in self.steps:
+            steps_json.append(s.get_as_json())
+
+        new_json["steps"] = steps_json
+        return new_json
+
+    def set_from_json(self, received_json):
+        self.initial_track_speed = received_json["initial_track_speed"]
+        self.initial_slide = received_json["initial_slide"]
+        self.action_speed = received_json["action_speed"]
+        self.action_steering_angle = received_json["action_steering_angle"]
+        self.final_track_speed = received_json["final_track_speed"]
+        self.final_slide = received_json["final_slide"]
+        self.max_slide = received_json["max_slide"]
+
+        self.steps = []
+        for s in received_json["steps"]:
+            new_step = Sequence.Step(0, 0)
+            new_step.set_from_json(s)
+            self.steps.append(new_step)
+
+        self._is_invalid = False
+        self._add_on = None
+
     def matches(self, initial_track_speed, initial_slide, action_speed, action_steering_angle):
         return self._matches_value(initial_track_speed, self.initial_track_speed) and \
                self._matches_value(initial_slide, self.initial_slide) and \
@@ -125,3 +172,14 @@ class Sequence:
 
         def invert(self):
             self.bearing = -self.bearing
+
+        def get_as_json(self):
+            new_json = dict()
+            new_json["distance"] = self.distance
+            new_json["bearing"] = self.bearing
+            return new_json
+
+        def set_from_json(self, received_json):
+            self.distance = received_json["distance"]
+            self.bearing = received_json["bearing"]
+

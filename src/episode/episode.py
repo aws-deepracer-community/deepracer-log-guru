@@ -648,7 +648,9 @@ class Episode:
             if e.sequence_count == 1 and i >= min_sequence_length:
                 previous_event: Event = self.events[i-1]
                 if previous_event.steering_angle != 0 and previous_event.sequence_count >= min_sequence_length:
-                    sequences.add(Sequence(self.events[i - previous_event.sequence_count:i]))
+                    new_sequence = Sequence()
+                    new_sequence.set_from_events(self.events[i - previous_event.sequence_count:i])
+                    sequences.add(new_sequence)
         return sequences
 
 

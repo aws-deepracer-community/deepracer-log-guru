@@ -7,11 +7,13 @@
 #
 
 import tkinter as tk
+
 import src.utils.geometry as geometry
 from src.analyze.core.controls import CurveDirectionControl, CurveSteeringDegreesControl, CurveSpeedControl
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.configuration.real_world import VEHICLE_WIDTH
+from src.episode.episode import extract_all_sequences
 from src.graphics.track_graphics import TrackGraphics
 from src.sequences.sequences import Sequences
 
@@ -29,10 +31,13 @@ class AnalyzeCurveFitting(TrackAnalyzer):
         self._action_speed_control = CurveSpeedControl(guru_parent_redraw, control_frame, "Action")
 
         self._all_sequences = Sequences()
+        self._episode_sequences = Sequences()
 
         self._chosen_point = None
         self._chosen_bearing = None
         self._backwards_point = None
+
+        self._all_sequences.load()
 
     def build_control_frame(self, control_frame):
         self._curve_direction_control.add_to_control_frame()
@@ -89,11 +94,13 @@ class AnalyzeCurveFitting(TrackAnalyzer):
 
         self.guru_parent_redraw()
 
-    def set_all_sequences(self, sequences: Sequences):
-        self._all_sequences = sequences
-        self.guru_parent_redraw()
-
     def warning_track_changed(self):
         self._chosen_point = None
         self._backwards_point = None
+
+    def warning_all_episodes_changed(self):
+        self._episode_sequences = extract_all_sequences(self.all_episodes, 10)
+        self._all_sequences.add_sequences(self._episode_sequences)
+        self._all_sequences.save()
+        self.guru_parent_redraw()
 

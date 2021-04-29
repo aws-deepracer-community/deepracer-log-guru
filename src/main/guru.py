@@ -400,10 +400,6 @@ class MainApp(tk.Frame):
             self.menu_bar = MenuBar(root, self, True)
             self.update()
 
-        # Temporary code for sequences until we can save them together from all log files
-        sequences = extract_all_sequences(self.log.get_episodes(), 10)
-        self.analyze_curve_fitting.set_all_sequences(sequences)
-
     def apply_new_action_space(self):
         self.action_space_filter.set_new_action_space(self.log.get_log_meta().action_space)
         for v in self.all_analyzers:

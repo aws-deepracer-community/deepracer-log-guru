@@ -38,7 +38,6 @@ from src.analyze.graph.analyze_discount_factors import AnalyzeDiscountFactors
 
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.configuration.config_manager import ConfigManager
-from src.episode.episode import extract_all_sequences
 from src.episode.episode_filter import EpisodeFilter
 from src.graphics.track_graphics import TrackGraphics
 from src.log.log import Log

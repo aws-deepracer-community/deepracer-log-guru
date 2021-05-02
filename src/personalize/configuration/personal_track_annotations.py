@@ -72,3 +72,7 @@ po_chun_super_speedway_annotations = []
 lars_loop_annotations = []
 
 lars_circuit_annotations = []
+
+kuei_raceway_annotations = []
+
+kuei_super_raceway_annotations = []

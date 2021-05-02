@@ -16,20 +16,25 @@ _FILENAME = "DRG_sequences.json"
 class Sequences:
     def __init__(self):
         self._sequences = dict()
+        self._modified = False
 
     def add(self, sequence: Sequence):
         if sequence.is_valid():
             key = sequence.get_simple_key()
             if key not in self._sequences:
                 self._sequences[key] = sequence
+                self._modified = True
             elif sequence.get_length() > self._sequences[key].get_length():
                 self._sequences[key] = sequence
+                self._modified = True
 
             inverted_key = sequence.get_simple_inverted_key()
             if inverted_key not in self._sequences:
                 self._sequences[inverted_key] = sequence.build_inverted_copy()
+                self._modified = True
             elif sequence.get_length() > self._sequences[inverted_key].get_length():
                 self._sequences[inverted_key] = sequence.build_inverted_copy()
+                self._modified = True
 
     def add_sequences(self, sequences):
         for s in sequences.get_all():
@@ -76,10 +81,15 @@ class Sequences:
         with open(_FILENAME, "r") as infile:
             self.set_from_json(json.load(infile))
         print("Loaded " + str(len(self._sequences)) + " in " + str(round(time.time() - start_time, 2)) + " secs")
+        self._modified = False
 
     def save(self):
-        start_time = time.time()
-        with open(_FILENAME, "w+") as outfile:
-            json.dump(self.get_as_json(), outfile)
-        print("Saved " + str(len(self._sequences)) + " in " + str(round(time.time() - start_time, 2)) + " secs")
+        if self._modified:
+            start_time = time.time()
+            with open(_FILENAME, "w+") as outfile:
+                json.dump(self.get_as_json(), outfile)
+            print("Saved " + str(len(self._sequences)) + " in " + str(round(time.time() - start_time, 2)) + " secs")
+            self._modified = False
+        else:
+            print("NO SAVE - Not modified")
 

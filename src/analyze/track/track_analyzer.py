@@ -30,7 +30,7 @@ class TrackAnalyzer(Analyzer):
 
     # These are ADDITIONAL to the interface in Analyzer
 
-    def left_button_pressed(self, track_point):
+    def right_button_pressed(self, track_point):
         # You MIGHT override this
         pass
 

@@ -284,6 +284,34 @@ class Track:
             y2 = max(y2, y)
         return x1, y1, x2, y2
 
+    def get_closest_waypoint_id(self, point: Point):
+        best_distance = geometry.get_distance_between_points(point, self._drawing_points[0].middle)
+        best_waypoint = 0
+
+        for i, p in enumerate(self._drawing_points):
+            distance = min(
+                geometry.get_distance_between_points(point, p.left),
+                geometry.get_distance_between_points(point, p.right),
+                geometry.get_distance_between_points(point, p.middle))
+            if distance < best_distance:
+                best_distance = distance
+                best_waypoint = i
+
+        return best_waypoint
+
+    def get_bearing_at_waypoint(self, waypoint_id):
+        previous_point = self._track_waypoints[self._get_previous_waypoint_id(waypoint_id)]
+        next_point = self._track_waypoints[self._get_next_waypoint_id(waypoint_id)]
+        mid_point = self._track_waypoints[waypoint_id]
+
+        before_bearing = geometry.get_bearing_between_points(previous_point, mid_point)
+        after_bearing = geometry.get_bearing_between_points(mid_point, next_point)
+        change_in_bearing = after_bearing - before_bearing
+
+        return geometry.get_angle_in_proper_range(before_bearing + change_in_bearing / 2)
+
+
+
     #
     # PRIVATE implementation
     #

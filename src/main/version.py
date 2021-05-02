@@ -6,4 +6,4 @@
 # Copyright (c) 2021 dmh23
 #
 
-VERSION = "3.0"
+VERSION = "3.0.1"

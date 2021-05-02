@@ -80,7 +80,7 @@ class Sequences:
         start_time = time.time()
         with open(_FILENAME, "r") as infile:
             self.set_from_json(json.load(infile))
-        print("Loaded " + str(len(self._sequences)) + " in " + str(round(time.time() - start_time, 2)) + " secs")
+        ### print("Loaded " + str(len(self._sequences)) + " in " + str(round(time.time() - start_time, 2)) + " secs")
         self._modified = False
 
     def save(self):
@@ -88,8 +88,9 @@ class Sequences:
             start_time = time.time()
             with open(_FILENAME, "w+") as outfile:
                 json.dump(self.get_as_json(), outfile)
-            print("Saved " + str(len(self._sequences)) + " in " + str(round(time.time() - start_time, 2)) + " secs")
+            ### print("Saved " + str(len(self._sequences)) + " in " + str(round(time.time() - start_time, 2)) + " secs")
             self._modified = False
         else:
-            print("NO SAVE - Not modified")
+            ### print("NO SAVE - Not modified")
+            pass
 

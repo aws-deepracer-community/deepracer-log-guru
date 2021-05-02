@@ -172,9 +172,9 @@ class MenuBar():
         menu.add_command(label="Common Rewards", command=self.main_app.menu_callback_analyze_common_rewards)
         menu.add_command(label="Rewards per Waypoint", command=self.main_app.menu_callback_analyze_rewards_per_waypoint)
 
-        menu.add_separator()
-        menu.add_command(label="Track Curve Fitting", command=self.main_app.menu_callback_analyze_curve_fitting)
-        menu.add_command(label="Track Straight Fitting", command=self.main_app.menu_callback_analyze_straight_fitting)
+        # menu.add_separator()
+        # menu.add_command(label="Track Curve Fitting", command=self.main_app.menu_callback_analyze_curve_fitting)
+        # menu.add_command(label="Track Straight Fitting", command=self.main_app.menu_callback_analyze_straight_fitting)
 
         self.menubar.add_cascade(label="Analyze", menu=menu)
 

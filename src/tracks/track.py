@@ -300,17 +300,30 @@ class Track:
         return best_waypoint
 
     def get_bearing_at_waypoint(self, waypoint_id):
-        previous_point = self._track_waypoints[self._get_previous_waypoint_id(waypoint_id)]
-        next_point = self._track_waypoints[self._get_next_waypoint_id(waypoint_id)]
+        previous_point = self._track_waypoints[self._get_previous_different_waypoint_id(waypoint_id)]
+        next_point = self._track_waypoints[self._get_next_different_waypoint_id(waypoint_id)]
         mid_point = self._track_waypoints[waypoint_id]
 
         before_bearing = geometry.get_bearing_between_points(previous_point, mid_point)
         after_bearing = geometry.get_bearing_between_points(mid_point, next_point)
-        change_in_bearing = after_bearing - before_bearing
+        change_in_bearing = geometry.get_angle_in_proper_range(after_bearing - before_bearing)
 
         return geometry.get_angle_in_proper_range(before_bearing + change_in_bearing / 2)
 
+    def get_adjusted_point_on_track(self, chosen_point: Point):
+        waypoint_id = self.get_closest_waypoint_id(chosen_point)
+        waypoint = self.get_waypoint(waypoint_id)
 
+        distance_from_waypoint = geometry.get_distance_between_points(waypoint, chosen_point)
+        max_distance_from_centre = (self.get_width() + VEHICLE_WIDTH) / 2
+
+        if distance_from_waypoint > max_distance_from_centre:
+            bearing_of_point = geometry.get_bearing_between_points(waypoint, chosen_point)
+            adjusted_point = geometry.get_point_at_bearing(waypoint, bearing_of_point, max_distance_from_centre)
+        else:
+            adjusted_point = chosen_point
+
+        return adjusted_point, waypoint_id
 
     #
     # PRIVATE implementation
@@ -460,6 +473,20 @@ class Track:
             return len(self._track_waypoints) - 1
         else:
             return waypoint_id - 1
+
+    def _get_next_different_waypoint_id(self, waypoint_id):
+        current_point = self._track_waypoints[waypoint_id]
+        next_waypoint_id = self._get_next_waypoint_id(waypoint_id)
+        while current_point == self._track_waypoints[next_waypoint_id]:
+            next_waypoint_id = self._get_next_waypoint_id(next_waypoint_id)
+        return next_waypoint_id
+
+    def _get_previous_different_waypoint_id(self, waypoint_id):
+        current_point = self._track_waypoints[waypoint_id]
+        previous_waypoint_id = self._get_previous_waypoint_id(waypoint_id)
+        while current_point == self._track_waypoints[previous_waypoint_id]:
+            previous_waypoint_id = self._get_previous_waypoint_id(previous_waypoint_id)
+        return previous_waypoint_id
 
     def _get_closest_waypoint_id(self, point):
         distance = geometry.get_distance_between_points(self._track_waypoints[0], point)

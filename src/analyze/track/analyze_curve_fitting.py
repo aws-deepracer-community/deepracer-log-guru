@@ -77,18 +77,7 @@ class AnalyzeCurveFitting(TrackAnalyzer):
             self._backwards_point = chosen_point
             self._chosen_bearing = geometry.get_bearing_between_points(self._backwards_point, self._chosen_point)
         else:
-            waypoint_id = self.current_track.get_closest_waypoint_id(chosen_point)
-            waypoint = self.current_track.get_waypoint(waypoint_id)
-
-            distance_from_waypoint = geometry.get_distance_between_points(waypoint, chosen_point)
-            max_distance_from_centre = (self.current_track.get_width() + VEHICLE_WIDTH) / 2
-
-            if distance_from_waypoint > max_distance_from_centre:
-                bearing_of_point = geometry.get_bearing_between_points(waypoint, chosen_point)
-                self._chosen_point = geometry.get_point_at_bearing(waypoint, bearing_of_point, max_distance_from_centre)
-            else:
-                self._chosen_point = chosen_point
-
+            self._chosen_point, waypoint_id = self.current_track.get_adjusted_point_on_track(chosen_point)
             self._chosen_bearing = self.current_track.get_bearing_at_waypoint(waypoint_id)
             self._backwards_point = geometry.get_point_at_bearing(self._chosen_point, self._chosen_bearing - 180, BACKWARDS_DISTANCE)
 

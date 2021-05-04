@@ -22,3 +22,7 @@ class AnalyzeStraightFitting(TrackAnalyzer):
 
     def redraw(self):
         pass
+
+    def right_button_pressed(self, chosen_point):
+        waypoint_id = self.current_track.get_closest_waypoint_id(chosen_point)
+        waypoint = self.current_track.get_waypoint(waypoint_id)

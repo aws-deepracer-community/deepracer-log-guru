@@ -17,12 +17,17 @@ class AnalyzeStraightFitting(TrackAnalyzer):
     def __init__(self, guru_parent_redraw, track_graphics: TrackGraphics, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
+        self._chosen_point = None
+
     def build_control_frame(self, control_frame):
         pass
 
     def redraw(self):
-        pass
+        if self._chosen_point:
+            self.track_graphics.plot_dot(self._chosen_point, 5, "red")
 
     def right_button_pressed(self, chosen_point):
-        waypoint_id = self.current_track.get_closest_waypoint_id(chosen_point)
-        waypoint = self.current_track.get_waypoint(waypoint_id)
+        self._chosen_point, waypoint_id = self.current_track.get_adjusted_point_on_track(chosen_point)
+
+        self.guru_parent_redraw()
+

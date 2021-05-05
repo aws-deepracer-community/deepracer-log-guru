@@ -12,8 +12,7 @@ from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
 from src.utils import geometry
 
-BEARING_RANGE = 90
-BEARING_STEP = 10
+BEARING_STEP = 2
 
 PATH_WIDTH = 0.1
 
@@ -26,6 +25,7 @@ class AnalyzeStraightFitting(TrackAnalyzer):
         self._chosen_point = None
         self._chosen_bearing = 0.0
         self._distance = 0.0
+        self._waypoint_id = 0
 
     def build_control_frame(self, control_frame):
         pass
@@ -45,15 +45,14 @@ class AnalyzeStraightFitting(TrackAnalyzer):
 
     def warning_track_changed(self):
         self._chosen_point = None
-        
-    def right_button_pressed(self, chosen_point):
-        self._chosen_point, waypoint_id = self.current_track.get_adjusted_point_on_track(chosen_point, PATH_WIDTH / 2)
-        mid_bearing = int(round(self.current_track.get_bearing_at_waypoint(waypoint_id)))
-        self._distance = 0.0
-        self._chosen_bearing = mid_bearing
 
-        self._try_bearings(mid_bearing - BEARING_RANGE, mid_bearing + BEARING_RANGE, BEARING_STEP, waypoint_id)
-        self._try_bearings(self._chosen_bearing - BEARING_STEP, self._chosen_bearing + BEARING_STEP, 1, waypoint_id)
+    def right_button_pressed(self, chosen_point):
+        self._chosen_point, self._waypoint_id = self.current_track.get_adjusted_point_on_track(chosen_point, PATH_WIDTH / 2 + 0.01)
+        self._distance = 0.0
+        self._chosen_bearing = 0.0
+
+        self._try_bearings(-180, 180, BEARING_STEP, self._waypoint_id)
+        self._try_bearings(self._chosen_bearing - BEARING_STEP, self._chosen_bearing + BEARING_STEP, BEARING_STEP / 10, self._waypoint_id)
 
         self.guru_parent_redraw()
 
@@ -65,4 +64,3 @@ class AnalyzeStraightFitting(TrackAnalyzer):
                 self._distance = distance
                 self._chosen_bearing = bearing
             bearing += step
-

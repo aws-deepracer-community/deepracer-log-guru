@@ -66,6 +66,7 @@ def get_edge_point(previous: Point, mid: Point, future: Point, direction_offset:
 
     return x, y
 
+
 # Distance of point from line comes from Wikipedia
 # https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
 
@@ -80,6 +81,32 @@ def get_distance_of_point_from_line(point: Point, line_point_a: Point, line_poin
     lower_expression = math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
 
     return upper_expression / lower_expression
+
+
+# Intersection of two lines comes from Wikipedia
+# https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line
+
+def get_intersection_of_two_lines(line_a_point_1: Point, line_a_point_2: Point,
+                                  line_b_point_1: Point, line_b_point_2: Point) -> Point:
+    (x1, y1) = line_a_point_1
+    (x2, y2) = line_a_point_2
+    (x3, y3) = line_b_point_1
+    (x4, y4) = line_b_point_2
+
+    denominator = ((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4))
+    z1 = (x1 * y2) - (y1 * x2)
+    z2 = (x3 * y4) - (y3 * x4)
+
+    x = ((z1 * (x3 - x4)) - ((x1 - x2) * z2)) / denominator
+    y = ((z1 * (y3 - y4)) - ((y1 - y2) * z2)) / denominator
+
+    return x, y
+
+
+def is_point_between(point: Point, start: Point, finish: Point):
+    bearing_from_start = get_bearing_between_points(start, point)
+    bearing_to_finish = get_bearing_between_points(point, finish)
+    return abs(get_turn_between_directions(bearing_from_start, bearing_to_finish)) < 1
 
 
 def is_left_bearing(bearing: float) -> bool:

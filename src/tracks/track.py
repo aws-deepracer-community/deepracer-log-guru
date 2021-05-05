@@ -15,6 +15,8 @@ from src.utils.types import Point
 
 DISPLAY_BORDER = 0.3
 
+LEFT = "L"
+RIGHT = "R"
 
 class Track:
     #
@@ -220,7 +222,7 @@ class Track:
         else:
             return "R"
 
-    def get_waypoint_ids_before_and_after(self, point: Point, closest_waypoint_id: int):
+    def get_waypoint_ids_before_and_after(self, point: Point, closest_waypoint_id: int, prefer_forwards = False):
         assert 0 <= closest_waypoint_id < len(self._track_waypoints)
 
         previous_id = self._get_previous_waypoint_id(closest_waypoint_id)
@@ -242,13 +244,18 @@ class Track:
         else:
             next_ratio = geometry.get_distance_between_points(point, next_waypoint) / target_dist
 
+        if prefer_forwards:   # Make the behind waypoint appear 5% further away
+            previous_ratio *= 1.05
+
         if previous_ratio > next_ratio:
             return closest_waypoint_id, next_id
         else:
             return previous_id, closest_waypoint_id
 
     def get_projected_distance_on_track(self, point: Point, heading: float, closest_waypoint_id: int,
-                                        path_width: float=0.0):
+                                        path_width: float = 0.0):
+        heading = geometry.get_angle_in_proper_range(heading)
+
         if path_width > 0.0:
             side_point_1 = geometry.get_point_at_bearing(point, heading + 90, path_width / 2)
             side_point_2 = geometry.get_point_at_bearing(point, heading - 90, path_width / 2)
@@ -256,9 +263,12 @@ class Track:
                        self.get_projected_distance_on_track(side_point_1, heading, closest_waypoint_id),
                        self.get_projected_distance_on_track(side_point_2, heading, closest_waypoint_id))
 
-        travel_distance = 0.0
+        (before_waypoint_id, after_waypoint_id) = self.get_waypoint_ids_before_and_after(point,
+                                                                                         closest_waypoint_id, True)
+        previous_left = self._drawing_points[before_waypoint_id].left_safe
+        previous_right = self._drawing_points[before_waypoint_id].right_safe
 
-        for w in self._drawing_points[closest_waypoint_id:] + self._drawing_points[:closest_waypoint_id]:
+        for w in self._drawing_points[after_waypoint_id:] + self._drawing_points[:after_waypoint_id]:
             direction_to_left_target = geometry.get_bearing_between_points(point, w.left_safe)
             direction_to_right_target = geometry.get_bearing_between_points(point, w.right_safe)
 
@@ -266,12 +276,28 @@ class Track:
             relative_direction_to_right_target = geometry.get_turn_between_directions(heading, direction_to_right_target)
 
             if relative_direction_to_left_target >= 0 and relative_direction_to_right_target <= 0:
-                if abs(relative_direction_to_left_target) < abs(relative_direction_to_right_target):
-                    travel_distance = geometry.get_distance_between_points(point, w.left_safe)
-                else:
-                    travel_distance = geometry.get_distance_between_points(point, w.right_safe)
+                previous_left = w.left_safe
+                previous_right = w.right_safe
             else:
-                return travel_distance
+                point2 = geometry.get_point_at_bearing(point, heading, 1)   # Just some random distance (1m)
+                off_track_left = geometry.get_intersection_of_two_lines(point, point2, w.left_safe, previous_left)
+                off_track_right = geometry.get_intersection_of_two_lines(point, point2, w.right_safe, previous_right)
+
+                left_bearing = geometry.get_bearing_between_points(point, off_track_left)
+                right_bearing = geometry.get_bearing_between_points(point, off_track_right)
+
+                distances = []
+                if abs(geometry.get_turn_between_directions(left_bearing, heading)) < 1:
+                    if geometry.is_point_between(off_track_left, w.left_safe, previous_left):
+                        distances += [geometry.get_distance_between_points(point, off_track_left)]
+                if abs(geometry.get_turn_between_directions(right_bearing, heading)) < 1:
+                    if geometry.is_point_between(off_track_right, w.right_safe, previous_right):
+                        distances += [geometry.get_distance_between_points(point, off_track_right)]
+
+                if len(distances) > 0:
+                    return max(distances)
+                else:
+                    return 0.0
 
     def get_sector_coordinates(self, sector: str):
         start, finish = self.get_sector_start_and_finish(sector)
@@ -317,7 +343,7 @@ class Track:
 
         return geometry.get_angle_in_proper_range(before_bearing + change_in_bearing / 2)
 
-    def get_adjusted_point_on_track(self, chosen_point: Point, margin: float=0.0):
+    def get_adjusted_point_on_track(self, chosen_point: Point, margin: float = 0.0):
         waypoint_id = self.get_closest_waypoint_id(chosen_point)
         waypoint = self.get_waypoint(waypoint_id)
 

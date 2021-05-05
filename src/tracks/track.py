@@ -247,9 +247,16 @@ class Track:
         else:
             return previous_id, closest_waypoint_id
 
-    def get_projected_distance_on_track(self, point: Point, heading: float, closest_waypoint_id: int):
+    def get_projected_distance_on_track(self, point: Point, heading: float, closest_waypoint_id: int,
+                                        path_width: float=0.0):
+        if path_width > 0.0:
+            side_point_1 = geometry.get_point_at_bearing(point, heading + 90, path_width / 2)
+            side_point_2 = geometry.get_point_at_bearing(point, heading - 90, path_width / 2)
+            return min(self.get_projected_distance_on_track(point, heading, closest_waypoint_id),
+                       self.get_projected_distance_on_track(side_point_1, heading, closest_waypoint_id),
+                       self.get_projected_distance_on_track(side_point_2, heading, closest_waypoint_id))
 
-        travel_distance = 0
+        travel_distance = 0.0
 
         for w in self._drawing_points[closest_waypoint_id:] + self._drawing_points[:closest_waypoint_id]:
             direction_to_left_target = geometry.get_bearing_between_points(point, w.left_safe)
@@ -310,12 +317,12 @@ class Track:
 
         return geometry.get_angle_in_proper_range(before_bearing + change_in_bearing / 2)
 
-    def get_adjusted_point_on_track(self, chosen_point: Point):
+    def get_adjusted_point_on_track(self, chosen_point: Point, margin: float=0.0):
         waypoint_id = self.get_closest_waypoint_id(chosen_point)
         waypoint = self.get_waypoint(waypoint_id)
 
         distance_from_waypoint = geometry.get_distance_between_points(waypoint, chosen_point)
-        max_distance_from_centre = (self.get_width() + VEHICLE_WIDTH) / 2
+        max_distance_from_centre = (self.get_width() + VEHICLE_WIDTH) / 2 - margin
 
         if distance_from_waypoint > max_distance_from_centre:
             bearing_of_point = geometry.get_bearing_between_points(waypoint, chosen_point)

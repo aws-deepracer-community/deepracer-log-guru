@@ -10,9 +10,12 @@ import tkinter as tk
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
+from src.utils import geometry
 
-BEARING_RANGE = 60
+BEARING_RANGE = 90
 BEARING_STEP = 10
+
+PATH_WIDTH = 0.1
 
 
 class AnalyzeStraightFitting(TrackAnalyzer):
@@ -29,11 +32,22 @@ class AnalyzeStraightFitting(TrackAnalyzer):
 
     def redraw(self):
         if self._chosen_point:
-            self.track_graphics.plot_dot(self._chosen_point, 5, "red")
-            self.track_graphics.plot_angle_line(self._chosen_point, self._chosen_bearing, self._distance, 2, "red")
+            self.track_graphics.plot_dot(self._chosen_point, 3, "red")
 
+            if PATH_WIDTH > 0.0:
+                side_point_1 = geometry.get_point_at_bearing(self._chosen_point, self._chosen_bearing + 90, PATH_WIDTH / 2)
+                side_point_2 = geometry.get_point_at_bearing(self._chosen_point, self._chosen_bearing - 90, PATH_WIDTH / 2)
+
+                self.track_graphics.plot_angle_line(side_point_1, self._chosen_bearing, self._distance, 2, "red")
+                self.track_graphics.plot_angle_line(side_point_2, self._chosen_bearing, self._distance, 2, "red")
+            else:
+                self.track_graphics.plot_angle_line(self._chosen_point, self._chosen_bearing, self._distance, 2, "red")
+
+    def warning_track_changed(self):
+        self._chosen_point = None
+        
     def right_button_pressed(self, chosen_point):
-        self._chosen_point, waypoint_id = self.current_track.get_adjusted_point_on_track(chosen_point)
+        self._chosen_point, waypoint_id = self.current_track.get_adjusted_point_on_track(chosen_point, PATH_WIDTH / 2)
         mid_bearing = int(round(self.current_track.get_bearing_at_waypoint(waypoint_id)))
         self._distance = 0.0
         self._chosen_bearing = mid_bearing
@@ -46,7 +60,7 @@ class AnalyzeStraightFitting(TrackAnalyzer):
     def _try_bearings(self, start, finish, step, waypoint_id):
         bearing = start
         while bearing <= finish:
-            distance = self.current_track.get_projected_distance_on_track(self._chosen_point, bearing, waypoint_id)
+            distance = self.current_track.get_projected_distance_on_track(self._chosen_point, bearing, waypoint_id, PATH_WIDTH)
             if distance > self._distance:
                 self._distance = distance
                 self._chosen_bearing = bearing

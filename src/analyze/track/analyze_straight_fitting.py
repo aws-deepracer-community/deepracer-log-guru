@@ -8,7 +8,7 @@
 
 import tkinter as tk
 
-from src.analyze.core.controls import PathWidthControl, InformationTextControl
+from src.analyze.core.controls import InformationTextControl, NumericButtonsControl
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.graphics.track_graphics import TrackGraphics
 from src.utils import geometry
@@ -21,14 +21,15 @@ class AnalyzeStraightFitting(TrackAnalyzer):
     def __init__(self, guru_parent_redraw, track_graphics: TrackGraphics, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
-        self._path_width_control = PathWidthControl(guru_parent_redraw, control_frame)
+        self._path_width_control = NumericButtonsControl(guru_parent_redraw, control_frame,
+                                                         "Path Width", "cm", [0, 2, 5, 10, 20], 0)
         self._information_control = InformationTextControl(guru_parent_redraw, control_frame)
 
         self._chosen_point = None
         self._chosen_bearing = 0.0
         self._distance = 0.0
         self._waypoint_id = 0
-        self._path_width = self._path_width_control.get_width()
+        self._path_width = self._path_width_control.get_value()
 
     def build_control_frame(self, control_frame):
         self._path_width_control.add_to_control_frame()
@@ -36,7 +37,7 @@ class AnalyzeStraightFitting(TrackAnalyzer):
 
     def redraw(self):
         if self._chosen_point:
-            new_path_width = self._path_width_control.get_width()
+            new_path_width = self._path_width_control.get_value()
             if new_path_width != self._path_width:
                 self._path_width = new_path_width
                 self._calculate_new_path()
@@ -63,7 +64,7 @@ class AnalyzeStraightFitting(TrackAnalyzer):
     def right_button_pressed(self, chosen_point):
         self._chosen_point, self._waypoint_id = self.current_track.get_adjusted_point_on_track(chosen_point,
                                                                                                self._path_width / 2)
-        self._path_width = self._path_width_control.get_width()
+        self._path_width = self._path_width_control.get_value()
         self._calculate_new_path()
         self.guru_parent_redraw()
 
@@ -75,7 +76,7 @@ class AnalyzeStraightFitting(TrackAnalyzer):
                            self._waypoint_id)
 
     def _try_bearings(self, start, finish, step, waypoint_id):
-        path_width = self._path_width_control.get_width()
+        path_width = self._path_width_control.get_value()
         bearing = start
         while bearing <= finish:
             distance = self.current_track.get_projected_distance_on_track(self._chosen_point, bearing, waypoint_id,
@@ -84,7 +85,3 @@ class AnalyzeStraightFitting(TrackAnalyzer):
                 self._distance = distance
                 self._chosen_bearing = bearing
             bearing += step
-
-
-
-

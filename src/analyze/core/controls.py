@@ -947,22 +947,27 @@ class CurveSpeedControl(Control):
             return None
 
 
-class PathWidthControl(Control):
+class NumericButtonsControl(Control):
 
-    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
-        super().__init__(guru_parent_redraw, control_frame, "Path Width")
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame,
+                 title: str, unit: str, values: list[int], default: int):
+        super().__init__(guru_parent_redraw, control_frame, title)
 
-        self._width = tk.StringVar(value="0 cm")
+        assert default in values
+
+        self._all_values = values
+        self._unit = unit
+        self._value = tk.StringVar(value=self._make_value_string(default))
 
     def _add_widgets(self):
-        self.add_radiobutton_improved("0 cm", self._width)
-        self.add_radiobutton_improved("2 cm", self._width)
-        self.add_radiobutton_improved("5 cm", self._width)
-        self.add_radiobutton_improved("10 cm", self._width)
-        self.add_radiobutton_improved("20 cm", self._width)
+        for v in self._all_values:
+            self.add_radiobutton_improved(self._make_value_string(v), self._value)
 
-    def get_width(self):
-        return float(self._width.get()[:-3]) / 100
+    def _make_value_string(self, value):
+        return str(value) + " " + self._unit
+
+    def get_value(self):
+        return float(self._value.get()[:-len(self._unit)-1]) / 100
 
 
 class InformationTextControl(Control):
@@ -976,4 +981,3 @@ class InformationTextControl(Control):
 
     def display_text(self, new_text):
         self._text.set(new_text)
-

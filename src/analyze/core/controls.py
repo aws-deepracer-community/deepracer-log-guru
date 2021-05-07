@@ -945,3 +945,35 @@ class CurveSpeedControl(Control):
             return 3.0, 99
         else:
             return None
+
+
+class PathWidthControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Path Width")
+
+        self._width = tk.StringVar(value="0 cm")
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved("0 cm", self._width)
+        self.add_radiobutton_improved("2 cm", self._width)
+        self.add_radiobutton_improved("5 cm", self._width)
+        self.add_radiobutton_improved("10 cm", self._width)
+        self.add_radiobutton_improved("20 cm", self._width)
+
+    def get_width(self):
+        return float(self._width.get()[:-3]) / 100
+
+
+class InformationTextControl(Control):
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Longest Path")
+
+        self._text = tk.StringVar()
+
+    def _add_widgets(self):
+        self.add_information_text(self._text)
+
+    def display_text(self, new_text):
+        self._text.set(new_text)
+

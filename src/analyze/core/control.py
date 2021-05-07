@@ -94,6 +94,11 @@ class Control:
                   command=callback).grid(column=self._column, row=self._row, padx=4, pady=4, sticky="W")
         self._column += 1
 
+    def add_information_text(self, tk_var: tk.StringVar):
+        tk.Label(self._label_frame, text="", textvariable=tk_var,
+                 justify=tk.LEFT).grid(column=0, row=self._row, padx=5, pady=0, sticky="W")
+        self._row += 1
+
 
     #
     # ABSTRACT interface

@@ -23,6 +23,7 @@ class ViewManager:
         self.waypoint_minor_size = 0
 
         self.waypoints_on = True
+        self.waypoint_labels_on = False
         self.grid_on = False
         self.annotations_on = False
         self.sectors_on = False
@@ -62,6 +63,12 @@ class ViewManager:
 
     def set_waypoints_off(self):
         self.waypoints_on = False
+
+    def set_waypoint_labels_on(self):
+        self.waypoint_labels_on = True
+
+    def set_waypoint_labels_off(self):
+        self.waypoint_labels_on = False
 
     def set_grid_front(self):
         self.grid_on = True
@@ -139,6 +146,8 @@ class ViewManager:
                     current_track.draw_sector_labels(track_graphics, self.track_colour)
                 if self.waypoints_on:
                     current_track.draw_waypoints(track_graphics, self.track_colour, self.waypoint_minor_size, self.waypoint_major_size)
+                    if self.waypoint_labels_on:
+                        current_track.draw_waypoint_labels(track_graphics, self.track_colour, 10)
 
             if do == "A":
                 if background_analyser:

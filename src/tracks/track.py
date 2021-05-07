@@ -134,6 +134,22 @@ class Track:
             else:
                 track_graphics.plot_dot(p.middle, minor_size, colour)
 
+    def draw_waypoint_labels(self, track_graphics: TrackGraphics, colour: str, font_size: int):
+        last_label_position = None
+        for (i, p) in enumerate(self._drawing_points[:-2]):
+            if self._is_vertical_at_waypoint(i):
+                label = track_graphics.plot_text(p.middle, str(i), font_size, colour, -1.5 * font_size, 0.0)
+            else:
+                label = track_graphics.plot_text(p.middle, str(i), font_size, colour, 0.0, 1.5 * font_size)
+
+            label_position = track_graphics.get_widget_position(label)
+            if last_label_position is None:
+                last_label_position = label_position
+            elif geometry.get_distance_between_points(last_label_position, label_position) < 2.5 * font_size:
+                track_graphics.delete_widget(label)
+            else:
+                last_label_position = label_position
+
     def draw_annotations(self, track_graphics: TrackGraphics):
         for a in self._annotations:
             a.draw(track_graphics, self._drawing_points, self._track_width)
@@ -163,7 +179,10 @@ class Track:
             label_waypoint = int((start + finish) / 2)
             point = self._drawing_points[label_waypoint].middle
 
-            track_graphics.plot_text(point, name, 18, colour)
+            if self._is_vertical_at_waypoint(label_waypoint):
+                track_graphics.plot_text(point, name, 20, colour, 14, 0)
+            else:
+                track_graphics.plot_text(point, name, 20, colour, 0, -14)
 
     def get_bearing_and_distance_to_next_waypoint(self, waypoint_id: int):
         this_point = self._drawing_points[waypoint_id].middle
@@ -530,6 +549,10 @@ class Track:
                 distance = new_distance
                 closest_id = i + 1
         return closest_id
+
+    def _is_vertical_at_waypoint(self, waypoint_id: int):
+        bearing = self.get_bearing_at_waypoint(waypoint_id)
+        return -135 < bearing < -45 or 45 < bearing < 135
 
     @staticmethod
     def _get_sector_name(sector_id: int):

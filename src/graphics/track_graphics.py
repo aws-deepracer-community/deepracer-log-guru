@@ -44,6 +44,12 @@ class TrackGraphics:
         self.min_x = min_x - x_border
         self.max_y = max_y + y_border
 
+    def get_widget_position(self, widget_id: int):
+        return self.canvas.coords(widget_id)
+
+    def delete_widget(self, widget_id: int):
+        self.canvas.delete(widget_id)
+
     def plot_dot(self, point, r, fill_colour):
         (x, y) = point
 
@@ -68,13 +74,13 @@ class TrackGraphics:
         end_point = geometry.get_point_at_bearing(start_point, bearing, distance)
         return self.plot_line(start_point, end_point, width, fill_colour, dash_pattern)
 
-    def plot_text(self, point, text_string, font_size, colour: str):
+    def plot_text(self, point, text_string, font_size, colour: str, offset_x: float = 0, offset_y: float = 0):
         (x, y) = point
 
         x = (x - self.min_x) * self.scale
         y = (self.max_y - y) * self.scale
 
-        self.canvas.create_text(x, y, text=text_string, fill=colour, font=("", font_size))
+        return self.canvas.create_text(x + offset_x, y + offset_y, text=text_string, fill=colour, font=("", font_size))
 
     def plot_box(self, x, y, x2, y2, colour):
 

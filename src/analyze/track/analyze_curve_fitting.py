@@ -62,9 +62,16 @@ class AnalyzeCurveFitting(TrackAnalyzer):
 
             for s in sequences:
                 points = s.get_plot_points(self._chosen_point, self._chosen_bearing)
-                colour = "green"
+                seconds = 0.0
                 for p in points:
+                    if seconds < 1:
+                        colour = "green"
+                    elif seconds < 2:
+                        colour = "yellow"
+                    else:
+                        colour = "pink"
                     self.track_graphics.plot_dot(p, 2, colour)
+                    seconds += 1/15
 
     def right_button_pressed(self, chosen_point):
         chose_backwards_point = False

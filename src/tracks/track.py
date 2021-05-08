@@ -299,8 +299,14 @@ class Track:
                 previous_right = w.right_safe
             else:
                 point2 = geometry.get_point_at_bearing(point, heading, 1)   # Just some random distance (1m)
-                off_track_left = geometry.get_intersection_of_two_lines(point, point2, w.left_safe, previous_left)
-                off_track_right = geometry.get_intersection_of_two_lines(point, point2, w.right_safe, previous_right)
+                if w.left_safe == previous_left:
+                    off_track_left = previous_left
+                else:
+                    off_track_left = geometry.get_intersection_of_two_lines(point, point2, w.left_safe, previous_left)
+                if w.right_safe == previous_right:
+                    off_track_right = previous_right
+                else:
+                    off_track_right = geometry.get_intersection_of_two_lines(point, point2, w.right_safe, previous_right)
 
                 left_bearing = geometry.get_bearing_between_points(point, off_track_left)
                 right_bearing = geometry.get_bearing_between_points(point, off_track_right)

@@ -9,10 +9,10 @@
 import tkinter as tk
 
 import src.utils.geometry as geometry
-from src.analyze.core.controls import CurveDirectionControl, CurveSteeringDegreesControl, CurveSpeedControl
+from src.analyze.core.controls import CurveDirectionControl, CurveSteeringDegreesControl,\
+    CurveSpeedControl, CurveInitialSlideControl
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
-from src.configuration.real_world import VEHICLE_WIDTH
 from src.episode.episode import extract_all_sequences
 from src.graphics.track_graphics import TrackGraphics
 from src.sequences.sequences import Sequences
@@ -29,6 +29,7 @@ class AnalyzeCurveFitting(TrackAnalyzer):
         self._curve_steering_degrees_control = CurveSteeringDegreesControl(guru_parent_redraw, control_frame)
         self._entry_speed_control = CurveSpeedControl(guru_parent_redraw, control_frame, "Entry")
         self._action_speed_control = CurveSpeedControl(guru_parent_redraw, control_frame, "Action")
+        self._initial_slide_control = CurveInitialSlideControl(guru_parent_redraw, control_frame)
 
         self._all_sequences = Sequences()
         self._episode_sequences = Sequences()
@@ -44,6 +45,7 @@ class AnalyzeCurveFitting(TrackAnalyzer):
         self._curve_steering_degrees_control.add_to_control_frame()
         self._action_speed_control.add_to_control_frame()
         self._entry_speed_control.add_to_control_frame()
+        self._initial_slide_control.add_to_control_frame()
 
     def redraw(self):
         if self._chosen_point and self._chosen_bearing:
@@ -55,7 +57,7 @@ class AnalyzeCurveFitting(TrackAnalyzer):
                 action_steering_angle_match = (-s1, -s2)
 
             initial_track_speed_match = self._entry_speed_control.get_speed_range()
-            initial_slide_match = None
+            initial_slide_match = self._initial_slide_control.get_initial_slide_range()
             action_speed_match = self._action_speed_control.get_speed_range()
 
             sequences = self._all_sequences.get_matches(initial_track_speed_match, initial_slide_match, action_speed_match, action_steering_angle_match)

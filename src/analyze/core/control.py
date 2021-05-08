@@ -67,6 +67,13 @@ class Control:
             command=self._guru_parent_redraw).grid(column=0, row=self._row, padx=5, pady=0, sticky="W")
         self._row += 1
 
+    # TODO - Convert all code to this new simpler method & approach
+    def add_radiobutton_right_improved(self, title: str, tk_var: tk.StringVar):
+        tk.Radiobutton(
+            self._label_frame, text=title, variable=tk_var, value=title,
+            command=self._guru_parent_redraw).grid(column=1, row=self._row_right, padx=5, pady=0, sticky="W")
+        self._row_right += 1
+
     def add_radiobutton_right(self, title: str, tk_var: tk.IntVar, value: int):
         tk.Radiobutton(
             self._label_frame, text=title, variable=tk_var, value=value,

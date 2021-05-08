@@ -878,7 +878,7 @@ class CurveDirectionControl(Control):
 
     def _add_widgets(self):
         self.add_radiobutton_improved(CurveDirectionControl._LEFT, self._direction)
-        self.add_radiobutton_improved(CurveDirectionControl._RIGHT, self._direction)
+        self.add_radiobutton_right_improved(CurveDirectionControl._RIGHT, self._direction)
 
     def direction_left(self):
         return self._direction.get() == CurveDirectionControl._LEFT
@@ -900,9 +900,9 @@ class CurveSteeringDegreesControl(Control):
 
     def _add_widgets(self):
         self.add_radiobutton_improved(CurveSteeringDegreesControl._LOW, self._degrees)
-        self.add_radiobutton_improved(CurveSteeringDegreesControl._MEDIUM, self._degrees)
+        self.add_radiobutton_right_improved(CurveSteeringDegreesControl._MEDIUM, self._degrees)
         self.add_radiobutton_improved(CurveSteeringDegreesControl._HIGH, self._degrees)
-        self.add_radiobutton_improved(CurveSteeringDegreesControl._ALL, self._degrees)
+        self.add_radiobutton_right_improved(CurveSteeringDegreesControl._ALL, self._degrees)
 
     def get_steering_range(self):
         if self._degrees.get() == CurveSteeringDegreesControl._LOW:
@@ -943,6 +943,26 @@ class CurveSpeedControl(Control):
             return 2.0, 2.9
         elif self._speed.get() == CurveSpeedControl._L4:
             return 3.0, 99
+        else:
+            return None
+
+
+class CurveInitialSlideControl(Control):
+    _LOW = "Low"
+    _ALL = "All"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Initial Slide")
+
+        self._slide = tk.StringVar(value=CurveInitialSlideControl._LOW)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(CurveInitialSlideControl._LOW, self._slide)
+        self.add_radiobutton_right_improved(CurveInitialSlideControl._ALL, self._slide)
+
+    def get_initial_slide_range(self):
+        if self._slide.get() == CurveInitialSlideControl._LOW:
+            return -2, 2
         else:
             return None
 

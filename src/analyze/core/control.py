@@ -96,14 +96,16 @@ class Control:
                       command=callback).grid(column=0, row=self._row + 1, pady=1, padx=5, sticky=tk.W)
         self._row += 2
 
-    def add_horizontal_push_button(self, title: str, callback: callable):
+    def add_horizontal_push_button(self, title: str, callback: callable, is_end_of_row: bool = False):
         tk.Button(self._label_frame, text=title,
                   command=callback).grid(column=self._column, row=self._row, padx=4, pady=4, sticky="W")
         self._column += 1
+        if is_end_of_row:
+            self._row += 1
 
     def add_information_text(self, tk_var: tk.StringVar):
         tk.Label(self._label_frame, text="", textvariable=tk_var,
-                 justify=tk.LEFT).grid(column=0, row=self._row, padx=5, pady=0, sticky="W")
+                 justify=tk.LEFT).grid(column=0, columnspan=10, row=self._row, padx=5, pady=0, sticky="W")
         self._row += 1
 
 

@@ -967,6 +967,24 @@ class CurveInitialSlideControl(Control):
             return None
 
 
+class CurveHighlightControl(Control):
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame,
+                 callback_before: callable, callback_after: callable):
+        super().__init__(guru_parent_redraw, control_frame, "Highlighted Curve")
+
+        self._text = tk.StringVar()
+        self._callback_before = callback_before
+        self._callback_after = callback_after
+
+    def _add_widgets(self):
+        self.add_horizontal_push_button("<<", self._callback_before)
+        self.add_horizontal_push_button(">>", self._callback_after, True)
+        self.add_information_text(self._text)
+
+    def display_text(self, new_text):
+        self._text.set(new_text)
+
+
 class NumericButtonsControl(Control):
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame,

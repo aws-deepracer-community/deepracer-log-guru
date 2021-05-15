@@ -48,7 +48,7 @@ class AnalyzeRace(TrackAnalyzer):
         self._timer.redraw()
 
     def warning_filtered_episodes_changed(self):
-        self._timer.reset()
+        self._timer.reset(False)
 
     def warning_lost_control(self):
         self._timer.stop()
@@ -113,11 +113,12 @@ class AnalyzeRace(TrackAnalyzer):
                 self._thread.daemon = True   # Set as daemon so thread is killed if main GUI is closed
                 self._thread.start()
 
-        def reset(self):
+        def reset(self, redraw=True):
             self.stop()
             self._simulation_stop_time = 0.0
             self._simulation_start_time = 0.0
-            self._redraw_callback(0.0)
+            if redraw:
+                self._redraw_callback(0.0)
 
         def redraw(self):
             if self._is_still_running:

@@ -156,7 +156,6 @@ class MeasurementControl(Control):
     _PROGRESS_SPEED = "Progress Speed"
     _ACCELERATION = "Acceleration"
     _BRAKING = "Braking"
-    _PREDICTED_LAP = "Predicted Lap"
     _SMOOTHNESS = "Smoothness"
     _STEERING_STRAIGHT = "Steering Straight"
     _STEERING_LEFT = "Steering Left"
@@ -170,7 +169,7 @@ class MeasurementControl(Control):
 
     _ALL_MEASUREMENTS_EXCEPT_SECONDS = [
         _VISITS, _EVENT_REWARD, _FUTURE_REWARD, _NEW_EVENT_REWARD, _NEW_FUTURE_REWARD, _ACTION_SPEED, _TRACK_SPEED,
-        _PROGRESS_SPEED, _ACCELERATION, _BRAKING, _PREDICTED_LAP, _SMOOTHNESS, _STEERING_STRAIGHT, _STEERING_LEFT,
+        _PROGRESS_SPEED, _ACCELERATION, _BRAKING, _SMOOTHNESS, _STEERING_STRAIGHT, _STEERING_LEFT,
         _STEERING_RIGHT, _SKEW, _SLIDE, _PROJECTED_TRAVEL_DISTANCE
                                         ]
 

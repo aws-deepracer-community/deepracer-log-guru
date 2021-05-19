@@ -65,23 +65,23 @@ class AnalyzeHeatmap(TrackAnalyzer):
                 if self._measurement_control.measure_progress_speed():
                     max_speed *= 1.2
                     min_speed *= 0.8
-                self._statistics_heat_map.draw_statistic(self.track_graphics, brightness, color_palette, max_speed, min_speed)
+                self._statistics_heat_map.draw_statistic(self.track_graphics, brightness, color_palette, self._visits_heat_map, max_speed, min_speed)
             elif self._measurement_control.measure_visits():
                 self._visits_heat_map.draw_visits(self.track_graphics, brightness, color_palette)
             elif self._measurement_control.measure_steering_straight() or \
                     self._measurement_control.measure_steering_left() or \
                     self._measurement_control.measure_steering_right() or \
                     self._measurement_control.measure_projected_travel_distance():
-                self._statistics_heat_map.draw_brightness_statistic(self.track_graphics, brightness, color_palette)
+                self._statistics_heat_map.draw_brightness_statistic(self.track_graphics, brightness, color_palette, self._visits_heat_map)
             ### Otherwise the OLD kludgy way...
             elif self._measurement_control.measure_slide():
-                self._statistics_heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 14, 0)
+                self._statistics_heat_map.draw_statistic(self.track_graphics, brightness, color_palette, self._visits_heat_map, 14, 0)
             elif self._measurement_control.measure_skew():
-                self._statistics_heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 60, 0)
+                self._statistics_heat_map.draw_statistic(self.track_graphics, brightness, color_palette, self._visits_heat_map, 60, 0)
             elif self._measurement_control.measure_steering_left() or self._measurement_control.measure_steering_right():
-                self._statistics_heat_map.draw_statistic(self.track_graphics, brightness, color_palette, 30, 0)
+                self._statistics_heat_map.draw_statistic(self.track_graphics, brightness, color_palette, self._visits_heat_map, 30, 0)
             else:
-                self._statistics_heat_map.draw_statistic(self.track_graphics, brightness, color_palette)
+                self._statistics_heat_map.draw_statistic(self.track_graphics, brightness, color_palette, self._visits_heat_map)
 
     def warning_filtered_episodes_changed(self):
         if self._episodes_control.show_filtered():

@@ -19,12 +19,12 @@ from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
 
 from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl,\
-    GraphScaleControl, GraphLineFittingControl
+    GraphScaleControl, GraphLineFittingControl, EvaluationPairsControl
 
 
 class AnalyzeTrainingProgress(GraphAnalyzer):
 
-    def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg, control_frame :tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
@@ -32,12 +32,14 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self._stats_control = StatsControl(guru_parent_redraw, control_frame)
         self._scale_control = GraphScaleControl(guru_parent_redraw, control_frame)
         self._line_fitting_control = GraphLineFittingControl(guru_parent_redraw, control_frame)
+        self._evaluation_pairs_control = EvaluationPairsControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
         self.episode_control.add_to_control_frame()
         self._stats_control.add_to_control_frame()
         self._scale_control.add_to_control_frame()
         self._line_fitting_control.add_to_control_frame()
+        self._evaluation_pairs_control.add_to_control_frame()
 
     def add_plots(self):
         if not self.all_episodes:
@@ -149,7 +151,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
 
     def add_plot_iteration_vs_evaluation_total_reward(self, axes: Axes, label, evaluation_phases, stat_method, colour):
-        (plot_x, plot_y) = get_plot_data_iteration_vs_evaluation_total_reward(evaluation_phases, stat_method)
+        (plot_x, plot_y) = self.get_plot_data_iteration_vs_evaluation_total_reward(evaluation_phases, stat_method)
         self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
 
     def add_plot_iteration_vs_percent_complete(self, axes: Axes, label, episodes, stat_method, colour):
@@ -157,7 +159,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
 
     def add_plot_iteration_vs_evaluation_percent_complete(self, axes: Axes, label, evaluation_phases, stat_method, colour):
-        (plot_x, plot_y) = get_plot_data_iteration_vs_evaluation_percent_complete(evaluation_phases, stat_method)
+        (plot_x, plot_y) = self.get_plot_data_iteration_vs_evaluation_percent_complete(evaluation_phases, stat_method)
         self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
 
     def plot_data_or_smooth_it(self, axes: Axes, label: str, plot_x: np.ndarray, plot_y: np.ndarray, colour: str):
@@ -171,6 +173,49 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
         axes.plot(x_values, y_values, colour, label=label)
         self._plot_solo_items(axes, x_values, y_values, colour)
+
+    def get_plot_data_iteration_vs_evaluation_total_reward(self, evaluation_phases, stat_method):
+        plot_iteration = []
+        plot_data = []
+
+        previous_eval = None
+        for i, this_eval in enumerate(evaluation_phases):
+            if self._evaluation_pairs_control.show_combined() and i % 2 == 1:
+                plot_value = stat_method(np.concatenate((this_eval.rewards, previous_eval.rewards)))
+                plot_data.append(plot_value)
+                plot_iteration.append(i - 0.5)
+            elif ((self._evaluation_pairs_control.show_odd() and i % 2 == 1) or
+                  (self._evaluation_pairs_control.show_even() and i % 2 == 0) or
+                  self._evaluation_pairs_control.show_separate()):
+
+                plot_data.append(stat_method(this_eval.rewards))
+                plot_iteration.append(i)
+
+            previous_eval = this_eval
+
+        return np.array(plot_iteration), np.array(plot_data)
+
+    def get_plot_data_iteration_vs_evaluation_percent_complete(self, evaluation_phases, stat_method):
+        plot_iteration = []
+        plot_data = []
+
+        previous_eval = None
+        for i, this_eval in enumerate(evaluation_phases):
+            if self._evaluation_pairs_control.show_combined() and i % 2 == 1:
+                plot_value = stat_method(np.concatenate((this_eval.progresses, previous_eval.progresses)))
+                plot_data.append(plot_value)
+                plot_iteration.append(i - 0.5)
+            elif ((self._evaluation_pairs_control.show_odd() and i % 2 == 1) or
+                  (self._evaluation_pairs_control.show_even() and i % 2 == 0) or
+                  self._evaluation_pairs_control.show_separate()):
+
+                plot_data.append(stat_method(this_eval.progresses))
+                plot_iteration.append(i)
+
+            previous_eval = this_eval
+
+        return np.array(plot_iteration), np.array(plot_data)
+
 
 def get_plot_data_iteration_vs_total_reward(episodes, stat_method):
     iteration_count = episodes[-1].iteration + 1
@@ -208,28 +253,6 @@ def get_plot_data_iteration_vs_percent_complete(episodes, stat_method):
             plot_percent_complete[i] = stat_method(np.array(ipc))
         else:
             plot_percent_complete[i] = np.nan
-
-    return plot_iteration, plot_percent_complete
-
-
-def get_plot_data_iteration_vs_evaluation_percent_complete(evaluation_phases, stat_method):
-    # Build the plot data using numpy to get the [required stat of] percent for each iteration
-    iteration_count = len(evaluation_phases)
-    plot_iteration = np.arange(0, iteration_count)
-    plot_percent_complete = np.zeros(iteration_count)
-    for i, eval in enumerate(evaluation_phases):
-        plot_percent_complete[i] = stat_method(np.array(eval.progresses))
-
-    return plot_iteration, plot_percent_complete
-
-
-def get_plot_data_iteration_vs_evaluation_total_reward(evaluation_phases, stat_method):
-    # Build the plot data using numpy to get the [required stat of] percent for each iteration
-    iteration_count = len(evaluation_phases)
-    plot_iteration = np.arange(0, iteration_count)
-    plot_percent_complete = np.zeros(iteration_count)
-    for i, eval in enumerate(evaluation_phases):
-        plot_percent_complete[i] = stat_method(np.array(eval.rewards))
 
     return plot_iteration, plot_percent_complete
 

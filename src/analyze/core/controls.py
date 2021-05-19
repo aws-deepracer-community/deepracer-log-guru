@@ -1018,3 +1018,33 @@ class InformationTextControl(Control):
 
     def display_text(self, new_text):
         self._text.set(new_text)
+
+
+class EvaluationPairsControl(Control):
+    _SEPARATE = "Separate"
+    _COMBINED = "Combined"
+    _ODD = "Odd"
+    _EVEN = "Even"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Evaluation Pairs")
+
+        self._pairing = tk.StringVar(value=EvaluationPairsControl._SEPARATE)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(EvaluationPairsControl._SEPARATE, self._pairing)
+        self.add_radiobutton_improved(EvaluationPairsControl._COMBINED, self._pairing)
+        self.add_radiobutton_improved(EvaluationPairsControl._ODD, self._pairing)
+        self.add_radiobutton_improved(EvaluationPairsControl._EVEN, self._pairing)
+
+    def show_separate(self):
+        return self._pairing.get() == EvaluationPairsControl._SEPARATE
+
+    def show_combined(self):
+        return self._pairing.get() == EvaluationPairsControl._COMBINED
+
+    def show_odd(self):
+        return self._pairing.get() == EvaluationPairsControl._ODD
+
+    def show_even(self):
+        return self._pairing.get() == EvaluationPairsControl._EVEN

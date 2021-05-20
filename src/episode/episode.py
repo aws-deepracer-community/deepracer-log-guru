@@ -666,8 +666,9 @@ def are_close_waypoint_ids(id1, id2, track :Track):
 
 def extract_all_sequences(episodes: list[Episode], min_sequence_length: int):
     result = Sequences()
-    for e in episodes:
-        result.add_sequences(e.extract_all_sequences(min_sequence_length))
+    if episodes is not None:
+        for e in episodes:
+            result.add_sequences(e.extract_all_sequences(min_sequence_length))
     return result
 
 

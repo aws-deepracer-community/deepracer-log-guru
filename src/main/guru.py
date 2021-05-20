@@ -641,6 +641,14 @@ class MainApp(tk.Frame):
         self.view_manager.set_waypoints_off()
         self.redraw()
 
+    def menu_callback_waypoint_labels_on(self):
+        self.view_manager.set_waypoint_labels_on()
+        self.redraw()
+
+    def menu_callback_waypoint_labels_off(self):
+        self.view_manager.set_waypoint_labels_off()
+        self.redraw()
+
     def menu_callback_analyze_front(self):
         self.view_manager.set_analyze_front()
         self.redraw()

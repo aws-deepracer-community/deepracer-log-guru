@@ -36,6 +36,7 @@ class MenuBar():
             self.add_sector_menu()
             self.add_analyze_menu()
 
+        self.add_fitting_menu()
         self.add_zoom_menu()
         self.add_view_menu()
         self.add_secret_sauce_menu()
@@ -118,6 +119,9 @@ class MenuBar():
         menu.add_command(label="Waypoints - Micro", command=self.main_app.menu_callback_waypoints_micro)
         menu.add_command(label="Waypoints - Off", command=self.main_app.menu_callback_waypoints_off)
         menu.add_separator()
+        menu.add_command(label="Waypoint Labels - On", command=self.main_app.menu_callback_waypoint_labels_on)
+        menu.add_command(label="Waypoint Labels - Off", command=self.main_app.menu_callback_waypoint_labels_off)
+        menu.add_separator()
         menu.add_command(label="Annotations - Front", command=self.main_app.menu_callback_annotations_front)
         menu.add_command(label="Annotations - Back", command=self.main_app.menu_callback_annotations_back)
         menu.add_command(label="Annotations - Off", command=self.main_app.menu_callback_annotations_off)
@@ -172,11 +176,14 @@ class MenuBar():
         menu.add_command(label="Common Rewards", command=self.main_app.menu_callback_analyze_common_rewards)
         menu.add_command(label="Rewards per Waypoint", command=self.main_app.menu_callback_analyze_rewards_per_waypoint)
 
-        # menu.add_separator()
-        # menu.add_command(label="Track Curve Fitting", command=self.main_app.menu_callback_analyze_curve_fitting)
-        # menu.add_command(label="Track Straight Fitting", command=self.main_app.menu_callback_analyze_straight_fitting)
-
         self.menubar.add_cascade(label="Analyze", menu=menu)
+
+    def add_fitting_menu(self):
+        menu = Menu(self.menubar, tearoff=0)
+        menu.add_command(label="Track Curve Fitting", command=self.main_app.menu_callback_analyze_curve_fitting)
+        menu.add_command(label="Track Straight Fitting", command=self.main_app.menu_callback_analyze_straight_fitting)
+
+        self.menubar.add_cascade(label="Fitting", menu=menu)
 
     def add_episode_menu(self):
         menu = Menu(self.menubar, tearoff=0)

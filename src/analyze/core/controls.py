@@ -156,7 +156,6 @@ class MeasurementControl(Control):
     _PROGRESS_SPEED = "Progress Speed"
     _ACCELERATION = "Acceleration"
     _BRAKING = "Braking"
-    _PREDICTED_LAP = "Predicted Lap"
     _SMOOTHNESS = "Smoothness"
     _STEERING_STRAIGHT = "Steering Straight"
     _STEERING_LEFT = "Steering Left"
@@ -170,7 +169,7 @@ class MeasurementControl(Control):
 
     _ALL_MEASUREMENTS_EXCEPT_SECONDS = [
         _VISITS, _EVENT_REWARD, _FUTURE_REWARD, _NEW_EVENT_REWARD, _NEW_FUTURE_REWARD, _ACTION_SPEED, _TRACK_SPEED,
-        _PROGRESS_SPEED, _ACCELERATION, _BRAKING, _PREDICTED_LAP, _SMOOTHNESS, _STEERING_STRAIGHT, _STEERING_LEFT,
+        _PROGRESS_SPEED, _ACCELERATION, _BRAKING, _SMOOTHNESS, _STEERING_STRAIGHT, _STEERING_LEFT,
         _STEERING_RIGHT, _SKEW, _SLIDE, _PROJECTED_TRAVEL_DISTANCE
                                         ]
 
@@ -878,7 +877,7 @@ class CurveDirectionControl(Control):
 
     def _add_widgets(self):
         self.add_radiobutton_improved(CurveDirectionControl._LEFT, self._direction)
-        self.add_radiobutton_improved(CurveDirectionControl._RIGHT, self._direction)
+        self.add_radiobutton_right_improved(CurveDirectionControl._RIGHT, self._direction)
 
     def direction_left(self):
         return self._direction.get() == CurveDirectionControl._LEFT
@@ -900,9 +899,9 @@ class CurveSteeringDegreesControl(Control):
 
     def _add_widgets(self):
         self.add_radiobutton_improved(CurveSteeringDegreesControl._LOW, self._degrees)
-        self.add_radiobutton_improved(CurveSteeringDegreesControl._MEDIUM, self._degrees)
+        self.add_radiobutton_right_improved(CurveSteeringDegreesControl._MEDIUM, self._degrees)
         self.add_radiobutton_improved(CurveSteeringDegreesControl._HIGH, self._degrees)
-        self.add_radiobutton_improved(CurveSteeringDegreesControl._ALL, self._degrees)
+        self.add_radiobutton_right_improved(CurveSteeringDegreesControl._ALL, self._degrees)
 
     def get_steering_range(self):
         if self._degrees.get() == CurveSteeringDegreesControl._LOW:
@@ -945,3 +944,107 @@ class CurveSpeedControl(Control):
             return 3.0, 99
         else:
             return None
+
+
+class CurveInitialSlideControl(Control):
+    _LOW = "Low"
+    _ALL = "All"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Initial Slide")
+
+        self._slide = tk.StringVar(value=CurveInitialSlideControl._LOW)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(CurveInitialSlideControl._LOW, self._slide)
+        self.add_radiobutton_right_improved(CurveInitialSlideControl._ALL, self._slide)
+
+    def get_initial_slide_range(self):
+        if self._slide.get() == CurveInitialSlideControl._LOW:
+            return -2, 2
+        else:
+            return None
+
+
+class CurveHighlightControl(Control):
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame,
+                 callback_before: callable, callback_after: callable):
+        super().__init__(guru_parent_redraw, control_frame, "Highlighted Curve")
+
+        self._text = tk.StringVar()
+        self._callback_before = callback_before
+        self._callback_after = callback_after
+
+    def _add_widgets(self):
+        self.add_horizontal_push_button("<<", self._callback_before)
+        self.add_horizontal_push_button(">>", self._callback_after, True)
+        self.add_information_text(self._text)
+
+    def display_text(self, new_text):
+        self._text.set(new_text)
+
+
+class NumericButtonsControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame,
+                 title: str, unit: str, values: list[int], default: int):
+        super().__init__(guru_parent_redraw, control_frame, title)
+
+        assert default in values
+
+        self._all_values = values
+        self._unit = unit
+        self._value = tk.StringVar(value=self._make_value_string(default))
+
+    def _add_widgets(self):
+        for v in self._all_values:
+            self.add_radiobutton_improved(self._make_value_string(v), self._value)
+
+    def _make_value_string(self, value):
+        return str(value) + " " + self._unit
+
+    def get_value(self):
+        return float(self._value.get()[:-len(self._unit)-1]) / 100
+
+
+class InformationTextControl(Control):
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Longest Path")
+
+        self._text = tk.StringVar()
+
+    def _add_widgets(self):
+        self.add_information_text(self._text)
+
+    def display_text(self, new_text):
+        self._text.set(new_text)
+
+
+class EvaluationPairsControl(Control):
+    _SEPARATE = "Separate"
+    _COMBINED = "Combined"
+    _ODD = "Odd"
+    _EVEN = "Even"
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Evaluation Pairs")
+
+        self._pairing = tk.StringVar(value=EvaluationPairsControl._SEPARATE)
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(EvaluationPairsControl._SEPARATE, self._pairing)
+        self.add_radiobutton_improved(EvaluationPairsControl._COMBINED, self._pairing)
+        self.add_radiobutton_improved(EvaluationPairsControl._ODD, self._pairing)
+        self.add_radiobutton_improved(EvaluationPairsControl._EVEN, self._pairing)
+
+    def show_separate(self):
+        return self._pairing.get() == EvaluationPairsControl._SEPARATE
+
+    def show_combined(self):
+        return self._pairing.get() == EvaluationPairsControl._COMBINED
+
+    def show_odd(self):
+        return self._pairing.get() == EvaluationPairsControl._ODD
+
+    def show_even(self):
+        return self._pairing.get() == EvaluationPairsControl._EVEN

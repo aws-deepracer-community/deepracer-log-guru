@@ -58,7 +58,8 @@ class Sequence:
             distance = get_distance_between_points(previous_location, current_location)
             original_bearing = e.true_bearing
             relative_bearing = get_angle_in_proper_range(original_bearing - first_event.true_bearing)
-            self.steps.append(Sequence.Step(distance, relative_bearing))
+            elapsed_time = e.time - first_event.time
+            self.steps.append(Sequence.Step(distance, relative_bearing, elapsed_time))
             self.max_slide = max(self.max_slide, abs(round(e.slide, SLIDE_ROUNDING)))
             previous_location = current_location
 
@@ -142,7 +143,7 @@ class Sequence:
 
         self.steps = []
         for s in received_json["steps"]:
-            new_step = Sequence.Step(0, 0)
+            new_step = Sequence.Step(0, 0, 0)
             new_step.set_from_json(s)
             self.steps.append(new_step)
 
@@ -166,9 +167,10 @@ class Sequence:
             return min_value <= real_value <= max_value
 
     class Step:
-        def __init__(self, distance, bearing):
+        def __init__(self, distance, bearing, elapsed_time):
             self.distance = round(distance, 3)
             self.bearing = round(bearing, 3)
+            self.elapsed_time = round(elapsed_time, 2)
 
         def invert(self):
             self.bearing = -self.bearing
@@ -177,9 +179,11 @@ class Sequence:
             new_json = dict()
             new_json["distance"] = self.distance
             new_json["bearing"] = self.bearing
+            new_json["elapsed_time"] = self.elapsed_time
             return new_json
 
         def set_from_json(self, received_json):
             self.distance = received_json["distance"]
             self.bearing = received_json["bearing"]
+            self.elapsed_time = received_json["elapsed_time"]
 

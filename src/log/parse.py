@@ -67,7 +67,7 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
 
         if line_of_text.startswith(MISC_MODEL_NAME_CLOUD_LOGS):
             split_parts = line_of_text[len(MISC_MODEL_NAME_CLOUD_LOGS):].split("/")
-            if split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME):
+            if split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME_A) or split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME_B):
                 log_meta.model_name = split_parts[0]
 
     if line_of_text.startswith(MISC_ACTION_SPACE_A):
@@ -224,7 +224,9 @@ MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
 #   non-cloud   [s3] Successfully downloaded yaml file from s3 key data-56b52007-8142-46cd-a9cc-370feb620f0c/models/Champ-Obj-Avoidance-03/sagemaker-robomaker-artifacts/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml to local ./custom_files/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml.
 
 MISC_MODEL_NAME_CLOUD_LOGS = "[s3] Successfully downloaded yaml file from s3 key"
-CLOUD_TRAINING_YAML_FILENAME = "training-params.yaml"
+CLOUD_TRAINING_YAML_FILENAME_A = "training_params.yaml"   # New
+CLOUD_TRAINING_YAML_FILENAME_B = "training-params.yaml"   # Older logs
+
 
 MISC_ACTION_SPACE_A = "Loaded action space from file: "
 MISC_ACTION_SPACE_B = "Action space from file: "

@@ -41,25 +41,40 @@ class HeatMap:
             self._last_visitor[y_index][x_index] = visitor
             self._stats[y_index][x_index].append(float(stat))
 
-    def draw_visits(self, track_graphics: TrackGraphics, brightness: int, color_palette: ColorPalette):
+    def get_visits_and_scope_range(self, brightness: int):
         assert brightness in [-1, 0, 1, 2]
 
         (visits, _, max_visits) = self._get_stats_array(np.count_nonzero)
         if max_visits == 0:
-            return
+            return None, None, None
 
-        colour_multiplier = 255 / max_visits / max_visits * 2
         min_visits = max_visits / 10
 
         if brightness == 1:
-            colour_multiplier *= 2
             min_visits /= 2
         elif brightness == 2:
-            colour_multiplier *= 3.5
             min_visits /= 3.5
         elif brightness == -1:
-            colour_multiplier /= 2
             min_visits *= 1.5
+
+        return visits, min_visits, max_visits
+
+    def draw_visits(self, track_graphics: TrackGraphics, brightness: int, color_palette: ColorPalette):
+        assert brightness in [-1, 0, 1, 2]
+
+        visits, min_visits, max_visits = self.get_visits_and_scope_range(brightness)
+
+        if not visits:
+            return
+
+        colour_multiplier = 255 / max_visits / max_visits * 2
+
+        if brightness == 1:
+            colour_multiplier *= 2
+        elif brightness == 2:
+            colour_multiplier *= 3.5
+        elif brightness == -1:
+            colour_multiplier /= 2
 
         for yy, visits in enumerate(visits):
             for xx, visit in enumerate(visits):
@@ -72,24 +87,20 @@ class HeatMap:
                     track_graphics.plot_box(x, y, x + self._granularity, y + self._granularity, colour)
 
     # NEW way - heatmap itself is given the standard brightness calculation
-    def draw_brightness_statistic(self, track_graphics: TrackGraphics, adjust_brightness: int, color_palette: ColorPalette):
+    def draw_brightness_statistic(self, track_graphics: TrackGraphics, adjust_brightness: int,
+                                  color_palette: ColorPalette, visits_heatmap):
         assert adjust_brightness in [-1, 0, 1, 2]
 
-        threshold = round(self._get_stats_count() / 10)
-
         if adjust_brightness == 1:
-            threshold /= 2
             multiplier = 1.1
         elif adjust_brightness == 2:
-            threshold /= 3.5
             multiplier = 1.2
         elif adjust_brightness == -1:
-            threshold *= 1.5
             multiplier = 0.9
         else:
             multiplier = 1.0
 
-        (stats, _, _) = self._get_stats_array(np.median, threshold)
+        (stats, _, _) = self._get_stats_array(np.median, adjust_brightness, visits_heatmap)
 
         for yy, stats in enumerate(stats):
             for xx, stat in enumerate(stats):
@@ -100,20 +111,11 @@ class HeatMap:
                     track_graphics.plot_box(x, y, x + self._granularity, y + self._granularity, colour)
 
     # Old way - heatmap contains the stats
-    def draw_statistic(self, track_graphics: TrackGraphics, brightness: int, color_palette: ColorPalette,
+    def draw_statistic(self, track_graphics: TrackGraphics, brightness: int, color_palette: ColorPalette, visits_heatmap,
                        forced_max_stat=-1, forced_min_stat=-1):
         assert brightness in [-1, 0, 1, 2]
 
-        threshold = round(self._get_stats_count() / 10)
-
-        if brightness == 1:
-            threshold /= 2
-        elif brightness == 2:
-            threshold /= 3.5
-        elif brightness == -1:
-            threshold *= 1.5
-
-        (stats, min_stat, max_stat) = self._get_stats_array(np.median, threshold)
+        (stats, min_stat, max_stat) = self._get_stats_array(np.median, brightness, visits_heatmap)
         if max_stat == 0:
             return
 
@@ -166,19 +168,24 @@ class HeatMap:
                     count = max(count, len(x_stats))
         return count
 
-    def _get_stats_array(self, stat_method: callable, threshold: int = 0):
+    def _get_stats_array(self, stat_method: callable, brightness: int = 0, visits_heatmap = None):
+        if visits_heatmap:
+            visits, min_visits, _ = visits_heatmap.get_visits_and_scope_range(brightness)
+        else:
+            visits, min_visits = (None, None)
+
         min_value = math.nan
         max_value = 0.0
         new_stats = []
-        for y_stats in self._stats:
+        for yy, y_stats in enumerate(self._stats):
             new_y_stats = []
-            for x_stats in y_stats:
-                if x_stats and len(x_stats) >= threshold:
-                    stat = stat_method(np.array(x_stats))
-                    min_value = min(stat, min_value)
-                    max_value = max(stat, max_value)
-                else:
-                    stat = math.nan
+            for xx, x_stats in enumerate(y_stats):
+                stat = math.nan
+                if x_stats:
+                    if not visits_heatmap or visits[yy][xx] >= min_visits:
+                        stat = stat_method(np.array(x_stats))
+                        min_value = min(stat, min_value)
+                        max_value = max(stat, max_value)
                 new_y_stats.append(stat)
             new_stats.append(new_y_stats)
         return new_stats, min_value, max_value

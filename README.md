@@ -1,8 +1,10 @@
 # deep_racer_guru
 
-## Special Announcement
+## News
 
-Version 3 has now arrived (24th April 2021), with many new features and fixes
+* 20th May 2021: Version 3.1.0 has now arrived, adding the new "track fitting" feature and fixing various bugs including the issue in version 3.0.1
+* 20th May 2021: Version 3.0.1 has been withdrawn due to a fatal defect
+* 24th April 2021: Version 3.0.0 has now arrived, with many new features and fixes
 
 ## Introduction
 

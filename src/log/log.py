@@ -33,7 +33,7 @@ class Log:
 
     def load_meta(self, meta_file_name: str):
         self._meta_file_name = meta_file_name
-        with open(self._log_directory + "\\" + meta_file_name, 'rb') as file:
+        with open(os.path.join(self._log_directory, meta_file_name), 'rb') as file:
             received_json = json.load(file)
             self._log_meta.set_from_json(received_json)
 
@@ -64,7 +64,7 @@ class Log:
         self._analyze_episode_details()
 
     def save(self):
-        with open(self._log_directory + "\\" + self._meta_file_name, "w+") as meta_file:
+        with open(os.path.join(self._log_directory, self._meta_file_name), "w+") as meta_file:
             log_json = self._log_meta.get_as_json()
             json.dump(log_json, meta_file, indent=2)
 
@@ -96,7 +96,7 @@ class Log:
         self._log_directory = log_directory
 
     def _parse_intro_events(self):
-        with open(self._log_directory + "\\" + self._log_file_name, "r") as file:
+        with open(os.path.join(self._log_directory, self._log_file_name), "r") as file:
             for line_of_text in file:
                 if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
                     break
@@ -117,10 +117,10 @@ class Log:
         saved_object_locations = None
         iteration_id = 0
 
-        file_size = os.path.getsize(self._log_directory + "\\" + self._log_file_name)
+        file_size = os.path.getsize(os.path.join(self._log_directory, self._log_file_name))
         file_amount_read = 0
 
-        with open(self._log_directory + "\\" + self._log_file_name, "r") as file:
+        with open(os.path.join(self._log_directory, self._log_file_name), "r") as file:
             for line_of_text in file:
                 if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
                     intro = False

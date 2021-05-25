@@ -24,6 +24,30 @@ Download a log file as follows:
 * Note - DRG does NOT require any other files in the zip archive
 * If you wish, repeat this process to download log file(s) for other model(s) too
 
+### Download Logs from DRFC (DeepRacer-For-Cloud)
+
+You may find the following script useful:
+
+    !/bin/bash
+
+    cd $DR_DIR/data/logs
+    rm *.log *.zip
+
+    for name in `docker ps --format "{{.Names}}"`; do
+            docker logs ${name} >& ${name}.log
+    done
+
+    zip robomaker_log deepracer-0_robomaker.1.*.log
+    aws s3 cp robomaker_log.zip  s3://$DR_LOGS_COPY_S3_BUCKET/
+    
+To use this, you will need to set the value of $DR_LOGS_COPY_S3_BUCKET in the system.env configuration file, for example:
+
+    DR_LOGS_COPY_S3_BUCKET=dmh-2021-transfers/logs
+    
+This script will compress and store the correct log file in an S3 bucket for a **currently-running-training session**
+
+You can then easily download or transfer the log file to wherever you need to perform log analysis.
+
 ### Download Logs from Other Sources
 
 Simply transfer or copy **robomaker** log files into a directory/folder that DRG can access.

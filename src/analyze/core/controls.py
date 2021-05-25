@@ -818,9 +818,9 @@ class QuarterlyDistributionControl(Control):
     _LINES = "Lines"
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
-        super().__init__(guru_parent_redraw, control_frame, "Show Quarterly")
+        super().__init__(guru_parent_redraw, control_frame, "Show Quarters As")
 
-        self._distribution_choice = tk.StringVar(value=QuarterlyDistributionControl._NONE)
+        self._distribution_choice = tk.StringVar(value=QuarterlyDistributionControl._BARS)
 
     def _add_widgets(self):
         self.add_radiobutton_improved(QuarterlyDistributionControl._NONE, self._distribution_choice)
@@ -1048,3 +1048,31 @@ class EvaluationPairsControl(Control):
 
     def show_even(self):
         return self._pairing.get() == EvaluationPairsControl._EVEN
+
+
+class QuartersCheckButtonControl(Control):
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+        super().__init__(guru_parent_redraw, control_frame, "Quarters")
+
+        self._q1 = tk.BooleanVar(value=True)
+        self._q2 = tk.BooleanVar(value=False)
+        self._q3 = tk.BooleanVar(value=False)
+        self._q4 = tk.BooleanVar(value=True)
+
+    def _add_widgets(self):
+        self.add_checkbutton("Q1", self._q1)
+        self.add_checkbutton("Q2", self._q2)
+        self.add_checkbutton("Q3", self._q3)
+        self.add_checkbutton("Q4", self._q4)
+
+    def show_q1(self):
+        return self._q1.get()
+
+    def show_q2(self):
+        return self._q2.get()
+
+    def show_q3(self):
+        return self._q3.get()
+
+    def show_q4(self):
+        return self._q4.get()

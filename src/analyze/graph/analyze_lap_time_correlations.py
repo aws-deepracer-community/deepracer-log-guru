@@ -22,9 +22,10 @@ from src.episode.episode import Episode
 
 class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
-    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg,
+                 control_frame: tk.Frame, guru_parent_callback_for_episode_choice: callable):
 
-        super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
+        super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame, guru_parent_callback_for_episode_choice)
 
         self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame)
         self.predictions_control = PredictionsControl(guru_parent_redraw, control_frame)
@@ -178,7 +179,7 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
     def handle_chosen_item(self, item_index: int, artist: Artist):
         if artist in self._plotted_episode_ids:
-            print("DEBUG got LAP time item, episode id = ", self._plotted_episode_ids[artist][item_index])
+            self._guru_parent_callback_for_episode_choice(self._plotted_episode_ids[artist][item_index])
 
 
 def get_plot_data_distances(episodes: list):

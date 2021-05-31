@@ -19,13 +19,15 @@ from src.analyze.core.analyzer import Analyzer
 class GraphAnalyzer(Analyzer):
     last_drawn_analyzer = None
 
-    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg,
+                 control_frame: tk.Frame, guru_parent_callback_for_episode_choice=None):
         super().__init__(guru_parent_redraw, control_frame)
         self.matplotlib_canvas = matplotlib_canvas
         self.graph_figure: Figure = matplotlib_canvas.figure
         mpl_style.use("seaborn")
         self.graph_figure.patch.set_facecolor('lightgrey')
         self.graph_figure.canvas.mpl_connect('pick_event', self.handle_mouse_picker)
+        self._guru_parent_callback_for_episode_choice = guru_parent_callback_for_episode_choice
 
     def uses_graph_canvas(self):
         return True

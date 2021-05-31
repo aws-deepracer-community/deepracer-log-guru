@@ -23,9 +23,10 @@ from src.event.event_meta import Event
 
 class AnalyzeSectorTimeCorrelations(GraphAnalyzer):
 
-    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg,
+                 control_frame: tk.Frame, guru_parent_callback_for_episode_choice: callable):
 
-        super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
+        super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame, guru_parent_callback_for_episode_choice)
 
         self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame)
         self.correlation_control = CorrelationControl(guru_parent_redraw, control_frame, False)
@@ -170,7 +171,7 @@ class AnalyzeSectorTimeCorrelations(GraphAnalyzer):
     def handle_chosen_item(self, item_index: int, artist: Artist):
         if artist in self._plotted_episode_info:
             episode, _, _ = self._plotted_episode_info[artist][item_index]
-            print("DEBUG got SECTOR time item, episode id = ", episode.id)
+            self._guru_parent_callback_for_episode_choice(episode.id)
 
     @staticmethod
     def _get_plot_data_sector_times(episode_info: list):

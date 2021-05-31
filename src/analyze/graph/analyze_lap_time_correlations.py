@@ -8,6 +8,7 @@
 
 import tkinter as tk
 import numpy as np
+from matplotlib.artist import Artist
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
@@ -21,7 +22,7 @@ from src.episode.episode import Episode
 
 class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
-    def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg, control_frame :tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
@@ -30,6 +31,8 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         self.correlation_control = CorrelationControl(guru_parent_redraw, control_frame, True)
         self.format_control = GraphFormatControl(guru_parent_redraw, control_frame)
         self._line_fitting_control = GraphLineFittingControl(guru_parent_redraw, control_frame)
+
+        self._plotted_episode_ids = dict()
 
     def build_control_frame(self, control_frame):
         self.episode_control.add_to_control_frame()
@@ -40,6 +43,7 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
     def add_plots(self):
         axes: Axes = self.graph_figure.add_subplot()
+        self._plotted_episode_ids = dict()
 
         if self.episode_control.show_all():
             self.plot_episodes(axes, self.all_episodes, False, "C1", "All", "o")
@@ -53,7 +57,7 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         self.format_axes(axes)
 
-    def plot_episodes(self, axes: Axes, episodes: list, make_predictions :bool, colour, label, shape):
+    def plot_episodes(self, axes: Axes, episodes: list, make_predictions: bool, colour, label, shape):
 
         if not episodes:
             return
@@ -96,9 +100,9 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
                 return
 
         if make_predictions:
-            plot_x = get_plot_data_lap_times_predicted(episodes)
+            plot_x, episode_ids = get_plot_data_lap_times_predicted(episodes)
         else:
-            plot_x = get_plot_data_lap_times(episodes)
+            plot_x, episode_ids = get_plot_data_lap_times(episodes)
 
         # Calculate linear regression line through the points, if requested
         (smoothed_x, smoothed_y, r_label) = (None, None, None)
@@ -111,15 +115,17 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         # Finally plot the data we have gathered
         if self.format_control.swap_axes():
-            axes.plot(plot_y, plot_x, shape, color=colour, label=label, picker=True)
+            artist, = axes.plot(plot_y, plot_x, shape, color=colour, label=label, picker=True)
             if smoothed_y is not None:
                 axes.plot(smoothed_y, smoothed_x, color=colour, label=r_label)
         else:
-            axes.plot(plot_x, plot_y, shape, color=colour, label=label, picker=True)
+            artist, = axes.plot(plot_x, plot_y, shape, color=colour, label=label, picker=True)
             if smoothed_y is not None:
                 axes.plot(smoothed_x, smoothed_y, color=colour, label=r_label)
 
-    def format_axes(self, axes :Axes):
+        self._plotted_episode_ids[artist] = episode_ids
+
+    def format_axes(self, axes: Axes):
 
         general_title = "???"
         axis_label = "???"
@@ -170,8 +176,9 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
 
-    def handle_chosen_item(self, item_index: int):
-        print("DEBUG got LAP time item: ", item_index)
+    def handle_chosen_item(self, item_index: int, artist: Artist):
+        if artist in self._plotted_episode_ids:
+            print("DEBUG got LAP time item, episode id = ", self._plotted_episode_ids[artist][item_index])
 
 
 def get_plot_data_distances(episodes: list):
@@ -184,7 +191,7 @@ def get_plot_data_distances(episodes: list):
     return np.array(distances)
 
 
-def get_plot_data_peak_track_speeds(episodes :list):
+def get_plot_data_peak_track_speeds(episodes: list):
     speeds = []
 
     for e in episodes:
@@ -194,7 +201,7 @@ def get_plot_data_peak_track_speeds(episodes :list):
     return np.array(speeds)
 
 
-def get_plot_data_peak_progress_speeds(episodes :list):
+def get_plot_data_peak_progress_speeds(episodes: list):
     speeds = []
 
     for e in episodes:
@@ -206,21 +213,27 @@ def get_plot_data_peak_progress_speeds(episodes :list):
 
 def get_plot_data_lap_times(episodes: list):
     lap_times = []
+    episode_ids = []
 
     for e in episodes:
         if e.lap_complete:
             lap_times.append(e.time_taken)
+            episode_ids.append(e.id)
 
-    return np.array(lap_times)
+    return np.array(lap_times), episode_ids
+
 
 def get_plot_data_lap_times_predicted(episodes: list):
     lap_times = []
+    episode_ids = []
 
     for e in episodes:
         if is_predicted_episode(e):
             lap_times.append(e.predicted_lap_time)
+            episode_ids.append(e.id)
 
-    return np.array(lap_times)
+    return np.array(lap_times), episode_ids
+
 
 def get_plot_data_starting_points(episodes: list):
     starts = []
@@ -231,6 +244,7 @@ def get_plot_data_starting_points(episodes: list):
 
     return np.array(starts)
 
+
 def get_plot_data_starting_points_predicted(episodes: list):
     starts = []
 
@@ -239,6 +253,7 @@ def get_plot_data_starting_points_predicted(episodes: list):
             starts.append(e.events[0].closest_waypoint_index)
 
     return np.array(starts)
+
 
 def get_plot_data_average_rewards(episodes: list):
     rewards = []
@@ -249,6 +264,7 @@ def get_plot_data_average_rewards(episodes: list):
 
     return np.array(rewards)
 
+
 def get_plot_data_average_rewards_predicted(episodes: list):
     rewards = []
 
@@ -257,6 +273,7 @@ def get_plot_data_average_rewards_predicted(episodes: list):
             rewards.append(e.average_reward)
 
     return np.array(rewards)
+
 
 def get_plot_data_total_rewards(episodes: list):
     rewards = []
@@ -278,6 +295,7 @@ def get_plot_data_final_rewards(episodes: list):
 
     return np.array(rewards)
 
+
 def get_plot_data_total_rewards_predicted(episodes: list):
     rewards = []
 
@@ -286,6 +304,7 @@ def get_plot_data_total_rewards_predicted(episodes: list):
             rewards.append(e.predicted_lap_reward)
 
     return np.array(rewards)
+
 
 def get_plot_data_repeats(episodes: list):
     repeats = []
@@ -296,6 +315,7 @@ def get_plot_data_repeats(episodes: list):
 
     return np.array(repeats)
 
+
 def get_plot_data_iterations(episodes: list):
     iterations = []
 
@@ -304,6 +324,7 @@ def get_plot_data_iterations(episodes: list):
             iterations.append(e.iteration)
 
     return np.array(iterations)
+
 
 def get_plot_data_iterations_predicted(episodes: list):
     iterations = []
@@ -314,6 +335,7 @@ def get_plot_data_iterations_predicted(episodes: list):
 
     return np.array(iterations)
 
+
 def get_plot_data_flying_starts(episodes: list):
     starts = []
 
@@ -323,6 +345,7 @@ def get_plot_data_flying_starts(episodes: list):
 
     return np.array(starts)
 
+
 def get_plot_data_max_slide(episodes: list):
     slides = []
 
@@ -331,6 +354,7 @@ def get_plot_data_max_slide(episodes: list):
             slides.append(e.max_slide)
 
     return np.array(slides)
+
 
 def is_predicted_episode(e):
     return not e.lap_complete and e.percent_complete >= 5

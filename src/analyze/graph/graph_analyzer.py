@@ -9,7 +9,7 @@
 import tkinter as tk
 import math
 
-from matplotlib.axes import Axes
+from matplotlib.artist import Artist
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from matplotlib import style as mpl_style
@@ -19,7 +19,7 @@ from src.analyze.core.analyzer import Analyzer
 class GraphAnalyzer(Analyzer):
     last_drawn_analyzer = None
 
-    def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg, control_frame :tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame)
         self.matplotlib_canvas = matplotlib_canvas
         self.graph_figure: Figure = matplotlib_canvas.figure
@@ -46,11 +46,11 @@ class GraphAnalyzer(Analyzer):
     def handle_mouse_picker(self, event):
         if self == GraphAnalyzer.last_drawn_analyzer:
             if len(event.ind == 1) and event.artist.axes in self.graph_figure.get_axes():
-                self.handle_chosen_item(event.ind[0])
+                self.handle_chosen_item(event.ind[0], event.artist)
 
-    ##########################
-    ### ABSTRACT INTERFACE ###
-    ##########################
+    ########################
+    #  ABSTRACT INTERFACE  #
+    ########################
 
     # These are ADDITIONAL to the interface in Analyzer
 
@@ -58,7 +58,7 @@ class GraphAnalyzer(Analyzer):
         # You *MUST* override this
         pass
 
-    def handle_chosen_item(self, item_index: int):
+    def handle_chosen_item(self, item_index: int, artist: Artist):
         # You *MAY* override this
         pass
 

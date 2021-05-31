@@ -92,11 +92,11 @@ class AnalyzeSectorTimeCorrelations(GraphAnalyzer):
 
         # Finally plot the data we have gathered
         if self.format_control.swap_axes():
-            axes.plot(plot_y, plot_x, shape, color=colour, label=label)
+            axes.plot(plot_y, plot_x, shape, color=colour, label=label, picker=True)
             if smoothed_y is not None:
                 axes.plot(smoothed_y, smoothed_x, color=colour, label=r_label)
         else:
-            axes.plot(plot_x, plot_y, shape, color=colour, label=label)
+            axes.plot(plot_x, plot_y, shape, color=colour, label=label, picker=True)
             if smoothed_y is not None:
                 axes.plot(smoothed_x, smoothed_y, color=colour, label=r_label)
 
@@ -160,6 +160,9 @@ class AnalyzeSectorTimeCorrelations(GraphAnalyzer):
                     info.append((e, start_event, finish_event))
 
         return info
+
+    def handle_chosen_item(self, item_index: int):
+        print("DEBUG got SECTOR time item: ", item_index)
 
     @staticmethod
     def _get_plot_data_sector_times(episode_info: list):

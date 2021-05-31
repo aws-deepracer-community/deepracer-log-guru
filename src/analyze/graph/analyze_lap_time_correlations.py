@@ -111,11 +111,11 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         # Finally plot the data we have gathered
         if self.format_control.swap_axes():
-            axes.plot(plot_y, plot_x, shape, color=colour, label=label)
+            axes.plot(plot_y, plot_x, shape, color=colour, label=label, picker=True)
             if smoothed_y is not None:
                 axes.plot(smoothed_y, smoothed_x, color=colour, label=r_label)
         else:
-            axes.plot(plot_x, plot_y, shape, color=colour, label=label)
+            axes.plot(plot_x, plot_y, shape, color=colour, label=label, picker=True)
             if smoothed_y is not None:
                 axes.plot(smoothed_x, smoothed_y, color=colour, label=r_label)
 
@@ -169,6 +169,9 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
+
+    def handle_chosen_item(self, item_index: int):
+        print("DEBUG got LAP time item: ", item_index)
 
 
 def get_plot_data_distances(episodes: list):

@@ -27,6 +27,9 @@ from src.tracks.lars_loop_track import LarsLoopTrack
 from src.tracks.lars_circuit_track import LarsCircuitTrack
 from src.tracks.kuei_raceway_track import KueiRacewayTrack
 from src.tracks.kuei_super_raceway_track import KueiSuperRacewayTrack
+from src.tracks.cosmic_loop_track import CosmicLoopTrack
+from src.tracks.cosmic_circuit_track import CosmicCircuitTrack
+
 
 def get_all_tracks():
     tracks = {}
@@ -37,7 +40,7 @@ def get_all_tracks():
               RogerRacewayTrack(), FumiakiLoop2020Track(), SummitRacewayTrack(),
               Sola2020Track(), Baadal2020Track(), Barcelona2020Track(), BowtieTrack(),
               PoChunSuperSpeedwayTrack(), PoChunSpeedwayTrack(), LarsCircuitTrack(), LarsLoopTrack(),
-              KueiRacewayTrack(), KueiSuperRacewayTrack()
+              KueiRacewayTrack(), KueiSuperRacewayTrack(), CosmicLoopTrack(), CosmicCircuitTrack()
               ]:
         t.prepare(tracks)
 

@@ -76,3 +76,7 @@ lars_circuit_annotations = []
 kuei_raceway_annotations = []
 
 kuei_super_raceway_annotations = []
+
+cosmic_loop_annotations = []
+
+cosmic_circuit_annotations = []

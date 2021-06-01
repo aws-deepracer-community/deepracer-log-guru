@@ -45,7 +45,8 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         if not self.all_episodes:
             return
 
-        gs = GridSpec(1, 2)
+        gs = self.graph_figure.add_gridspec(1, 2, left=0.08, right=0.98, bottom=0.08, top=0.92)
+
         axes_left: Axes = self.graph_figure.add_subplot(gs[0, 0])
         axes_right: Axes = self.graph_figure.add_subplot(gs[0, 1])
 

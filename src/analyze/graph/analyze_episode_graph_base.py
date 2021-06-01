@@ -12,6 +12,7 @@ import math
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
+from matplotlib.figure import SubplotParams
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.analyze.core.episode_selector import EpisodeSelector
@@ -54,7 +55,11 @@ class AnalyzeEpisodeStat(GraphAnalyzer):
     def add_plots(self):
         self.additional_preparation_for_plots()
 
-        axes :Axes = self.graph_figure.add_subplot()
+        if self.use_second_axis_scale:
+            grid_spec = self.graph_figure.add_gridspec(1, 1, left=0.08, right=0.92, bottom=0.08, top=0.92)
+        else:
+            grid_spec = self.graph_figure.add_gridspec(1, 1, left=0.08, right=0.98, bottom=0.08, top=0.92)
+        axes: Axes = self.graph_figure.add_subplot(grid_spec[0])
         if self.use_second_axis_scale:
             axes2 :Axes = axes.twinx()
         else:

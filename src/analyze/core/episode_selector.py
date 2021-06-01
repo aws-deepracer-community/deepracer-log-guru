@@ -8,6 +8,7 @@
 
 import tkinter as tk
 from re import fullmatch
+from tkinter import messagebox
 
 
 class EpisodeSelector:
@@ -58,7 +59,7 @@ class EpisodeSelector:
                 return None
 
     def select_specific_episode(self, episode_id: int):
-        assert 0 <= episode_id <= len(self._all_episodes)
+        assert 0 <= episode_id < len(self._all_episodes)
         self._episode_number_entry.set(str(episode_id))
         self._chosen_episode_specific_id = episode_id
         self.update_episode_info_in_ui_()
@@ -71,22 +72,25 @@ class EpisodeSelector:
 
         label_frame = tk.LabelFrame(parent_frame, text="Episode", padx=5, pady=5)
 
-        previous_button = tk.Button(label_frame, height=2, text="<<")
+        previous_button = tk.Button(label_frame, width=4, text="<<")
         previous_button["command"] = self.button_press_previous
         previous_button.grid(column=0, row=0, pady=5, padx=3)
 
-        next_button = tk.Button(label_frame, height=2, text=">>")
+        next_button = tk.Button(label_frame, width=4, text=">>")
         next_button["command"] = self.button_press_next
         next_button.grid(column=1, row=0, pady=5, padx=3)
 
-        first_button = tk.Button(label_frame, height=2, text="First")
+        first_button = tk.Button(label_frame, width=4, text="First")
         first_button["command"] = self.button_press_first
         first_button.grid(column=2, row=0, pady=5, padx=3)
 
-        tk.Label(label_frame, text="Or go to #").grid(column=0, row=1, columnspan=2, pady=5, padx=3)
+        goto_button = tk.Button(label_frame, width=4, text="Go to")
+        goto_button["command"] = self.button_press_goto
+        goto_button.grid(column=0, row=1, pady=5, padx=3)
+
         tk.Entry(
             label_frame, textvariable=self._episode_number_entry, width=5,
-            validate="key", validatecommand=self._validate_episode_id).grid(column=2, row=1, pady=5, padx=5)
+            validate="key", validatecommand=self._validate_episode_id).grid(column=1, row=1, sticky=tk.E, pady=5, padx=5)
 
         self.episode_info = tk.Label(label_frame, text="", textvariable=self.tk_episode_info_var_, justify=tk.LEFT)
         self.episode_info.grid(column=0, row=2, columnspan=3, pady=3, sticky=tk.W)
@@ -103,9 +107,15 @@ class EpisodeSelector:
         if not self._filtered_episodes:
             return
 
-        self._remove_any_specific_episode_choice()
-
-        self._chosen_episode_filter_index += 1
+        if self._chosen_episode_specific_id is not None:
+            current_index = self._get_nearest_filter_index(self._chosen_episode_specific_id)
+            if self._filtered_episodes[current_index].id == self._chosen_episode_specific_id:
+                self._chosen_episode_filter_index = current_index + 1
+            else:
+                self._chosen_episode_filter_index = current_index
+            self._remove_any_specific_episode_choice()
+        else:
+            self._chosen_episode_filter_index += 1
 
         if self._chosen_episode_filter_index >= len(self._filtered_episodes):
             self._chosen_episode_filter_index = 0
@@ -117,9 +127,12 @@ class EpisodeSelector:
         if not self._filtered_episodes:
             return
 
-        self._remove_any_specific_episode_choice()
-
-        self._chosen_episode_filter_index -= 1
+        if self._chosen_episode_specific_id is not None:
+            current_index = self._get_nearest_filter_index(self._chosen_episode_specific_id)
+            self._chosen_episode_filter_index = current_index - 1
+            self._remove_any_specific_episode_choice()
+        else:
+            self._chosen_episode_filter_index -= 1
 
         if self._chosen_episode_filter_index < 0:
             self._chosen_episode_filter_index = len(self._filtered_episodes) - 1
@@ -137,6 +150,17 @@ class EpisodeSelector:
 
         self.update_episode_info_in_ui_()
         self.callback_method_()
+
+    def button_press_goto(self):
+        if self._episode_number_entry.get() != "" and self._all_episodes is not None:
+            episode_id = int(self._episode_number_entry.get())
+            max_episode_id = len(self._all_episodes) - 1
+            if episode_id > max_episode_id:
+                messagebox.showerror("Invalid Episode Id",
+                                     "No such episode #" + str(episode_id) +
+                                     "\nEnter a number in the range 0 to " + str(max_episode_id))
+            else:
+                self.select_specific_episode(episode_id)
 
     def update_episode_info_in_ui_(self):
         episode = self.get_selected_episode()
@@ -157,6 +181,15 @@ class EpisodeSelector:
     def _remove_any_specific_episode_choice(self):
         self._chosen_episode_specific_id = None
         self._episode_number_entry.set("")
+
+    def _get_nearest_filter_index(self, actual_episode_id):
+        if self._filtered_episodes is not None:
+            for i, e in enumerate(self._filtered_episodes):
+                if e.id >= actual_episode_id:
+                    return i
+            return 0
+        else:
+            return None
 
 
 def on_validate_episode_id(new_value):

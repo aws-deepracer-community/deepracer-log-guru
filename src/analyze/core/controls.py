@@ -1076,3 +1076,17 @@ class QuartersCheckButtonControl(Control):
 
     def show_q4(self):
         return self._q4.get()
+
+
+class ShowLastStepControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
+        super().__init__(guru_parent_redraw, control_frame, "Last Step")
+
+        self._show_last_step = tk.BooleanVar(value=True)
+
+    def _add_widgets(self):
+        self.add_checkbutton("Show", self._show_last_step)
+
+    def show_last_step(self):
+        return self._show_last_step.get()

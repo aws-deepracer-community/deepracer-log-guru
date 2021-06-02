@@ -18,8 +18,8 @@ from src.analyze.core.line_fitting import get_linear_regression, get_polynomial_
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
 
-from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl,\
-    GraphScaleControl, GraphLineFittingControl, EvaluationPairsControl
+from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl, \
+    GraphScaleControl, GraphLineFittingControl, EvaluationPairsControl, ShowFinalIterationControl
 
 
 class AnalyzeTrainingProgress(GraphAnalyzer):
@@ -33,6 +33,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self._scale_control = GraphScaleControl(guru_parent_redraw, control_frame)
         self._line_fitting_control = GraphLineFittingControl(guru_parent_redraw, control_frame)
         self._evaluation_pairs_control = EvaluationPairsControl(guru_parent_redraw, control_frame)
+        self._final_iteration_control = ShowFinalIterationControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
         self.episode_control.add_to_control_frame()
@@ -40,6 +41,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self._scale_control.add_to_control_frame()
         self._line_fitting_control.add_to_control_frame()
         self._evaluation_pairs_control.add_to_control_frame()
+        self._final_iteration_control.add_to_control_frame()
 
     def add_plots(self):
         if not self.all_episodes:
@@ -148,7 +150,8 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         return self._scale_control.fixed_scale()
 
     def add_plot_iteration_vs_total_reward(self, axes: Axes, label, episodes, stat_method, colour):
-        (plot_x, plot_y) = get_plot_data_iteration_vs_total_reward(episodes, stat_method)
+        show_final_iteration = self._final_iteration_control.show_final_iteration()
+        (plot_x, plot_y) = get_plot_data_iteration_vs_total_reward(episodes, stat_method, show_final_iteration)
         self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
 
     def add_plot_iteration_vs_evaluation_total_reward(self, axes: Axes, label, evaluation_phases, stat_method, colour):
@@ -156,7 +159,8 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
 
     def add_plot_iteration_vs_percent_complete(self, axes: Axes, label, episodes, stat_method, colour):
-        (plot_x, plot_y) = get_plot_data_iteration_vs_percent_complete(episodes, stat_method)
+        show_final_iteration = self._final_iteration_control.show_final_iteration()
+        (plot_x, plot_y) = get_plot_data_iteration_vs_percent_complete(episodes, stat_method, show_final_iteration)
         self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
 
     def add_plot_iteration_vs_evaluation_percent_complete(self, axes: Axes, label, evaluation_phases, stat_method, colour):
@@ -218,13 +222,17 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         return np.array(plot_iteration), np.array(plot_data)
 
 
-def get_plot_data_iteration_vs_total_reward(episodes, stat_method):
+def get_plot_data_iteration_vs_total_reward(episodes, stat_method, show_final_iteration: bool):
     iteration_count = episodes[-1].iteration + 1
 
     # Gather all the percentage completions into a list per iteration
     iteration_reward = get_list_of_empty_lists(iteration_count)
     for e in episodes:
         iteration_reward[e.iteration].append(e.total_reward)
+
+    if not show_final_iteration:
+        iteration_count -= 1
+        iteration_reward = iteration_reward[:-1]
 
     # Build the plot data using numpy to get the average percent for each iteration
     plot_iteration = np.arange(0, iteration_count)
@@ -238,13 +246,17 @@ def get_plot_data_iteration_vs_total_reward(episodes, stat_method):
     return plot_iteration, plot_total_reward
 
 
-def get_plot_data_iteration_vs_percent_complete(episodes, stat_method):
+def get_plot_data_iteration_vs_percent_complete(episodes, stat_method, show_final_iteration: bool):
     iteration_count = episodes[-1].iteration + 1
 
     # Gather all the percentage completions into a list per iteration
     iteration_percent_complete = get_list_of_empty_lists(iteration_count)
     for e in episodes:
         iteration_percent_complete[e.iteration].append(e.percent_complete)
+
+    if not show_final_iteration:
+        iteration_count -= 1
+        iteration_percent_complete = iteration_percent_complete[:-1]
 
     # Build the plot data using numpy to get the average percent for each iteration
     plot_iteration = np.arange(0, iteration_count)

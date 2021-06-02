@@ -1090,3 +1090,17 @@ class ShowLastStepControl(Control):
 
     def show_last_step(self):
         return self._show_last_step.get()
+
+
+class ShowFinalIterationControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
+        super().__init__(guru_parent_redraw, control_frame, "Final Iteration")
+
+        self._show_final_iteration = tk.BooleanVar(value=False)
+
+    def _add_widgets(self):
+        self.add_checkbutton("Show", self._show_final_iteration)
+
+    def show_final_iteration(self):
+        return self._show_final_iteration.get()

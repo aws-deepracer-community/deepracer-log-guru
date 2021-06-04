@@ -6,7 +6,9 @@
 # Copyright (c) 2021 dmh23
 #
 
-from src.personalize.reward_functions.prevent_zig_zag import reward_function
+# ***************
+from src.personalize.reward_functions.private.model_orange_b import reward_function
+
 NEW_REWARD_FUNCTION = reward_function
 
 DISCOUNT_FACTORS = [0.999, 0.99, 0.97, 0.95, 0.9]

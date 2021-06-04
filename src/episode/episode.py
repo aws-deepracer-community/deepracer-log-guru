@@ -85,7 +85,8 @@ class Episode:
         self.set_acceleration_and_braking_on_events()
 
         if do_full_analysis:
-            self._blocked_left_waypoints, self._blocked_right_waypoints = self.get_blocked_waypoints(track)
+            (self._blocked_left_waypoints, self._blocked_right_waypoints,
+             self._blocked_left_object_locations, self._blocked_right_object_locations) = self.get_blocked_waypoints(track)
             self.set_projected_distances_on_events(track)   # Relies on blocked waypoints
             self._set_distance_from_center_on_events(track)
             self._set_before_and_after_waypoints_on_events(track)
@@ -107,6 +108,8 @@ class Episode:
             self.new_discounted_future_rewards = []
             self._blocked_left_waypoints = []
             self._blocked_right_waypoints = []
+            self._blocked_left_object_locations = []
+            self._blocked_right_object_locations = []
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -278,14 +281,19 @@ class Episode:
     def get_blocked_waypoints(self, track: Track):
         left_wps = []
         right_wps = []
+        left_locations = []
+        right_locations = []
+
         for obj in self.object_locations:
             wp = track.get_closest_waypoint_id(obj)
             pos = track.get_position_of_point_relative_to_waypoint(obj, wp)
             if pos == "L":
                 left_wps.append(wp)
+                left_locations.append(obj)
             else:
                 right_wps.append(wp)
-        return left_wps, right_wps
+                right_locations.append(obj)
+        return left_wps, right_wps, left_locations, right_locations
 
     def set_projected_distances_on_events(self, track: Track):
         e: Event
@@ -293,7 +301,9 @@ class Episode:
             e.projected_travel_distance = track.get_projected_distance_on_track((e.x, e.y), e.true_bearing,
                                                                                 e.closest_waypoint_index, 0.0,
                                                                                 self._blocked_left_waypoints,
-                                                                                self._blocked_right_waypoints)
+                                                                                self._blocked_right_waypoints,
+                                                                                self._blocked_left_object_locations,
+                                                                                self._blocked_right_object_locations)
 
     def set_reward_total_on_events(self):
         reward_total = 0.0

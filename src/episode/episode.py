@@ -85,7 +85,8 @@ class Episode:
         self.set_acceleration_and_braking_on_events()
 
         if do_full_analysis:
-            self.set_projected_distances_on_events(track)
+            self._blocked_left_waypoints, self._blocked_right_waypoints = self.get_blocked_waypoints(track)
+            self.set_projected_distances_on_events(track)   # Relies on blocked waypoints
             self._set_distance_from_center_on_events(track)
             self._set_before_and_after_waypoints_on_events(track)
             self._set_skew_on_events(track)   # Relies on before and after
@@ -101,10 +102,11 @@ class Episode:
 
             self._set_discounted_future_rewards(calculate_alternate_discount_factors)
             self.discounted_future_rewards = self._get_lists_of_discounted_future_rewards()
-
         else:
             self.new_rewards = []
             self.new_discounted_future_rewards = []
+            self._blocked_left_waypoints = []
+            self._blocked_right_waypoints = []
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -273,10 +275,25 @@ class Episode:
                     e.acceleration = (later_event.track_speed - earlier_event.track_speed) / time_difference
             previous_time = e.time_elapsed
 
+    def get_blocked_waypoints(self, track: Track):
+        left_wps = []
+        right_wps = []
+        for obj in self.object_locations:
+            wp = track.get_closest_waypoint_id(obj)
+            pos = track.get_position_of_point_relative_to_waypoint(obj, wp)
+            if pos == "L":
+                left_wps.append(wp)
+            else:
+                right_wps.append(wp)
+        return left_wps, right_wps
+
     def set_projected_distances_on_events(self, track: Track):
         e: Event
         for e in self.events:
-            e.projected_travel_distance = track.get_projected_distance_on_track((e.x, e.y), e.true_bearing, e.closest_waypoint_index)
+            e.projected_travel_distance = track.get_projected_distance_on_track((e.x, e.y), e.true_bearing,
+                                                                                e.closest_waypoint_index, 0.0,
+                                                                                self._blocked_left_waypoints,
+                                                                                self._blocked_right_waypoints)
 
     def set_reward_total_on_events(self):
         reward_total = 0.0

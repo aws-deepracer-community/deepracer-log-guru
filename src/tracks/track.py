@@ -272,57 +272,114 @@ class Track:
             return previous_id, closest_waypoint_id
 
     def get_projected_distance_on_track(self, point: Point, heading: float, closest_waypoint_id: int,
-                                        path_width: float = 0.0):
+                                        path_width: float = 0.0,
+                                        blocked_left_waypoints=None, blocked_right_waypoints=None):
+        if blocked_left_waypoints is None:
+            blocked_left_waypoints = []
+        if blocked_right_waypoints is None:
+            blocked_right_waypoints = []
+
         heading = geometry.get_angle_in_proper_range(heading)
 
         if path_width > 0.0:
             side_point_1 = geometry.get_point_at_bearing(point, heading + 90, path_width / 2)
             side_point_2 = geometry.get_point_at_bearing(point, heading - 90, path_width / 2)
-            return min(self.get_projected_distance_on_track(point, heading, closest_waypoint_id),
-                       self.get_projected_distance_on_track(side_point_1, heading, closest_waypoint_id),
-                       self.get_projected_distance_on_track(side_point_2, heading, closest_waypoint_id))
+            return min(self.get_projected_distance_on_track(point, heading, closest_waypoint_id, 0.0,
+                                                            blocked_left_waypoints, blocked_right_waypoints),
+                       self.get_projected_distance_on_track(side_point_1, heading, closest_waypoint_id, 0.0,
+                                                            blocked_left_waypoints, blocked_right_waypoints),
+                       self.get_projected_distance_on_track(side_point_2, heading, closest_waypoint_id, 0.0,
+                                                            blocked_left_waypoints, blocked_right_waypoints))
 
-        (before_waypoint_id, after_waypoint_id) = self.get_waypoint_ids_before_and_after(point,
-                                                                                         closest_waypoint_id, True)
+        before_waypoint_id, after_waypoint_id = self.get_waypoint_ids_before_and_after(point, closest_waypoint_id, True)
+
         previous_left = self._drawing_points[before_waypoint_id].left_safe
         previous_right = self._drawing_points[before_waypoint_id].right_safe
 
         for w in self._drawing_points[after_waypoint_id:] + self._drawing_points[:after_waypoint_id]:
-            direction_to_left_target = geometry.get_bearing_between_points(point, w.left_safe)
-            direction_to_right_target = geometry.get_bearing_between_points(point, w.right_safe)
+            off_track_distance = self._get_off_track_distance(point, heading, previous_left, previous_right, w)
+            hit_object_distance = self._get_hit_object_distance(point, heading, blocked_left_waypoints, blocked_right_waypoints, w)
 
-            relative_direction_to_left_target = geometry.get_turn_between_directions(heading, direction_to_left_target)
-            relative_direction_to_right_target = geometry.get_turn_between_directions(heading, direction_to_right_target)
-
-            if relative_direction_to_left_target >= 0 and relative_direction_to_right_target <= 0:
+            if off_track_distance is None and hit_object_distance is None:
                 previous_left = w.left_safe
                 previous_right = w.right_safe
+            elif off_track_distance is None:
+                return hit_object_distance
+            elif hit_object_distance is None:
+                return off_track_distance
             else:
-                point2 = geometry.get_point_at_bearing(point, heading, 1)   # Just some random distance (1m)
-                if w.left_safe == previous_left:
-                    off_track_left = previous_left
-                else:
-                    off_track_left = geometry.get_intersection_of_two_lines(point, point2, w.left_safe, previous_left)
-                if w.right_safe == previous_right:
-                    off_track_right = previous_right
-                else:
-                    off_track_right = geometry.get_intersection_of_two_lines(point, point2, w.right_safe, previous_right)
+                return min(hit_object_distance, off_track_distance)
 
-                left_bearing = geometry.get_bearing_between_points(point, off_track_left)
-                right_bearing = geometry.get_bearing_between_points(point, off_track_right)
+    @staticmethod
+    def _get_off_track_distance(point: Point, heading: float, previous_left, previous_right, drawing_point):
+        left_safe = drawing_point.left_safe
+        right_safe = drawing_point.right_safe
 
-                distances = []
-                if abs(geometry.get_turn_between_directions(left_bearing, heading)) < 1:
-                    if geometry.is_point_between(off_track_left, w.left_safe, previous_left):
-                        distances += [geometry.get_distance_between_points(point, off_track_left)]
-                if abs(geometry.get_turn_between_directions(right_bearing, heading)) < 1:
-                    if geometry.is_point_between(off_track_right, w.right_safe, previous_right):
-                        distances += [geometry.get_distance_between_points(point, off_track_right)]
+        direction_to_left_target = geometry.get_bearing_between_points(point, left_safe)
+        direction_to_right_target = geometry.get_bearing_between_points(point, right_safe)
 
-                if len(distances) > 0:
-                    return max(distances)
-                else:
-                    return 0.0
+        relative_direction_to_left_target = geometry.get_turn_between_directions(heading, direction_to_left_target)
+        relative_direction_to_right_target = geometry.get_turn_between_directions(heading, direction_to_right_target)
+
+        if relative_direction_to_left_target >= 0 and relative_direction_to_right_target <= 0:
+            return None
+        else:
+            point2 = geometry.get_point_at_bearing(point, heading, 1)  # Just some random distance (1m)
+            if left_safe == previous_left:
+                off_track_left = previous_left
+            else:
+                off_track_left = geometry.get_intersection_of_two_lines(point, point2, left_safe, previous_left)
+            if right_safe == previous_right:
+                off_track_right = previous_right
+            else:
+                off_track_right = geometry.get_intersection_of_two_lines(point, point2, right_safe, previous_right)
+
+            left_bearing = geometry.get_bearing_between_points(point, off_track_left)
+            right_bearing = geometry.get_bearing_between_points(point, off_track_right)
+
+            distances = []
+            if abs(geometry.get_turn_between_directions(left_bearing, heading)) < 1:
+                if geometry.is_point_between(off_track_left, left_safe, previous_left):
+                    distances += [geometry.get_distance_between_points(point, off_track_left)]
+            if abs(geometry.get_turn_between_directions(right_bearing, heading)) < 1:
+                if geometry.is_point_between(off_track_right, right_safe, previous_right):
+                    distances += [geometry.get_distance_between_points(point, off_track_right)]
+
+            if len(distances) > 0:
+                return max(distances)
+            else:
+                return 0.0
+
+    @staticmethod
+    def _get_hit_object_distance(point: Point, heading: float, blocked_left, blocked_right, drawing_point):
+        no_object = True
+        if drawing_point.id in blocked_left:
+            left_safe = drawing_point.middle
+            no_object = False
+        else:
+            left_safe = drawing_point.left_safe
+
+        if drawing_point.id in blocked_right:
+            right_safe = drawing_point.middle
+            no_object = False
+        else:
+            right_safe = drawing_point.right_safe
+
+        if no_object:
+            return None
+
+        direction_to_left_target = geometry.get_bearing_between_points(point, left_safe)
+        direction_to_right_target = geometry.get_bearing_between_points(point, right_safe)
+
+        relative_direction_to_left_target = geometry.get_turn_between_directions(heading, direction_to_left_target)
+        relative_direction_to_right_target = geometry.get_turn_between_directions(heading, direction_to_right_target)
+
+        if relative_direction_to_left_target >= 0 and relative_direction_to_right_target <= 0:
+            return None
+        else:
+            point2 = geometry.get_point_at_bearing(point, heading, 1)  # Just some random distance (1m)
+            hit_point = geometry.get_intersection_of_two_lines(point, point2, drawing_point.left, drawing_point.right)
+            return geometry.get_distance_between_points(point, hit_point)
 
     def get_sector_coordinates(self, sector: str):
         start, finish = self.get_sector_start_and_finish(sector)
@@ -475,7 +532,7 @@ class Track:
                 previous = w
 
             is_divider = (i in self._track_sector_dividers)
-            self._drawing_points.append(Track.DrawingPoint(left, w, right, left_outer, right_outer,
+            self._drawing_points.append(Track.DrawingPoint(i, left, w, right, left_outer, right_outer,
                                                            left_safe, right_safe, is_divider))
 
         self._mid_x = (self._min_x + self._max_x) / 2
@@ -565,10 +622,11 @@ class Track:
         return chr(ord("A") + sector_id)
 
     class DrawingPoint:
-        def __init__(self, left: Point, middle: Point, right: Point,
+        def __init__(self, waypoint_id: int, left: Point, middle: Point, right: Point,
                      left_outer: Point, right_outer: Point,
                      left_safe: Point, right_safe: Point,
                      is_divider: bool):
+            self.id = waypoint_id
             self.left = left
             self.middle = middle
             self.right = right

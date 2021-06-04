@@ -27,6 +27,11 @@ from src.personalize.configuration.analysis import NEW_REWARD_FUNCTION, TIME_BEF
 
 SLIDE_SETTLING_PERIOD = 6
 
+REVERSED = "R"
+OFF_TRACK = "O"
+CRASHED = "C"
+LAP_COMPLETE = "L"
+
 
 class Episode:
 
@@ -45,6 +50,16 @@ class Episode:
         last_event = events[-1]
 
         if last_event.status == "lap_complete":
+            self.outcome = LAP_COMPLETE
+        elif last_event.status == "reversed":
+            self.outcome = REVERSED
+        elif last_event.status == "off_track":
+            self.outcome = OFF_TRACK
+        else:
+            assert last_event.status == "crashed"
+            self.outcome = CRASHED
+
+        if self.outcome == LAP_COMPLETE:
             self.lap_complete = True
             self.percent_complete = 100
         elif len(events) == 1:
@@ -304,6 +319,8 @@ class Episode:
                                                                                 self._blocked_right_waypoints,
                                                                                 self._blocked_left_object_locations,
                                                                                 self._blocked_right_object_locations)
+        if self.outcome in [OFF_TRACK, CRASHED]:
+            self.events[-1].projected_travel_distance = 0.0
 
     def set_reward_total_on_events(self):
         reward_total = 0.0

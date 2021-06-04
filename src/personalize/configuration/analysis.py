@@ -6,8 +6,7 @@
 # Copyright (c) 2021 dmh23
 #
 
-# ***************
-from src.personalize.reward_functions.private.model_orange_b import reward_function
+from src.personalize.reward_functions.follow_centre_line import reward_function
 
 NEW_REWARD_FUNCTION = reward_function
 

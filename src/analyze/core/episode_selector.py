@@ -33,8 +33,25 @@ class EpisodeSelector:
     #
 
     def set_filtered_episodes(self, filtered_episodes):
+        old_episode = self.get_selected_episode()
+        if old_episode is not None:
+            old_episode_id = old_episode.id
+        else:
+            old_episode_id = None
+
         self._filtered_episodes = filtered_episodes
         self._chosen_episode_filter_index = 0
+
+        keep_specific_choice = False
+        if old_episode_id is not None:
+            for i, e in enumerate(filtered_episodes):
+                if e.id == old_episode_id:
+                    self._chosen_episode_filter_index = i
+                    if old_episode_id == self._chosen_episode_specific_id:
+                        keep_specific_choice = True
+
+        if not keep_specific_choice:
+            self._remove_any_specific_episode_choice()
 
         self.update_episode_info_in_ui_()
 

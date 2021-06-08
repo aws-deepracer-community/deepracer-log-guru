@@ -8,11 +8,16 @@
 
 from tkinter import *
 
+from src.episode.episode import REVERSED, OFF_TRACK, CRASHED, LAP_COMPLETE, LOST_CONTROL
 from src.tracks.track import Track
 from src.ui.dialog import Dialog, on_validate_waypoint_id
 from src.episode.episode_filter import EpisodeFilter
 
 OPTION_NO_SECTOR = "n/a"
+
+OUTCOME_MAPPING = {"": None, "Reversed": REVERSED, "Off Track": OFF_TRACK, "Crashed": CRASHED,
+                   "Lap Complete": LAP_COMPLETE, "Lost Control": LOST_CONTROL}
+
 
 class EpisodeFilterDialog(Dialog):
     def __init__(self, parent):
@@ -31,6 +36,11 @@ class EpisodeFilterDialog(Dialog):
         self.filter_min_average_reward = make_nullable_var(self.episode_filter.filter_min_average_reward)
         self.filter_peak_track_speed = make_nullable_var(self.episode_filter.filter_peak_track_speed)
         self.filter_max_slide = make_nullable_var(self.episode_filter.filter_max_slide)
+
+        self.filter_outcome = StringVar(value=None)
+        for (ui_text, episode_key) in OUTCOME_MAPPING.items():
+            if episode_key == self.episode_filter.filter_outcome:
+                self.filter_outcome.set(ui_text)
 
         self.filter_specific_waypoint_id = make_nullable_var(self.episode_filter.filter_specific_waypoint_id)
         self.filter_specific_waypoint_min_reward = make_nullable_var(self.episode_filter.filter_specific_waypoint_min_reward)
@@ -94,7 +104,7 @@ class EpisodeFilterDialog(Dialog):
 
         #
 
-        episode_stat_group = LabelFrame(master, text="Episode Stat", padx=5, pady=5)
+        episode_stat_group = LabelFrame(master, text="Whole Episode", padx=5, pady=5)
         episode_stat_group.grid(column=0, row=3, pady=5, padx=5, sticky=W)
 
         Label(episode_stat_group, text="Steps <=").grid(column=0, row=2, pady=5, padx=5, sticky=E)
@@ -121,6 +131,10 @@ class EpisodeFilterDialog(Dialog):
         Entry(
             episode_stat_group, textvariable=self.filter_max_slide,
             validate="key", validatecommand=self.validate_positive_integer).grid(column=1, row=6, pady=5, padx=5)
+
+        Label(episode_stat_group, text="Outcome =").grid(column=0, row=7, pady=5, padx=5, sticky=E)
+        OptionMenu(episode_stat_group, self.filter_outcome,
+                   *OUTCOME_MAPPING.keys()).grid(column=1, row=7, pady=5, padx=5, sticky=W)
 
         #
 
@@ -177,6 +191,7 @@ class EpisodeFilterDialog(Dialog):
         self.episode_filter.filter_min_average_reward = get_nullable_float_entry(self.filter_min_average_reward)
         self.episode_filter.filter_peak_track_speed = get_nullable_float_entry(self.filter_peak_track_speed)
         self.episode_filter.filter_max_slide = get_nullable_int_entry(self.filter_max_slide)
+        self.episode_filter.filter_outcome = OUTCOME_MAPPING[self.filter_outcome.get()]
 
         self.episode_filter.set_filter_specific_waypoint_reward(
             get_nullable_int_entry(self.filter_specific_waypoint_id),

@@ -28,9 +28,12 @@ from src.personalize.configuration.analysis import NEW_REWARD_FUNCTION, TIME_BEF
 SLIDE_SETTLING_PERIOD = 6
 
 REVERSED = "R"
-OFF_TRACK = "O"
+OFF_TRACK = "OT"
 CRASHED = "C"
-LAP_COMPLETE = "L"
+LAP_COMPLETE = "LP"
+LOST_CONTROL = "LC"
+
+ALL_OUTCOMES = [REVERSED, OFF_TRACK, CRASHED, LAP_COMPLETE, LOST_CONTROL]
 
 
 class Episode:
@@ -55,9 +58,11 @@ class Episode:
             self.outcome = REVERSED
         elif last_event.status == "off_track":
             self.outcome = OFF_TRACK
-        else:
-            assert last_event.status == "crashed"
+        elif last_event.status == "crashed":
             self.outcome = CRASHED
+        else:
+            assert last_event.status == "immobilized"
+            self.outcome = LOST_CONTROL
 
         if self.outcome == LAP_COMPLETE:
             self.lap_complete = True

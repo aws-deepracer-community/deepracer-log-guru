@@ -703,6 +703,10 @@ class MainApp(tk.Frame):
         self.episode_selector.select_specific_episode(episode_id)
         self.switch_analyzer(self.analyze_route)
 
+    def expect_objects(self):
+        return self.log is not None and self.log.get_log_meta().race_type == "OBJECT_AVOIDANCE"
+
+
 
 root = tk.Tk()
 app = MainApp(root)

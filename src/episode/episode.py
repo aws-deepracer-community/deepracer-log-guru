@@ -35,11 +35,19 @@ LOST_CONTROL = "LC"
 
 ALL_OUTCOMES = [REVERSED, OFF_TRACK, CRASHED, LAP_COMPLETE, LOST_CONTROL]
 
+POS_XLEFT = "XL"
+POS_LEFT = "L"
+POS_CENTRAL = "C"
+POS_RIGHT = "R"
+POS_XRIGHT = "XR"
+
+ALL_POSITIONS = [POS_XLEFT, POS_LEFT, POS_CENTRAL, POS_RIGHT, POS_XRIGHT]
+
 
 class Episode:
 
     def __init__(self, episode_id, iteration, events, object_locations, action_space: ActionSpace,
-                 do_full_analysis: bool, track: Track=None,
+                 do_full_analysis: bool, track: Track = None,
                  calculate_new_reward=False, calculate_alternate_discount_factors=False):
 
         assert track is not None or not do_full_analysis
@@ -108,7 +116,7 @@ class Episode:
             (self._blocked_left_waypoints, self._blocked_right_waypoints,
              self._blocked_left_object_locations, self._blocked_right_object_locations) = self.get_blocked_waypoints(track)
             self.set_projected_distances_on_events(track)   # Relies on blocked waypoints
-            self._set_distance_from_center_on_events(track)
+            self._set_side_and_distance_from_center_on_events(track)
             self._set_before_and_after_waypoints_on_events(track)
             self._set_skew_on_events(track)   # Relies on before and after
 
@@ -145,7 +153,6 @@ class Episode:
         return round(first_event_percent / 5) * 5
 
     def get_distance_travelled(self):
-
         if self.events:
             return self.events[-1].total_distance_travelled
         else:
@@ -239,7 +246,6 @@ class Episode:
             previous = previous[1:] + [e]
 
     def set_true_bearing_and_slide_on_events(self):
-
         previous_event = self.events[0]
         self.events[0].slide = 0.0
         self.events[0].true_bearing = self.events[0].heading
@@ -259,9 +265,10 @@ class Episode:
                 self.max_slide = max(self.max_slide, abs(e.slide))
             previous_event = e
 
-    def _set_distance_from_center_on_events(self, track :Track):
+    def _set_side_and_distance_from_center_on_events(self, track: Track):
         for e in self.events:
             current_location = (e.x, e.y)
+            e.track_side = track.get_position_of_point_relative_to_waypoint(current_location, e.closest_waypoint_index)
             closest_waypoint = track.get_waypoint(e.closest_waypoint_index)
             next_waypoint = track.get_next_different_waypoint(e.closest_waypoint_index)
             previous_waypoint = track.get_previous_different_waypoint(e.closest_waypoint_index)
@@ -690,6 +697,22 @@ class Episode:
                 index -= 1
 
             return index
+
+    def count_objects_in_section(self, start_wp: int, end_wp: int):
+        left = 0
+        for w in self._blocked_left_waypoints:
+            if start_wp <= end_wp and start_wp <= w <= end_wp:
+                left += 1
+            elif start_wp > end_wp and (w >= start_wp or w <= end_wp):
+                left += 1
+        right = 0
+        for w in self._blocked_right_waypoints:
+            if start_wp <= end_wp and start_wp <= w <= end_wp:
+                right += 1
+            elif start_wp > end_wp and (w >= start_wp or w <= end_wp):
+                right += 1
+
+        return left, right
 
     def extract_all_sequences(self, min_sequence_length: int):
         sequences = Sequences()

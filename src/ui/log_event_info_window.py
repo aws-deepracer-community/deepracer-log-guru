@@ -171,7 +171,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.state_true_bearing.set(str(round(event.true_bearing)))
         self.state_slide.set(str(round(event.slide)))
         self.state_skew.set(str(round(event.skew)))
-        self.state_side.set(track.get_position_of_point_relative_to_waypoint((event.x, event.y), event.closest_waypoint_index))
+        self.state_side.set(event.track_side)
         self.state_distance_from_centre.set(str(round(event.distance_from_center, 2)))
         self.state_all_wheels_on_track.set(str(event.all_wheels_on_track))
         if event.acceleration > 0.0:

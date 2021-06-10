@@ -1104,3 +1104,37 @@ class ShowFinalIterationControl(Control):
 
     def show_final_iteration(self):
         return self._show_final_iteration.get()
+
+
+class OutcomesCheckButtonControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
+        super().__init__(guru_parent_redraw, control_frame, "Outcome")
+
+        self._lap_complete = tk.BooleanVar(value=False)
+        self._off_track = tk.BooleanVar(value=True)
+        self._crashed = tk.BooleanVar(value=False)
+        self._reversed = tk.BooleanVar(value=False)
+        self._lost_control = tk.BooleanVar(value=False)
+
+    def _add_widgets(self):
+        self.add_checkbutton("Lap Complete", self._lap_complete)
+        self.add_checkbutton("Off Track", self._off_track)
+        self.add_checkbutton("Crashed", self._crashed)
+        self.add_checkbutton("Reversed", self._reversed)
+        self.add_checkbutton("Lost Control", self._lost_control)
+
+    def show_lap_complete(self):
+        return self._lap_complete.get()
+
+    def show_off_track(self):
+        return self._off_track.get()
+
+    def show_crashed(self):
+        return self._crashed.get()
+
+    def show_reversed(self):
+        return self._reversed.get()
+
+    def show_lost_control(self):
+        return self._lost_control.get()

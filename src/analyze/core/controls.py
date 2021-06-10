@@ -601,6 +601,7 @@ class GraphLineFittingControl(Control):
     _NONE = 1
     _LINEAR = 2
     _QUADRATIC = 3
+    _CUBIC = 4
 
     def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
         super().__init__(guru_parent_redraw, control_frame, "Line Fitting")
@@ -611,6 +612,7 @@ class GraphLineFittingControl(Control):
         self.add_radiobutton("None", self._smoothing, GraphLineFittingControl._NONE)
         self.add_radiobutton("Linear", self._smoothing, GraphLineFittingControl._LINEAR)
         self.add_radiobutton("Quadratic", self._smoothing, GraphLineFittingControl._QUADRATIC)
+        self.add_radiobutton("Cubic", self._smoothing, GraphLineFittingControl._CUBIC)
 
     def no_fitting(self):
         return self._smoothing.get() == GraphLineFittingControl._NONE
@@ -620,6 +622,9 @@ class GraphLineFittingControl(Control):
 
     def quadratic_fitting(self):
         return self._smoothing.get() == GraphLineFittingControl._QUADRATIC
+
+    def cubic_fitting(self):
+        return self._smoothing.get() == GraphLineFittingControl._CUBIC
 
 
 class ActionGroupControl(Control):

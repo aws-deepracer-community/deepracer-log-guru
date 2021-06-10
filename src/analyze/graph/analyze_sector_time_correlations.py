@@ -16,7 +16,7 @@ from matplotlib.axes import Axes
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.analyze.core.controls import EpisodeCheckButtonControl, GraphFormatControl, CorrelationControl, \
     GraphLineFittingControl
-from src.analyze.core.line_fitting import get_linear_regression, get_polynomial_quadratic_regression
+from src.analyze.core.line_fitting import get_linear_regression, get_quadratic_regression, get_cubic_regression
 from src.episode.episode import Episode
 from src.event.event_meta import Event
 
@@ -92,8 +92,11 @@ class AnalyzeSectorTimeCorrelations(GraphAnalyzer):
             (smoothed_x, smoothed_y, r) = get_linear_regression(plot_x, plot_y)
             r_label = "R = " + str(round(r, 2))
         elif self._line_fitting_control.quadratic_fitting():
-            (smoothed_x, smoothed_y) = get_polynomial_quadratic_regression(plot_x, plot_y)
+            (smoothed_x, smoothed_y) = get_quadratic_regression(plot_x, plot_y)
             r_label = "Quadratic"
+        elif self._line_fitting_control.cubic_fitting():
+            (smoothed_x, smoothed_y) = get_cubic_regression(plot_x, plot_y)
+            r_label = "Cubic"
 
         # Finally plot the data we have gathered
         if self.format_control.swap_axes():

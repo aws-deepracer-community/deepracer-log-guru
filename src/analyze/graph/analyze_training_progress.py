@@ -14,7 +14,7 @@ from matplotlib.gridspec import GridSpec
 from matplotlib.axes import Axes
 from matplotlib.ticker import PercentFormatter
 
-from src.analyze.core.line_fitting import get_linear_regression, get_polynomial_quadratic_regression
+from src.analyze.core.line_fitting import get_linear_regression, get_quadratic_regression, get_cubic_regression
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
 
@@ -171,7 +171,9 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         if self._line_fitting_control.linear_fitting():
             (x_values, y_values, r) = get_linear_regression(plot_x, plot_y)
         elif self._line_fitting_control.quadratic_fitting():
-            (x_values, y_values) = get_polynomial_quadratic_regression(plot_x, plot_y)
+            (x_values, y_values) = get_quadratic_regression(plot_x, plot_y)
+        elif self._line_fitting_control.cubic_fitting():
+            (x_values, y_values) = get_cubic_regression(plot_x, plot_y)
         else:
             x_values = plot_x
             y_values = plot_y

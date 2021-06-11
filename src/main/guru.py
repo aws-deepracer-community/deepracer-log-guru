@@ -209,7 +209,7 @@ class MainApp(tk.Frame):
         #
 
         self.master.title("Deep Racer Guru v" + VERSION)
-        self.menu_bar = MenuBar(root, self, False)
+        self.menu_bar = MenuBar(root, self, False, False)
 
 
         #
@@ -267,7 +267,7 @@ class MainApp(tk.Frame):
 
         self.view_manager.zoom_clear()
 
-        self.menu_bar = MenuBar(root, self, False)
+        self.menu_bar = MenuBar(root, self, False, False)
 
         self.redraw()
 
@@ -397,7 +397,7 @@ class MainApp(tk.Frame):
         self.analyzer.take_control()
 
         if redraw_menu_afterwards:
-            self.menu_bar = MenuBar(root, self, True)
+            self.menu_bar = MenuBar(root, self, True, self.log.get_log_meta().action_space.is_continuous())
             self.update()
 
     def apply_new_action_space(self):
@@ -447,7 +447,7 @@ class MainApp(tk.Frame):
         self._reset_analyzer(self.analyzer)
         if self.background_analyzer:
             self._reset_analyzer(self.background_analyzer)
-        self.menu_bar = MenuBar(root, self, False)
+        self.menu_bar = MenuBar(root, self, False, False)
         self.redraw()
 
     def right_button_pressed_on_track_canvas(self, event):

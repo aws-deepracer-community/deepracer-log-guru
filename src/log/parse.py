@@ -70,6 +70,9 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
             if split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME_A) or split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME_B):
                 log_meta.model_name = split_parts[0]
 
+    if line_of_text.startswith(CONTINUOUS_ACTION_SPACE_START) and CONTINUOUS_ACTION_SPACE_CONTAINS in line_of_text:
+        log_meta.action_space.mark_as_continuous()
+
     if line_of_text.startswith(MISC_ACTION_SPACE_A):
         _parse_actions(line_of_text, log_meta, MISC_ACTION_SPACE_A)
 
@@ -85,7 +88,7 @@ def parse_object_locations(line_of_text: str):
 
 
 def parse_episode_event(line_of_text: str, episode_events, episode_object_locations,
-                        saved_events, saved_debug, saved_object_locations):
+                        saved_events, saved_debug, saved_object_locations, is_continuous_action_space: bool):
     if len(saved_events) > 15:
         print(line_of_text)
 
@@ -96,24 +99,42 @@ def parse_episode_event(line_of_text: str, episode_events, episode_object_locati
         episode_object_locations.append([])
 
     input_line = line_of_text.split("\n", 1)[0]
-    split_input = input_line[14:].split(",")[:16]
 
-    (episode,
-     step,
-     x,
-     y,
-     heading,
-     steering_angle,
-     speed,
-     action_taken,
-     reward,
-     job_completed,
-     all_wheels_on_track,
-     progress,
-     closest_waypoint_index,
-     track_length,
-     time,
-     status) = split_input
+    if is_continuous_action_space:
+        (episode,
+         step,
+         x,
+         y,
+         heading,
+         steering_angle,
+         speed,
+         action_taken,
+         action_taken_2,
+         reward,
+         job_completed,
+         all_wheels_on_track,
+         progress,
+         closest_waypoint_index,
+         track_length,
+         time,
+         status) = input_line[14:].split(",")[:17]
+    else:
+        (episode,
+         step,
+         x,
+         y,
+         heading,
+         steering_angle,
+         speed,
+         action_taken,
+         reward,
+         job_completed,
+         all_wheels_on_track,
+         progress,
+         closest_waypoint_index,
+         track_length,
+         time,
+         status) = input_line[14:].split(",")[:16]
 
     event_meta = Event()
 
@@ -124,7 +145,10 @@ def parse_episode_event(line_of_text: str, episode_events, episode_object_locati
     event_meta.heading = float(heading)
     event_meta.steering_angle = float(steering_angle)
     event_meta.speed = float(speed)
-    event_meta.action_taken = int(action_taken)
+    if is_continuous_action_space:
+        event_meta.action_taken = None
+    else:
+        event_meta.action_taken = int(action_taken)
     event_meta.reward = float(reward)
     event_meta.job_completed = (job_completed == "True")
     event_meta.all_wheels_on_track = (all_wheels_on_track == "True")
@@ -219,6 +243,10 @@ MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-me
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
 MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
 
+CONTINUOUS_ACTION_SPACE_START = "Sensor list ["
+CONTINUOUS_ACTION_SPACE_CONTAINS = "action_space_type continuous"
+
+
 # For handling cloud, here are the example of cloud and non-cloud
 #   cloud       [s3] Successfully downloaded yaml file from s3 key DMH-Champ-Round1-OA-B-3/training-params.yaml
 #   non-cloud   [s3] Successfully downloaded yaml file from s3 key data-56b52007-8142-46cd-a9cc-370feb620f0c/models/Champ-Obj-Avoidance-03/sagemaker-robomaker-artifacts/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml to local ./custom_files/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml.
@@ -226,7 +254,6 @@ MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
 MISC_MODEL_NAME_CLOUD_LOGS = "[s3] Successfully downloaded yaml file from s3 key"
 CLOUD_TRAINING_YAML_FILENAME_A = "training_params.yaml"   # New
 CLOUD_TRAINING_YAML_FILENAME_B = "training-params.yaml"   # Older logs
-
 
 MISC_ACTION_SPACE_A = "Loaded action space from file: "
 MISC_ACTION_SPACE_B = "Action space from file: "
@@ -242,11 +269,19 @@ def _parse_actions(line_of_text: str, log_meta: LogMeta, starts_with: str):
     raw_actions = line_of_text[len(starts_with):].replace("'", "\"")
 
     actions = json.loads(raw_actions)
-    for index, a in enumerate(actions):
-        if "index" in a:
-            assert a["index"] == index
-        new_action = Action(index, a["speed"], a["steering_angle"])
-        log_meta.action_space.add_action(new_action)
+
+    if log_meta.action_space.is_continuous():
+        low_speed = actions["speed"]["low"]
+        high_speed = actions["speed"]["high"]
+        low_steering = actions["steering_angle"]["low"]
+        high_steering = actions["steering_angle"]["high"]
+        log_meta.action_space.define_continuous_action_limits(low_speed, high_speed, low_steering, high_steering)
+    else:
+        for index, a in enumerate(actions):
+            if "index" in a:
+                assert a["index"] == index
+            new_action = Action(index, a["speed"], a["steering_angle"])
+            log_meta.action_space.add_action(new_action)
 
 
 # Parse hyper parameters

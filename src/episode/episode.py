@@ -95,8 +95,12 @@ class Episode:
         self.average_reward = np_rewards.mean()
         self.predicted_lap_reward = 100 / last_event.progress * self.total_reward  # predicted
 
-        self.action_frequency = self._get_action_frequency(action_space)
-        self.repeated_action_percent = self.get_repeated_action_percent(self.events)
+        if action_space.is_continuous():
+            self.action_frequency = None
+            self.repeated_action_percent = None
+        else:
+            self.action_frequency = self._get_action_frequency(action_space)
+            self.repeated_action_percent = self.get_repeated_action_percent(self.events)
 
         self._mark_dodgy_data()   # Must be first, before all the analysis below, especially for speeds
 
@@ -362,7 +366,9 @@ class Episode:
         previous_action_id = -1
 
         for e in self.events:
-            if e.action_taken == previous_action_id:
+            if e.action_taken is None:
+                sequence = 1
+            elif e.action_taken == previous_action_id:
                 sequence += 1
             else:
                 sequence = 1

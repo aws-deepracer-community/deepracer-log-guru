@@ -65,24 +65,41 @@ class LogMeta:
         self.action_space = self._get_action_space_from_json(received_json)
 
     def _get_action_space_as_json_list(self):
-        all_actions_json = []
-        a: Action
-        for a in self.action_space.get_all_actions():
-            action_json = dict()
-            action_json["speed"] = a.get_speed()
-            action_json["steering_angle"] = a.get_steering_angle()
-            action_json["index"] = a.get_index()
-            all_actions_json.append(action_json)
-        return all_actions_json
+        if self.action_space.is_continuous():
+            actions_json = dict()
+            low_speed, high_speed, low_steering, high_steering = self.action_space.get_continuous_action_limits()
+            actions_json["low_speed"] = low_speed
+            actions_json["high_speed"] = high_speed
+            actions_json["low_steering"] = low_steering
+            actions_json["high_steering"] = high_steering
+        else:
+            actions_json = []
+            a: Action
+            for a in self.action_space.get_all_actions():
+                action_json = dict()
+                action_json["speed"] = a.get_speed()
+                action_json["steering_angle"] = a.get_steering_angle()
+                action_json["index"] = a.get_index()
+                actions_json.append(action_json)
+
+        return actions_json
 
     @staticmethod
     def _get_action_space_from_json(received_json):
         action_space = ActionSpace()
-        for action_json in received_json["action_space"]:
-            speed = action_json["speed"]
-            steering_angle = action_json["steering_angle"]
-            index = action_json["index"]
-            action_space.add_action(Action(index, speed, steering_angle))
+        received_action_space = received_json["action_space"]
+        if type(received_action_space) is list:
+            for action_json in received_action_space:
+                speed = action_json["speed"]
+                steering_angle = action_json["steering_angle"]
+                index = action_json["index"]
+                action_space.add_action(Action(index, speed, steering_angle))
+        else:
+            action_space.mark_as_continuous()
+            action_space.define_continuous_action_limits(received_action_space["low_speed"],
+                                                         received_action_space["high_speed"],
+                                                         received_action_space["low_steering"],
+                                                         received_action_space["high_steering"])
         return action_space
 
     class EpisodeStats:

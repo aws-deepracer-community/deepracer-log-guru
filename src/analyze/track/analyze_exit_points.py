@@ -21,7 +21,7 @@ class AnalyzeExitPoints(TrackAnalyzer):
 
         super().__init__(guru_parent_redraw, track_graphics, control_frame)
 
-        self._episodes_control = EpisodeRadioButtonControl(guru_parent_redraw, control_frame)
+        self._episodes_control = EpisodeRadioButtonControl(guru_parent_redraw, control_frame, True)
         self._outcome_control = OutcomesCheckButtonControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
@@ -55,6 +55,15 @@ class AnalyzeExitPoints(TrackAnalyzer):
                     self.track_graphics.plot_dot(exit_point, 3, colour)
 
         elif self._episodes_control.show_evaluations():
+            whole_lap = False
             for v in self.evaluation_phases:
-                pass
-                # TODO
+                for p in v.progresses:
+                    if p == 100:
+                        whole_lap = True
+                    else:
+                        exit_point = self.current_track.get_percent_progress_point_on_centre_line(p)
+                        self.track_graphics.plot_dot(exit_point, 3, "orange")
+            if whole_lap:
+                exit_point = self.current_track.get_percent_progress_point_on_centre_line(100)
+                self.track_graphics.plot_dot(exit_point, 5, "green")
+

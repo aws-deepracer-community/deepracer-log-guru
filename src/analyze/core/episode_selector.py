@@ -43,7 +43,7 @@ class EpisodeSelector:
         self._chosen_episode_filter_index = 0
 
         keep_specific_choice = False
-        if old_episode_id is not None:
+        if old_episode_id is not None and filtered_episodes is not None:
             for i, e in enumerate(filtered_episodes):
                 if e.id == old_episode_id:
                     self._chosen_episode_filter_index = i

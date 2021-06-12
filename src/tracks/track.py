@@ -79,6 +79,23 @@ class Track:
     def get_waypoint_percent_from_race_start(self, waypoint_id: int):
         return self._percent_from_race_start[waypoint_id]
 
+    def get_percent_progress_point_on_centre_line(self, percent: float):
+        assert 0 <= percent <= 100
+
+        i = 0
+        while self._percent_from_race_start[i] < percent:
+            i += 1
+
+        distance_gap = geometry.get_distance_between_points(self._drawing_points[i].middle,
+                                                            self._drawing_points[i - 1].middle)
+        percent_gap = self._percent_from_race_start[i] - self._percent_from_race_start[i-1]
+        bearing = geometry.get_bearing_between_points(self._drawing_points[i].middle,
+                                                      self._drawing_points[i - 1].middle)
+
+        ratio = (self._percent_from_race_start[i] - percent) / percent_gap
+
+        return geometry.get_point_at_bearing(self._drawing_points[i].middle, bearing, ratio * distance_gap)
+
     def prepare(self, all_tracks: dict):
         self._assert_sensible_info()
         self._process_raw_waypoints()

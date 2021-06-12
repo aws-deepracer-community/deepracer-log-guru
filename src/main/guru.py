@@ -102,6 +102,8 @@ class MainApp(tk.Frame):
         self.track_canvas.bind("<Button-1>", self.left_button_pressed_on_track_canvas)
         self.track_canvas.bind("<B1-Motion>", self.left_button_moved_on_track_canvas)
         self.track_canvas.bind("<ButtonRelease-1>", self.left_button_released_on_track_canvas)
+        self.track_canvas.bind("<Double-1>", self.left_button_double_clicked_on_track_canvas)
+
 
         self.control_frame = tk.Frame(root)
         self.inner_control_frame = tk.Frame(self.control_frame)
@@ -473,6 +475,9 @@ class MainApp(tk.Frame):
             if x_diff > 10 and y_diff > 10:
                 self.view_manager.zoom_set(self.track_graphics, self.zoom_start_x, self.zoom_start_y, event.x, event.y)
                 self.redraw()
+
+    def left_button_double_clicked_on_track_canvas(self, event):
+        self.right_button_pressed_on_track_canvas(event)
 
     def right_or_up_key_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)

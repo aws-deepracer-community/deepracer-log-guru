@@ -31,7 +31,7 @@ class AnalyzeRewardDistribution(GraphAnalyzer):
         if not self.all_episodes:
             return
 
-        gs = GridSpec(1, 3)
+        gs = GridSpec(1, 3, left=0.02, right=0.98, bottom=0.08, top=0.92)
         axes_left: Axes = self.graph_figure.add_subplot(gs[0, 0])
         axes_middle: Axes = self.graph_figure.add_subplot(gs[0, 1])
         axes_right: Axes = self.graph_figure.add_subplot(gs[0, 2])

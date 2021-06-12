@@ -30,7 +30,8 @@ class AnalyzeDiscountFactors(GraphAnalyzer):
         self._zoom_control.add_to_control_frame()
 
     def add_plots(self):
-        axes: Axes = self.graph_figure.add_subplot()
+        grid_spec = self.graph_figure.add_gridspec(1, 1, left=0.08, right=0.98, bottom=0.08, top=0.92)
+        axes: Axes = self.graph_figure.add_subplot(grid_spec[0])
 
         for i in range(discount_factors.get_number_of_discount_factors()):
             zoom_level = self._zoom_control.get_zoom_level()

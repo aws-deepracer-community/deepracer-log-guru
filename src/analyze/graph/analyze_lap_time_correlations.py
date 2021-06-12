@@ -43,7 +43,9 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
         self._line_fitting_control.add_to_control_frame()
 
     def add_plots(self):
-        axes: Axes = self.graph_figure.add_subplot()
+        grid_spec = self.graph_figure.add_gridspec(1, 1, left=0.08, right=0.98, bottom=0.08, top=0.92)
+        axes: Axes = self.graph_figure.add_subplot(grid_spec[0])
+
         self._plotted_episode_ids = dict()
 
         if self.episode_control.show_all():

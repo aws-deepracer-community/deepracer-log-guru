@@ -17,8 +17,6 @@ from src.analyze.core.episode_selector import EpisodeSelector
 from src.episode.episode import Episode
 
 
-
-
 class AnalyzeEpisodeSlide(GraphAnalyzer):
 
     def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg,
@@ -32,7 +30,8 @@ class AnalyzeEpisodeSlide(GraphAnalyzer):
         self.episode_selector.add_to_control_frame(control_frame, self.guru_parent_redraw)
 
     def add_plots(self):
-        axes :Axes = self.graph_figure.add_subplot()
+        grid_spec = self.graph_figure.add_gridspec(1, 1, left=0.08, right=0.98, bottom=0.08, top=0.92)
+        axes: Axes = self.graph_figure.add_subplot(grid_spec[0])
 
         # Plot the data
 

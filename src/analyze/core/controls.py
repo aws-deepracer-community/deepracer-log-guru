@@ -1143,3 +1143,54 @@ class OutcomesCheckButtonControl(Control):
 
     def show_lost_control(self):
         return self._lost_control.get()
+
+
+class RewardTypeControl(Control):
+    _EVENT_REWARD = "Event Reward"
+    _FUTURE_REWARD = "Future Reward"
+    _NEW_EVENT_REWARD = "New Event Reward"
+    _NEW_FUTURE_REWARD = "New Future Reward"
+    _ALTERNATE_DISCOUNT_FACTOR = "Future DF = "
+
+    def __init__(self, redraw_callback: callable, control_frame: tk.Frame, config_manager: ConfigManager):
+        super().__init__(redraw_callback, control_frame, "Reward Type")
+        self._chosen_reward_type = tk.StringVar(value=RewardTypeControl._EVENT_REWARD)
+        self._redraw_callback = redraw_callback
+        self._alternate_discount_factor_dict = dict()
+        self._config_manager = config_manager
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(RewardTypeControl._EVENT_REWARD, self._chosen_reward_type)
+        self.add_radiobutton_improved(RewardTypeControl._FUTURE_REWARD, self._chosen_reward_type)
+        if self._config_manager.get_calculate_new_reward():
+            self.add_radiobutton_improved(RewardTypeControl._NEW_EVENT_REWARD, self._chosen_reward_type)
+            self.add_radiobutton_improved(RewardTypeControl._NEW_FUTURE_REWARD, self._chosen_reward_type)
+        if self._config_manager.get_calculate_alternate_discount_factors():
+            self._alternate_discount_factor_dict = dict()
+            for i in range(0, discount_factors.get_number_of_discount_factors()):
+                name = RewardTypeControl._ALTERNATE_DISCOUNT_FACTOR + str(discount_factors.get_discount_factor(i))
+                self._alternate_discount_factor_dict[name] = i
+                if i > 0:
+                    self.add_radiobutton_improved(name, self._chosen_reward_type)
+
+    def measure_event_reward(self):
+        return self._chosen_reward_type.get() == RewardTypeControl._EVENT_REWARD
+
+    def measure_new_event_reward(self):
+        return self._chosen_reward_type.get() == RewardTypeControl._NEW_EVENT_REWARD
+
+    def measure_discounted_future_reward(self):
+        return self._chosen_reward_type.get() == RewardTypeControl._FUTURE_REWARD
+
+    def measure_new_discounted_future_reward(self):
+        return self._chosen_reward_type.get() == RewardTypeControl._NEW_FUTURE_REWARD
+
+    def measure_alternate_discounted_future_reward(self):
+        return self._chosen_reward_type.get() in self._alternate_discount_factor_dict.keys()
+
+    def get_alternate_discount_factor_index(self):
+        if self.measure_alternate_discounted_future_reward():
+            return self._alternate_discount_factor_dict[self._chosen_reward_type.get()]
+        else:
+            return None
+

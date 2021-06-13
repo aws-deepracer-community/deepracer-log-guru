@@ -13,23 +13,28 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
+from src.configuration.config_manager import ConfigManager
+from src.event.event_meta import Event
 from src.utils.lists import get_list_of_empty_lists
 
-from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl, ShowLastStepControl
+from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl, ShowLastStepControl, RewardTypeControl
 
 
 class AnalyzeRewardsPerWaypoint(GraphAnalyzer):
 
-    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame,
+                 config_manager: ConfigManager):
 
         super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
 
         self._episodes_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame)
+        self._reward_type_control = RewardTypeControl(guru_parent_redraw, control_frame, config_manager)
         self._stats_control = StatsControl(guru_parent_redraw, control_frame)
         self._showLastStepControl = ShowLastStepControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
         self._episodes_control.add_to_control_frame()
+        self._reward_type_control.add_to_control_frame()
         self._stats_control.add_to_control_frame()
         self._showLastStepControl.add_to_control_frame()
 
@@ -80,8 +85,20 @@ class AnalyzeRewardsPerWaypoint(GraphAnalyzer):
             else:
                 events = e.events[:-1]
 
+            v: Event
             for v in events:
-                rewards[v.closest_waypoint_index].append(v.reward)
+                if self._reward_type_control.measure_event_reward():
+                    rewards[v.closest_waypoint_index].append(v.reward)
+                elif self._reward_type_control.measure_discounted_future_reward():
+                    rewards[v.closest_waypoint_index].append(v.discounted_future_rewards[0])
+                elif self._reward_type_control.measure_new_event_reward():
+                    rewards[v.closest_waypoint_index].append(v.new_reward)
+                elif self._reward_type_control.measure_new_discounted_future_reward():
+                    rewards[v.closest_waypoint_index].append(v.new_discounted_future_reward)
+                else:
+                    assert self._reward_type_control.measure_alternate_discounted_future_reward()
+                    index = self._reward_type_control.get_alternate_discount_factor_index()
+                    rewards[v.closest_waypoint_index].append(v.discounted_future_rewards[index])
 
         plot_waypoints = np.arange(0, num_waypoints)
         plot_rewards = np.zeros(num_waypoints)

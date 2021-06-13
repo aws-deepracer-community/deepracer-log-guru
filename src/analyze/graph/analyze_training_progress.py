@@ -19,7 +19,8 @@ from src.analyze.graph.graph_analyzer import GraphAnalyzer
 from src.utils.lists import get_list_of_empty_lists
 
 from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl, \
-    GraphScaleControl, GraphLineFittingControl, EvaluationPairsControl, ShowFinalIterationControl
+    GraphScaleControl, GraphLineFittingControl, EvaluationPairsControl, ShowFinalIterationControl, \
+    EpisodeTrainingRewardTypeControl
 
 
 class AnalyzeTrainingProgress(GraphAnalyzer):
@@ -34,6 +35,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self._line_fitting_control = GraphLineFittingControl(guru_parent_redraw, control_frame)
         self._evaluation_pairs_control = EvaluationPairsControl(guru_parent_redraw, control_frame)
         self._final_iteration_control = ShowFinalIterationControl(guru_parent_redraw, control_frame)
+        self._episode_reward_type_control = EpisodeTrainingRewardTypeControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
         self.episode_control.add_to_control_frame()
@@ -42,6 +44,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self._line_fitting_control.add_to_control_frame()
         self._evaluation_pairs_control.add_to_control_frame()
         self._final_iteration_control.add_to_control_frame()
+        self._episode_reward_type_control.add_to_control_frame()
 
     def add_plots(self):
         if not self.all_episodes:
@@ -78,7 +81,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
             if self._stats_control.show_worst():
                 self.add_plot_iteration_vs_total_reward(axes, "Filtered - Worst", self.filtered_episodes, np.min, "C4")
 
-        if self.episode_control.show_evaluations():
+        if self.episode_control.show_evaluations() and self._episode_reward_type_control.measure_total_event_rewards():
             if self._stats_control.show_median():
                 self.add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Median", self.evaluation_phases, np.median, "C9")
             if self._stats_control.show_mean():
@@ -89,7 +92,14 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
                 self.add_plot_iteration_vs_evaluation_total_reward(axes, "Evaluations - Worst", self.evaluation_phases, np.min, "C12")
 
         # Format the plot
-        axes.set_title("Total Reward")
+        if self._episode_reward_type_control.measure_total_event_rewards():
+            axes.set_title("Total Event Reward Per Episode")
+        elif self._episode_reward_type_control.measure_max_future_reward():
+            axes.set_title("Max Future Reward Per Episode")
+        else:
+            assert self._episode_reward_type_control.measure_mean_future_reward()
+            axes.set_title("Mean Future Reward Per Episode")
+
         axes.set_xlabel("Training Iteration")
 
         if self.log_meta and self.is_fixed_scale():
@@ -151,7 +161,8 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
 
     def add_plot_iteration_vs_total_reward(self, axes: Axes, label, episodes, stat_method, colour):
         show_final_iteration = self._final_iteration_control.show_final_iteration()
-        (plot_x, plot_y) = get_plot_data_iteration_vs_total_reward(episodes, stat_method, show_final_iteration)
+        (plot_x, plot_y) = get_plot_data_iteration_vs_total_reward(episodes, stat_method, show_final_iteration,
+                                                                   self._episode_reward_type_control)
         self.plot_data_or_smooth_it(axes, label, plot_x, plot_y, colour)
 
     def add_plot_iteration_vs_evaluation_total_reward(self, axes: Axes, label, evaluation_phases, stat_method, colour):
@@ -224,13 +235,20 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         return np.array(plot_iteration), np.array(plot_data)
 
 
-def get_plot_data_iteration_vs_total_reward(episodes, stat_method, show_final_iteration: bool):
+def get_plot_data_iteration_vs_total_reward(episodes, stat_method, show_final_iteration: bool,
+                                            reward_control: EpisodeTrainingRewardTypeControl):
     iteration_count = episodes[-1].iteration + 1
 
-    # Gather all the percentage completions into a list per iteration
+    # Gather all the rewards into a list per iteration
     iteration_reward = get_list_of_empty_lists(iteration_count)
     for e in episodes:
-        iteration_reward[e.iteration].append(e.total_reward)
+        if reward_control.measure_total_event_rewards():
+            iteration_reward[e.iteration].append(e.total_reward)
+        elif reward_control.measure_max_future_reward():
+            iteration_reward[e.iteration].append(np.max(e.discounted_future_rewards[0]))
+        else:
+            assert reward_control.measure_mean_future_reward()
+            iteration_reward[e.iteration].append(np.mean(e.discounted_future_rewards[0]))
 
     if not show_final_iteration:
         iteration_count -= 1

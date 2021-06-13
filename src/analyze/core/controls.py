@@ -466,9 +466,9 @@ class StatsControl(Control):
 
     def _add_widgets(self):
         self.add_checkbutton("Mean", self._show_mean)
+        self.add_checkbutton_right("Best", self._show_best)
         self.add_checkbutton("Median", self._show_median)
-        self.add_checkbutton("Best", self._show_best)
-        self.add_checkbutton("Worst", self._show_worst)
+        self.add_checkbutton_right("Worst", self._show_worst)
 
     def show_mean(self):
         return self._show_mean.get()
@@ -1193,4 +1193,30 @@ class RewardTypeControl(Control):
             return self._alternate_discount_factor_dict[self._chosen_reward_type.get()]
         else:
             return None
+
+
+class EpisodeTrainingRewardTypeControl(Control):
+    _TOTAL_EVENT_REWARD = "Total Event Reward"
+    _MAX_FUTURE_REWARD = "Max Future Reward"
+    _MEAN_FUTURE_REWARD = "Mean Future Reward"
+
+    def __init__(self, redraw_callback: callable, control_frame: tk.Frame):
+        super().__init__(redraw_callback, control_frame, "Episode Reward")
+        self._chosen_reward_type = tk.StringVar(value=EpisodeTrainingRewardTypeControl._TOTAL_EVENT_REWARD)
+        self._redraw_callback = redraw_callback
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(EpisodeTrainingRewardTypeControl._TOTAL_EVENT_REWARD, self._chosen_reward_type)
+        self.add_radiobutton_improved(EpisodeTrainingRewardTypeControl._MAX_FUTURE_REWARD, self._chosen_reward_type)
+        self.add_radiobutton_improved(EpisodeTrainingRewardTypeControl._MEAN_FUTURE_REWARD, self._chosen_reward_type)
+
+    def measure_total_event_rewards(self):
+        return self._chosen_reward_type.get() == EpisodeTrainingRewardTypeControl._TOTAL_EVENT_REWARD
+
+    def measure_max_future_reward(self):
+        return self._chosen_reward_type.get() == EpisodeTrainingRewardTypeControl._MAX_FUTURE_REWARD
+
+    def measure_mean_future_reward(self):
+        return self._chosen_reward_type.get() == EpisodeTrainingRewardTypeControl._MEAN_FUTURE_REWARD
+
 

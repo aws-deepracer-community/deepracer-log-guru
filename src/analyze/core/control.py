@@ -43,7 +43,7 @@ class Control:
     def add_checkbutton_right(self, title: str, tk_var: tk.BooleanVar):
         tk.Checkbutton(
             self._label_frame, text=title, variable=tk_var,
-            command=self._guru_parent_redraw).grid(column=1, row=self._row_right, padx=5, pady=0)
+            command=self._guru_parent_redraw).grid(column=1, row=self._row_right, padx=5, pady=0, sticky="W")
         self._row_right += 1
 
     def add_checkbutton_wide(self, title: str, tk_var: tk.BooleanVar):

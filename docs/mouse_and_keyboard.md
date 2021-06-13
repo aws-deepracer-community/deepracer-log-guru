@@ -4,7 +4,7 @@
 
 Whenever DRG is showing the track, whatever the analysis mode, click and hold the left mouse button and drag a rectangle where you wish to zoom in.
 
-PICTURE HERE
+![](pictures/mouse and keyboard/zoom in.png)
 
 _Hint: To zoom back out to the complete track, especially if you get "lost" by zooming in too much, click on the menu option Zoom -> Zoom - In/Out_
 

@@ -1,4 +1,4 @@
-# Special Mouse and Keyboard Actions
+# Mouse and Keyboard Actions
 
 ## Zoom In
 

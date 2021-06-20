@@ -46,9 +46,11 @@ class GraphAnalyzer(Analyzer):
         self.matplotlib_canvas.draw()
 
     def handle_mouse_picker(self, event):
-        if self == GraphAnalyzer.last_drawn_analyzer:
-            if len(event.ind == 1) and event.artist.axes in self.graph_figure.get_axes():
-                self.handle_chosen_item(event.ind[0], event.artist)
+        mouse_event = event.mouseevent
+        if (mouse_event.button == 3) or (mouse_event.button == 1 and mouse_event.dblclick):
+            if self == GraphAnalyzer.last_drawn_analyzer:
+                if len(event.ind == 1) and event.artist.axes in self.graph_figure.get_axes():
+                    self.handle_chosen_item(event.ind[0], event.artist)
 
     ########################
     #  ABSTRACT INTERFACE  #

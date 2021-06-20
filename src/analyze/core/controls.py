@@ -1194,6 +1194,13 @@ class RewardTypeControl(Control):
         else:
             return None
 
+    def get_alternate_discount_factor(self):
+        index = self.get_alternate_discount_factor_index()
+        if index is not None:
+            return discount_factors.get_discount_factor(index)
+        else:
+            return None
+
 
 class EpisodeTrainingRewardTypeControl(Control):
     _TOTAL_EVENT_REWARD = "Total Event Reward"

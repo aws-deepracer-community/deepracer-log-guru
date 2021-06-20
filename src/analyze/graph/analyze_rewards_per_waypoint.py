@@ -69,9 +69,20 @@ class AnalyzeRewardsPerWaypoint(GraphAnalyzer):
                 self.add_plot_for_rewards_per_waypoint(axes, "Filtered - Worst", self.filtered_episodes, np.min, "C4", num_waypoints)
 
         # Format the plot
-        axes.set_title("Rewards per Waypoint")
-        axes.set_xlabel("Waypoint")
+        if self._reward_type_control.measure_event_reward():
+            axes.set_title("Event Reward per Waypoint")
+        elif self._reward_type_control.measure_discounted_future_reward():
+            axes.set_title("Future Reward per Waypoint")
+        elif self._reward_type_control.measure_new_event_reward():
+            axes.set_title("New Event Reward per Waypoint")
+        elif self._reward_type_control.measure_new_discounted_future_reward():
+            axes.set_title("New Future Reward per Waypoint")
+        else:
+            assert self._reward_type_control.measure_alternate_discounted_future_reward()
+            index = self._reward_type_control.get_alternate_discount_factor()
+            axes.set_title("Future Reward per Waypoint Using Alternate DF = " + str(index))
 
+        axes.set_xlabel("Waypoint")
         if axes.has_data():
             axes.legend(frameon=True, framealpha=0.8, shadow=True)
 

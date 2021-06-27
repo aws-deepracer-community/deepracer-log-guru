@@ -62,5 +62,5 @@ _Hint: hold down one of these keys to rapidly move forwards or backwards through
 
 ### Screenshot
 
-TODO
+![](pictures/mouse_and_keyboard/event_info_arrow_keys.png)
 

@@ -39,13 +39,14 @@ Analyze -> Episode Route:
 ![](pictures/mouse_and_keyboard/detailed_event_info.png)
 
 Any scatter chart e.g. Analyze -> Lap Time Correlations
-TODO
+![](pictures/mouse_and_keyboard/scatter_detailed_info.png)
 
 Fitting -> Track Straight Fitting:
-TODO
+![](pictures/mouse_and_keyboard/straight_fitting.png)
 
 Fitting -> Track Curve Fitting:
-TODO
+![](pictures/mouse_and_keyboard/curve_fitting.png)
+
 
 
 ## Next/Previous Event

@@ -2,16 +2,21 @@
 
 ## Zoom In
 
-Whenever DRG is showing the track, whatever the analysis mode, click and hold the left mouse button and drag a rectangle where you wish to zoom in.
+### Instructions
 
-![](pictures/mouse_and_keyboard/zoom_in.png)
+Whenever DRG is showing the track, whatever the analysis mode, click and hold the left mouse button and drag a rectangle where you wish to zoom in.
 
 _Hint: To zoom back out to the complete track, especially if you get "lost" by zooming in too much, click on the menu option Zoom -> Zoom - In/Out_
 
 _Note: Zooming is **not** currently supported for charts_
 
+### Screenshot(s)
+
+![](pictures/mouse_and_keyboard/zoom_in.png)
 
 ## Detailed Info
+
+### Instructions
 
 Many (but not all) DRG analysis modes offer a "Detailed Info" interaction using either of the following, whichever you find most convenient:
 * Right mouse button single click
@@ -28,9 +33,13 @@ _Hint: Using the "Lap Time Correlations" or "Sector Time Correlations", you will
 
 _Hint: When performing track curve fitting, click near the rear end of the straight approach line to move it around, thus changing the angle of approach to whatever you wish_
 
-PICTURE HERE OF EACH ONE
+### Screenshot(s)
+
+TODO
 
 ## Next/Previous Event
+
+### Instructions
 
 Only during "Episode Route", once an event has been selected and displayed in the "Detailed Event Info" window, use the keyboard arrows keys to rapidly move to the previous or next event.
 
@@ -39,5 +48,7 @@ Only during "Episode Route", once an event has been selected and displayed in th
 
 _Hint: hold down one of these keys to rapidly move forwards or backwards through multiple steps_
 
-PICTURE HERE
+### Screenshot(s)
+
+TODO
 

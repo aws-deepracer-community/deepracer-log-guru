@@ -25,7 +25,7 @@ Many (but not all) DRG analysis modes offer a "Detailed Info" interaction using 
 The exact meaning is as follows:
 * Analyze -> Episode Route ... display the "Detailed Event Info" window for the event/step nearest the mouse click(s)
 * Any scatter chart ... switch to the Episode Route analysis for the blob nearest the mouse click(s)
-* Any analysis from the "Fitting" menu ... the fitting starts at the mouse click(s)
+* Any analysis from the "Fitting" menu ... the fitting starts at the mouse click(s) ... and for curve fitting, additional mouse click(s) can be used to finely adjust the angle or approach (see screenshot below)
 
 _Hint: The "Detailed Event Info" window is a very powerful and useful feature of the Episode Route analysis; it gives you so much information about that single step_
 

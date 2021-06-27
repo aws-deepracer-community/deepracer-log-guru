@@ -10,7 +10,7 @@ _Hint: To zoom back out to the complete track, especially if you get "lost" by z
 
 _Note: Zooming is **not** currently supported for charts_
 
-### Screenshot(s)
+### Screenshot
 
 ![](pictures/mouse_and_keyboard/zoom_in.png)
 
@@ -33,9 +33,20 @@ _Hint: Using the "Lap Time Correlations" or "Sector Time Correlations", you will
 
 _Hint: When performing track curve fitting, click near the rear end of the straight approach line to move it around, thus changing the angle of approach to whatever you wish_
 
-### Screenshot(s)
+### Screenshots
 
+Analyze -> Episode Route:
+![](pictures/mouse_and_keyboard/detailed_event_info.png)
+
+Any scatter chart e.g. Analyze -> Lap Time Correlations
 TODO
+
+Fitting -> Track Straight Fitting:
+TODO
+
+Fitting -> Track Curve Fitting:
+TODO
+
 
 ## Next/Previous Event
 
@@ -48,7 +59,7 @@ Only during "Episode Route", once an event has been selected and displayed in th
 
 _Hint: hold down one of these keys to rapidly move forwards or backwards through multiple steps_
 
-### Screenshot(s)
+### Screenshot
 
 TODO
 

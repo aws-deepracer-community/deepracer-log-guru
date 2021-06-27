@@ -37,7 +37,7 @@ Only during "Episode Route", once an event has been selected and displayed in th
 * Previous Event = Left or Down arrow key 
 * Next Event = Right or Up arrow key
 
-_Hint: hold down one of these keys to rapidly move forwards or backwards through multiple steps
+_Hint: hold down one of these keys to rapidly move forwards or backwards through multiple steps_
 
 PICTURE HERE
 

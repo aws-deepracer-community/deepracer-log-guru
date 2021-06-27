@@ -55,15 +55,21 @@ class AnalyzeExitPoints(TrackAnalyzer):
                     self.track_graphics.plot_dot(exit_point, 3, colour)
 
         elif self._episodes_control.show_evaluations():
+            start_wp = self.all_episodes[0].events[0].closest_waypoint_index
+            start_percent = self.current_track.get_waypoint_percent_from_race_start(start_wp)
+
             whole_lap = False
             for v in self.evaluation_phases:
                 for p in v.progresses:
                     if p == 100:
                         whole_lap = True
                     else:
+                        p += start_percent
+                        if p > 100:
+                            p -= 100
                         exit_point = self.current_track.get_percent_progress_point_on_centre_line(p)
                         self.track_graphics.plot_dot(exit_point, 3, "orange")
             if whole_lap:
-                exit_point = self.current_track.get_percent_progress_point_on_centre_line(100)
+                exit_point = self.current_track.get_percent_progress_point_on_centre_line(start_percent)
                 self.track_graphics.plot_dot(exit_point, 5, "green")
 

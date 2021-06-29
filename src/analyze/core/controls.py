@@ -588,7 +588,7 @@ class GraphScaleControl(Control):
     def _add_widgets(self):
 
         self.add_radiobutton("Fixed", self._scale, GraphScaleControl._FIXED_SCALE)
-        self.add_radiobutton("Dynamic", self._scale, GraphScaleControl._DYNAMIC_SCALE)
+        self.add_radiobutton_right("Dynamic", self._scale, GraphScaleControl._DYNAMIC_SCALE)
 
     def fixed_scale(self):
         return self._scale.get() == GraphScaleControl._FIXED_SCALE
@@ -599,23 +599,35 @@ class GraphScaleControl(Control):
 
 class GraphLineFittingControl(Control):
     _NONE = 1
-    _LINEAR = 2
-    _QUADRATIC = 3
-    _CUBIC = 4
+    _JOINED = 2
+    _LINEAR = 3
+    _QUADRATIC = 4
+    _CUBIC = 5
 
-    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, is_correlation: bool = True):
         super().__init__(guru_parent_redraw, control_frame, "Line Fitting")
 
+        self._is_correlation = is_correlation
         self._smoothing = tk.IntVar(value=GraphLineFittingControl._NONE)
+        self._show_scatter = tk.BooleanVar(value=True)
+        if not is_correlation:
+            self._smoothing.set(value=GraphLineFittingControl._JOINED)
+            self._show_scatter.set(False)
 
     def _add_widgets(self):
         self.add_radiobutton("None", self._smoothing, GraphLineFittingControl._NONE)
+        if not self._is_correlation:
+            self.add_radiobutton("Joined", self._smoothing, GraphLineFittingControl._JOINED)
         self.add_radiobutton("Linear", self._smoothing, GraphLineFittingControl._LINEAR)
         self.add_radiobutton("Quadratic", self._smoothing, GraphLineFittingControl._QUADRATIC)
         self.add_radiobutton("Cubic", self._smoothing, GraphLineFittingControl._CUBIC)
+        self.add_checkbutton("+ Scatter", self._show_scatter)
 
     def no_fitting(self):
         return self._smoothing.get() == GraphLineFittingControl._NONE
+
+    def joined_fitting(self):
+        return self._smoothing.get() == GraphLineFittingControl._JOINED
 
     def linear_fitting(self):
         return self._smoothing.get() == GraphLineFittingControl._LINEAR
@@ -625,6 +637,9 @@ class GraphLineFittingControl(Control):
 
     def cubic_fitting(self):
         return self._smoothing.get() == GraphLineFittingControl._CUBIC
+
+    def show_scatter(self):
+        return self._show_scatter.get()
 
 
 class ActionGroupControl(Control):

@@ -121,15 +121,17 @@ class AnalyzeLapTimeCorrelations(GraphAnalyzer):
 
         # Finally plot the data we have gathered
         if self.format_control.swap_axes():
-            artist, = axes.plot(plot_y, plot_x, shape, color=colour, label=label, picker=True)
+            if self._line_fitting_control.show_scatter():
+                artist, = axes.plot(plot_y, plot_x, shape, color=colour, label=label, picker=True)
+                self._plotted_episode_ids[artist] = episode_ids
             if smoothed_y is not None:
                 axes.plot(smoothed_y, smoothed_x, color=colour, label=r_label)
         else:
-            artist, = axes.plot(plot_x, plot_y, shape, color=colour, label=label, picker=True)
+            if self._line_fitting_control.show_scatter():
+                artist, = axes.plot(plot_x, plot_y, shape, color=colour, label=label, picker=True)
+                self._plotted_episode_ids[artist] = episode_ids
             if smoothed_y is not None:
                 axes.plot(smoothed_x, smoothed_y, color=colour, label=r_label)
-
-        self._plotted_episode_ids[artist] = episode_ids
 
     def format_axes(self, axes: Axes):
 

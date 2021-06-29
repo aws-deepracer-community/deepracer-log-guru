@@ -148,7 +148,7 @@ class MainApp(tk.Frame):
         self.analyze_race = AnalyzeRace(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_curve_fitting = AnalyzeCurveFitting(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_straight_fitting = AnalyzeStraightFitting(self.redraw, self.track_graphics, self.inner_control_frame)
-        self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame, self.switch_to_specific_episode_default_analysis)
         self.analyze_quarterly_results = AnalyzeQuarterlyResults(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_reward_distribution = AnalyzeRewardDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_common_rewards = AnalyzeCommonRewards(self.redraw, matplotlib_canvas, self.inner_control_frame)

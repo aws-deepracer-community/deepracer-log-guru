@@ -8,6 +8,7 @@
 
 import tkinter as tk
 import numpy as np
+from matplotlib.artist import Artist
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.gridspec import GridSpec
@@ -25,9 +26,10 @@ from src.analyze.core.controls import EpisodeCheckButtonControl, StatsControl, \
 
 class AnalyzeTrainingProgress(GraphAnalyzer):
 
-    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg, control_frame: tk.Frame,
+                 guru_parent_callback_for_episode_choice: callable):
 
-        super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
+        super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame, guru_parent_callback_for_episode_choice)
 
         self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame, True)
         self._stats_control = StatsControl(guru_parent_redraw, control_frame)
@@ -36,6 +38,8 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         self._evaluation_pairs_control = EvaluationPairsControl(guru_parent_redraw, control_frame)
         self._final_iteration_control = ShowFinalIterationControl(guru_parent_redraw, control_frame)
         self._episode_reward_type_control = EpisodeTrainingRewardTypeControl(guru_parent_redraw, control_frame)
+
+        self._plotted_episode_ids = dict()
 
     def build_control_frame(self, control_frame):
         self.episode_control.add_to_control_frame()
@@ -49,6 +53,8 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
     def add_plots(self):
         if not self.all_episodes:
             return
+
+        self._plotted_episode_ids = dict()
 
         gs = self.graph_figure.add_gridspec(1, 2, left=0.08, right=0.98, bottom=0.08, top=0.92)
 
@@ -166,9 +172,9 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
                                                                             self._episode_reward_type_control)
             self.plot_line_data(axes, label, plot_x, plot_y, colour)
         if self._line_fitting_control.show_scatter():
-            (plot_x, plot_y) = get_scatter_plot_data_iteration_vs_total_reward(episodes, show_final_iteration,
+            (plot_x, plot_y, episode_ids) = get_scatter_plot_data_iteration_vs_total_reward(episodes, show_final_iteration,
                                                                                self._episode_reward_type_control)
-            self.plot_scatter_data(axes, label, plot_x, plot_y, colour)
+            self.plot_scatter_data(axes, label, plot_x, plot_y, colour, episode_ids)
 
     def add_line_plot_iteration_vs_evaluation_total_reward(self, axes: Axes, label, evaluation_phases, stat_method, colour):
         if not self._line_fitting_control.no_fitting():
@@ -176,7 +182,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
             self.plot_line_data(axes, label, plot_x, plot_y, colour)
         if self._line_fitting_control.show_scatter():
             (plot_x, plot_y) = self.get_scatter_plot_data_iteration_vs_evaluation_total_reward(evaluation_phases)
-            self.plot_scatter_data(axes, label, plot_x, plot_y, colour)
+            self.plot_scatter_data(axes, label, plot_x, plot_y, colour, None)
 
     def add_line_plot_iteration_vs_percent_complete(self, axes: Axes, label, episodes, stat_method, colour):
         show_final_iteration = self._final_iteration_control.show_final_iteration()
@@ -184,8 +190,8 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
             (plot_x, plot_y) = get_line_plot_data_iteration_vs_percent_complete(episodes, stat_method, show_final_iteration)
             self.plot_line_data(axes, label, plot_x, plot_y, colour)
         if self._line_fitting_control.show_scatter():
-            (plot_x, plot_y) = get_scatter_plot_data_iteration_vs_percent_complete(episodes, show_final_iteration)
-            self.plot_scatter_data(axes, label, plot_x, plot_y, colour)
+            (plot_x, plot_y, episode_ids) = get_scatter_plot_data_iteration_vs_percent_complete(episodes, show_final_iteration)
+            self.plot_scatter_data(axes, label, plot_x, plot_y, colour, episode_ids)
 
     def add_line_plot_iteration_vs_evaluation_percent_complete(self, axes: Axes, label, evaluation_phases, stat_method, colour):
         if not self._line_fitting_control.no_fitting():
@@ -193,7 +199,7 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
             self.plot_line_data(axes, label, plot_x, plot_y, colour)
         if self._line_fitting_control.show_scatter():
             (plot_x, plot_y) = self.get_scatter_plot_data_iteration_vs_evaluation_percent_complete(evaluation_phases)
-            self.plot_scatter_data(axes, label, plot_x, plot_y, colour)
+            self.plot_scatter_data(axes, label, plot_x, plot_y, colour, None)
 
     def plot_line_data(self, axes: Axes, label: str, plot_x: np.ndarray, plot_y: np.ndarray, colour: str):
         if self._line_fitting_control.linear_fitting():
@@ -212,8 +218,15 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         axes.plot(x_values, y_values, colour, label=label)
         self._plot_solo_items(axes, x_values, y_values, colour)
 
-    def plot_scatter_data(self, axes: Axes, label: str, plot_x: np.ndarray, plot_y: np.ndarray, colour: str):
-        axes.plot(plot_x, plot_y, ".", color=colour, label=label)
+    def plot_scatter_data(self, axes: Axes, label: str, plot_x: np.ndarray, plot_y: np.ndarray, colour: str, episode_ids):
+        allow_picking = episode_ids is not None
+        artist, = axes.plot(plot_x, plot_y, ".", color=colour, label=label, picker=allow_picking)
+        if allow_picking:
+            self._plotted_episode_ids[artist] = episode_ids
+
+    def handle_chosen_item(self, item_index: int, artist: Artist):
+        if artist in self._plotted_episode_ids:
+            self._guru_parent_callback_for_episode_choice(self._plotted_episode_ids[artist][item_index])
 
     def get_line_plot_data_iteration_vs_evaluation_total_reward(self, evaluation_phases, stat_method):
         plot_iteration = []
@@ -342,9 +355,11 @@ def get_scatter_plot_data_iteration_vs_total_reward(episodes, show_final_iterati
 
     plot_iteration = []
     plot_data = []
+    episode_ids = []
 
     for e in episodes:
         if e.iteration <= max_iteration:
+            episode_ids.append(e.id)
             plot_iteration.append(e.iteration)
             if reward_control.measure_total_event_rewards():
                 plot_data.append(e.total_reward)
@@ -354,7 +369,7 @@ def get_scatter_plot_data_iteration_vs_total_reward(episodes, show_final_iterati
                 assert reward_control.measure_mean_future_reward()
                 plot_data.append(np.mean(e.discounted_future_rewards[0]))
 
-    return np.array(plot_iteration), np.array(plot_data)
+    return np.array(plot_iteration), np.array(plot_data), episode_ids
 
 
 def get_scatter_plot_data_iteration_vs_percent_complete(episodes, show_final_iteration: bool):
@@ -364,11 +379,13 @@ def get_scatter_plot_data_iteration_vs_percent_complete(episodes, show_final_ite
 
     plot_iteration = []
     plot_data = []
+    episode_ids = []
 
     for e in episodes:
         if e.iteration <= max_iteration:
+            episode_ids.append(e.id)
             plot_iteration.append(e.iteration)
             plot_data.append(e.percent_complete)
 
-    return np.array(plot_iteration), np.array(plot_data)
+    return np.array(plot_iteration), np.array(plot_data), episode_ids
 

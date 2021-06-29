@@ -30,10 +30,12 @@ def import_new_logs(log_files, please_wait, log_directory):
 
 
 def get_model_info_for_open_model_dialog(track, log_directory):
+    all_logs_count = 0
     model_names = []
     model_logs = {}
     for f in os.listdir(log_directory):
         if f.endswith(META_FILE_SUFFIX):
+            all_logs_count += 1
             log = Log(log_directory)
             log.load_meta(f)
 
@@ -41,7 +43,7 @@ def get_model_info_for_open_model_dialog(track, log_directory):
                 model_name = log.get_log_meta().model_name
                 model_names.append(model_name)
                 model_logs[model_name] = log
-    return model_logs, model_names
+    return model_logs, model_names, all_logs_count
 
 
 def get_possible_new_model_log_files(log_directory: str):

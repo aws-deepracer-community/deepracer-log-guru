@@ -18,8 +18,8 @@ from src.utils.formatting import get_pretty_whole_percentage, get_pretty_large_i
 class OpenFileDialog(Dialog):
 
     def body(self, master):
-        model_logs, model_names = get_model_info_for_open_model_dialog(self.parent.current_track,
-                                                                       self.parent.get_log_directory())
+        model_logs, model_names, all_logs_count = get_model_info_for_open_model_dialog(self.parent.current_track,
+                                                                                       self.parent.get_log_directory())
         all_best_times = []
         all_average_times = []
         all_progress_percent = []
@@ -36,7 +36,8 @@ class OpenFileDialog(Dialog):
             all_success_percent.append(self._get_success_percent(log_meta))
 
         if len(all_progress_percent) == 0:
-            return
+            best_progress_percent = 0.0
+            best_success_percent = 0.0
         else:
             best_progress_percent = max(all_progress_percent)
             best_success_percent = max(all_success_percent)
@@ -86,6 +87,15 @@ class OpenFileDialog(Dialog):
                                                                       best_average_times))
 
             row += 1
+
+        if all_logs_count > len(model_logs) and all_logs_count > 0:
+            hidden_count = all_logs_count - len(model_logs)
+            if hidden_count == 1:
+                hidden_text = "Note: One log file is not shown, choose the correct track to see it"
+            else:
+                hidden_text = "Note: " + str(hidden_count) + " log files are not shown, choose other tracks to see them"
+            tk.Label(master, text=hidden_text, foreground="red").grid(row=row, column=0, columnspan=6,
+                                                                      pady=5, sticky="W")
 
     @staticmethod
     def _get_progress_percent(log_meta):

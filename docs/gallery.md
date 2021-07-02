@@ -2,7 +2,7 @@
 
 ## Version 3
 
-Coming here soon
+![Analyze DeepRacer logs easily with DRG](pictures/gallery_v3/route_analysis_1.png)
 
 
 ## Version 2

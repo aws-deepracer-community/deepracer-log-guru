@@ -19,7 +19,7 @@ class BajaHighwayTrack(Track):
         self._ui_length_in_m = 99.99  # metres  (99.99 = not stated in AWS DR GUI)
         self._ui_width_in_cm = 107  # centimetres   # TODO
         self._world_name = "dubai_pro"
-        self._track_sector_dividers = [10, 20, 30]
+        self._track_sector_dividers = [61, 111, 140, 200]
         self._annotations = config.baja_highway_annotations
         self._track_width = 1.066
 

@@ -33,6 +33,10 @@
 <td><img src="pictures/gallery_v3/race_2.png"/></td>
 </tr>
 <tr>
+<td><img src="pictures/gallery_v3/speed.png"/></td>
+<td><img src="pictures/gallery_v3/slide.png"/></td>
+</tr>
+<tr>
 <td><img src="pictures/gallery_v3/episode_reward_1.png"/></td>
 <td><img src="pictures/gallery_v3/episode_reward_2.png"/></td>
 </tr>
@@ -41,10 +45,19 @@
 <td><img src="pictures/gallery_v3/reward_per_waypoint.png"/></td>
 </tr>
 <tr>
+<td><img src="pictures/gallery_v3/actions_1.png"/></td>
+<td><img src="pictures/gallery_v3/actions_2.png"/></td>
+</tr>
+<tr>
+<td><img src="pictures/gallery_v3/common_rewards.png"/></td>
+<td><img src="pictures/gallery_v3/lap_time_dist.png"/></td>
+</tr>
+<tr>
 <td><img src="pictures/gallery_v3/episode_filter.png"/></td>
 </tr>
 </tbody>
 </table>
+
 
 
 ## Version 2

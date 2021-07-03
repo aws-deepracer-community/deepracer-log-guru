@@ -5,7 +5,7 @@
 <table>
 <tbody>
 <tr>
-<td><img src="pictures/gallery_v3/route_analysis_1.png"/></td>
+<td width=50%><img src="pictures/gallery_v3/route_analysis_1.png"/></td>
 <td><img src="pictures/gallery_v3/route_analysis_2.png"/></td>
 </tr>
 <tr>

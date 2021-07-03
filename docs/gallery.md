@@ -9,8 +9,20 @@
 <td><img src="pictures/gallery_v3/route_analysis_2.png"/></td>
 </tr>
 <tr>
+<td width=50%><img src="pictures/gallery_v3/route_analysis_3.png"/></td>
+<td><img src="pictures/gallery_v3/route_analysis_4.png"/></td>
+</tr>
+<tr>
+<td width=50%><img src="pictures/gallery_v3/route_analysis_5.png"/></td>
+<td><img src="pictures/gallery_v3/exit_points.png"/></td>
+</tr>
+<tr>
 <td><img src="pictures/gallery_v3/heatmap_analysis_1.png"/></td>
 <td><img src="pictures/gallery_v3/heatmap_analysis_2.png"/></td>
+</tr>
+<tr>
+<td><img src="pictures/gallery_v3/race_1.png"/></td>
+<td><img src="pictures/gallery_v3/race_2.png"/></td>
 </tr>
 </tbody>
 </table>

@@ -33,6 +33,10 @@
 <td><img src="pictures/gallery_v3/race_2.png"/></td>
 </tr>
 <tr>
+<td><img src="pictures/gallery_v3/correlation_1.png"/></td>
+<td><img src="pictures/gallery_v3/correlation_2.png"/></td>
+</tr>
+<tr>
 <td><img src="pictures/gallery_v3/speed.png"/></td>
 <td><img src="pictures/gallery_v3/slide.png"/></td>
 </tr>
@@ -53,7 +57,12 @@
 <td><img src="pictures/gallery_v3/lap_time_dist.png"/></td>
 </tr>
 <tr>
+<td><img src="pictures/gallery_v3/progress_1.png"/></td>
+<td><img src="pictures/gallery_v3/progress_2.png"/></td>
+</tr>
+<tr>
 <td><img src="pictures/gallery_v3/episode_filter.png"/></td>
+<td><img src="pictures/gallery_v3/open_file.png"/></td>
 </tr>
 </tbody>
 </table>

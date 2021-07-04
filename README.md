@@ -4,7 +4,9 @@
 4th July 2021: Version 3.2.0 is available with new features including:
 * All the latest competition tracks
 * Support for continuous action space
-* Episode filtering options for object avoidance
+* Episode filtering options for object avoidance (refer to [Special Topics](docs/special_topics.md) for important setup information)
+* Click-thru' from a scatter graph blob to see the episode route details (refer to [Special Mouse and Keyboard Actions](docs/mouse_and_keyboard.md))
+* Improved documentation including an extended [Gallery](docs/gallery.md) to showcase what's possible
 
 ## Introduction
 

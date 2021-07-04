@@ -80,3 +80,7 @@ kuei_super_raceway_annotations = []
 cosmic_loop_annotations = []
 
 cosmic_circuit_annotations = []
+
+baja_highway_annotations = []
+
+baja_turnpike_annotations = []

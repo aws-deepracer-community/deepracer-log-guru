@@ -12,7 +12,7 @@ import math
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-from src.analyze.core.controls import EpisodeRewardTypeControl
+from src.analyze.core.controls import EpisodeRewardTypeControl, ShowLastStepControl
 from src.analyze.graph.analyze_episode_graph_base import AnalyzeEpisodeStat
 from src.analyze.core.episode_selector import EpisodeSelector
 from src.configuration.config_manager import ConfigManager
@@ -28,9 +28,11 @@ class AnalyzeEpisodeReward(AnalyzeEpisodeStat):
                          "Reward", "Step Reward", "Total Reward", False, True)
 
         self._rewardTypeControl = EpisodeRewardTypeControl(guru_parent_redraw, control_frame, config_manager)
+        self._showLastStepControl = ShowLastStepControl(guru_parent_redraw, control_frame)
 
     def build_control_frame(self, control_frame):
         self._rewardTypeControl.add_to_control_frame()
+        self._showLastStepControl.add_to_control_frame()
         super().build_control_frame(control_frame)
 
     def get_plot_bar_values_per_step(self, wrap_point):
@@ -43,6 +45,9 @@ class AnalyzeEpisodeReward(AnalyzeEpisodeStat):
         else:
             for v in self.episode.events:
                 rewards.append(v.reward)
+
+        if not self._showLastStepControl.show_last_step() and len(rewards) > 0:
+            rewards = rewards[:-1] + [0]
 
         if wrap_point:
             rewards = rewards[wrap_point:] + [math.nan] + rewards[:wrap_point]

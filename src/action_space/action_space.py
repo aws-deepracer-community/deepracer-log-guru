@@ -19,6 +19,9 @@ class ActionSpace:
         self._min_speed = 0.0
         self._max_speed = 0.0
         self._speed_range = 0.0
+        self._is_continuous = False
+        self._continuous_speed = None
+        self._continuous_steering = None
 
     def add_action(self, action: Action) -> None:
         assert action.get_index() == len(self._actions)
@@ -33,6 +36,28 @@ class ActionSpace:
 
     def get_action(self, index: int) -> Action:
         return self._actions[index]
+
+    def mark_as_continuous(self):
+        self._is_continuous = True
+
+    def is_continuous(self):
+        return self._is_continuous
+
+    def define_continuous_action_limits(self, low_speed: float, high_speed: float, low_steering: float, high_steering: float):
+        assert 0 <= low_speed <= high_speed <= 4
+        assert -30 <= low_steering <= high_steering <= 30
+        self._continuous_speed = (low_speed, high_speed)
+        self._continuous_steering = (low_steering, high_steering)
+
+        self._min_speed = low_speed
+        self._max_speed = high_speed
+        self._speed_range = self._max_speed - self._min_speed
+
+    def get_continuous_action_limits(self):
+        assert self._is_continuous
+        (low_speed, high_speed) = self._continuous_speed
+        (low_steering, high_steering) = self._continuous_steering
+        return low_speed, high_speed, low_steering, high_steering
 
     def get_all_actions(self):
         return self._actions

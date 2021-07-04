@@ -97,10 +97,6 @@ class AnalyzeRoute(TrackAnalyzer):
             self.display_info_about_chosen_event()
 
     def redraw(self):
-
-        if not self.filtered_episodes:
-            return
-
         self.draw_episode(self.episode_selector.get_selected_episode())
         self.draw_chosen_event_()
 
@@ -174,6 +170,8 @@ class AnalyzeRoute(TrackAnalyzer):
             self.floating_window = None
 
     def draw_episode(self, episode):
+        if episode is None:
+            return
 
         for obj in episode.object_locations:
             track_bearing = self.current_track.get_track_bearing_at_point(obj)

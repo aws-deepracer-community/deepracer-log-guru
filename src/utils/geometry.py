@@ -94,6 +94,10 @@ def get_intersection_of_two_lines(line_a_point_1: Point, line_a_point_2: Point,
     (x4, y4) = line_b_point_2
 
     denominator = ((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4))
+
+    if denominator == 0.0:
+        return None
+
     z1 = (x1 * y2) - (y1 * x2)
     z2 = (x3 * y4) - (y3 * x4)
 

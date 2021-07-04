@@ -98,7 +98,6 @@ class LogEventInfoWindow(tk.Toplevel):
         self.make_label_and_value(state_frame, 13, "Braking", self.state_braking)
         self.make_label_and_value(state_frame, 14, "Projected Travel", self.state_projected_travel_distance)
 
-
         self.action_id = tk.StringVar()
         self.action_steering = tk.StringVar()
         self.action_speed = tk.StringVar()
@@ -171,7 +170,7 @@ class LogEventInfoWindow(tk.Toplevel):
         self.state_true_bearing.set(str(round(event.true_bearing)))
         self.state_slide.set(str(round(event.slide)))
         self.state_skew.set(str(round(event.skew)))
-        self.state_side.set(track.get_position_of_point_relative_to_waypoint((event.x, event.y), event.closest_waypoint_index))
+        self.state_side.set(event.track_side)
         self.state_distance_from_centre.set(str(round(event.distance_from_center, 2)))
         self.state_all_wheels_on_track.set(str(event.all_wheels_on_track))
         if event.acceleration > 0.0:
@@ -184,7 +183,10 @@ class LogEventInfoWindow(tk.Toplevel):
             self.state_braking.set("---")
         self.state_projected_travel_distance.set(str(round(event.projected_travel_distance, 1)) + " m")
 
-        self.action_id.set(str(event.action_taken))
+        if event.action_taken is None:
+            self.action_id.set("n/a")
+        else:
+            self.action_id.set(str(event.action_taken))
         self.action_steering.set(get_formatted_steering(event.steering_angle))
         self.action_speed.set(str(event.speed) + "  m/s")
         self.action_sequence.set(str(event.sequence_count))

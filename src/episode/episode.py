@@ -27,11 +27,27 @@ from src.personalize.configuration.analysis import NEW_REWARD_FUNCTION, TIME_BEF
 
 SLIDE_SETTLING_PERIOD = 6
 
+REVERSED = "R"
+OFF_TRACK = "OT"
+CRASHED = "C"
+LAP_COMPLETE = "LP"
+LOST_CONTROL = "LC"
+
+ALL_OUTCOMES = [REVERSED, OFF_TRACK, CRASHED, LAP_COMPLETE, LOST_CONTROL]
+
+POS_XLEFT = "XL"
+POS_LEFT = "L"
+POS_CENTRAL = "C"
+POS_RIGHT = "R"
+POS_XRIGHT = "XR"
+
+ALL_POSITIONS = [POS_XLEFT, POS_LEFT, POS_CENTRAL, POS_RIGHT, POS_XRIGHT]
+
 
 class Episode:
 
     def __init__(self, episode_id, iteration, events, object_locations, action_space: ActionSpace,
-                 do_full_analysis: bool, track: Track=None,
+                 do_full_analysis: bool, track: Track = None,
                  calculate_new_reward=False, calculate_alternate_discount_factors=False):
 
         assert track is not None or not do_full_analysis
@@ -45,6 +61,18 @@ class Episode:
         last_event = events[-1]
 
         if last_event.status == "lap_complete":
+            self.outcome = LAP_COMPLETE
+        elif last_event.status == "reversed":
+            self.outcome = REVERSED
+        elif last_event.status == "off_track":
+            self.outcome = OFF_TRACK
+        elif last_event.status == "crashed":
+            self.outcome = CRASHED
+        else:
+            assert last_event.status == "immobilized"
+            self.outcome = LOST_CONTROL
+
+        if self.outcome == LAP_COMPLETE:
             self.lap_complete = True
             self.percent_complete = 100
         elif len(events) == 1:
@@ -67,8 +95,12 @@ class Episode:
         self.average_reward = np_rewards.mean()
         self.predicted_lap_reward = 100 / last_event.progress * self.total_reward  # predicted
 
-        self.action_frequency = self._get_action_frequency(action_space)
-        self.repeated_action_percent = self.get_repeated_action_percent(self.events)
+        if action_space.is_continuous():
+            self.action_frequency = None
+            self.repeated_action_percent = None
+        else:
+            self.action_frequency = self._get_action_frequency(action_space)
+            self.repeated_action_percent = self.get_repeated_action_percent(self.events)
 
         self._mark_dodgy_data()   # Must be first, before all the analysis below, especially for speeds
 
@@ -85,8 +117,10 @@ class Episode:
         self.set_acceleration_and_braking_on_events()
 
         if do_full_analysis:
-            self.set_projected_distances_on_events(track)
-            self._set_distance_from_center_on_events(track)
+            (self._blocked_left_waypoints, self._blocked_right_waypoints,
+             self._blocked_left_object_locations, self._blocked_right_object_locations) = self.get_blocked_waypoints(track)
+            self.set_projected_distances_on_events(track)   # Relies on blocked waypoints
+            self._set_side_and_distance_from_center_on_events(track)
             self._set_before_and_after_waypoints_on_events(track)
             self._set_skew_on_events(track)   # Relies on before and after
 
@@ -101,10 +135,13 @@ class Episode:
 
             self._set_discounted_future_rewards(calculate_alternate_discount_factors)
             self.discounted_future_rewards = self._get_lists_of_discounted_future_rewards()
-
         else:
             self.new_rewards = []
             self.new_discounted_future_rewards = []
+            self._blocked_left_waypoints = []
+            self._blocked_right_waypoints = []
+            self._blocked_left_object_locations = []
+            self._blocked_right_object_locations = []
 
         # THESE MUST BE AT THE END SINCE THEY ARE CALCULATED FROM DATA SET FURTHER UP/ABOVE
         self.distance_travelled = self.get_distance_travelled()
@@ -120,7 +157,6 @@ class Episode:
         return round(first_event_percent / 5) * 5
 
     def get_distance_travelled(self):
-
         if self.events:
             return self.events[-1].total_distance_travelled
         else:
@@ -214,7 +250,6 @@ class Episode:
             previous = previous[1:] + [e]
 
     def set_true_bearing_and_slide_on_events(self):
-
         previous_event = self.events[0]
         self.events[0].slide = 0.0
         self.events[0].true_bearing = self.events[0].heading
@@ -234,9 +269,10 @@ class Episode:
                 self.max_slide = max(self.max_slide, abs(e.slide))
             previous_event = e
 
-    def _set_distance_from_center_on_events(self, track :Track):
+    def _set_side_and_distance_from_center_on_events(self, track: Track):
         for e in self.events:
             current_location = (e.x, e.y)
+            e.track_side = track.get_position_of_point_relative_to_waypoint(current_location, e.closest_waypoint_index)
             closest_waypoint = track.get_waypoint(e.closest_waypoint_index)
             next_waypoint = track.get_next_different_waypoint(e.closest_waypoint_index)
             previous_waypoint = track.get_previous_different_waypoint(e.closest_waypoint_index)
@@ -273,10 +309,34 @@ class Episode:
                     e.acceleration = (later_event.track_speed - earlier_event.track_speed) / time_difference
             previous_time = e.time_elapsed
 
+    def get_blocked_waypoints(self, track: Track):
+        left_wps = []
+        right_wps = []
+        left_locations = []
+        right_locations = []
+
+        for obj in self.object_locations:
+            wp = track.get_closest_waypoint_id(obj)
+            pos = track.get_position_of_point_relative_to_waypoint(obj, wp)
+            if pos == "L":
+                left_wps.append(wp)
+                left_locations.append(obj)
+            else:
+                right_wps.append(wp)
+                right_locations.append(obj)
+        return left_wps, right_wps, left_locations, right_locations
+
     def set_projected_distances_on_events(self, track: Track):
         e: Event
         for e in self.events:
-            e.projected_travel_distance = track.get_projected_distance_on_track((e.x, e.y), e.true_bearing, e.closest_waypoint_index)
+            e.projected_travel_distance = track.get_projected_distance_on_track((e.x, e.y), e.true_bearing,
+                                                                                e.closest_waypoint_index, 0.0,
+                                                                                self._blocked_left_waypoints,
+                                                                                self._blocked_right_waypoints,
+                                                                                self._blocked_left_object_locations,
+                                                                                self._blocked_right_object_locations)
+        if self.outcome in [OFF_TRACK, CRASHED]:
+            self.events[-1].projected_travel_distance = 0.0
 
     def set_reward_total_on_events(self):
         reward_total = 0.0
@@ -306,7 +366,9 @@ class Episode:
         previous_action_id = -1
 
         for e in self.events:
-            if e.action_taken == previous_action_id:
+            if e.action_taken is None:
+                sequence = 1
+            elif e.action_taken == previous_action_id:
                 sequence += 1
             else:
                 sequence = 1
@@ -641,6 +703,22 @@ class Episode:
                 index -= 1
 
             return index
+
+    def count_objects_in_section(self, start_wp: int, end_wp: int):
+        left = 0
+        for w in self._blocked_left_waypoints:
+            if start_wp <= end_wp and start_wp <= w <= end_wp:
+                left += 1
+            elif start_wp > end_wp and (w >= start_wp or w <= end_wp):
+                left += 1
+        right = 0
+        for w in self._blocked_right_waypoints:
+            if start_wp <= end_wp and start_wp <= w <= end_wp:
+                right += 1
+            elif start_wp > end_wp and (w >= start_wp or w <= end_wp):
+                right += 1
+
+        return left, right
 
     def extract_all_sequences(self, min_sequence_length: int):
         sequences = Sequences()

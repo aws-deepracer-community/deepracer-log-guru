@@ -466,9 +466,9 @@ class StatsControl(Control):
 
     def _add_widgets(self):
         self.add_checkbutton("Mean", self._show_mean)
+        self.add_checkbutton_right("Best", self._show_best)
         self.add_checkbutton("Median", self._show_median)
-        self.add_checkbutton("Best", self._show_best)
-        self.add_checkbutton("Worst", self._show_worst)
+        self.add_checkbutton_right("Worst", self._show_worst)
 
     def show_mean(self):
         return self._show_mean.get()
@@ -588,7 +588,7 @@ class GraphScaleControl(Control):
     def _add_widgets(self):
 
         self.add_radiobutton("Fixed", self._scale, GraphScaleControl._FIXED_SCALE)
-        self.add_radiobutton("Dynamic", self._scale, GraphScaleControl._DYNAMIC_SCALE)
+        self.add_radiobutton_right("Dynamic", self._scale, GraphScaleControl._DYNAMIC_SCALE)
 
     def fixed_scale(self):
         return self._scale.get() == GraphScaleControl._FIXED_SCALE
@@ -599,27 +599,47 @@ class GraphScaleControl(Control):
 
 class GraphLineFittingControl(Control):
     _NONE = 1
-    _LINEAR = 2
-    _QUADRATIC = 3
+    _JOINED = 2
+    _LINEAR = 3
+    _QUADRATIC = 4
+    _CUBIC = 5
 
-    def __init__(self, guru_parent_redraw, control_frame: tk.Frame):
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, is_correlation: bool = True):
         super().__init__(guru_parent_redraw, control_frame, "Line Fitting")
 
+        self._is_correlation = is_correlation
         self._smoothing = tk.IntVar(value=GraphLineFittingControl._NONE)
+        self._show_scatter = tk.BooleanVar(value=True)
+        if not is_correlation:
+            self._smoothing.set(value=GraphLineFittingControl._JOINED)
+            self._show_scatter.set(False)
 
     def _add_widgets(self):
         self.add_radiobutton("None", self._smoothing, GraphLineFittingControl._NONE)
+        if not self._is_correlation:
+            self.add_radiobutton("Joined", self._smoothing, GraphLineFittingControl._JOINED)
         self.add_radiobutton("Linear", self._smoothing, GraphLineFittingControl._LINEAR)
         self.add_radiobutton("Quadratic", self._smoothing, GraphLineFittingControl._QUADRATIC)
+        self.add_radiobutton("Cubic", self._smoothing, GraphLineFittingControl._CUBIC)
+        self.add_checkbutton("+ Scatter", self._show_scatter)
 
     def no_fitting(self):
         return self._smoothing.get() == GraphLineFittingControl._NONE
+
+    def joined_fitting(self):
+        return self._smoothing.get() == GraphLineFittingControl._JOINED
 
     def linear_fitting(self):
         return self._smoothing.get() == GraphLineFittingControl._LINEAR
 
     def quadratic_fitting(self):
         return self._smoothing.get() == GraphLineFittingControl._QUADRATIC
+
+    def cubic_fitting(self):
+        return self._smoothing.get() == GraphLineFittingControl._CUBIC
+
+    def show_scatter(self):
+        return self._show_scatter.get()
 
 
 class ActionGroupControl(Control):
@@ -1076,3 +1096,149 @@ class QuartersCheckButtonControl(Control):
 
     def show_q4(self):
         return self._q4.get()
+
+
+class ShowLastStepControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
+        super().__init__(guru_parent_redraw, control_frame, "Last Step")
+
+        self._show_last_step = tk.BooleanVar(value=True)
+
+    def _add_widgets(self):
+        self.add_checkbutton("Show", self._show_last_step)
+
+    def show_last_step(self):
+        return self._show_last_step.get()
+
+
+class ShowFinalIterationControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
+        super().__init__(guru_parent_redraw, control_frame, "Final Iteration")
+
+        self._show_final_iteration = tk.BooleanVar(value=False)
+
+    def _add_widgets(self):
+        self.add_checkbutton("Show", self._show_final_iteration)
+
+    def show_final_iteration(self):
+        return self._show_final_iteration.get()
+
+
+class OutcomesCheckButtonControl(Control):
+
+    def __init__(self, guru_parent_redraw, control_frame: tk.Frame, include_evaluations=False):
+        super().__init__(guru_parent_redraw, control_frame, "Outcome")
+
+        self._lap_complete = tk.BooleanVar(value=False)
+        self._off_track = tk.BooleanVar(value=True)
+        self._crashed = tk.BooleanVar(value=False)
+        self._reversed = tk.BooleanVar(value=False)
+        self._lost_control = tk.BooleanVar(value=False)
+
+    def _add_widgets(self):
+        self.add_checkbutton("Lap Complete", self._lap_complete)
+        self.add_checkbutton("Off Track", self._off_track)
+        self.add_checkbutton("Crashed", self._crashed)
+        self.add_checkbutton("Reversed", self._reversed)
+        self.add_checkbutton("Lost Control", self._lost_control)
+
+    def show_lap_complete(self):
+        return self._lap_complete.get()
+
+    def show_off_track(self):
+        return self._off_track.get()
+
+    def show_crashed(self):
+        return self._crashed.get()
+
+    def show_reversed(self):
+        return self._reversed.get()
+
+    def show_lost_control(self):
+        return self._lost_control.get()
+
+
+class RewardTypeControl(Control):
+    _EVENT_REWARD = "Event Reward"
+    _FUTURE_REWARD = "Future Reward"
+    _NEW_EVENT_REWARD = "New Event Reward"
+    _NEW_FUTURE_REWARD = "New Future Reward"
+    _ALTERNATE_DISCOUNT_FACTOR = "Future DF = "
+
+    def __init__(self, redraw_callback: callable, control_frame: tk.Frame, config_manager: ConfigManager):
+        super().__init__(redraw_callback, control_frame, "Reward Type")
+        self._chosen_reward_type = tk.StringVar(value=RewardTypeControl._EVENT_REWARD)
+        self._redraw_callback = redraw_callback
+        self._alternate_discount_factor_dict = dict()
+        self._config_manager = config_manager
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(RewardTypeControl._EVENT_REWARD, self._chosen_reward_type)
+        self.add_radiobutton_improved(RewardTypeControl._FUTURE_REWARD, self._chosen_reward_type)
+        if self._config_manager.get_calculate_new_reward():
+            self.add_radiobutton_improved(RewardTypeControl._NEW_EVENT_REWARD, self._chosen_reward_type)
+            self.add_radiobutton_improved(RewardTypeControl._NEW_FUTURE_REWARD, self._chosen_reward_type)
+        if self._config_manager.get_calculate_alternate_discount_factors():
+            self._alternate_discount_factor_dict = dict()
+            for i in range(0, discount_factors.get_number_of_discount_factors()):
+                name = RewardTypeControl._ALTERNATE_DISCOUNT_FACTOR + str(discount_factors.get_discount_factor(i))
+                self._alternate_discount_factor_dict[name] = i
+                if i > 0:
+                    self.add_radiobutton_improved(name, self._chosen_reward_type)
+
+    def measure_event_reward(self):
+        return self._chosen_reward_type.get() == RewardTypeControl._EVENT_REWARD
+
+    def measure_new_event_reward(self):
+        return self._chosen_reward_type.get() == RewardTypeControl._NEW_EVENT_REWARD
+
+    def measure_discounted_future_reward(self):
+        return self._chosen_reward_type.get() == RewardTypeControl._FUTURE_REWARD
+
+    def measure_new_discounted_future_reward(self):
+        return self._chosen_reward_type.get() == RewardTypeControl._NEW_FUTURE_REWARD
+
+    def measure_alternate_discounted_future_reward(self):
+        return self._chosen_reward_type.get() in self._alternate_discount_factor_dict.keys()
+
+    def get_alternate_discount_factor_index(self):
+        if self.measure_alternate_discounted_future_reward():
+            return self._alternate_discount_factor_dict[self._chosen_reward_type.get()]
+        else:
+            return None
+
+    def get_alternate_discount_factor(self):
+        index = self.get_alternate_discount_factor_index()
+        if index is not None:
+            return discount_factors.get_discount_factor(index)
+        else:
+            return None
+
+
+class EpisodeTrainingRewardTypeControl(Control):
+    _TOTAL_EVENT_REWARD = "Total Event Reward"
+    _MAX_FUTURE_REWARD = "Max Future Reward"
+    _MEAN_FUTURE_REWARD = "Mean Future Reward"
+
+    def __init__(self, redraw_callback: callable, control_frame: tk.Frame):
+        super().__init__(redraw_callback, control_frame, "Episode Reward")
+        self._chosen_reward_type = tk.StringVar(value=EpisodeTrainingRewardTypeControl._TOTAL_EVENT_REWARD)
+        self._redraw_callback = redraw_callback
+
+    def _add_widgets(self):
+        self.add_radiobutton_improved(EpisodeTrainingRewardTypeControl._TOTAL_EVENT_REWARD, self._chosen_reward_type)
+        self.add_radiobutton_improved(EpisodeTrainingRewardTypeControl._MAX_FUTURE_REWARD, self._chosen_reward_type)
+        self.add_radiobutton_improved(EpisodeTrainingRewardTypeControl._MEAN_FUTURE_REWARD, self._chosen_reward_type)
+
+    def measure_total_event_rewards(self):
+        return self._chosen_reward_type.get() == EpisodeTrainingRewardTypeControl._TOTAL_EVENT_REWARD
+
+    def measure_max_future_reward(self):
+        return self._chosen_reward_type.get() == EpisodeTrainingRewardTypeControl._MAX_FUTURE_REWARD
+
+    def measure_mean_future_reward(self):
+        return self._chosen_reward_type.get() == EpisodeTrainingRewardTypeControl._MEAN_FUTURE_REWARD
+
+

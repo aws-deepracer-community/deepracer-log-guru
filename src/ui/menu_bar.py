@@ -19,11 +19,12 @@ import src.secret_sauce.glue.glue as ss
 
 
 class MenuBar():
-    def __init__(self, root, main_app, file_is_open):
+    def __init__(self, root, main_app, file_is_open:bool, is_continuous_action_space:bool):
         self.main_app = main_app
         self.root = root
         self.menubar = Menu(root)
         self._file_is_open = file_is_open
+        self._is_continuous_action_space = is_continuous_action_space
         self._create_menus()
 
     def _create_menus(self):
@@ -32,7 +33,8 @@ class MenuBar():
 
         if self._file_is_open:
             self.add_episode_menu()
-            self.add_action_menu()
+            if not self._is_continuous_action_space:
+                self.add_action_menu()
             self.add_sector_menu()
             self.add_analyze_menu()
 
@@ -144,7 +146,8 @@ class MenuBar():
         menu.add_command(label="Episode Speed", command=self.main_app.menu_callback_analyze_episode_speed)
         menu.add_command(label="Episode Reward", command=self.main_app.menu_callback_analyze_episode_reward)
         menu.add_command(label="Episode Slide", command=self.main_app.menu_callback_analyze_episode_slide)
-        menu.add_command(label="Episode Action Distribution", command=self.main_app.menu_callback_analyze_episode_action_distribution)
+        if not self._is_continuous_action_space:
+            menu.add_command(label="Episode Action Distribution", command=self.main_app.menu_callback_analyze_episode_action_distribution)
 
         menu.add_separator()
         menu.add_command(label="Heatmap", command=self.main_app.menu_callback_analyze_track_heatmap)

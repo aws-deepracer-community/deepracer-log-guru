@@ -44,7 +44,8 @@ class Log:
         self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
         discount_factors.reset_for_log(self._log_meta.hyper.discount_factor)
         please_wait.set_progress(2)
-        self._parse_episode_events(please_wait, 2, 50, 95, True, track,
+        self._parse_episode_events(please_wait, self._log_meta.action_space.is_continuous(),
+                                   2, 50, 95, True, track,
                                    calculate_new_reward, calculate_alternate_discount_factors)
         self._divide_episodes_into_quarters(please_wait, 95, 100)
         please_wait.set_progress(100)
@@ -57,6 +58,7 @@ class Log:
         self._parse_intro_events()
         self._parse_episode_events(
             please_wait,
+            self._log_meta.action_space.is_continuous(),
             min_progress_percent,
             min_progress_percent + 0.9 * (max_progress_percent - min_progress_percent),
             max_progress_percent, False)
@@ -103,7 +105,7 @@ class Log:
                 else:
                     parse.parse_intro_event(line_of_text, self._log_meta)
 
-    def _parse_episode_events(self, please_wait: PleaseWait,
+    def _parse_episode_events(self, please_wait: PleaseWait, is_continuous_action_space: bool,
                               min_progress_percent: float, mid_progress_percent: float, max_progress_percent: float,
                               do_full_analysis: bool, track: Track = None,
                               calculate_new_reward=False, calculate_alternate_discount_factors=False):
@@ -125,14 +127,16 @@ class Log:
                 if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
                     intro = False
                     parse.parse_episode_event(line_of_text, episode_events, episode_object_locations,
-                                              saved_events, saved_debug, saved_object_locations)
+                                              saved_events, saved_debug, saved_object_locations,
+                                              is_continuous_action_space)
                     saved_debug = ""
                     saved_object_locations = None
                 elif parse.EPISODE_STARTS_WITH in line_of_text and (len(line_of_text) > 1000 or parse.SENT_SIGTERM in line_of_text):
                     end_of_str = line_of_text[line_of_text.find(parse.EPISODE_STARTS_WITH):]
                     intro = False
                     parse.parse_episode_event(end_of_str, episode_events, episode_object_locations,
-                                              saved_events, saved_debug, saved_object_locations)
+                                              saved_events, saved_debug, saved_object_locations,
+                                              is_continuous_action_space)
                     saved_debug = ""
                     saved_object_locations = None
                 elif not intro:

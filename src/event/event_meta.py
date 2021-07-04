@@ -56,6 +56,7 @@ class Event:
         self.acceleration = 0.0
         self.braking = 0.0
         self.projected_travel_distance = 0.0
+        self.track_side = "L"
 
         self.dodgy_data = False
 

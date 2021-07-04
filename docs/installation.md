@@ -5,7 +5,7 @@ Download and install [Python 3.9.4](https://www.python.org/downloads/release/pyt
 
 Note - If you change the install options, be sure you still install *pip* and *tkinter*:
 
-![](pictures/python_install_options.png)
+![](pictures/installation/python_install_options.png)
 
 ## Install Additional Python Packages
 
@@ -15,7 +15,7 @@ Download additional packages by running this command in the directory where you 
     
 For example:
 
-![](pictures/pip_install.png)
+![](pictures/installation/pip_install.png)
 
 ## Download Deep Racer Guru
 
@@ -46,10 +46,10 @@ Note:
 Configure the IDE to use the version of Python interpreter that you installed in the previous steps.
 
 As an example, here is a screenshot from PyCharm:
-![](pictures/pycharm_setup_python_interpreter.png)
+![](pictures/installation/pycharm_setup_python_interpreter.png)
 
 Then you can simply "run" the main application from the __src/main/guru.py file__
 
 Again as an example, here is a screenshot from PyCharm:
-![](pictures/pycharm_run.png)
+![](pictures/installation/pycharm_run.png)
 

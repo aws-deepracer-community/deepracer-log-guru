@@ -14,11 +14,11 @@ Download a log file as follows:
 * Go to the AWS DeepRacer console and view the training details for a model
 * Click the "**Download logs**" button at the top of the training section (note - this button is only enabled once training has completed)
 
-![](pictures/download_logs.png)
+![](pictures/getting_started/download_logs.png)
 
 * After it has downloaded, open the zip archive and locate the single **robomaker** log file in the **logs/training** folder
 
-![](pictures/find_correct_log_file.png)
+![](pictures/getting_started/find_correct_log_file.png)
 
 * Extract/save it locally
 * Note - DRG does NOT require any other files in the zip archive
@@ -69,29 +69,29 @@ Run the main DRG application, as per the [Installation Instructions](installatio
 ## Configure DRG
 Tell DRG where you have saved your log files using "Switch Directory":
 
-![](pictures/file_menu_switch_directory.png)
+![](pictures/getting_started/file_menu_switch_directory.png)
 
 ## Import Log Files
 You must then "Import" new log files before you can open them for analysis, using "New File(s)":
 
-![](pictures/file_menu_new_files.png)
+![](pictures/getting_started/file_menu_new_files.png)
 
 It will display a list of the new files, if it is correct then click OK to import them into DRG:
 
-![](pictures/import_new_log_files.png)
+![](pictures/getting_started/import_new_log_files.png)
 
 
 ### Open Log Files
 Use the "Track" menu to select the correct track - note that tracks with log files are at the top of the list, above the divider
   
-![](pictures/choose_track.png)
+![](pictures/getting_started/choose_track.png)
 
 View all imported log files for your selected track using "Open File":
 
-![](pictures/file_menu_open_files.png)
+![](pictures/getting_started/file_menu_open_files.png)
 
 Click on the model name to open its log file:
 
-![](pictures/choose_file_to_open.png)
+![](pictures/getting_started/choose_file_to_open.png)
 
 

@@ -8,28 +8,32 @@
 
 import tkinter as tk
 import numpy as np
+from matplotlib.artist import Artist
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.axes import Axes
 
 from src.analyze.graph.graph_analyzer import GraphAnalyzer
-from src.analyze.core.controls import EpisodeCheckButtonControl, PredictionsControl, \
-    GraphFormatControl, CorrelationControl, GraphLineFittingControl
-from src.analyze.core.line_fitting import get_linear_regression, get_polynomial_quadratic_regression
+from src.analyze.core.controls import EpisodeCheckButtonControl, GraphFormatControl, CorrelationControl, \
+    GraphLineFittingControl
+from src.analyze.core.line_fitting import get_linear_regression, get_quadratic_regression, get_cubic_regression
 from src.episode.episode import Episode
 from src.event.event_meta import Event
 
 
 class AnalyzeSectorTimeCorrelations(GraphAnalyzer):
 
-    def __init__(self, guru_parent_redraw, matplotlib_canvas :FigureCanvasTkAgg, control_frame :tk.Frame):
+    def __init__(self, guru_parent_redraw, matplotlib_canvas: FigureCanvasTkAgg,
+                 control_frame: tk.Frame, guru_parent_callback_for_episode_choice: callable):
 
-        super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame)
+        super().__init__(guru_parent_redraw, matplotlib_canvas, control_frame, guru_parent_callback_for_episode_choice)
 
         self.episode_control = EpisodeCheckButtonControl(guru_parent_redraw, control_frame)
         self.correlation_control = CorrelationControl(guru_parent_redraw, control_frame, False)
         self.format_control = GraphFormatControl(guru_parent_redraw, control_frame)
         self._line_fitting_control = GraphLineFittingControl(guru_parent_redraw, control_frame)
+
+        self._plotted_episode_info = dict()
 
     def build_control_frame(self, control_frame):
         self.episode_control.add_to_control_frame()
@@ -41,7 +45,10 @@ class AnalyzeSectorTimeCorrelations(GraphAnalyzer):
         if not self.sector_filter:
             return
 
-        axes: Axes = self.graph_figure.add_subplot()
+        grid_spec = self.graph_figure.add_gridspec(1, 1, left=0.08, right=0.98, bottom=0.08, top=0.92)
+        axes: Axes = self.graph_figure.add_subplot(grid_spec[0])
+
+        self._plotted_episode_info = dict()
 
         if self.episode_control.show_all():
             self.plot_episodes(axes, self.all_episodes, "C1", "All", "o")
@@ -87,20 +94,27 @@ class AnalyzeSectorTimeCorrelations(GraphAnalyzer):
             (smoothed_x, smoothed_y, r) = get_linear_regression(plot_x, plot_y)
             r_label = "R = " + str(round(r, 2))
         elif self._line_fitting_control.quadratic_fitting():
-            (smoothed_x, smoothed_y) = get_polynomial_quadratic_regression(plot_x, plot_y)
+            (smoothed_x, smoothed_y) = get_quadratic_regression(plot_x, plot_y)
             r_label = "Quadratic"
+        elif self._line_fitting_control.cubic_fitting():
+            (smoothed_x, smoothed_y) = get_cubic_regression(plot_x, plot_y)
+            r_label = "Cubic"
 
         # Finally plot the data we have gathered
         if self.format_control.swap_axes():
-            axes.plot(plot_y, plot_x, shape, color=colour, label=label)
+            if self._line_fitting_control.show_scatter():
+                artist, = axes.plot(plot_y, plot_x, shape, color=colour, label=label, picker=True)
+                self._plotted_episode_info[artist] = episode_info
             if smoothed_y is not None:
                 axes.plot(smoothed_y, smoothed_x, color=colour, label=r_label)
         else:
-            axes.plot(plot_x, plot_y, shape, color=colour, label=label)
+            if self._line_fitting_control.show_scatter():
+                artist, = axes.plot(plot_x, plot_y, shape, color=colour, label=label, picker=True)
+                self._plotted_episode_info[artist] = episode_info
             if smoothed_y is not None:
                 axes.plot(smoothed_x, smoothed_y, color=colour, label=r_label)
 
-    def format_axes(self, axes :Axes):
+    def format_axes(self, axes: Axes):
 
         general_title = "???"
         axis_label = "???"
@@ -160,6 +174,11 @@ class AnalyzeSectorTimeCorrelations(GraphAnalyzer):
                     info.append((e, start_event, finish_event))
 
         return info
+
+    def handle_chosen_item(self, item_index: int, artist: Artist):
+        if artist in self._plotted_episode_info:
+            episode, _, _ = self._plotted_episode_info[artist][item_index]
+            self._guru_parent_callback_for_episode_choice(episode.id)
 
     @staticmethod
     def _get_plot_data_sector_times(episode_info: list):
@@ -276,6 +295,3 @@ class AnalyzeSectorTimeCorrelations(GraphAnalyzer):
             events = episode.get_events_in_range(start_event, finish_event)
             repeated_percents.append(episode.get_repeated_action_percent(events))
         return np.array(repeated_percents)
-
-
-

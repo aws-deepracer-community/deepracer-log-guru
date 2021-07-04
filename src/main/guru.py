@@ -102,10 +102,11 @@ class MainApp(tk.Frame):
         self.track_canvas.bind("<Button-1>", self.left_button_pressed_on_track_canvas)
         self.track_canvas.bind("<B1-Motion>", self.left_button_moved_on_track_canvas)
         self.track_canvas.bind("<ButtonRelease-1>", self.left_button_released_on_track_canvas)
+        self.track_canvas.bind("<Double-1>", self.left_button_double_clicked_on_track_canvas)
+
 
         self.control_frame = tk.Frame(root)
         self.inner_control_frame = tk.Frame(self.control_frame)
-
 
         #
         # Initialise variables to control the right mouse zoom-in feature over a canvas
@@ -147,17 +148,17 @@ class MainApp(tk.Frame):
         self.analyze_race = AnalyzeRace(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_curve_fitting = AnalyzeCurveFitting(self.redraw, self.track_graphics, self.inner_control_frame)
         self.analyze_straight_fitting = AnalyzeStraightFitting(self.redraw, self.track_graphics, self.inner_control_frame)
-        self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_training_progress = AnalyzeTrainingProgress(self.redraw, matplotlib_canvas, self.inner_control_frame, self.switch_to_specific_episode_default_analysis)
         self.analyze_quarterly_results = AnalyzeQuarterlyResults(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_reward_distribution = AnalyzeRewardDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_common_rewards = AnalyzeCommonRewards(self.redraw, matplotlib_canvas, self.inner_control_frame)
-        self.analyze_rewards_per_waypoint = AnalyzeRewardsPerWaypoint(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_rewards_per_waypoint = AnalyzeRewardsPerWaypoint(self.redraw, matplotlib_canvas, self.inner_control_frame, self._config_manager)
         self.analyze_episode_speed = AnalyzeEpisodeSpeed(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
         self.analyze_episode_reward = AnalyzeEpisodeReward(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector, self._config_manager)
         self.analyze_episode_slide = AnalyzeEpisodeSlide(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
         self.analyze_episode_action_distribution = AnalyzeEpisodeActionDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame, self.episode_selector)
-        self.analyze_lap_time_correlations = AnalyzeLapTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
-        self.analyze_sector_time_correlations = AnalyzeSectorTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame)
+        self.analyze_lap_time_correlations = AnalyzeLapTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame, self.switch_to_specific_episode_default_analysis)
+        self.analyze_sector_time_correlations = AnalyzeSectorTimeCorrelations(self.redraw, matplotlib_canvas, self.inner_control_frame, self.switch_to_specific_episode_default_analysis)
         self.analyze_lap_time_distribution = AnalyzeLapTimeDistribution(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_complete_lap_percentage = AnalyzeCompleteLapPercentage(self.redraw, matplotlib_canvas, self.inner_control_frame)
         self.analyze_discount_factors = AnalyzeDiscountFactors(self.redraw, matplotlib_canvas, self.inner_control_frame)
@@ -210,7 +211,7 @@ class MainApp(tk.Frame):
         #
 
         self.master.title("Deep Racer Guru v" + VERSION)
-        self.menu_bar = MenuBar(root, self, False)
+        self.menu_bar = MenuBar(root, self, False, False)
 
 
         #
@@ -260,6 +261,7 @@ class MainApp(tk.Frame):
             v.set_track(new_track)
 
         self.episode_selector.set_filtered_episodes(None)
+        self.episode_selector.set_all_episodes(None)
 
         self._reset_analyzer(self.analyzer)
         if self.background_analyzer:
@@ -267,7 +269,7 @@ class MainApp(tk.Frame):
 
         self.view_manager.zoom_clear()
 
-        self.menu_bar = MenuBar(root, self, False)
+        self.menu_bar = MenuBar(root, self, False, False)
 
         self.redraw()
 
@@ -389,6 +391,7 @@ class MainApp(tk.Frame):
             v.set_log_meta(self.log.get_log_meta())
             v.set_evaluation_phases(self.log.get_evaluation_phases())
 
+        self.episode_selector.set_all_episodes(self.log.get_episodes())
         self.episode_filter.set_all_episodes(self.log.get_episodes())
         self.reapply_episode_filter()
 
@@ -396,7 +399,7 @@ class MainApp(tk.Frame):
         self.analyzer.take_control()
 
         if redraw_menu_afterwards:
-            self.menu_bar = MenuBar(root, self, True)
+            self.menu_bar = MenuBar(root, self, True, self.log.get_log_meta().action_space.is_continuous())
             self.update()
 
     def apply_new_action_space(self):
@@ -442,10 +445,11 @@ class MainApp(tk.Frame):
         self.filtered_episodes = None
         self.status_frame.reset()
         self.episode_selector.set_filtered_episodes(None)
+        self.episode_selector.set_all_episodes(None)
         self._reset_analyzer(self.analyzer)
         if self.background_analyzer:
             self._reset_analyzer(self.background_analyzer)
-        self.menu_bar = MenuBar(root, self, False)
+        self.menu_bar = MenuBar(root, self, False, False)
         self.redraw()
 
     def right_button_pressed_on_track_canvas(self, event):
@@ -471,6 +475,9 @@ class MainApp(tk.Frame):
             if x_diff > 10 and y_diff > 10:
                 self.view_manager.zoom_set(self.track_graphics, self.zoom_start_x, self.zoom_start_y, event.x, event.y)
                 self.redraw()
+
+    def left_button_double_clicked_on_track_canvas(self, event):
+        self.right_button_pressed_on_track_canvas(event)
 
     def right_or_up_key_pressed_on_track_canvas(self, event):
         track_point = self.track_graphics.get_real_point_for_widget_location(event.x, event.y)
@@ -696,6 +703,14 @@ class MainApp(tk.Frame):
 
     def get_config_manager(self):
         return self._config_manager
+
+    def switch_to_specific_episode_default_analysis(self, episode_id):
+        self.episode_selector.select_specific_episode(episode_id)
+        self.switch_analyzer(self.analyze_route)
+
+    def expect_objects(self):
+        return self.log is not None and self.log.get_log_meta().race_type == "OBJECT_AVOIDANCE"
+
 
 
 root = tk.Tk()

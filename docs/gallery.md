@@ -1,7 +1,5 @@
 # Gallery
 
-## Version 3
-
 <table>
 <tbody>
 <tr>
@@ -67,8 +65,3 @@
 </tbody>
 </table>
 
-
-
-## Version 2
-
-![Analyze DeepRacer logs easily with DRG](pictures/gallery_v2/Collage.png)

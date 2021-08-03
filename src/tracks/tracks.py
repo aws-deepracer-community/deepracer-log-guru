@@ -31,6 +31,8 @@ from src.tracks.cosmic_loop_track import CosmicLoopTrack
 from src.tracks.cosmic_circuit_track import CosmicCircuitTrack
 from src.tracks.baja_turnpike_track import BajaTurnpikeTrack
 from src.tracks.baja_highway_track import BajaHighwayTrack
+from src.tracks.hot_rod_speedway_track import HotRodSpeedwayTrack
+from src.tracks.hot_rod_super_speedway_track import HotRodSuperSpeedwayTrack
 
 
 def get_all_tracks():
@@ -43,7 +45,7 @@ def get_all_tracks():
               Sola2020Track(), Baadal2020Track(), Barcelona2020Track(), BowtieTrack(),
               PoChunSuperSpeedwayTrack(), PoChunSpeedwayTrack(), LarsCircuitTrack(), LarsLoopTrack(),
               KueiRacewayTrack(), KueiSuperRacewayTrack(), CosmicLoopTrack(), CosmicCircuitTrack(),
-              BajaTurnpikeTrack(), BajaHighwayTrack()
+              BajaTurnpikeTrack(), BajaHighwayTrack(), HotRodSpeedwayTrack(), HotRodSuperSpeedwayTrack()
               ]:
         t.prepare(tracks)
 

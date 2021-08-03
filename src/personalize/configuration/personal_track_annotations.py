@@ -84,3 +84,7 @@ cosmic_circuit_annotations = []
 baja_highway_annotations = []
 
 baja_turnpike_annotations = []
+
+hot_rod_speedway_annotations = []
+
+hot_rod_super_speedway_annotations = []

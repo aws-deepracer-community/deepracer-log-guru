@@ -1,12 +1,7 @@
 # deep_racer_guru
 
 ## Announcement
-4th July 2021: Version 3.2.0 is available with new features including:
-* All the latest competition tracks
-* Support for continuous action space
-* Episode filtering options for object avoidance (refer to [Special Topics](docs/special_topics.md) for important setup information)
-* Click-thru' from a scatter graph blob to see the episode route details (refer to [Special Mouse and Keyboard Actions](docs/mouse_and_keyboard.md#detailed-info))
-* Improved documentation including an extended [Gallery](docs/gallery.md) to showcase what's possible
+4th August 2021: Version 3.2.1 is now available with support for the latest monthly competition tracks
 
 ## Introduction
 
@@ -38,6 +33,7 @@ See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_rac
 * [Troubleshooting](docs/trouble_shooting.md)
 
 ## Old Announcements
+* 4th July 2021: Version 3.2.0 is available with new features including the latest competition tracks, support for continuous action space, episode filtering options for object avoidance, click-thru' from a scatter graph blob to see the episode route details and improved documentation including an extended gallery to showcase what's possible
 * 20th May 2021: Version 3.1.0 has now arrived, adding the new "track fitting" feature and fixing various bugs including the fatal defect in version 3.0.1
 * 20th May 2021: Version 3.0.1 has been withdrawn due to a fatal defect
 * 24th April 2021: Version 3.0.0 has now arrived, with many new features and fixes

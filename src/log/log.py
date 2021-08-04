@@ -141,13 +141,16 @@ class Log:
                     saved_object_locations = None
                 elif not intro:
                     evaluation_reward = parse.parse_evaluation_reward_info(line_of_text)
-                    evaluation_count, evaluation_progresses = parse.parse_evaluation_progress_info(line_of_text)
+                    evaluation_progresses = parse.parse_evaluation_progress_info(line_of_text)
                     object_locations = parse.parse_object_locations(line_of_text)
 
                     if evaluation_reward is not None:
                         evaluation_rewards.append(evaluation_reward)
-                    elif evaluation_count and evaluation_progresses:
-                        assert evaluation_count == len(evaluation_rewards)
+                    elif evaluation_progresses is not None:
+                        # Rare case in which final reward is missing from log file for some reason
+                        if len(evaluation_progresses) == len(evaluation_rewards) + 1:
+                            evaluation_progresses = evaluation_progresses[:-1]
+                        assert len(evaluation_progresses) == len(evaluation_rewards)
                         self._evaluation_phases.append(EvaluationPhase(evaluation_rewards, evaluation_progresses))
                         evaluation_rewards = []
                         while len(episode_events) - 1 > len(episode_iterations):  # Minus 1 avoids counting next (empty) one

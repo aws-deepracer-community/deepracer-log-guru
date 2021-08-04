@@ -218,9 +218,9 @@ def parse_evaluation_progress_info(line_of_text: str):
 
         assert count == len(progresses)
 
-        return count, progresses
+        return progresses
     else:
-        return None, None
+        return None
 
 
 #

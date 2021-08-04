@@ -33,13 +33,13 @@ from src.tracks.baja_turnpike_track import BajaTurnpikeTrack
 from src.tracks.baja_highway_track import BajaHighwayTrack
 from src.tracks.hot_rod_speedway_track import HotRodSpeedwayTrack
 from src.tracks.hot_rod_super_speedway_track import HotRodSuperSpeedwayTrack
-
+from src.tracks.reinvent_2018_wide_track import Reinvent2018WideTrack
 
 def get_all_tracks():
     tracks = {}
 
     for t in [AmericanHillsSpeedwayTrack(), AsiaPacificBayLoopTrack(), EuropeanSeasideCircuitTrack(),
-              Reinvent2018Track(), ChampionshipCup2019Track(), StratusLoop2020Track(),
+              Reinvent2018Track(), Reinvent2018WideTrack(), ChampionshipCup2019Track(), StratusLoop2020Track(),
               CumuloTurnpikeTrack(), YunSpeedwayTrack(),
               RogerRacewayTrack(), FumiakiLoop2020Track(), SummitRacewayTrack(),
               Sola2020Track(), Baadal2020Track(), Barcelona2020Track(), BowtieTrack(),

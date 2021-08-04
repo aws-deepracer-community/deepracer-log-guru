@@ -88,3 +88,5 @@ baja_turnpike_annotations = []
 hot_rod_speedway_annotations = []
 
 hot_rod_super_speedway_annotations = []
+
+reinvent_2018_wide_annotations = []

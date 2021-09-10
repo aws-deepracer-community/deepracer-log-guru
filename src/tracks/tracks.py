@@ -34,6 +34,9 @@ from src.tracks.baja_highway_track import BajaHighwayTrack
 from src.tracks.hot_rod_speedway_track import HotRodSpeedwayTrack
 from src.tracks.hot_rod_super_speedway_track import HotRodSuperSpeedwayTrack
 from src.tracks.reinvent_2018_wide_track import Reinvent2018WideTrack
+from src.tracks.playa_raceway_track import PlayaRacewayTrack
+from src.tracks.playa_super_raceway_track import PlayaSuperRacewayTrack
+
 
 def get_all_tracks():
     tracks = {}
@@ -45,7 +48,8 @@ def get_all_tracks():
               Sola2020Track(), Baadal2020Track(), Barcelona2020Track(), BowtieTrack(),
               PoChunSuperSpeedwayTrack(), PoChunSpeedwayTrack(), LarsCircuitTrack(), LarsLoopTrack(),
               KueiRacewayTrack(), KueiSuperRacewayTrack(), CosmicLoopTrack(), CosmicCircuitTrack(),
-              BajaTurnpikeTrack(), BajaHighwayTrack(), HotRodSpeedwayTrack(), HotRodSuperSpeedwayTrack()
+              BajaTurnpikeTrack(), BajaHighwayTrack(), HotRodSpeedwayTrack(), HotRodSuperSpeedwayTrack(),
+              PlayaRacewayTrack(), PlayaSuperRacewayTrack()
               ]:
         t.prepare(tracks)
 

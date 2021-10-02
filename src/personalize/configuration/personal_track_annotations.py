@@ -94,3 +94,7 @@ reinvent_2018_wide_annotations = []
 playa_raceway_annotations = []
 
 playa_super_raceway_annotations = []
+
+expedition_super_loop_annotations = []
+
+expedition_loop_annotations = []

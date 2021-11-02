@@ -1,0 +1,60 @@
+Index: src/tracks/playa_super_raceway_track.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/tracks/playa_super_raceway_track.py b/src/tracks/playa_super_raceway_track.py
+--- a/src/tracks/playa_super_raceway_track.py	(revision 0a168d097c50b0a6d516eab080293a10e1be677a)
++++ b/src/tracks/playa_super_raceway_track.py	(date 1635862180786)
+@@ -19,7 +19,7 @@
+         self._ui_length_in_m = 59.8  # metres  (99.99 = not stated in AWS DR GUI)
+         self._ui_width_in_cm = 107  # centimetres   # TODO
+         self._world_name = "morgan_pro"
+-        self._track_sector_dividers = [55, 123, 189]
++        self._track_sector_dividers = [40, 80, 120,180]
+         self._annotations = config.playa_super_raceway_annotations
+         self._track_width = 1.066
+ 
+Index: src/personalize/configuration/personal_track_annotations.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/personalize/configuration/personal_track_annotations.py b/src/personalize/configuration/personal_track_annotations.py
+--- a/src/personalize/configuration/personal_track_annotations.py	(revision 0a168d097c50b0a6d516eab080293a10e1be677a)
++++ b/src/personalize/configuration/personal_track_annotations.py	(date 1635862860929)
+@@ -97,4 +97,5 @@
+ 
+ expedition_super_loop_annotations = []
+ 
+-expedition_loop_annotations = []
+\ No newline at end of file
++expedition_loop_annotations = []
++vivalas_speedway_annotations = []
+\ No newline at end of file
+Index: src/tracks/tracks.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/tracks/tracks.py b/src/tracks/tracks.py
+--- a/src/tracks/tracks.py	(revision 0a168d097c50b0a6d516eab080293a10e1be677a)
++++ b/src/tracks/tracks.py	(date 1635862762742)
+@@ -5,7 +5,7 @@
+ #
+ # Copyright (c) 2021 dmh23
+ #
+-
++from src.tracks.caecer_gp import VivalasSpeedwayTrack
+ from src.tracks.summit_raceway_track import SummitRacewayTrack
+ from src.tracks.reinvent_2018_track import Reinvent2018Track
+ from src.tracks.sola_2020_track import Sola2020Track
+@@ -43,7 +43,7 @@
+ def get_all_tracks():
+     tracks = {}
+ 
+-    for t in [AmericanHillsSpeedwayTrack(), AsiaPacificBayLoopTrack(), EuropeanSeasideCircuitTrack(),
++    for t in [VivalasSpeedwayTrack(),AmericanHillsSpeedwayTrack(), AsiaPacificBayLoopTrack(), EuropeanSeasideCircuitTrack(),
+               Reinvent2018Track(), Reinvent2018WideTrack(), ChampionshipCup2019Track(), StratusLoop2020Track(),
+               CumuloTurnpikeTrack(), YunSpeedwayTrack(),
+               RogerRacewayTrack(), FumiakiLoop2020Track(), SummitRacewayTrack(),

@@ -38,6 +38,8 @@ from src.tracks.playa_raceway_track import PlayaRacewayTrack
 from src.tracks.playa_super_raceway_track import PlayaSuperRacewayTrack
 from src.tracks.expedition_super_loop_track import ExpeditionSuperLoopTrack
 from src.tracks.expedition_loop_track import ExpeditionLoopTrack
+from src.tracks.vivalas_loop_track import VivalasLoooTrack
+from src.tracks.vivalas_speedway_track import VivalasSpeedwayTrack
 
 
 def get_all_tracks():
@@ -51,7 +53,8 @@ def get_all_tracks():
               PoChunSuperSpeedwayTrack(), PoChunSpeedwayTrack(), LarsCircuitTrack(), LarsLoopTrack(),
               KueiRacewayTrack(), KueiSuperRacewayTrack(), CosmicLoopTrack(), CosmicCircuitTrack(),
               BajaTurnpikeTrack(), BajaHighwayTrack(), HotRodSpeedwayTrack(), HotRodSuperSpeedwayTrack(),
-              PlayaRacewayTrack(), PlayaSuperRacewayTrack(), ExpeditionSuperLoopTrack(), ExpeditionLoopTrack()
+              PlayaRacewayTrack(), PlayaSuperRacewayTrack(), ExpeditionSuperLoopTrack(), ExpeditionLoopTrack(),
+              VivalasLoooTrack(), VivalasSpeedwayTrack()
               ]:
         t.prepare(tracks)
 

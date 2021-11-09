@@ -1,7 +1,7 @@
 # deep_racer_guru
 
 ## Announcement
-2nd October 2021: Version 3.2.3 is now available with support for the latest monthly competition tracks
+3rd October 2021: Version 3.2.3 is now available with support for the latest monthly competition tracks
 
 ## Introduction
 

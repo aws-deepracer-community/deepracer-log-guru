@@ -1,7 +1,7 @@
 # deep_racer_guru
 
 ## Announcement
-3rd October 2021: Version 3.2.3 is now available with support for the latest monthly competition tracks
+10th November 2021: Version 3.2.4 is now available with support for the Vivalas tracks for re:Invent 2021
 
 ## Introduction
 
@@ -33,6 +33,7 @@ See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_rac
 * [Troubleshooting](docs/trouble_shooting.md)
 
 ## Old Announcements
+* 3rd October 2021: Version 3.2.3 is now available with support for the latest monthly competition tracks
 * 10th September 2021: Version 3.2.2 is now available with support for the latest monthly competition tracks
 * 4th August 2021: Version 3.2.1 is now available with support for the latest monthly competition tracks
 * 4th July 2021: Version 3.2.0 is available with new features including the latest competition tracks, support for continuous action space, episode filtering options for object avoidance, click-thru' from a scatter graph blob to see the episode route details and improved documentation including an extended gallery to showcase what's possible

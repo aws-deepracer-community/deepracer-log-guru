@@ -54,7 +54,7 @@ class AnalyzeExitPoints(TrackAnalyzer):
                     exit_point = (e.events[-1].x, e.events[-1].y)
                     self.track_graphics.plot_dot(exit_point, 3, colour)
 
-        elif self._episodes_control.show_evaluations():
+        elif self._episodes_control.show_evaluations() and self.all_episodes:
             start_wp = self.all_episodes[0].events[0].closest_waypoint_index
             start_percent = self.current_track.get_waypoint_percent_from_race_start(start_wp)
 

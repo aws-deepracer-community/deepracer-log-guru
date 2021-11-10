@@ -214,7 +214,7 @@ def parse_evaluation_progress_info(line_of_text: str):
         progresses_as_strings = info[:-2].split("[")[1].split(",")
         progresses = []
         for p in progresses_as_strings:
-            progresses.append(float(p))
+            progresses.append(max(0.0, float(p)))    # Added max with zero to avoid rare oddity of negative progress!!!
 
         assert count == len(progresses)
 

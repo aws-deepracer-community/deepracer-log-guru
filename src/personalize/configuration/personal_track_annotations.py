@@ -98,3 +98,7 @@ playa_super_raceway_annotations = []
 expedition_super_loop_annotations = []
 
 expedition_loop_annotations = []
+
+vivalas_loop_annotations = []
+
+vivlas_speedway_annotations = []

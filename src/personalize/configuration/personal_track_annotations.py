@@ -102,3 +102,5 @@ expedition_loop_annotations = []
 vivalas_loop_annotations = []
 
 vivlas_speedway_annotations = []
+
+summit_speedway_annotations = []

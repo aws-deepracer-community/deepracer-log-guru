@@ -8,14 +8,14 @@
 
 import os
 
-from src.log.log import LOG_FILE_SUFFIX, Log, META_FILE_SUFFIX
+from src.log.log import LOG_FILE_SUFFIX, Log, META_FILE_SUFFIX, CONSOLE_LOG_SUFFIX
 
 
 def refresh_all_log_meta(please_wait, log_directory):
     please_wait.start("Refreshing")
     log_files = []
     for f in os.listdir(log_directory):
-        if f.endswith(LOG_FILE_SUFFIX):
+        if f.endswith(LOG_FILE_SUFFIX) or f.endswith(CONSOLE_LOG_SUFFIX):
             log_files.append(f)
     import_new_logs(log_files, please_wait, log_directory)
 
@@ -51,7 +51,7 @@ def get_possible_new_model_log_files(log_directory: str):
 
     all_files = os.listdir(log_directory)
     for f in all_files:
-        if f.endswith(LOG_FILE_SUFFIX):
+        if f.endswith(LOG_FILE_SUFFIX) or f.endswith(CONSOLE_LOG_SUFFIX):
             expected_meta = f + META_FILE_SUFFIX
             if expected_meta not in all_files:
                 new_log_files.append(f)

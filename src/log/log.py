@@ -9,6 +9,7 @@
 import numpy as np
 import os
 import json
+import tarfile
 
 import src.log.parse as parse
 
@@ -24,6 +25,7 @@ from src.utils.discount_factors import discount_factors
 
 META_FILE_SUFFIX = ".meta.json"
 LOG_FILE_SUFFIX = ".log"
+CONSOLE_LOG_SUFFIX = ".gz"
 
 
 class Log:
@@ -44,9 +46,25 @@ class Log:
         self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
         discount_factors.reset_for_log(self._log_meta.hyper.discount_factor)
         please_wait.set_progress(2)
-        self._parse_episode_events(please_wait, self._log_meta.action_space.is_continuous(),
-                                   2, 50, 95, True, track,
-                                   calculate_new_reward, calculate_alternate_discount_factors)
+
+        if self._log_file_name.endswith(CONSOLE_LOG_SUFFIX):
+            with tarfile.open(os.path.join(self._log_directory, self._log_file_name), "r") as tar:
+                for member in tar:
+                    if "/logs/training" in member.name and member.name.endswith("-robomaker.log"):
+                        binary_io = tar.extractfile(member)
+                        self._parse_episode_events(
+                            binary_io, True,
+                            please_wait, self._log_meta.action_space.is_continuous(),
+                            2, 50, 95, True, False, member.size, track,
+                            calculate_new_reward, calculate_alternate_discount_factors)
+        else:
+            with open(os.path.join(self._log_directory, self._log_file_name), "r") as file_io:
+                self._parse_episode_events(
+                    file_io, False,
+                    please_wait, self._log_meta.action_space.is_continuous(),
+                    2, 50, 95, True, False, 0, track,
+                    calculate_new_reward, calculate_alternate_discount_factors)
+
         self._divide_episodes_into_quarters(please_wait, 95, 100)
         please_wait.set_progress(100)
         please_wait.stop(0.3)
@@ -55,13 +73,29 @@ class Log:
         self._log_file_name = log_file_name
         self._meta_file_name = log_file_name + META_FILE_SUFFIX
 
-        self._parse_intro_events()
-        self._parse_episode_events(
-            please_wait,
-            self._log_meta.action_space.is_continuous(),
-            min_progress_percent,
-            min_progress_percent + 0.9 * (max_progress_percent - min_progress_percent),
-            max_progress_percent, False)
+        # TODO - Extract correct model name
+        # TODO - Move this common file handling logic into _parse_episode_events()
+        if self._log_file_name.endswith(CONSOLE_LOG_SUFFIX):
+            with tarfile.open(os.path.join(self._log_directory, self._log_file_name), "r") as tar:
+                for member in tar:
+                    if "/logs/training" in member.name and member.name.endswith("-robomaker.log"):
+                        binary_io = tar.extractfile(member)
+                        self._parse_episode_events(
+                            binary_io, True,
+                            please_wait,
+                            self._log_meta.action_space.is_continuous(),
+                            min_progress_percent,
+                            min_progress_percent + 0.9 * (max_progress_percent - min_progress_percent),
+                            max_progress_percent, False, True, member.size)
+        else:
+            with open(os.path.join(self._log_directory, self._log_file_name), "r") as file_io:
+                self._parse_episode_events(
+                    file_io, False,
+                    please_wait,
+                    self._log_meta.action_space.is_continuous(),
+                    min_progress_percent,
+                    min_progress_percent + 0.9 * (max_progress_percent - min_progress_percent),
+                    max_progress_percent, False, True, 0)
 
         self._analyze_episode_details()
 
@@ -97,17 +131,18 @@ class Log:
         self._meta_file_name = ""
         self._log_directory = log_directory
 
-    def _parse_intro_events(self):
-        with open(os.path.join(self._log_directory, self._log_file_name), "r") as file:
-            for line_of_text in file:
-                if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
-                    break
-                else:
-                    parse.parse_intro_event(line_of_text, self._log_meta)
+    # def _parse_intro_events(self, file_io, is_binary: bool):
+    #     for line_of_text in file_io:
+    #         if is_binary:
+    #             line_of_text = line_of_text.decode()
+    #         if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
+    #             break
+    #         else:
+    #             parse.parse_intro_event(line_of_text, self._log_meta)
 
-    def _parse_episode_events(self, please_wait: PleaseWait, is_continuous_action_space: bool,
+    def _parse_episode_events(self, file_io, is_binary: bool, please_wait: PleaseWait, is_continuous_action_space: bool,
                               min_progress_percent: float, mid_progress_percent: float, max_progress_percent: float,
-                              do_full_analysis: bool, track: Track = None,
+                              do_full_analysis: bool, parse_intro: bool, file_size_override: int, track: Track = None,
                               calculate_new_reward=False, calculate_alternate_discount_factors=False):
         episode_events = []
         episode_iterations = []
@@ -119,60 +154,70 @@ class Log:
         saved_object_locations = None
         iteration_id = 0
 
-        file_size = os.path.getsize(os.path.join(self._log_directory, self._log_file_name))
+        # TODO - This fudge goes away when all the file handling is re-located into here ...
+        if file_size_override > 0:
+            file_size = file_size_override
+        else:
+            file_size = os.path.getsize(os.path.join(self._log_directory, self._log_file_name))
+
         file_amount_read = 0
 
-        with open(os.path.join(self._log_directory, self._log_file_name), "r") as file:
-            for line_of_text in file:
-                if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
-                    intro = False
-                    parse.parse_episode_event(line_of_text, episode_events, episode_object_locations,
-                                              saved_events, saved_debug, saved_object_locations,
-                                              is_continuous_action_space)
-                    saved_debug = ""
-                    saved_object_locations = None
-                elif parse.EPISODE_STARTS_WITH in line_of_text and (len(line_of_text) > 1000 or parse.SENT_SIGTERM in line_of_text):
-                    end_of_str = line_of_text[line_of_text.find(parse.EPISODE_STARTS_WITH):]
-                    intro = False
-                    parse.parse_episode_event(end_of_str, episode_events, episode_object_locations,
-                                              saved_events, saved_debug, saved_object_locations,
-                                              is_continuous_action_space)
-                    saved_debug = ""
-                    saved_object_locations = None
-                elif not intro:
-                    evaluation_reward = parse.parse_evaluation_reward_info(line_of_text)
-                    evaluation_progresses = parse.parse_evaluation_progress_info(line_of_text)
-                    object_locations = parse.parse_object_locations(line_of_text)
+        for line_of_text in file_io:
+            if is_binary:
+                line_of_text = line_of_text.decode()
 
-                    if evaluation_reward is not None:
-                        evaluation_rewards.append(evaluation_reward)
-                    elif evaluation_progresses is not None:
-                        # Rare case in which final reward is missing from log file for some reason
-                        if len(evaluation_progresses) == len(evaluation_rewards) + 1:
-                            evaluation_progresses = evaluation_progresses[:-1]
-                        assert len(evaluation_progresses) == len(evaluation_rewards)
-                        self._evaluation_phases.append(EvaluationPhase(evaluation_rewards, evaluation_progresses))
-                        evaluation_rewards = []
-                        while len(episode_events) - 1 > len(episode_iterations):  # Minus 1 avoids counting next (empty) one
-                            episode_iterations.append(iteration_id)
-                        iteration_id += 1
-                    elif line_of_text.startswith(parse.STILL_EVALUATING):
-                        saved_debug = ""  # Make sure debug info doesn't include any output from evaluation phase
-                        saved_object_locations = None
-                    elif object_locations:
-                        saved_object_locations = object_locations
-                    else:
-                        saved_debug += line_of_text
+            if line_of_text.startswith(parse.EPISODE_STARTS_WITH):
+                intro = False
+                parse.parse_episode_event(line_of_text, episode_events, episode_object_locations,
+                                          saved_events, saved_debug, saved_object_locations,
+                                          is_continuous_action_space)
+                saved_debug = ""
+                saved_object_locations = None
+            elif parse.EPISODE_STARTS_WITH in line_of_text and (len(line_of_text) > 1000 or parse.SENT_SIGTERM in line_of_text):
+                end_of_str = line_of_text[line_of_text.find(parse.EPISODE_STARTS_WITH):]
+                intro = False
+                parse.parse_episode_event(end_of_str, episode_events, episode_object_locations,
+                                          saved_events, saved_debug, saved_object_locations,
+                                          is_continuous_action_space)
+                saved_debug = ""
+                saved_object_locations = None
+            elif not intro:
+                evaluation_reward = parse.parse_evaluation_reward_info(line_of_text)
+                evaluation_progresses = parse.parse_evaluation_progress_info(line_of_text)
+                object_locations = parse.parse_object_locations(line_of_text)
+
+                if evaluation_reward is not None:
+                    evaluation_rewards.append(evaluation_reward)
+                elif evaluation_progresses is not None:
+                    # Rare case in which final reward is missing from log file for some reason
+                    if len(evaluation_progresses) == len(evaluation_rewards) + 1:
+                        evaluation_progresses = evaluation_progresses[:-1]
+                    assert len(evaluation_progresses) == len(evaluation_rewards)
+                    self._evaluation_phases.append(EvaluationPhase(evaluation_rewards, evaluation_progresses))
+                    evaluation_rewards = []
+                    while len(episode_events) - 1 > len(episode_iterations):  # Minus 1 avoids counting next (empty) one
+                        episode_iterations.append(iteration_id)
+                    iteration_id += 1
+                elif line_of_text.startswith(parse.STILL_EVALUATING):
+                    saved_debug = ""  # Make sure debug info doesn't include any output from evaluation phase
+                    saved_object_locations = None
+                elif object_locations:
+                    saved_object_locations = object_locations
                 else:
-                    object_locations = parse.parse_object_locations(line_of_text)
-                    if object_locations:
-                        saved_object_locations = object_locations
-                        intro = False
+                    saved_debug += line_of_text
+            else:
+                if parse_intro:
+                    parse.parse_intro_event(line_of_text, self._log_meta)
 
-                file_amount_read += len(line_of_text)
-                percent_read = file_amount_read / file_size * 100
-                scaled_percent_read = (mid_progress_percent - min_progress_percent) / 100 * percent_read
-                please_wait.set_progress(min_progress_percent + scaled_percent_read)
+                object_locations = parse.parse_object_locations(line_of_text)
+                if object_locations:
+                    saved_object_locations = object_locations
+                    intro = False
+
+            file_amount_read += len(line_of_text)
+            percent_read = file_amount_read / file_size * 100
+            scaled_percent_read = (mid_progress_percent - min_progress_percent) / 100 * percent_read
+            please_wait.set_progress(min_progress_percent + scaled_percent_read)
 
         if saved_events:
             episode_events = episode_events[:-1]

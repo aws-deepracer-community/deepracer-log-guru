@@ -104,3 +104,8 @@ vivalas_loop_annotations = []
 vivlas_speedway_annotations = []
 
 summit_speedway_annotations = []
+
+rogue_raceway_annotations = []
+
+rogue_circuit_annotations = []
+

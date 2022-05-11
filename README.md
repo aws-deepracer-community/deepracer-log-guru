@@ -1,7 +1,7 @@
 # deep_racer_guru
 
 ## Announcement
-4th April 2022: Version 3.2.7 is now available with support for the new Ace Super Speedway and Ace Speedway tracks
+11th May 2022: Version 3.2.8 is now available with support for the new Ross Raceway and Ross Super Speedway tracks, and also the old Oval track
 
 ## Introduction
 
@@ -33,6 +33,7 @@ See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_rac
 * [Troubleshooting](docs/trouble_shooting.md)
 
 ## Old Announcements
+* 4th April 2022: Version 3.2.7 is now available with support for the new Ace Super Speedway and Ace Speedway tracks
 * 5th March 2022: Version 3.2.6 is now available with support for the new Rogue Circuit and Raceway tracks
 * 3rd February 2022: Version 3.2.5 is now available with support for the new Summit Speedway track
 * 10th November 2021: Version 3.2.4 is now available with support for the Vivalas tracks for re:Invent 2021

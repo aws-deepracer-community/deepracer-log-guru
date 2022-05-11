@@ -20,7 +20,7 @@ class VivalasSpeedwayTrack(Track):
         self._ui_width_in_cm = 108  # centimetres   # TODO
         self._world_name = "caecer_gp"
         self._track_sector_dividers = [36, 64, 100, 181]
-        self._annotations = config.vivlas_speedway_annotations
+        self._annotations = config.vivalas_speedway_annotations
         self._track_width = 1.08
 
         self._track_waypoints = [(7.724641561508179, -1.6634734869003296), (7.721113443374634, -0.7894019931554781),

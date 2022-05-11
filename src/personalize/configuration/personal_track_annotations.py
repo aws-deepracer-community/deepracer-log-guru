@@ -101,11 +101,17 @@ expedition_loop_annotations = []
 
 vivalas_loop_annotations = []
 
-vivlas_speedway_annotations = []
+vivalas_speedway_annotations = []
 
 summit_speedway_annotations = []
 
 rogue_raceway_annotations = []
 
 rogue_circuit_annotations = []
+
+ross_raceway_annotations = []
+
+ross_super_speedway_annotations = []
+
+oval_track_annotations = []
 

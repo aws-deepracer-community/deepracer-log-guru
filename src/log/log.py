@@ -54,14 +54,14 @@ class Log:
                         binary_io = tar.extractfile(member)
                         self._parse_episode_events(
                             binary_io, True,
-                            please_wait, self._log_meta.action_space.is_continuous(),
+                            please_wait,
                             2, 50, 95, True, False, member.size, track,
                             calculate_new_reward, calculate_alternate_discount_factors)
         else:
             with open(os.path.join(self._log_directory, self._log_file_name), "r") as file_io:
                 self._parse_episode_events(
                     file_io, False,
-                    please_wait, self._log_meta.action_space.is_continuous(),
+                    please_wait,
                     2, 50, 95, True, False, 0, track,
                     calculate_new_reward, calculate_alternate_discount_factors)
 
@@ -83,7 +83,6 @@ class Log:
                         self._parse_episode_events(
                             binary_io, True,
                             please_wait,
-                            self._log_meta.action_space.is_continuous(),
                             min_progress_percent,
                             min_progress_percent + 0.9 * (max_progress_percent - min_progress_percent),
                             max_progress_percent, False, True, member.size)
@@ -92,7 +91,6 @@ class Log:
                 self._parse_episode_events(
                     file_io, False,
                     please_wait,
-                    self._log_meta.action_space.is_continuous(),
                     min_progress_percent,
                     min_progress_percent + 0.9 * (max_progress_percent - min_progress_percent),
                     max_progress_percent, False, True, 0)
@@ -140,7 +138,7 @@ class Log:
     #         else:
     #             parse.parse_intro_event(line_of_text, self._log_meta)
 
-    def _parse_episode_events(self, file_io, is_binary: bool, please_wait: PleaseWait, is_continuous_action_space: bool,
+    def _parse_episode_events(self, file_io, is_binary: bool, please_wait: PleaseWait,
                               min_progress_percent: float, mid_progress_percent: float, max_progress_percent: float,
                               do_full_analysis: bool, parse_intro: bool, file_size_override: int, track: Track = None,
                               calculate_new_reward=False, calculate_alternate_discount_factors=False):
@@ -170,7 +168,7 @@ class Log:
                 intro = False
                 parse.parse_episode_event(line_of_text, episode_events, episode_object_locations,
                                           saved_events, saved_debug, saved_object_locations,
-                                          is_continuous_action_space)
+                                          self._log_meta.action_space.is_continuous())
                 saved_debug = ""
                 saved_object_locations = None
             elif parse.EPISODE_STARTS_WITH in line_of_text and (len(line_of_text) > 1000 or parse.SENT_SIGTERM in line_of_text):
@@ -178,7 +176,7 @@ class Log:
                 intro = False
                 parse.parse_episode_event(end_of_str, episode_events, episode_object_locations,
                                           saved_events, saved_debug, saved_object_locations,
-                                          is_continuous_action_space)
+                                          self._log_meta.action_space.is_continuous())
                 saved_debug = ""
                 saved_object_locations = None
             elif not intro:

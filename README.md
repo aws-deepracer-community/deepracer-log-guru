@@ -1,7 +1,7 @@
 # deep_racer_guru
 
 ## Announcement
-5th June 2022: Version 3.2.10 is now available with support for the new BreadCentric Loop and BreadCentric Speedway tracks
+6th June 2022: Version 3.2.11 is now available with support for the new BreadCentric Loop and BreadCentric Speedway tracks
 
 ## Introduction
 
@@ -33,6 +33,7 @@ See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_rac
 * [Troubleshooting](docs/trouble_shooting.md)
 
 ## Old Announcements
+* 5th June 2022: Version 3.2.10 is a faulty release which will be replaced by 3.2.11
 * 28th May 2022: Version 3.2.9 is now available with a bug fix so that continuous action space log files will load properly
 * 11th May 2022: Version 3.2.8 is now available with support for the new Ross Raceway and Ross Super Speedway tracks, and also the old Oval track
 * 4th April 2022: Version 3.2.7 is now available with support for the new Ace Super Speedway and Ace Speedway tracks

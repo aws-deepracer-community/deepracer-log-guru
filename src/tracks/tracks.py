@@ -50,6 +50,8 @@ from src.tracks.ross_super_speedway_track import RossSuperSpeedwayTrack
 from src.tracks.oval_track import OvalTrack
 from src.tracks.breadcentric_loop_track import BreadCentricLoopTrack
 from src.tracks.breadcentric_speedway_track import BreadCentricSpeedwayTrack
+from src.tracks.dbro_raceway_track import DBroRacewayTrack
+from src.tracks.dbro_super_raceway_track import DBroSuperRacewayTrack
 
 
 def get_all_tracks():
@@ -66,7 +68,8 @@ def get_all_tracks():
               PlayaRacewayTrack(), PlayaSuperRacewayTrack(), ExpeditionSuperLoopTrack(), ExpeditionLoopTrack(),
               VivalasLoooTrack(), VivalasSpeedwayTrack(), SummitSpeedwayTrack(), RogueRacewayTrack(),
               RogueCircuitTrack(), AceSpeedwayTrack(), AceSuperSpeedwayTrack(), RossRacewayTrack(),
-              RossSuperSpeedwayTrack(), OvalTrack(), BreadCentricLoopTrack(), BreadCentricSpeedwayTrack()
+              RossSuperSpeedwayTrack(), OvalTrack(), BreadCentricLoopTrack(), BreadCentricSpeedwayTrack(),
+              DBroRacewayTrack(), DBroSuperRacewayTrack()
               ]:
         t.prepare(tracks)
 

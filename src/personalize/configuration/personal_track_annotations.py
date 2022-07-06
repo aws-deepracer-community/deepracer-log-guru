@@ -118,3 +118,7 @@ oval_track_annotations = []
 breadcentric_speedway_annotations = []
 
 breadcentric_loop_annotations = []
+
+dbro_super_raceway_annotations = []
+
+dbro_raceway_annotations = []

@@ -1,7 +1,7 @@
 # deep_racer_guru
 
 ## Announcement
-3rd July 2022: Version 3.2.12 is now available with support for the new DBro Raceway and DBro Super Raceway tracks
+6th July 2022: Version 3.2.12 is now available with support for the new DBro Raceway and DBro Super Raceway tracks
 
 ## Introduction
 

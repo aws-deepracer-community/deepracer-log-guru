@@ -1,4 +1,4 @@
-# deep_racer_guru
+# deepracer-log-guru
 
 ## Announcement
 3rd August 2022: Version 3.2.13 is now available with support for the new Jochem Highway and Jochem Turnpike tracks

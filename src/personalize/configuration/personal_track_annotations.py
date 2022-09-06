@@ -127,3 +127,6 @@ jochem_highway_annotations = []
 
 jochem_turnpike_annotations = []
 
+roger_super_raceway_annotations = []
+
+

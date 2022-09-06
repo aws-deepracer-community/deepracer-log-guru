@@ -54,6 +54,7 @@ from src.tracks.dbro_raceway_track import DBroRacewayTrack
 from src.tracks.dbro_super_raceway_track import DBroSuperRacewayTrack
 from src.tracks.jochem_turnpike_track import JochemTurnpikeTrack
 from src.tracks.jochem_highway_track import JochemHighwayTrack
+from src.tracks.roger_super_raceway_track import RogerSuperRacewayTrack
 
 
 def get_all_tracks():
@@ -71,7 +72,8 @@ def get_all_tracks():
               VivalasLoooTrack(), VivalasSpeedwayTrack(), SummitSpeedwayTrack(), RogueRacewayTrack(),
               RogueCircuitTrack(), AceSpeedwayTrack(), AceSuperSpeedwayTrack(), RossRacewayTrack(),
               RossSuperSpeedwayTrack(), OvalTrack(), BreadCentricLoopTrack(), BreadCentricSpeedwayTrack(),
-              DBroRacewayTrack(), DBroSuperRacewayTrack(), JochemTurnpikeTrack(), JochemHighwayTrack()
+              DBroRacewayTrack(), DBroSuperRacewayTrack(), JochemTurnpikeTrack(), JochemHighwayTrack(),
+              RogerSuperRacewayTrack()
               ]:
         t.prepare(tracks)
 

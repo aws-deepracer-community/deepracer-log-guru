@@ -1,7 +1,7 @@
 # deepracer-log-guru
 
 ## Announcement
-6th September 2022: Version 3.2.14 is now available with support for the new Roger Super Raceway track
+18th October 2022: Version 3.2.15 is now available with support for TO BE CONFIRMED
 
 ## Introduction
 
@@ -33,6 +33,7 @@ See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_rac
 * [Troubleshooting](docs/trouble_shooting.md)
 
 ## Old Announcements
+* 6th September 2022: Version 3.2.14 is now available with support for the new Roger Super Raceway track
 * 3rd August 2022: Version 3.2.13 is now available with support for the new Jochem Highway and Jochem Turnpike tracks
 * 6th July 2022: Version 3.2.12 is now available with support for the new DBro Raceway and DBro Super Raceway tracks
 * 6th June 2022: Version 3.2.11 is now available with support for the new BreadCentric Loop and BreadCentric Speedway tracks

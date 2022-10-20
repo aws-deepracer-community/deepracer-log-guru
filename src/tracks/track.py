@@ -430,6 +430,7 @@ class Track:
         self._is_ready = False
 
     def _assert_sensible_info(self):
+        assert(self._track_waypoints[0] == self._track_waypoints[-1])
         assert len(self._ui_name) > 5
         assert len(self._ui_description) > 10
         assert 10 < self._ui_length_in_m < 100

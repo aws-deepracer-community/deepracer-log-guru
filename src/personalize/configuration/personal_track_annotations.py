@@ -129,4 +129,13 @@ jochem_turnpike_annotations = []
 
 roger_super_raceway_annotations = []
 
+roger_ring_annotations = []
+
+jennens_family_speedway_annotations = []
+
+jennens_super_speedway_annotations = []
+
+reinvent_2022_annotations = []
+
+
 

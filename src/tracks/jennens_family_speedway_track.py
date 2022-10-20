@@ -19,7 +19,7 @@ class JennensFamilySpeedwayTrack(Track):
         self._ui_length_in_m = 49.56  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "2022_october_open"
-        self._track_sector_dividers = [46, 100]
+        self._track_sector_dividers = [68, 119]
         self._annotations = config.jennens_family_speedway_annotations
         self._track_width = 1.067
 

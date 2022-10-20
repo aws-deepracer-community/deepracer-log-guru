@@ -19,7 +19,7 @@ class Reinvent2022Track(Track):
         self._ui_length_in_m = 35.87  # metres
         self._ui_width_in_cm = 95  # centimetres
         self._world_name = "2022_reinvent_champ"
-        self._track_sector_dividers = [46, 100]
+        self._track_sector_dividers = [36, 73]
         self._annotations = config.reinvent_2022_annotations
         self._track_width = 0.95
 

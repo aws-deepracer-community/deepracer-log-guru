@@ -19,7 +19,7 @@ class RogerRingTrack(Track):
         self._ui_length_in_m = 45.30  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "2022_september_open"
-        self._track_sector_dividers = [46, 100]
+        self._track_sector_dividers = [49, 99]
         self._annotations = config.roger_ring_annotations
         self._track_width = 1.067
 

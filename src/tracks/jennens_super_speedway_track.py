@@ -19,7 +19,7 @@ class JennensSuperSpeedwayTrack(Track):
         self._ui_length_in_m = 62.07  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "2022_october_pro"
-        self._track_sector_dividers = [46, 100]
+        self._track_sector_dividers = [60, 105, 157]
         self._annotations = config.jennens_super_speedway_annotations
         self._track_width = 1.067
 

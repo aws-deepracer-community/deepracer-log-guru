@@ -1,7 +1,7 @@
 # deepracer-log-guru
 
 ## Announcement
-20th October 2022: Version 3.2.15 is now available with support for TO BE CONFIRMED
+20th October 2022: Version 3.2.15 is now available with support for all the latest tracks including the 2022 re:Invent Championship track
 
 ## Introduction
 

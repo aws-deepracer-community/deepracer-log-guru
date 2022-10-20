@@ -1,7 +1,7 @@
 # deepracer-log-guru
 
 ## Announcement
-18th October 2022: Version 3.2.15 is now available with support for TO BE CONFIRMED
+20th October 2022: Version 3.2.15 is now available with support for TO BE CONFIRMED
 
 ## Introduction
 

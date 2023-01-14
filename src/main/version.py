@@ -6,4 +6,4 @@
 # Copyright (c) 2021 dmh23
 #
 
-VERSION = "3.2.15"
+VERSION = "4.0.0"

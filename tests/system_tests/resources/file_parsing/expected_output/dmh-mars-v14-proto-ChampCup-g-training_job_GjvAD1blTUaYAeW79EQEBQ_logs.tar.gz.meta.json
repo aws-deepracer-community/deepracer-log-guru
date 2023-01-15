@@ -1,0 +1,141 @@
+{
+  "model_name": "dmh-mars-v14-proto-ChampCup-g",
+  "world_name": "reInvent2019_track",
+  "race_type": "TIME_TRIAL",
+  "job_type": "TRAINING",
+  "hyper": {
+    "batch_size": 128,
+    "entropy": 1e-05,
+    "discount_factor": 0.995,
+    "loss_type": "huber",
+    "learning_rate": 1e-05,
+    "episodes_per_training_iteration": 0,
+    "epochs": 10
+  },
+  "episode_stats": {
+    "episode_count": 520,
+    "iteration_count": 0,
+    "success_count": 246,
+    "average_percent_complete": 71.27446230769225,
+    "best_steps": 133,
+    "average_steps": 154,
+    "worst_steps": 197,
+    "best_time": 8.954927682876587,
+    "average_time": 10.293760322942966,
+    "worst_time": 13.220787525177002,
+    "best_distance": 20.448732529711684,
+    "average_distance": 21.81402926535902,
+    "worst_distance": 23.81616322929046,
+    "best_reward": 217653.92140000002,
+    "average_reward": 101159.94227692307,
+    "worst_reward": 223.4,
+    "training_minutes": 117
+  },
+  "action_space": [
+    {
+      "speed": 1.3333333333333333,
+      "steering_angle": -30,
+      "index": 0
+    },
+    {
+      "speed": 2.6666666666666665,
+      "steering_angle": -30,
+      "index": 1
+    },
+    {
+      "speed": 4,
+      "steering_angle": -30,
+      "index": 2
+    },
+    {
+      "speed": 1.3333333333333333,
+      "steering_angle": -20,
+      "index": 3
+    },
+    {
+      "speed": 2.6666666666666665,
+      "steering_angle": -20,
+      "index": 4
+    },
+    {
+      "speed": 4,
+      "steering_angle": -20,
+      "index": 5
+    },
+    {
+      "speed": 1.3333333333333333,
+      "steering_angle": -10.000000000000004,
+      "index": 6
+    },
+    {
+      "speed": 2.6666666666666665,
+      "steering_angle": -10.000000000000004,
+      "index": 7
+    },
+    {
+      "speed": 4,
+      "steering_angle": -10.000000000000004,
+      "index": 8
+    },
+    {
+      "speed": 1.3333333333333333,
+      "steering_angle": 0,
+      "index": 9
+    },
+    {
+      "speed": 2.6666666666666665,
+      "steering_angle": 0,
+      "index": 10
+    },
+    {
+      "speed": 4,
+      "steering_angle": 0,
+      "index": 11
+    },
+    {
+      "speed": 1.3333333333333333,
+      "steering_angle": 9.999999999999998,
+      "index": 12
+    },
+    {
+      "speed": 2.6666666666666665,
+      "steering_angle": 9.999999999999998,
+      "index": 13
+    },
+    {
+      "speed": 4,
+      "steering_angle": 9.999999999999998,
+      "index": 14
+    },
+    {
+      "speed": 1.3333333333333333,
+      "steering_angle": 20,
+      "index": 15
+    },
+    {
+      "speed": 2.6666666666666665,
+      "steering_angle": 20,
+      "index": 16
+    },
+    {
+      "speed": 4,
+      "steering_angle": 20,
+      "index": 17
+    },
+    {
+      "speed": 1.3333333333333333,
+      "steering_angle": 30,
+      "index": 18
+    },
+    {
+      "speed": 2.6666666666666665,
+      "steering_angle": 30,
+      "index": 19
+    },
+    {
+      "speed": 4,
+      "steering_angle": 30,
+      "index": 20
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "model_name": "cda62b3e-4ec6-4eb7-8011-595c82db7a43",
+  "world_name": "reinvent_base",
+  "race_type": "TIME_TRIAL",
+  "job_type": "TRAINING",
+  "hyper": {
+    "batch_size": 128,
+    "entropy": 0.002,
+    "discount_factor": 0.97,
+    "loss_type": "huber",
+    "learning_rate": 2e-05,
+    "episodes_per_training_iteration": 0,
+    "epochs": 10
+  },
+  "episode_stats": {
+    "episode_count": 20,
+    "iteration_count": 0,
+    "success_count": 18,
+    "average_percent_complete": 97.147795,
+    "best_steps": 132,
+    "average_steps": 141,
+    "worst_steps": 156,
+    "best_time": 8.732,
+    "average_time": 9.306555555555555,
+    "worst_time": 10.332,
+    "best_distance": 17.043004962005536,
+    "average_distance": 17.539005043029206,
+    "worst_distance": 18.12623261923561,
+    "best_reward": 33774.0,
+    "average_reward": 28649.64188,
+    "worst_reward": 12513.2011,
+    "training_minutes": 3
+  },
+  "action_space": [
+    {
+      "speed": 3,
+      "steering_angle": 0,
+      "index": 0
+    },
+    {
+      "speed": 3,
+      "steering_angle": -5,
+      "index": 1
+    },
+    {
+      "speed": 3,
+      "steering_angle": 5,
+      "index": 2
+    },
+    {
+      "speed": 3,
+      "steering_angle": -10,
+      "index": 3
+    },
+    {
+      "speed": 3,
+      "steering_angle": 10,
+      "index": 4
+    },
+    {
+      "speed": 3,
+      "steering_angle": -15,
+      "index": 5
+    },
+    {
+      "speed": 3,
+      "steering_angle": 15,
+      "index": 6
+    },
+    {
+      "speed": 1.7,
+      "steering_angle": 30,
+      "index": 7
+    },
+    {
+      "speed": 1.7,
+      "steering_angle": -30,
+      "index": 8
+    },
+    {
+      "speed": 1.2,
+      "steering_angle": 30,
+      "index": 9
+    },
+    {
+      "speed": 1.2,
+      "steering_angle": -30,
+      "index": 10
+    }
+  ]
+}

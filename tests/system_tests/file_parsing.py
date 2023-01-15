@@ -26,10 +26,22 @@ class DummyPleaseWait(PleaseWait):
         pass
 
 
-class TestStringMethods(unittest.TestCase):
+class TestFileParsingWithJsonOutput(unittest.TestCase):
 
-    def test_load_file(self):
+    def test_load_file_1(self):
+        self._test_parse_file("deepracer-0_robomaker.1.vpbdhdkgumibcp5eye7f60xyg.log")
+
+    def test_load_file_2(self):
+        self._test_parse_file("dmh-mars-v14-proto-ChampCup-g-training_job_GjvAD1blTUaYAeW79EQEBQ_logs.tar.gz")
+
+    def test_load_file_3(self):
         self._test_parse_file("get-track-dbro-easy-aug-turnpike-training_job_BxX14SAlTzypcxJRR_K45g_logs.tar.gz")
+
+    def test_load_file_4(self):
+        self._test_parse_file("training-20220525035255-0NVXkrNsS0qJ1yHgfIXR6Q-robomaker.continuous_May_2022.log")
+
+    def test_load_file_5(self):
+        self._test_parse_file("training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker.log")
 
     def _test_parse_file(self, filename: str):
         # Setup

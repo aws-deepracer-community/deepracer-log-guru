@@ -1,0 +1,141 @@
+{
+  "model_name": "b1bfe9e1-a707-425a-98df-1d26d1733781",
+  "world_name": "2022_august_open",
+  "race_type": "TIME_TRIAL",
+  "job_type": "TRAINING",
+  "hyper": {
+    "batch_size": 64,
+    "entropy": 0.01,
+    "discount_factor": 0.999,
+    "loss_type": "huber",
+    "learning_rate": 0.0003,
+    "episodes_per_training_iteration": 0,
+    "epochs": 10
+  },
+  "episode_stats": {
+    "episode_count": 55,
+    "iteration_count": 0,
+    "success_count": 0,
+    "average_percent_complete": 6.2489181818181825,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 76.5,
+    "average_reward": 40.88181818181818,
+    "worst_reward": 24.0,
+    "training_minutes": 3
+  },
+  "action_space": [
+    {
+      "speed": 1.33,
+      "steering_angle": -30,
+      "index": 0
+    },
+    {
+      "speed": 2.67,
+      "steering_angle": -30,
+      "index": 1
+    },
+    {
+      "speed": 4,
+      "steering_angle": -30,
+      "index": 2
+    },
+    {
+      "speed": 1.33,
+      "steering_angle": -20,
+      "index": 3
+    },
+    {
+      "speed": 2.67,
+      "steering_angle": -20,
+      "index": 4
+    },
+    {
+      "speed": 4,
+      "steering_angle": -20,
+      "index": 5
+    },
+    {
+      "speed": 1.33,
+      "steering_angle": -10,
+      "index": 6
+    },
+    {
+      "speed": 2.67,
+      "steering_angle": -10,
+      "index": 7
+    },
+    {
+      "speed": 4,
+      "steering_angle": -10,
+      "index": 8
+    },
+    {
+      "speed": 1.33,
+      "steering_angle": 0,
+      "index": 9
+    },
+    {
+      "speed": 2.67,
+      "steering_angle": 0,
+      "index": 10
+    },
+    {
+      "speed": 4,
+      "steering_angle": 0,
+      "index": 11
+    },
+    {
+      "speed": 1.33,
+      "steering_angle": 10,
+      "index": 12
+    },
+    {
+      "speed": 2.67,
+      "steering_angle": 10,
+      "index": 13
+    },
+    {
+      "speed": 4,
+      "steering_angle": 10,
+      "index": 14
+    },
+    {
+      "speed": 1.33,
+      "steering_angle": 20,
+      "index": 15
+    },
+    {
+      "speed": 2.67,
+      "steering_angle": 20,
+      "index": 16
+    },
+    {
+      "speed": 4,
+      "steering_angle": 20,
+      "index": 17
+    },
+    {
+      "speed": 1.33,
+      "steering_angle": 30,
+      "index": 18
+    },
+    {
+      "speed": 2.67,
+      "steering_angle": 30,
+      "index": 19
+    },
+    {
+      "speed": 4,
+      "steering_angle": 30,
+      "index": 20
+    }
+  ]
+}

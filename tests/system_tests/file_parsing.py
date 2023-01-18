@@ -43,6 +43,10 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
     def test_load_file_5(self):
         self._test_parse_file("training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker.log")
 
+    def test_load_community_training_example_log(self):
+        # from: deepracer-utils/tests/deepracer/logs/sample-console-logs/logs/training/
+        self._test_parse_file("training-20220611230353-EHNgTNY2T9-77qXhqjBi6A-robomaker.log")
+
     def _test_parse_file(self, filename: str):
         # Setup
         self.assertTrue(os.path.isdir(RESOURCE_DIR))

@@ -58,6 +58,9 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
     def test_parse_training_console_log_tt_discrete_oct_2021(self):
         self._test_parse_file("training-20211020114346-TfRNRwzjRW2UIpugm7Gd-Q-robomaker.log")
 
+    def test_parse_training_drfc_log_tt_discrete_oact_2021(self):
+        self._test_parse_file("deepracer-0_robomaker.1.ynytdrw16nuhl8y1pauseuelw.log")
+
     def _test_parse_file(self, filename: str):
         # Setup
         self.assertTrue(os.path.isdir(RESOURCE_DIR))

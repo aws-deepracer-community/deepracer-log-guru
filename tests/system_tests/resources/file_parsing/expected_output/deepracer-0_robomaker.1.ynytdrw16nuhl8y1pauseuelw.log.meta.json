@@ -1,0 +1,106 @@
+{
+  "model_name": " dmh-Oct-C-157",
+  "world_name": "red_star_pro",
+  "race_type": "TIME_TRIAL",
+  "job_type": "TRAINING",
+  "hyper": {
+    "batch_size": 512,
+    "entropy": 0.02,
+    "discount_factor": 0.97,
+    "loss_type": "huber",
+    "learning_rate": 5e-06,
+    "episodes_per_training_iteration": 0,
+    "epochs": 10
+  },
+  "episode_stats": {
+    "episode_count": 70,
+    "iteration_count": 0,
+    "success_count": 0,
+    "average_percent_complete": 23.934700000000003,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 90021.122,
+    "average_reward": 16928.922185714287,
+    "worst_reward": 707.0089999999998,
+    "training_minutes": 14
+  },
+  "action_space": [
+    {
+      "speed": 4.0,
+      "steering_angle": 0,
+      "index": 0
+    },
+    {
+      "speed": 2.5,
+      "steering_angle": 0,
+      "index": 1
+    },
+    {
+      "speed": 3.5,
+      "steering_angle": 15,
+      "index": 2
+    },
+    {
+      "speed": 3.5,
+      "steering_angle": -15,
+      "index": 3
+    },
+    {
+      "speed": 3.0,
+      "steering_angle": 30,
+      "index": 4
+    },
+    {
+      "speed": 3.0,
+      "steering_angle": -30,
+      "index": 5
+    },
+    {
+      "speed": 2.5,
+      "steering_angle": 30,
+      "index": 6
+    },
+    {
+      "speed": 2.5,
+      "steering_angle": -30,
+      "index": 7
+    },
+    {
+      "speed": 2.0,
+      "steering_angle": 30,
+      "index": 8
+    },
+    {
+      "speed": 2.0,
+      "steering_angle": -30,
+      "index": 9
+    },
+    {
+      "speed": 1.5,
+      "steering_angle": 30,
+      "index": 10
+    },
+    {
+      "speed": 1.5,
+      "steering_angle": -30,
+      "index": 11
+    },
+    {
+      "speed": 1.1,
+      "steering_angle": 30,
+      "index": 12
+    },
+    {
+      "speed": 1.1,
+      "steering_angle": -30,
+      "index": 13
+    }
+  ]
+}

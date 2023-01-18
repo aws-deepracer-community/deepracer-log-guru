@@ -28,22 +28,30 @@ class DummyPleaseWait(PleaseWait):
 
 class TestFileParsingWithJsonOutput(unittest.TestCase):
 
-    def test_load_file_1(self):
+    # Naming convention for tests to show combinations of file types
+    #       training                    [ others to come, e.g. evaluation and leaderboard ]
+    #       console  /  drfc
+    #       log  /  zip
+    #       tt  /  oa  /  h2h
+    #       discrete  /  continuous
+    #       [ month and year ]
+
+    def test_parse_training_drfc_log_oa_discrete_aug_2022(self):
         self._test_parse_file("deepracer-0_robomaker.1.vpbdhdkgumibcp5eye7f60xyg.log")
 
-    def test_load_file_2(self):
+    def test_parse_training_console_zip_tt_discrete_aug_2020(self):
         self._test_parse_file("dmh-mars-v14-proto-ChampCup-g-training_job_GjvAD1blTUaYAeW79EQEBQ_logs.tar.gz")
 
-    def test_load_file_3(self):
+    def test_parse_training_console_zip_tt_discrete_aug_2022(self):
         self._test_parse_file("get-track-dbro-easy-aug-turnpike-training_job_BxX14SAlTzypcxJRR_K45g_logs.tar.gz")
 
-    def test_load_file_4(self):
+    def test_parse_training_console_log_tt_continuous_may_2022(self):
         self._test_parse_file("training-20220525035255-0NVXkrNsS0qJ1yHgfIXR6Q-robomaker.continuous_May_2022.log")
 
-    def test_load_file_5(self):
+    def test_parse_training_console_log_tt_discrete_july_2022(self):
         self._test_parse_file("training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker.log")
 
-    def test_load_community_training_example_log(self):
+    def test_parse_training_console_log_tt_discrete_june_2022(self):
         # from: deepracer-utils/tests/deepracer/logs/sample-console-logs/logs/training/
         self._test_parse_file("training-20220611230353-EHNgTNY2T9-77qXhqjBi6A-robomaker.log")
 

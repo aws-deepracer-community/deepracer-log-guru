@@ -12,7 +12,6 @@ from src.event.event_meta import Event
 from src.log.log_meta import LogMeta
 from src.action_space.action import Action
 
-
 #
 # PUBLIC Constants and Interface
 #
@@ -67,7 +66,8 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
 
         if line_of_text.startswith(MISC_MODEL_NAME_CLOUD_LOGS):
             split_parts = line_of_text[len(MISC_MODEL_NAME_CLOUD_LOGS):].split("/")
-            if split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME_A) or split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME_B):
+            if split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME_A) or split_parts[1].startswith(
+                    CLOUD_TRAINING_YAML_FILENAME_B):
                 log_meta.model_name = split_parts[0]
 
     if line_of_text.startswith(CONTINUOUS_ACTION_SPACE_START) and CONTINUOUS_ACTION_SPACE_CONTAINS in line_of_text:
@@ -118,6 +118,24 @@ def parse_episode_event(line_of_text: str, episode_events, episode_object_locati
          track_length,
          time,
          status) = input_line[14:].split(",")[:17]
+
+        if "]" not in action_taken_2:
+            (episode,
+             step,
+             x,
+             y,
+             heading,
+             steering_angle,
+             speed,
+             action_taken,
+             reward,
+             job_completed,
+             all_wheels_on_track,
+             progress,
+             closest_waypoint_index,
+             track_length,
+             time,
+             status) = input_line[14:].split(",")[:16]
     else:
         (episode,
          step,
@@ -214,7 +232,7 @@ def parse_evaluation_progress_info(line_of_text: str):
         progresses_as_strings = info[:-2].split("[")[1].split(",")
         progresses = []
         for p in progresses_as_strings:
-            progresses.append(max(0.0, float(p)))    # Added max with zero to avoid rare oddity of negative progress!!!
+            progresses.append(max(0.0, float(p)))  # Added max with zero to avoid rare oddity of negative progress!!!
 
         assert count == len(progresses)
 
@@ -246,14 +264,13 @@ MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
 CONTINUOUS_ACTION_SPACE_START = "Sensor list ["
 CONTINUOUS_ACTION_SPACE_CONTAINS = "action_space_type continuous"
 
-
 # For handling cloud, here are the example of cloud and non-cloud
 #   cloud       [s3] Successfully downloaded yaml file from s3 key DMH-Champ-Round1-OA-B-3/training-params.yaml
 #   non-cloud   [s3] Successfully downloaded yaml file from s3 key data-56b52007-8142-46cd-a9cc-370feb620f0c/models/Champ-Obj-Avoidance-03/sagemaker-robomaker-artifacts/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml to local ./custom_files/training_params_634ecc9a-b12d-4350-99ac-3320f88e9fbe.yaml.
 
 MISC_MODEL_NAME_CLOUD_LOGS = "[s3] Successfully downloaded yaml file from s3 key"
-CLOUD_TRAINING_YAML_FILENAME_A = "training_params.yaml"   # New
-CLOUD_TRAINING_YAML_FILENAME_B = "training-params.yaml"   # Older logs
+CLOUD_TRAINING_YAML_FILENAME_A = "training_params.yaml"  # New
+CLOUD_TRAINING_YAML_FILENAME_B = "training-params.yaml"  # Older logs
 
 MISC_ACTION_SPACE_A = "Loaded action space from file: "
 MISC_ACTION_SPACE_B = "Action space from file: "

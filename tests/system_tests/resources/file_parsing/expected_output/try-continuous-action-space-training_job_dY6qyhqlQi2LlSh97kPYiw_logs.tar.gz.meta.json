@@ -1,0 +1,40 @@
+{
+  "model_name": "1d7ead09-c79e-43c7-a65d-d9973591f77d",
+  "world_name": "2022_september_pro",
+  "race_type": "TIME_TRIAL",
+  "job_type": "TRAINING",
+  "hyper": {
+    "batch_size": 64,
+    "entropy": 0.0,
+    "discount_factor": 0.999,
+    "loss_type": "mean squared error",
+    "learning_rate": 0.0003,
+    "episodes_per_training_iteration": 0,
+    "epochs": 0
+  },
+  "episode_stats": {
+    "episode_count": 19,
+    "iteration_count": 0,
+    "success_count": 0,
+    "average_percent_complete": 2.395273684210526,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 34.403,
+    "average_reward": 11.045210526315788,
+    "worst_reward": 6.703,
+    "training_minutes": 3
+  },
+  "action_space": {
+    "low_speed": 1.0,
+    "high_speed": 4.0,
+    "low_steering": -28.0,
+    "high_steering": 27.0
+  }
+}

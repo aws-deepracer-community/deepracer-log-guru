@@ -5,6 +5,7 @@
 #
 # Copyright (c) 2021 dmh23
 #
+import re
 
 import numpy as np
 import os
@@ -26,6 +27,9 @@ from src.utils.discount_factors import discount_factors
 META_FILE_SUFFIX = ".meta.json"
 LOG_FILE_SUFFIX = ".log"
 CONSOLE_LOG_SUFFIX = ".gz"
+
+AWS_UID_REG_EX = re.compile('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\Z', re.I)
+TRAINING_FILE_REG_EXP = re.compile("-training_job_........*_logs.*")
 
 
 class Log:
@@ -235,6 +239,13 @@ class Log:
                                           calculate_new_reward, calculate_alternate_discount_factors))
             please_wait.set_progress(
                 mid_progress_percent + i / total_episodes * (max_progress_percent - mid_progress_percent))
+
+        # Override AWS id with better model name from filename if possible
+        if AWS_UID_REG_EX.match(self._log_meta.model_name):
+            if TRAINING_FILE_REG_EXP.search(self._log_file_name):
+                self._log_meta.model_name = TRAINING_FILE_REG_EXP.sub("", self._log_file_name)
+            else:
+                self._log_meta.model_name = re.sub("\\..*", "", self._log_file_name)
 
     def _analyze_episode_details(self):
         self._log_meta.episode_stats.episode_count = len(self._episodes)

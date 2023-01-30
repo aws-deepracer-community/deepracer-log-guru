@@ -8,6 +8,8 @@
 
 from src.action_space.action import Action
 from src.action_space.action_space import ActionSpace
+from src.main.version import VERSION
+
 
 class LogMeta:
     #
@@ -41,6 +43,7 @@ class LogMeta:
 
     def get_as_json(self):
         new_json = dict()
+        new_json["guru_version"] = VERSION
         new_json["model_name"] = self.model_name
         new_json["world_name"] = self.world_name
         new_json["race_type"] = self.race_type

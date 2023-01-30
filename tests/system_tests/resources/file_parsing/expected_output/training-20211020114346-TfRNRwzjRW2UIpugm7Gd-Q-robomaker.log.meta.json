@@ -1,4 +1,5 @@
 {
+  "guru_version": "4.0.0",
   "model_name": "training-20211020114346-TfRNRwzjRW2UIpugm7Gd-Q-robomaker",
   "world_name": "red_star_pro",
   "race_type": "TIME_TRIAL",

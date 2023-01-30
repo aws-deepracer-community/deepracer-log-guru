@@ -1,4 +1,5 @@
 {
+  "guru_version": "4.0.0",
   "model_name": "try-continuous-action-space",
   "world_name": "2022_september_pro",
   "race_type": "TIME_TRIAL",

@@ -33,37 +33,41 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
     #       training                    [ others to come, e.g. evaluation and leaderboard ]
     #       console  /  drfc
     #       log  /  zip
-    #       tt  /  oa  /  h2h
+    #       tt  /  oa  /  h2h / h2hoa
     #       discrete  /  continuous
+    #       ppo / sac
     #       [ month and year ]
 
-    def test_parse_training_drfc_log_oa_discrete_aug_2022(self):
+    def test_parse_training_drfc_log_oa_discrete_ppo_aug_2022(self):
         self._test_parse_file("deepracer-0_robomaker.1.vpbdhdkgumibcp5eye7f60xyg.log")
 
-    def test_parse_training_console_zip_tt_discrete_aug_2020(self):
+    def test_parse_training_console_zip_tt_discrete_ppo_aug_2020(self):
         self._test_parse_file("dmh-mars-v14-proto-ChampCup-g-training_job_GjvAD1blTUaYAeW79EQEBQ_logs.tar.gz")
 
-    def test_parse_training_console_zip_tt_discrete_aug_2022(self):
+    def test_parse_training_console_zip_tt_discrete_ppo_aug_2022(self):
         self._test_parse_file("get-track-dbro-easy-aug-turnpike-training_job_BxX14SAlTzypcxJRR_K45g_logs.tar.gz")
 
-    def test_parse_training_console_log_tt_continuous_may_2022(self):
+    def test_parse_training_console_log_tt_continuous_ppo_may_2022(self):
         self._test_parse_file("training-20220525035255-0NVXkrNsS0qJ1yHgfIXR6Q-robomaker.continuous_May_2022.log")
 
-    def test_parse_training_console_log_tt_discrete_july_2022(self):
+    def test_parse_training_console_log_tt_discrete_ppo_july_2022(self):
         self._test_parse_file("training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker.log")
 
-    def test_parse_training_console_log_tt_discrete_june_2022(self):
+    def test_parse_training_console_log_tt_discrete_ppo_june_2022(self):
         # from: deepracer-utils/tests/deepracer/logs/sample-console-logs/logs/training/
         self._test_parse_file("training-20220611230353-EHNgTNY2T9-77qXhqjBi6A-robomaker.log")
 
-    def test_parse_training_console_log_tt_discrete_oct_2021(self):
+    def test_parse_training_console_log_tt_discrete_ppo_oct_2021(self):
         self._test_parse_file("training-20211020114346-TfRNRwzjRW2UIpugm7Gd-Q-robomaker.log")
 
-    def test_parse_training_drfc_log_tt_discrete_oct_2021(self):
+    def test_parse_training_drfc_log_tt_discrete_ppo_oct_2021(self):
         self._test_parse_file("deepracer-0_robomaker.1.ynytdrw16nuhl8y1pauseuelw.log")
 
-    def test_parse_training_console_zip_tt_continuous_sep_2022(self):
+    def test_parse_training_console_zip_tt_continuous_ppo_sep_2022(self):
         self._test_parse_file("try-continuous-action-space-training_job_dY6qyhqlQi2LlSh97kPYiw_logs.tar.gz")
+
+    def test_parse_training_console_zip_h2hoa_continuous_sac_jan_2023(self):
+        self._test_parse_file("head-to-head-short-session-training_job_O-uWGmcTSAyrIj9X2PFXxQ_logs.tar.gz")
 
     def _test_parse_file(self, filename: str):
         # Setup

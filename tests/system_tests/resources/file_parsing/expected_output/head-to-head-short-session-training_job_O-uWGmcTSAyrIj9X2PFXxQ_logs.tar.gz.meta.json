@@ -1,0 +1,41 @@
+{
+  "guru_version": "4.0.0",
+  "model_name": "head-to-head-short-session",
+  "world_name": "2022_reinvent_champ",
+  "race_type": "HEAD_TO_HEAD_RACING",
+  "job_type": "TRAINING",
+  "hyper": {
+    "batch_size": 64,
+    "entropy": 0.0,
+    "discount_factor": 0.999,
+    "loss_type": "mean squared error",
+    "learning_rate": 0.0003,
+    "episodes_per_training_iteration": 0,
+    "epochs": 0
+  },
+  "episode_stats": {
+    "episode_count": 4,
+    "iteration_count": 0,
+    "success_count": 0,
+    "average_percent_complete": 6.374275,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 241.05300000000005,
+    "average_reward": 117.27825000000001,
+    "worst_reward": 65.019,
+    "training_minutes": 0
+  },
+  "action_space": {
+    "low_speed": 1.2,
+    "high_speed": 3.1,
+    "low_steering": -26.0,
+    "high_steering": 25.0
+  }
+}

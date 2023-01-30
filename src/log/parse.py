@@ -7,6 +7,7 @@
 #
 
 import json
+import re
 
 from src.event.event_meta import Event
 from src.log.log_meta import LogMeta
@@ -68,7 +69,7 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
             split_parts = line_of_text[len(MISC_MODEL_NAME_CLOUD_LOGS):].split("/")
             if split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME_A) or split_parts[1].startswith(
                     CLOUD_TRAINING_YAML_FILENAME_B):
-                log_meta.model_name = split_parts[0]
+                log_meta.model_name = re.sub("^ *", "", split_parts[0])    # Strip off leading space(s)
 
     if line_of_text.startswith(CONTINUOUS_ACTION_SPACE_START) and CONTINUOUS_ACTION_SPACE_CONTAINS in line_of_text:
         log_meta.action_space.mark_as_continuous()

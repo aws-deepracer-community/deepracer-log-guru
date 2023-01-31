@@ -69,6 +69,9 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
     def test_parse_training_console_zip_h2hoa_continuous_sac_jan_2023(self):
         self._test_parse_file("head-to-head-short-session-training_job_O-uWGmcTSAyrIj9X2PFXxQ_logs.tar.gz")
 
+    def test_parse_training_console_zip_tt_continuous_sac_jan_2023(self):
+        self._test_parse_file("sac-short-session-training_job_30Ieq368TqS-fa6QaRM3qA_logs.tar.gz")
+
     def _test_parse_file(self, filename: str):
         # Setup
         self.assertTrue(os.path.isdir(RESOURCE_DIR))

@@ -12,17 +12,12 @@ You will probably want to store related log files in the same directory/folder s
 
 Download a log file as follows:
 * Go to the AWS DeepRacer console and view the training details for a model
-* Click the "**Download logs**" button at the top of the training section (note - this button is only enabled once training has completed)
+* Click the "**Download logs**" button at the top of the training section (**NOTE** - this button is only enabled once training has completed)
 
 ![](pictures/getting_started/download_logs.png)
 
-* After it has downloaded, open the zip archive and locate the single **robomaker** log file in the **logs/training** folder
-
-![](pictures/getting_started/find_correct_log_file.png)
-
-* Extract/save it locally
-* Note - DRG does NOT require any other files in the zip archive
-* If you wish, repeat this process to download log file(s) for other model(s) too
+* After it has downloaded, simply copy/move the downloaded file directly to the directory where you will perform log analysis
+* **NOTE** - unlike earlier versions of DRG, you do **not** need to manually extract a specific file from the archive
 
 ### Download Logs from DRFC (DeepRacer-For-Cloud)
 

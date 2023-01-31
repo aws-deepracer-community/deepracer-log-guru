@@ -252,7 +252,7 @@ class HyperParameters:
         assert_float_inclusive_range(self.learning_rate, 0.001, 0.00000001)
         assert_float_inclusive_range(self.discount_factor, 0.0, 1.0)
         assert_non_empty_string(self.loss_type)         # TODO enumeration
-        #####   assert_integer_greater_than_zero(self.episodes_per_training_iteration)    # TODO Never found!
+        assert_integer_greater_than_zero(self.episodes_per_training_iteration)
         assert_optional_float_inclusive_range(self.beta_entropy, 0.0, 1.0)
         assert_optional_integer_greater_than_zero(self.epochs)
 

@@ -9,7 +9,7 @@
     "learning_rate": 0.0003,
     "discount_factor": 0.95,
     "loss_type": "huber",
-    "episodes_per_training_iteration": null,
+    "episodes_per_training_iteration": 20,
     "beta_entropy": 0.01,
     "epochs": 3
   },

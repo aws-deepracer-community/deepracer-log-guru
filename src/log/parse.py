@@ -27,7 +27,7 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
         log_meta.hyper.batch_size = _get_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE)
 
     if _contains_hyper(line_of_text, HYPER_ENTROPY):
-        log_meta.hyper.entropy = _get_hyper_float_value(line_of_text, HYPER_ENTROPY)
+        log_meta.hyper.beta_entropy = _get_hyper_float_value(line_of_text, HYPER_ENTROPY)
 
     if _contains_hyper(line_of_text, HYPER_DISCOUNT_FACTOR):
         log_meta.hyper.discount_factor = _get_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR)

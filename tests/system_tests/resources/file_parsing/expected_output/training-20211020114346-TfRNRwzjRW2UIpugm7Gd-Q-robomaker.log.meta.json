@@ -6,11 +6,11 @@
   "job_type": "TRAINING",
   "hyper": {
     "batch_size": 512,
-    "entropy": 0.001,
+    "learning_rate": 5e-08,
     "discount_factor": 0.97,
     "loss_type": "huber",
-    "learning_rate": 5e-08,
     "episodes_per_training_iteration": 0,
+    "beta_entropy": 0.001,
     "epochs": 3
   },
   "episode_stats": {

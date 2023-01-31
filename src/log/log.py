@@ -163,12 +163,12 @@ class Log:
             file_size = os.path.getsize(os.path.join(self._log_directory, self._log_file_name))
 
         #### TEMP TESTING FOR OS FILE INFO TASK #####
-        input_file_path = os.path.join(self._log_directory, self._log_file_name)
-
-        log_file_meta = LogFile()
-        log_file_meta.name = self._log_file_name
-        log_file_meta.os_stats.set_stats(os.stat(input_file_path))
-        print(log_file_meta.to_json())
+        # input_file_path = os.path.join(self._log_directory, self._log_file_name)
+        #
+        # log_file_meta = LogFile()
+        # log_file_meta.name = self._log_file_name
+        # log_file_meta.os_stats.set_stats(os.stat(input_file_path))
+        # print(log_file_meta.to_json())
         #### END OF TESTING
 
         file_amount_read = 0

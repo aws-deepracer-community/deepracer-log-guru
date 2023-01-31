@@ -6,7 +6,6 @@
 # Copyright (c) 2021 dmh23
 #
 import os
-from typing import Union
 
 from src.action_space.action import Action
 from src.action_space.action_space import ActionSpace
@@ -25,14 +24,11 @@ class LogMeta:
         print("Race type = ", self.race_type)
         print("Job type = ", self.job_type)
 
-        print("Hyper:")
-        self.hyper.display_for_debug()
-
         print("Episode Stats:")
         self.episode_stats.display_for_debug()
 
     def __init__(self):
-        self.hyper = LogMeta.HyperMeta()
+        self.hyper = HyperParameters()
         self.episode_stats = LogMeta.EpisodeStats()
 
         self.model_name = ""
@@ -51,7 +47,7 @@ class LogMeta:
         new_json["race_type"] = self.race_type
         new_json["job_type"] = self.job_type
 
-        new_json["hyper"] = self.hyper.get_as_json()
+        new_json["hyper"] = self.hyper.to_json()
         new_json["episode_stats"] = self.episode_stats.get_as_json()
 
         new_json["action_space"] = self._get_action_space_as_json_list()
@@ -200,44 +196,62 @@ class LogMeta:
             self.average_reward = received_json["average_reward"]
             self.worst_reward = received_json["worst_reward"]
 
-    class HyperMeta:
-        def __init__(self):
+
+class HyperParameters:
+    _FIELD_BATCH_SIZE = "batch_size"
+    _FIELD_LEARNING_RATE = "learning_rate"
+    _FIELD_DISCOUNT_FACTOR = "discount_factor"
+    _FIELD_LOSS_TYPE = "loss_type"
+    _FIELD_EPISODES_PER_TRAINING_ITERATION = "episodes_per_training_iteration"
+    _FIELD_BETA_ENTROPY = "beta_entropy"
+    _FIELD_EPOCHS = "epochs"
+    # _FIELD_SAC_ALPHA = "sac_alpha"
+    # _FIELD_E_GREEDY_VALUE = "e_greedy_value"
+    # _FIELD_EPSILON_STEPS = "epsilon_steps"
+    # _FIELD_EXPLORATION_TYPE = "exploration_type"
+    # _FIELD_STACK_SIZE = "stack_size"
+    # _FIELD_TERMINATION_CONDITION = "termination_condition"
+
+    def __init__(self, json: dict = None):
+        if json:
+            assert (isinstance(json, dict))
+            self.batch_size = json[self._FIELD_BATCH_SIZE]
+            self.learning_rate = json[self._FIELD_LEARNING_RATE]
+            self.discount_factor = json[self._FIELD_DISCOUNT_FACTOR]
+            self.loss_type = json[self._FIELD_LOSS_TYPE]
+            self.episodes_per_training_iteration = json[self._FIELD_EPISODES_PER_TRAINING_ITERATION]
+            self.beta_entropy = json[self._FIELD_BETA_ENTROPY]
+            self.epochs = json[self._FIELD_EPOCHS]
+            self._validate()
+        else:
             self.batch_size = 0
-            self.entropy = 0.0
+            self.learning_rate = 0.0
             self.discount_factor = 0.0
-            self.loss_type = ""
-            self.learning_rate = 0
+            self.loss_type = ""            # TODO enumeration
             self.episodes_per_training_iteration = 0
+            self.beta_entropy = 0.0
             self.epochs = 0
 
-        def display_for_debug(self):
-            print("    Batch size = ", self.batch_size)
-            print("    Entropy = ", self.entropy)
-            print("    Discount factor = ", self.discount_factor)
-            print("    Loss type = ", self.loss_type)
-            print("    Learning rate = ", self.learning_rate)
-            print("    Episodes per training iteration = ", self.episodes_per_training_iteration)
-            print("    Epochs = ", self.epochs)
+    def to_json(self) -> dict:
+        self._validate()
+        return {
+            self._FIELD_BATCH_SIZE: self.batch_size,
+            self._FIELD_LEARNING_RATE: self.learning_rate,
+            self._FIELD_DISCOUNT_FACTOR: self.discount_factor,
+            self._FIELD_LOSS_TYPE: self.loss_type,
+            self._FIELD_EPISODES_PER_TRAINING_ITERATION: self.episodes_per_training_iteration,
+            self._FIELD_BETA_ENTROPY: self.beta_entropy,
+            self._FIELD_EPOCHS: self.epochs,
+        }
 
-        def get_as_json(self):
-            new_json = dict()
-            new_json["batch_size"] = self.batch_size
-            new_json["entropy"] = self.entropy
-            new_json["discount_factor"] = self.discount_factor
-            new_json["loss_type"] = self.loss_type
-            new_json["learning_rate"] = self.learning_rate
-            new_json["episodes_per_training_iteration"] = self.episodes_per_training_iteration
-            new_json["epochs"] = self.epochs
-            return new_json
-
-        def set_from_json(self, received_json):
-            self.batch_size = received_json["batch_size"]
-            self.entropy = received_json["entropy"]
-            self.discount_factor = received_json["discount_factor"]
-            self.loss_type = received_json["loss_type"]
-            self.learning_rate = received_json["learning_rate"]
-            self.episodes_per_training_iteration = received_json["episodes_per_training_iteration"]
-            self.epochs = received_json["epochs"]
+    def _validate(self):
+        assert_integer_greater_than_zero(self.batch_size)
+        assert_float_inclusive_range(self.learning_rate, 0.001, 0.00000001)
+        assert_float_inclusive_range(self.discount_factor, 0.0, 1.0)
+        assert_non_empty_string(self.loss_type)         # TODO enumeration
+        #####   assert_integer_greater_than_zero(self.episodes_per_training_iteration)    ## Parsing is always 0 !!!
+        assert_float_inclusive_range(self.beta_entropy, 0.0, 1.0)
+        ###### assert_integer_greater_than_zero(self.epochs)      ## Parsing some epochs are 0 too !!!!
 
 
 class OsFileStats:
@@ -332,8 +346,20 @@ def assert_integer_greater_than_or_equal_to_zero(value: int):
     assert(isinstance(value, int) and value >= 0)
 
 
+def assert_integer_inclusive_range(value: int, range1: int, range2: int):
+    assert (isinstance(value, int) and min(range1, range2) <= value <= max(range1, range2))
+
+
 def assert_float_greater_than_zero(value: float):
     assert(isinstance(value, float) and value > 0.0)
+
+
+def assert_float_greater_than_or_equal_to_zero(value: float):
+    assert(isinstance(value, float) and value >= 0.0)
+
+
+def assert_float_inclusive_range(value: float, range1: float, range2: float):
+    assert (isinstance(value, float) and min(range1, range2) <= value <= max(range1, range2))
 
 
 def assert_non_empty_string(value: str):

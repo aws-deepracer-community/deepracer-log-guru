@@ -5,6 +5,8 @@
 #
 # Copyright (c) 2021 dmh23
 #
+import os
+from typing import Union
 
 from src.action_space.action import Action
 from src.action_space.action_space import ActionSpace
@@ -237,3 +239,102 @@ class LogMeta:
             self.episodes_per_training_iteration = received_json["episodes_per_training_iteration"]
             self.epochs = received_json["epochs"]
 
+
+class OsFileStats:
+    _FIELD_UID = "uid"
+    _FIELD_SIZE = "size"
+    _FIELD_ATIME = "atime"
+    _FIELD_MTIME = "mtime"
+    _FIELD_CTIME = "ctime"
+
+    def __init__(self, json: dict = None):
+        if json:
+            assert(isinstance(json, dict))
+            self._uid = json[self._FIELD_UID]
+            self._size = json[self._FIELD_SIZE]
+            self._atime = json[self._FIELD_ATIME]
+            self._mtime = json[self._FIELD_MTIME]
+            self._ctime = json[self._FIELD_CTIME]
+            self._validate()
+        else:
+            self._uid = 0
+            self._size = 0
+            self._atime = 0.0
+            self._mtime = 0.0
+            self._ctime = 0.0
+
+    def set_stats(self, stat_result: os.stat_result) -> None:
+        assert (isinstance(stat_result, os.stat_result))
+        self._uid = stat_result.st_uid
+        self._size = stat_result.st_size
+        self._atime = stat_result.st_atime
+        self._mtime = stat_result.st_mtime
+        self._ctime = stat_result.st_ctime
+        self._validate()
+
+    def to_json(self) -> dict:
+        return {
+            self._FIELD_UID: self._uid,
+            self._FIELD_SIZE: self._size,
+            self._FIELD_ATIME: self._atime,
+            self._FIELD_MTIME: self._mtime,
+            self._FIELD_CTIME: self._ctime
+        }
+
+    def matches(self, stat_result: os.stat_result) -> bool:
+        return (
+                stat_result.st_uid == self._uid and
+                stat_result.st_size == self._size and
+                stat_result.st_atime == self._atime and
+                stat_result.st_mtime == self._mtime and
+                stat_result.st_ctime == self._ctime
+        )
+
+    def _validate(self):
+        assert_integer_greater_than_or_equal_to_zero(self._uid)
+        assert_integer_greater_than_zero(self._size)
+        assert_float_greater_than_zero(self._atime)
+        assert_float_greater_than_zero(self._mtime)
+        assert_float_greater_than_zero(self._ctime)
+
+
+class LogFile:
+    _FIELD_NAME = "name"
+    _FIELD_OS_STATS = "os_stats"
+
+    def __init__(self, json: dict = None):
+        if json:
+            assert (isinstance(json, dict))
+            self.name = json[self._FIELD_NAME]
+            self.os_stats = OsFileStats(json[self._FIELD_OS_STATS])
+            self._validate()
+        else:
+            self.name = ""
+            self.os_stats = OsFileStats()
+
+    def to_json(self) -> dict:
+        self._validate()
+        return {
+            self._FIELD_NAME: self.name,
+            self._FIELD_OS_STATS: self.os_stats.to_json()
+        }
+
+    def _validate(self):
+        assert_non_empty_string(self.name)
+        assert(isinstance(self.os_stats, OsFileStats))
+
+
+def assert_integer_greater_than_zero(value: int):
+    assert(isinstance(value, int) and value > 0)
+
+
+def assert_integer_greater_than_or_equal_to_zero(value: int):
+    assert(isinstance(value, int) and value >= 0)
+
+
+def assert_float_greater_than_zero(value: float):
+    assert(isinstance(value, float) and value > 0.0)
+
+
+def assert_non_empty_string(value: str):
+    assert(isinstance(value, str) and str != "")

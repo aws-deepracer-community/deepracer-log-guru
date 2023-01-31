@@ -15,7 +15,7 @@ import tarfile
 import src.log.parse as parse
 
 from src.log.evaluation_phase import EvaluationPhase
-from src.log.log_meta import LogMeta
+from src.log.log_meta import LogMeta, LogFile
 
 from src.episode.episode import Episode
 from src.personalize.configuration.analysis import TIME_BEFORE_FIRST_STEP
@@ -161,6 +161,15 @@ class Log:
             file_size = file_size_override
         else:
             file_size = os.path.getsize(os.path.join(self._log_directory, self._log_file_name))
+
+        #### TEMP TESTING FOR OS FILE INFO TASK #####
+        input_file_path = os.path.join(self._log_directory, self._log_file_name)
+
+        log_file_meta = LogFile()
+        log_file_meta.name = self._log_file_name
+        log_file_meta.os_stats.set_stats(os.stat(input_file_path))
+        print(log_file_meta.to_json())
+        #### END OF TESTING
 
         file_amount_read = 0
 

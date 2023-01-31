@@ -33,7 +33,7 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
         log_meta.hyper.discount_factor = _get_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR)
 
     if _contains_hyper(line_of_text, HYPER_LOSS_TYPE):
-        log_meta.hyper.loss_type = _get_hyper_string_value(line_of_text, HYPER_LOSS_TYPE)
+        log_meta.hyper.loss_type = _get_hyper_string_value(line_of_text, HYPER_LOSS_TYPE).upper().replace(" ", "_")
 
     if _contains_hyper(line_of_text, HYPER_LEARNING_RATE):
         log_meta.hyper.learning_rate = _get_hyper_float_value(line_of_text, HYPER_LEARNING_RATE)

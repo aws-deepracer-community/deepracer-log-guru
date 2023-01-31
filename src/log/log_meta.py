@@ -224,34 +224,37 @@ class HyperParameters:
             self.epochs = json[self._FIELD_EPOCHS]
             self._validate()
         else:
-            self.batch_size = 0
-            self.learning_rate = 0.0
-            self.discount_factor = 0.0
-            self.loss_type = ""            # TODO enumeration
-            self.episodes_per_training_iteration = 0
-            self.beta_entropy = 0.0
-            self.epochs = 0
+            self.batch_size = None
+            self.learning_rate = None
+            self.discount_factor = None
+            self.loss_type = None            # TODO enumeration
+            self.episodes_per_training_iteration = None
+            self.beta_entropy = None
+            self.epochs = None
 
     def to_json(self) -> dict:
         self._validate()
-        return {
+        new_json = {
             self._FIELD_BATCH_SIZE: self.batch_size,
             self._FIELD_LEARNING_RATE: self.learning_rate,
             self._FIELD_DISCOUNT_FACTOR: self.discount_factor,
             self._FIELD_LOSS_TYPE: self.loss_type,
-            self._FIELD_EPISODES_PER_TRAINING_ITERATION: self.episodes_per_training_iteration,
-            self._FIELD_BETA_ENTROPY: self.beta_entropy,
-            self._FIELD_EPOCHS: self.epochs,
+            self._FIELD_EPISODES_PER_TRAINING_ITERATION: self.episodes_per_training_iteration
         }
+        if self.beta_entropy is not None:
+            new_json[self._FIELD_BETA_ENTROPY] = self.beta_entropy
+        if self.epochs is not None:
+            new_json[self._FIELD_EPOCHS] = self.epochs
+        return new_json
 
     def _validate(self):
         assert_integer_greater_than_zero(self.batch_size)
         assert_float_inclusive_range(self.learning_rate, 0.001, 0.00000001)
         assert_float_inclusive_range(self.discount_factor, 0.0, 1.0)
         assert_non_empty_string(self.loss_type)         # TODO enumeration
-        #####   assert_integer_greater_than_zero(self.episodes_per_training_iteration)    ## Parsing is always 0 !!!
-        assert_float_inclusive_range(self.beta_entropy, 0.0, 1.0)
-        ###### assert_integer_greater_than_zero(self.epochs)      ## Parsing some epochs are 0 too !!!!
+        #####   assert_integer_greater_than_zero(self.episodes_per_training_iteration)    # TODO Never found!
+        assert_optional_float_inclusive_range(self.beta_entropy, 0.0, 1.0)
+        assert_optional_integer_greater_than_zero(self.epochs)
 
 
 class OsFileStats:
@@ -364,3 +367,15 @@ def assert_float_inclusive_range(value: float, range1: float, range2: float):
 
 def assert_non_empty_string(value: str):
     assert(isinstance(value, str) and str != "")
+
+
+# Same again for optional fields where needed
+
+def assert_optional_integer_greater_than_zero(value: int):
+    if value is not None:
+        assert_integer_greater_than_zero(value)
+
+
+def assert_optional_float_inclusive_range(value: float, range1: float, range2: float):
+    if value is not None:
+        assert_float_inclusive_range(value, range1, range2)

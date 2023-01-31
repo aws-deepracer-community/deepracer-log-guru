@@ -20,16 +20,6 @@ class LogMeta:
     # PUBLIC interface (this whole class is basically just a data structure, so it's all public)
     #
 
-    def display_for_debug(self):
-        print("Model name = ", self.model_name)
-
-        print("World name = ", self.world_name)
-        print("Race type = ", self.race_type)
-        print("Job type = ", self.job_type)
-
-        print("Episode Stats:")
-        self.episode_stats.display_for_debug()
-
     def __init__(self):
         self.hyper = HyperParameters()
         self.episode_stats = LogMeta.EpisodeStats()
@@ -63,7 +53,7 @@ class LogMeta:
         self.race_type = received_json["race_type"]
         self.job_type = received_json["job_type"]
 
-        self.hyper.set_from_json(received_json["hyper"])
+        self.hyper = HyperParameters(received_json["hyper"])
         self.episode_stats.set_from_json(received_json["episode_stats"])
 
         self.action_space = self._get_action_space_from_json(received_json)
@@ -129,26 +119,6 @@ class LogMeta:
             self.best_reward = 0.0
             self.average_reward = 0.0
             self.worst_reward = 0.0
-
-        def display_for_debug(self):
-            print("    Episode count = ", self.episode_count)
-            print("    Iteration count = ", self.iteration_count)
-            print("    Success count = ", self.success_count)
-            print("    Success percent = ", round(self.success_count / self.episode_count * 100))
-
-            print("    Average Percent Complete % = ", round(self.average_percent_complete))
-
-            print("    Best steps = ", self.best_steps)
-            print("    Average steps = ", self.average_steps)
-            print("    Worst steps = ", self.worst_steps)
-
-            print("    Best time = ", self.best_time)
-            print("    Average time = ", self.average_time)
-            print("    Worst time = ", self.worst_time)
-
-            print("    Best distance = ", round(self.best_distance, 2))
-            print("    Average distance = ", round(self.average_distance, 2))
-            print("    Worst distance = ", round(self.worst_distance, 2))
 
         def get_as_json(self):
             new_json = dict()

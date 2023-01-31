@@ -129,8 +129,6 @@ class LogMeta:
             self.average_reward = 0.0
             self.worst_reward = 0.0
 
-            self.training_minutes = 0
-
         def display_for_debug(self):
             print("    Episode count = ", self.episode_count)
             print("    Iteration count = ", self.iteration_count)
@@ -150,8 +148,6 @@ class LogMeta:
             print("    Best distance = ", round(self.best_distance, 2))
             print("    Average distance = ", round(self.average_distance, 2))
             print("    Worst distance = ", round(self.worst_distance, 2))
-
-            print("    Training minutes = ", self.training_minutes)
 
         def get_as_json(self):
             new_json = dict()
@@ -177,8 +173,6 @@ class LogMeta:
             new_json["average_reward"] = self.average_reward
             new_json["worst_reward"] = self.worst_reward
 
-            new_json["training_minutes"] = self.training_minutes
-
             return new_json
 
         def set_from_json(self, received_json):
@@ -203,9 +197,6 @@ class LogMeta:
             self.best_reward = received_json["best_reward"]
             self.average_reward = received_json["average_reward"]
             self.worst_reward = received_json["worst_reward"]
-
-            self.training_minutes = received_json["training_minutes"]
-
 
     class HyperMeta:
         def __init__(self):

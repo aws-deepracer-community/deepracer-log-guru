@@ -29,8 +29,7 @@
     "worst_distance": 0.0,
     "best_reward": 34.403,
     "average_reward": 11.045210526315788,
-    "worst_reward": 6.703,
-    "training_minutes": 3
+    "worst_reward": 6.703
   },
   "action_space": {
     "low_speed": 1.0,

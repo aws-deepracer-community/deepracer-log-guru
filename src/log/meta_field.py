@@ -1,3 +1,4 @@
+import re
 from enum import Enum
 
 
@@ -22,8 +23,18 @@ class Optionality(Enum):
     OPTIONAL = 2
 
 
+JSON_PATH_VALID_RE = re.compile("^[a-zA-Z0-9_]*$")    # Allow only letters, numbers, underscores
+
+
 class MetaField:
     def __init__(self, json_path: str, data_type: type, optionality: Optionality, min_value=None, max_value=None):
+        assert(JSON_PATH_VALID_RE.match(json_path))
+        assert(data_type in [int, float, str])
+        assert(optionality in [Optionality.MANDATORY, Optionality.OPTIONAL])
+        assert(min_value is None or isinstance(min_value, data_type))
+        assert(max_value is None or isinstance(max_value, data_type))
+        assert(min_value is None or max_value is None or min_value < max_value)
+
         self._json_path = json_path
         self._data_type = data_type
         self._optionality = optionality

@@ -9,6 +9,10 @@ class MetaFieldMissingMandatoryValue(Exception):
     pass
 
 
+class MetaFieldDuplicate(Exception):
+    pass
+
+
 class Optionality(Enum):
     MANDATORY = 1,
     OPTIONAL = 2
@@ -34,7 +38,10 @@ class MetaField:
             raise MetaFieldMissingMandatoryValue
 
         if self._value is not None:
-            output_json[self._json_path] = self._value
+            if self._json_path in output_json:
+                raise MetaFieldDuplicate
+            else:
+                output_json[self._json_path] = self._value
 
     def get_from_json(self, input_json: dict):
         try:

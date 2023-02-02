@@ -1,6 +1,7 @@
 import unittest
 
-from src.log.meta_field import MetaField, MetaFieldWrongDatatype, Optionality, MetaFieldMissingMandatoryValue
+from src.log.meta_field import MetaField, MetaFieldWrongDatatype, Optionality, MetaFieldMissingMandatoryValue, \
+    MetaFieldDuplicate
 
 
 class TestFileParsingWithJsonOutput(unittest.TestCase):
@@ -108,3 +109,25 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         self.assertIsNone(optional_field_without_value.get())
         self.assertRaises(MetaFieldMissingMandatoryValue, MetaField.parse_json, [mandatory_field_without_value],
                           input_json)
+
+    def test_duplicates_not_allowed_in_output(self):
+        field_1 = MetaField("one", int, Optionality.MANDATORY)
+        field_2 = MetaField("two", float, Optionality.MANDATORY)
+        field_1_with_same_datatype = MetaField("one", int, Optionality.MANDATORY)
+        field_2_with_different_datatype = MetaField("two", str, Optionality.MANDATORY)
+
+        field_1.set(1)
+        field_2.set(2.0)
+        field_1_with_same_datatype.set(1)
+        field_2_with_different_datatype.set("two")
+
+        ok_json_1 = MetaField.create_json([field_1, field_2])
+        ok_json_2 = MetaField.create_json([field_1_with_same_datatype, field_2_with_different_datatype])
+
+        self.assertEqual({"one": 1, "two": 2.0}, ok_json_1)
+        self.assertEqual({"one": 1, "two": "two"}, ok_json_2)
+        self.assertRaises(MetaFieldDuplicate, MetaField.create_json, [field_1, field_1_with_same_datatype])
+        self.assertRaises(MetaFieldDuplicate, MetaField.create_json, [field_2, field_2_with_different_datatype])
+
+
+

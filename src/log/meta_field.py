@@ -13,21 +13,34 @@ class MetaFieldDuplicate(Exception):
     pass
 
 
+class MetaFieldNumberOutOfRange(Exception):
+    pass
+
+
 class Optionality(Enum):
     MANDATORY = 1,
     OPTIONAL = 2
 
 
 class MetaField:
-    def __init__(self, json_path: str, data_type: type, optionality: Optionality):
+    def __init__(self, json_path: str, data_type: type, optionality: Optionality, min_value=None, max_value=None):
         self._json_path = json_path
         self._data_type = data_type
         self._optionality = optionality
+        self._min_value = min_value
+        self._max_value = max_value
         self._value = None
 
     def set(self, value):
         if not isinstance(value, self._data_type):
             raise MetaFieldWrongDatatype()
+
+        if self._min_value is not None and value < self._min_value:
+            raise MetaFieldNumberOutOfRange
+
+        if self._max_value is not None and value > self._max_value:
+            raise MetaFieldNumberOutOfRange
+
         self._value = value
 
     def get(self):

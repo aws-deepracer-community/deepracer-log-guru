@@ -1,7 +1,7 @@
 import unittest
 
 from src.log.meta_field import MetaField, MetaFieldWrongDatatype, Optionality, MetaFieldMissingMandatoryValue, \
-    MetaFieldDuplicate
+    MetaFieldDuplicate, MetaFieldNumberOutOfRange
 
 
 class TestFileParsingWithJsonOutput(unittest.TestCase):
@@ -129,5 +129,33 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         self.assertRaises(MetaFieldDuplicate, MetaField.create_json, [field_1, field_1_with_same_datatype])
         self.assertRaises(MetaFieldDuplicate, MetaField.create_json, [field_2, field_2_with_different_datatype])
 
+    def test_range_checking_set_method(self):
+        upper_bound_field = MetaField("Upper", int, Optionality.MANDATORY, None, 10)
+        lower_bound_field = MetaField("Upper", int, Optionality.MANDATORY, 5, None)
+        range_bound_field = MetaField("Upper", int, Optionality.MANDATORY, 2, 6)
 
+        lower_bound_field.set(6)
+        lower_bound_field.set(5)
+        self.assertRaises(MetaFieldNumberOutOfRange, lower_bound_field.set, 4)
 
+        upper_bound_field.set(9)
+        upper_bound_field.set(10)
+        self.assertRaises(MetaFieldNumberOutOfRange, upper_bound_field.set, 11)
+
+        range_bound_field.set(2)
+        range_bound_field.set(6)
+        self.assertRaises(MetaFieldNumberOutOfRange, range_bound_field.set, 1)
+        self.assertRaises(MetaFieldNumberOutOfRange, range_bound_field.set, 7)
+
+    def test_range_checking_always_works_from_json(self):
+        input_json = {"int": 10, "float": 12.345}
+
+        int_in_range = MetaField("int", int, Optionality.MANDATORY, 4, 12)
+        float_in_range = MetaField("float", float, Optionality.MANDATORY, 12.344, 12.346)
+
+        int_not_in_range = MetaField("int", int, Optionality.MANDATORY, 4, 9)
+        float_not_in_range = MetaField("float", float, Optionality.MANDATORY, 912.344, 912.346)
+
+        MetaField.parse_json([int_in_range, float_in_range], input_json)
+        self.assertRaises(MetaFieldNumberOutOfRange, MetaField.parse_json, [int_not_in_range], input_json)
+        self.assertRaises(MetaFieldNumberOutOfRange, MetaField.parse_json, [float_not_in_range], input_json)

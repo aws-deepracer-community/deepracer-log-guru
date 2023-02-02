@@ -1,11 +1,24 @@
+from enum import Enum
+
+
 class MetaFieldWrongDatatype(Exception):
     pass
 
 
+class MetaFieldMissingMandatoryValue(Exception):
+    pass
+
+
+class Optionality(Enum):
+    MANDATORY = 1,
+    OPTIONAL = 2
+
+
 class MetaField:
-    def __init__(self, json_path: str, data_type: type):
+    def __init__(self, json_path: str, data_type: type, optionality: Optionality):
         self._json_path = json_path
         self._data_type = data_type
+        self._optionality = optionality
         self._value = None
 
     def set(self, value):
@@ -17,10 +30,18 @@ class MetaField:
         return self._value
 
     def add_to_json(self, output_json: dict):
-        output_json[self._json_path] = self._value
+        if self._value is None and self._optionality == Optionality.MANDATORY:
+            raise MetaFieldMissingMandatoryValue
+
+        if self._value is not None:
+            output_json[self._json_path] = self._value
 
     def get_from_json(self, input_json: dict):
-        self.set(input_json[self._json_path])
+        try:
+            self.set(input_json[self._json_path])
+        except KeyError:
+            if self._optionality == Optionality.MANDATORY:
+                raise MetaFieldMissingMandatoryValue
 
     @staticmethod
     def create_json(fields: list):

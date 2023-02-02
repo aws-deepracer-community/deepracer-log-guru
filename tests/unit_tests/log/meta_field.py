@@ -1,6 +1,6 @@
 import unittest
 
-from src.log.meta_field import MetaField
+from src.log.meta_field import MetaField, MetaFieldWrongDatatype
 
 
 class TestFileParsingWithJsonOutput(unittest.TestCase):
@@ -20,8 +20,8 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
 
     def test_multiple_field_types_output(self):
         test_integer_field = MetaField("my_int", int)
-        test_float_field = MetaField("my_float", int)
-        test_string_field = MetaField("my_string", int)
+        test_float_field = MetaField("my_float", float)
+        test_string_field = MetaField("my_string", str)
 
         test_integer_field.set(99)
         test_float_field.set(123.45)
@@ -53,3 +53,27 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         for f in input_fields:
             self.assertEqual(f.get(), expected_value)
             expected_value += 2
+
+    def test_integer_cannot_contain_anything_else(self):
+        test_integer_field = MetaField("my_int", int)
+        self.assertRaises(MetaFieldWrongDatatype, test_integer_field.set, "STRING VALUE")
+        self.assertRaises(MetaFieldWrongDatatype, test_integer_field.set, 123.99)
+
+        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_integer_field], {"my_int": "STRING"})
+        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_integer_field], {"my_int": 1.2})
+
+    def test_string_cannot_contain_anything_else(self):
+        test_string_field = MetaField("my_string", str)
+        self.assertRaises(MetaFieldWrongDatatype, test_string_field.set, 40)
+        self.assertRaises(MetaFieldWrongDatatype, test_string_field.set, 123.99)
+
+        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_string_field], {"my_string": 40})
+        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_string_field], {"my_string": 9.9})
+
+    def test_float_cannot_contain_anything_else(self):
+        test_float_field = MetaField("my_float", float)
+        self.assertRaises(MetaFieldWrongDatatype, test_float_field.set, "STRING VALUE")
+        self.assertRaises(MetaFieldWrongDatatype, test_float_field.set, 456)
+
+        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_float_field], {"my_float": "STRING"})
+        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_float_field], {"my_float": 22222})

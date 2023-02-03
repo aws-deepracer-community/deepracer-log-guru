@@ -159,3 +159,34 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         MetaField.parse_json([int_in_range, float_in_range], input_json)
         self.assertRaises(MetaFieldNumberOutOfRange, MetaField.parse_json, [int_not_in_range], input_json)
         self.assertRaises(MetaFieldNumberOutOfRange, MetaField.parse_json, [float_not_in_range], input_json)
+
+    def test_create_json_with_nested_structure(self):
+        outer_field = MetaField("outer", int, Optionality.MANDATORY)
+        shallow_nested_field = MetaField("level_1.shallow", int, Optionality.MANDATORY)
+        deeply_nested_field = MetaField("level_1.level_2.level_3.nested", int, Optionality.MANDATORY)
+
+        outer_field.set(0)
+        shallow_nested_field.set(1)
+        deeply_nested_field.set(3)
+
+        output_json1 = MetaField.create_json([outer_field, shallow_nested_field, deeply_nested_field])
+        output_json2 = MetaField.create_json([deeply_nested_field, outer_field, shallow_nested_field])
+        output_json3 = MetaField.create_json([shallow_nested_field])
+
+        self.assertEqual(output_json1, output_json2)
+        self.assertEqual({"outer": 0, "level_1": {"shallow": 1, "level_2": {"level_3": {"nested": 3}}}}, output_json1)
+        self.assertEqual({"level_1": {"shallow": 1}}, output_json3)
+
+    def test_parse_json_with_nested_structure(self):
+        outer_field = MetaField("outer", int, Optionality.MANDATORY)
+        shallow_nested_field = MetaField("level_1.shallow", int, Optionality.MANDATORY)
+        deeply_nested_field = MetaField("level_1.level_2.level_3.nested", int, Optionality.MANDATORY)
+
+        input_json = {"outer": 0, "level_1": {"shallow": 1, "level_2": {"level_3": {"nested": 3}}}}
+
+        MetaField.parse_json([outer_field, shallow_nested_field, deeply_nested_field], input_json)
+
+        self.assertEqual(0, outer_field.get())
+        self.assertEqual(1, shallow_nested_field.get())
+        self.assertEqual(3, deeply_nested_field.get())
+

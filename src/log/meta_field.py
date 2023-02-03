@@ -23,7 +23,7 @@ class Optionality(Enum):
     OPTIONAL = 2
 
 
-JSON_PATH_VALID_RE = re.compile("^[a-zA-Z0-9_]*$")    # Allow only letters, numbers, underscores
+JSON_PATH_VALID_RE = re.compile("^[a-zA-Z0-9_.]*$")    # Allow only letters, numbers, underscores and full stops
 
 
 class MetaField:
@@ -35,7 +35,7 @@ class MetaField:
         assert(max_value is None or isinstance(max_value, data_type))
         assert(min_value is None or max_value is None or min_value < max_value)
 
-        self._json_path = json_path
+        self._split_path = json_path.split(".")
         self._data_type = data_type
         self._optionality = optionality
         self._min_value = min_value
@@ -62,14 +62,31 @@ class MetaField:
             raise MetaFieldMissingMandatoryValue
 
         if self._value is not None:
-            if self._json_path in output_json:
+            if self._split_path[-1] in output_json:    # TODO - THis is wrong logic for paths
                 raise MetaFieldDuplicate
             else:
-                output_json[self._json_path] = self._value
+                parent_node = output_json
+                for node_name in self._split_path[:-1]:
+                    try:
+                        parent_node = parent_node[node_name]
+                    except KeyError:
+                        parent_node[node_name] = {}
+                        parent_node = parent_node[node_name]
+
+                parent_node[self._split_path[-1]] = self._value
 
     def get_from_json(self, input_json: dict):
+        parent_node = input_json
+        for node_name in self._split_path[:-1]:
+            try:
+                parent_node = parent_node[node_name]
+            except KeyError:
+                if self._optionality == Optionality.MANDATORY:
+                    raise MetaFieldMissingMandatoryValue
+                else:
+                    return
         try:
-            self.set(input_json[self._json_path])
+            self.set(parent_node[self._split_path[-1]])
         except KeyError:
             if self._optionality == Optionality.MANDATORY:
                 raise MetaFieldMissingMandatoryValue

@@ -10,7 +10,7 @@ from typing import Final
 
 from src.action_space.action import Action
 from src.action_space.action_space import ActionSpace
-from src.log.meta_field import MetaField, Optionality
+from src.log.meta_field import MetaField, MetaFields, Optionality
 from src.main.version import VERSION
 
 
@@ -63,12 +63,12 @@ class LogMeta:
 
     def get_as_json(self) -> dict:
         self.guru_version.set(VERSION)
-        result = MetaField.create_json(self._fields)
+        result = MetaFields.create_json(self._fields)
         result["action_space"] = self._get_action_space_as_json_list()
         return result
 
     def set_from_json(self, received_json):
-        MetaField.parse_json(self._fields, received_json)
+        MetaFields.parse_json(self._fields, received_json)
         self.action_space = self._get_action_space_from_json(received_json)
 
     def _make_field(self, json_path: str, data_type: type, optionality: Optionality, min_value=None, max_value=None):
@@ -237,3 +237,8 @@ def assert_optional_integer_greater_than_zero(value: int):
 def assert_optional_float_inclusive_range(value: float, range1: float, range2: float):
     if value is not None:
         assert_float_inclusive_range(value, range1, range2)
+
+
+
+import sys
+print(sys.version)

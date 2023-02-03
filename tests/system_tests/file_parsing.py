@@ -1,3 +1,11 @@
+#
+# DeepRacer Guru
+#
+# Version 4.0 onwards
+#
+# Copyright (c) 2023 dmh23
+#
+
 import filecmp
 import os
 import unittest

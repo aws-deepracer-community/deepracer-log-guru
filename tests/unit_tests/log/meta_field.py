@@ -1,6 +1,15 @@
+#
+# DeepRacer Guru
+#
+# Version 4.0 onwards
+#
+# Copyright (c) 2023 dmh23
+#
+
 import unittest
 
-from src.log.meta_field import MetaField, MetaFieldWrongDatatype, Optionality, MetaFieldMissingMandatoryValue, \
+from src.log.meta_field import MetaField, MetaFields, MetaFieldWrongDatatype, Optionality, \
+    MetaFieldMissingMandatoryValue, \
     MetaFieldDuplicate, MetaFieldNumberOutOfRange
 
 
@@ -8,14 +17,14 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
     def test_simple_integer_field_output(self):
         test_integer_field = MetaField("field_1", int, Optionality.OPTIONAL)
         test_integer_field.set(10)
-        json_result = MetaField.create_json([test_integer_field])
+        json_result = MetaFields.create_json([test_integer_field])
 
         self.assertEqual(10, test_integer_field.get())
         self.assertEqual({"field_1": 10}, json_result)
 
     def test_simple_integer_field_input(self):
         test_integer_field = MetaField("field_1", int, Optionality.OPTIONAL)
-        MetaField.parse_json([test_integer_field], {"something else": 0, "field_1": 22})
+        MetaFields.parse_json([test_integer_field], {"something else": 0, "field_1": 22})
 
         self.assertEqual(22, test_integer_field.get())
 
@@ -28,7 +37,7 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         test_float_field.set(123.45)
         test_string_field.set("Hello World")
 
-        json_result = MetaField.create_json([test_integer_field, test_float_field, test_string_field])
+        json_result = MetaFields.create_json([test_integer_field, test_float_field, test_string_field])
 
         self.assertEqual(99, test_integer_field.get())
         self.assertEqual(123.45, test_float_field.get())
@@ -45,9 +54,9 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
             input_field = MetaField("field" + str(x), int, Optionality.OPTIONAL)
             input_fields.append(input_field)
 
-        json_result = MetaField.create_json(output_fields)
+        json_result = MetaFields.create_json(output_fields)
 
-        MetaField.parse_json(input_fields, json_result)
+        MetaFields.parse_json(input_fields, json_result)
 
         self.assertEqual({"field0": 0, "field1": 2, "field2": 4, "field3": 6, "field4": 8, "field5": 10}, json_result)
         expected_value = 0
@@ -60,24 +69,24 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         self.assertRaises(MetaFieldWrongDatatype, test_integer_field.set, "STRING VALUE")
         self.assertRaises(MetaFieldWrongDatatype, test_integer_field.set, 123.99)
 
-        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_integer_field], {"my_int": "STRING"})
-        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_integer_field], {"my_int": 1.2})
+        self.assertRaises(MetaFieldWrongDatatype, MetaFields.parse_json, [test_integer_field], {"my_int": "STRING"})
+        self.assertRaises(MetaFieldWrongDatatype, MetaFields.parse_json, [test_integer_field], {"my_int": 1.2})
 
     def test_string_cannot_contain_anything_else(self):
         test_string_field = MetaField("my_string", str, Optionality.OPTIONAL)
         self.assertRaises(MetaFieldWrongDatatype, test_string_field.set, 40)
         self.assertRaises(MetaFieldWrongDatatype, test_string_field.set, 123.99)
 
-        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_string_field], {"my_string": 40})
-        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_string_field], {"my_string": 9.9})
+        self.assertRaises(MetaFieldWrongDatatype, MetaFields.parse_json, [test_string_field], {"my_string": 40})
+        self.assertRaises(MetaFieldWrongDatatype, MetaFields.parse_json, [test_string_field], {"my_string": 9.9})
 
     def test_float_cannot_contain_anything_else(self):
         test_float_field = MetaField("my_float", float, Optionality.OPTIONAL)
         self.assertRaises(MetaFieldWrongDatatype, test_float_field.set, "STRING VALUE")
         self.assertRaises(MetaFieldWrongDatatype, test_float_field.set, 456)
 
-        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_float_field], {"my_float": "STRING"})
-        self.assertRaises(MetaFieldWrongDatatype, MetaField.parse_json, [test_float_field], {"my_float": 22222})
+        self.assertRaises(MetaFieldWrongDatatype, MetaFields.parse_json, [test_float_field], {"my_float": "STRING"})
+        self.assertRaises(MetaFieldWrongDatatype, MetaFields.parse_json, [test_float_field], {"my_float": 22222})
 
     def test_optionality_for_output(self):
         mandatory_field_with_value = MetaField("A", int, Optionality.MANDATORY)
@@ -88,11 +97,11 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         mandatory_field_with_value.set(10)
         optional_field_with_value.set(20)
 
-        json_result = MetaField.create_json(
+        json_result = MetaFields.create_json(
             [mandatory_field_with_value, optional_field_without_value, optional_field_with_value])
 
         self.assertEqual({"A": 10, "C": 20}, json_result)
-        self.assertRaises(MetaFieldMissingMandatoryValue, MetaField.create_json, [mandatory_field_without_value])
+        self.assertRaises(MetaFieldMissingMandatoryValue, MetaFields.create_json, [mandatory_field_without_value])
 
     def test_optionality_for_input(self):
         mandatory_field_with_value = MetaField("A", int, Optionality.MANDATORY)
@@ -101,13 +110,13 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         optional_field_without_value = MetaField("D", int, Optionality.OPTIONAL)
 
         input_json = {"A": 22, "C": 33}
-        MetaField.parse_json([mandatory_field_with_value, optional_field_without_value, optional_field_with_value],
-                             input_json)
+        MetaFields.parse_json([mandatory_field_with_value, optional_field_without_value, optional_field_with_value],
+                              input_json)
 
         self.assertEqual(22, mandatory_field_with_value.get())
         self.assertEqual(33, optional_field_with_value.get())
         self.assertIsNone(optional_field_without_value.get())
-        self.assertRaises(MetaFieldMissingMandatoryValue, MetaField.parse_json, [mandatory_field_without_value],
+        self.assertRaises(MetaFieldMissingMandatoryValue, MetaFields.parse_json, [mandatory_field_without_value],
                           input_json)
 
     def test_duplicates_not_allowed_in_output(self):
@@ -121,13 +130,13 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         field_1_with_same_datatype.set(1)
         field_2_with_different_datatype.set("two")
 
-        ok_json_1 = MetaField.create_json([field_1, field_2])
-        ok_json_2 = MetaField.create_json([field_1_with_same_datatype, field_2_with_different_datatype])
+        ok_json_1 = MetaFields.create_json([field_1, field_2])
+        ok_json_2 = MetaFields.create_json([field_1_with_same_datatype, field_2_with_different_datatype])
 
         self.assertEqual({"one": 1, "two": 2.0}, ok_json_1)
         self.assertEqual({"one": 1, "two": "two"}, ok_json_2)
-        self.assertRaises(MetaFieldDuplicate, MetaField.create_json, [field_1, field_1_with_same_datatype])
-        self.assertRaises(MetaFieldDuplicate, MetaField.create_json, [field_2, field_2_with_different_datatype])
+        self.assertRaises(MetaFieldDuplicate, MetaFields.create_json, [field_1, field_1_with_same_datatype])
+        self.assertRaises(MetaFieldDuplicate, MetaFields.create_json, [field_2, field_2_with_different_datatype])
 
     def test_range_checking_set_method(self):
         upper_bound_field = MetaField("Upper", int, Optionality.MANDATORY, None, 10)
@@ -156,9 +165,9 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         int_not_in_range = MetaField("int", int, Optionality.MANDATORY, 4, 9)
         float_not_in_range = MetaField("float", float, Optionality.MANDATORY, 912.344, 912.346)
 
-        MetaField.parse_json([int_in_range, float_in_range], input_json)
-        self.assertRaises(MetaFieldNumberOutOfRange, MetaField.parse_json, [int_not_in_range], input_json)
-        self.assertRaises(MetaFieldNumberOutOfRange, MetaField.parse_json, [float_not_in_range], input_json)
+        MetaFields.parse_json([int_in_range, float_in_range], input_json)
+        self.assertRaises(MetaFieldNumberOutOfRange, MetaFields.parse_json, [int_not_in_range], input_json)
+        self.assertRaises(MetaFieldNumberOutOfRange, MetaFields.parse_json, [float_not_in_range], input_json)
 
     def test_create_json_with_nested_structure(self):
         outer_field = MetaField("outer", int, Optionality.MANDATORY)
@@ -169,9 +178,9 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         shallow_nested_field.set(1)
         deeply_nested_field.set(3)
 
-        output_json1 = MetaField.create_json([outer_field, shallow_nested_field, deeply_nested_field])
-        output_json2 = MetaField.create_json([deeply_nested_field, outer_field, shallow_nested_field])
-        output_json3 = MetaField.create_json([shallow_nested_field])
+        output_json1 = MetaFields.create_json([outer_field, shallow_nested_field, deeply_nested_field])
+        output_json2 = MetaFields.create_json([deeply_nested_field, outer_field, shallow_nested_field])
+        output_json3 = MetaFields.create_json([shallow_nested_field])
 
         self.assertEqual(output_json1, output_json2)
         self.assertEqual({"outer": 0, "level_1": {"shallow": 1, "level_2": {"level_3": {"nested": 3}}}}, output_json1)
@@ -184,7 +193,7 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
 
         input_json = {"outer": 0, "level_1": {"shallow": 1, "level_2": {"level_3": {"nested": 3}}}}
 
-        MetaField.parse_json([outer_field, shallow_nested_field, deeply_nested_field], input_json)
+        MetaFields.parse_json([outer_field, shallow_nested_field, deeply_nested_field], input_json)
 
         self.assertEqual(0, outer_field.get())
         self.assertEqual(1, shallow_nested_field.get())
@@ -201,7 +210,7 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         inner_field.set(3)
         genuine_duplicate.set("duplicate")
 
-        output_json = MetaField.create_json([outer_field, middle_field, inner_field])
+        output_json = MetaFields.create_json([outer_field, middle_field, inner_field])
 
         self.assertEqual({"field": 1, "middle": {"field": 2, "inner": {"field": 3}}}, output_json)
-        self.assertRaises(MetaFieldDuplicate, MetaField.create_json, [genuine_duplicate, inner_field])
+        self.assertRaises(MetaFieldDuplicate, MetaFields.create_json, [genuine_duplicate, inner_field])

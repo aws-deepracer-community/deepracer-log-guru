@@ -1,7 +1,7 @@
 # Installation Instructions
 
 ## Install Python
-Download and install [Python 3.9.13](https://www.python.org/downloads/release/python-3913/)
+Download and install [Python 3.11.1](https://www.python.org/downloads/release/python-3111/)
 
 Note - If you change the install options, be sure you still install *pip* and *tkinter*:
 
@@ -11,7 +11,7 @@ Note - If you change the install options, be sure you still install *pip* and *t
 
 Download additional packages by running this command in the directory where you just installed Python:
 
-    python -m pip install matplotlib==3.3.3 numpy==1.19.3 scipy==1.6.0
+    python -m pip install matplotlib==3.6.3 numpy==1.24.1 scipy==1.10.0
     
 For example:
 

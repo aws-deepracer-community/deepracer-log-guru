@@ -3,7 +3,8 @@ from enum import Enum
 
 
 class MetaFieldWrongDatatype(Exception):
-    pass
+    def __init__(self, expected_type: type, actual_type: type, field_name: str):
+        super().__init__("Expected type <" + expected_type.__name__ + "> but received type <" + actual_type.__name__ + "> for field " + field_name)
 
 
 class MetaFieldMissingMandatoryValue(Exception):
@@ -35,6 +36,7 @@ class MetaField:
         assert(max_value is None or isinstance(max_value, data_type))
         assert(min_value is None or max_value is None or min_value < max_value)
 
+        self._field_name = json_path
         self._split_path = json_path.split(".")
         self._data_type = data_type
         self._optionality = optionality
@@ -44,7 +46,7 @@ class MetaField:
 
     def set(self, value):
         if not isinstance(value, self._data_type):
-            raise MetaFieldWrongDatatype()
+            raise MetaFieldWrongDatatype(self._data_type, type(value), self._field_name)
 
         if self._min_value is not None and value < self._min_value:
             raise MetaFieldNumberOutOfRange
@@ -59,7 +61,7 @@ class MetaField:
 
     def add_to_json(self, output_json: dict):
         if self._value is None and self._optionality == Optionality.MANDATORY:
-            raise MetaFieldMissingMandatoryValue
+            raise MetaFieldMissingMandatoryValue(self._field_name)
 
         if self._value is not None:
             parent_node = output_json

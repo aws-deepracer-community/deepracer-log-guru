@@ -6,57 +6,75 @@
 # Copyright (c) 2021 dmh23
 #
 import os
+from typing import Final
 
 from src.action_space.action import Action
 from src.action_space.action_space import ActionSpace
+from src.log.meta_field import MetaField, Optionality
 from src.main.version import VERSION
 
 
 VALID_HYPER_PARAMETER_LOSS_TYPE = ["HUBER", "MEAN_SQUARED_ERROR"]
 
+MANDATORY = Optionality.MANDATORY
+OPTIONAL = Optionality.OPTIONAL
+
 
 class LogMeta:
-    #
-    # PUBLIC interface (this whole class is basically just a data structure, so it's all public)
-    #
-
     def __init__(self):
-        self.hyper = HyperParameters()
-        self.episode_stats = LogMeta.EpisodeStats()
+        self._fields = []
+        self.guru_version: Final = self._make_field("guru_version", str, MANDATORY)
+        self.model_name: Final = self._make_field("model_name", str, MANDATORY)
+        self.world_name: Final = self._make_field("world_name", str, MANDATORY)
+        self.race_type: Final = self._make_field("race_type", str, MANDATORY)
+        self.job_type: Final = self._make_field("job_type", str, MANDATORY)
 
-        self.model_name = ""
+        self.batch_size: Final = self._make_field("hyper.batch_size", int, MANDATORY, 1, None)
+        self.learning_rate: Final = self._make_field("hyper.learning_rate", float, MANDATORY, 0.00000001, 0.001)
+        self.discount_factor: Final = self._make_field("hyper.discount_factor", float, MANDATORY, 0.0, 1.0)
+        self.loss_type: Final = self._make_field("hyper.loss_type", str, MANDATORY)
+        self.episodes_per_training_iteration: Final = self._make_field("hyper.episodes_per_training_iteration", int, MANDATORY, 1, None)
+        self.beta_entropy: Final = self._make_field("hyper.beta_entropy", float, OPTIONAL, 0.0, 1.0)
+        self.epochs: Final = self._make_field("hyper.epochs", int, OPTIONAL, 1, None)
 
-        self.world_name = ""
-        self.race_type = ""
-        self.job_type = ""
+        self.episode_count: Final = self._make_field("episode_stats.episode_count", int, MANDATORY)
+        self.iteration_count: Final = self._make_field("episode_stats.iteration_count", int, MANDATORY)
+        self.success_count: Final = self._make_field("episode_stats.success_count", int, MANDATORY)
+
+        self.average_percent_complete: Final = self._make_field("episode_stats.average_percent_complete", float, MANDATORY)
+
+        self.best_steps: Final = self._make_field("episode_stats.best_steps", int, MANDATORY)
+        self.average_steps: Final = self._make_field("episode_stats.average_steps", int, MANDATORY)
+        self.worst_steps: Final = self._make_field("episode_stats.worst_steps", int, MANDATORY)
+
+        self.best_time: Final = self._make_field("episode_stats.best_time", float, MANDATORY)
+        self.average_time: Final = self._make_field("episode_stats.average_time", float, MANDATORY)
+        self.worst_time: Final = self._make_field("episode_stats.worst_time", float, MANDATORY)
+
+        self.best_distance: Final = self._make_field("episode_stats.best_distance", float, MANDATORY)
+        self.average_distance: Final = self._make_field("episode_stats.average_distance", float, MANDATORY)
+        self.worst_distance: Final = self._make_field("episode_stats.worst_distance", float, MANDATORY)
+
+        self.best_reward: Final = self._make_field("episode_stats.best_reward", float, MANDATORY)
+        self.average_reward: Final = self._make_field("episode_stats.average_reward", float, MANDATORY)
+        self.worst_reward: Final = self._make_field("episode_stats.worst_reward", float, MANDATORY)
 
         self.action_space = ActionSpace()
 
-    def get_as_json(self):
-        new_json = dict()
-        new_json["guru_version"] = VERSION
-        new_json["model_name"] = self.model_name
-        new_json["world_name"] = self.world_name
-        new_json["race_type"] = self.race_type
-        new_json["job_type"] = self.job_type
-
-        new_json["hyper"] = self.hyper.to_json()
-        new_json["episode_stats"] = self.episode_stats.get_as_json()
-
-        new_json["action_space"] = self._get_action_space_as_json_list()
-
-        return new_json
+    def get_as_json(self) -> dict:
+        self.guru_version.set(VERSION)
+        result = MetaField.create_json(self._fields)
+        result["action_space"] = self._get_action_space_as_json_list()
+        return result
 
     def set_from_json(self, received_json):
-        self.model_name = received_json["model_name"]
-        self.world_name = received_json["world_name"]
-        self.race_type = received_json["race_type"]
-        self.job_type = received_json["job_type"]
-
-        self.hyper = HyperParameters(received_json["hyper"])
-        self.episode_stats.set_from_json(received_json["episode_stats"])
-
+        MetaField.parse_json(self._fields, received_json)
         self.action_space = self._get_action_space_from_json(received_json)
+
+    def _make_field(self, json_path: str, data_type: type, optionality: Optionality, min_value=None, max_value=None):
+        new_field = MetaField(json_path, data_type, optionality, min_value, max_value)
+        self._fields.append(new_field)
+        return new_field
 
     def _get_action_space_as_json_list(self):
         if self.action_space.is_continuous():
@@ -95,139 +113,6 @@ class LogMeta:
                                                          received_action_space["low_steering"],
                                                          received_action_space["high_steering"])
         return action_space
-
-    class EpisodeStats:
-        def __init__(self):
-            self.episode_count = 0
-            self.success_count = 0
-            self.iteration_count = 0
-
-            self.average_percent_complete = 0.0
-
-            self.best_steps = 0
-            self.average_steps = 0
-            self.worst_steps = 0
-
-            self.best_time = 0.0
-            self.average_time = 0.0
-            self.worst_time = 0.0
-
-            self.best_distance = 0.0
-            self.average_distance = 0.0
-            self.worst_distance = 0.0
-
-            self.best_reward = 0.0
-            self.average_reward = 0.0
-            self.worst_reward = 0.0
-
-        def get_as_json(self):
-            new_json = dict()
-            new_json["episode_count"] = self.episode_count
-            new_json["iteration_count"] = self.iteration_count
-            new_json["success_count"] = self.success_count
-
-            new_json["average_percent_complete"] = self.average_percent_complete
-
-            new_json["best_steps"] = self.best_steps
-            new_json["average_steps"] = self.average_steps
-            new_json["worst_steps"] = self.worst_steps
-
-            new_json["best_time"] = self.best_time
-            new_json["average_time"] = self.average_time
-            new_json["worst_time"] = self.worst_time
-
-            new_json["best_distance"] = self.best_distance
-            new_json["average_distance"] = self.average_distance
-            new_json["worst_distance"] = self.worst_distance
-
-            new_json["best_reward"] = self.best_reward
-            new_json["average_reward"] = self.average_reward
-            new_json["worst_reward"] = self.worst_reward
-
-            return new_json
-
-        def set_from_json(self, received_json):
-            self.episode_count = received_json["episode_count"]
-            self.iteration_count = received_json["iteration_count"]
-            self.success_count = received_json["success_count"]
-
-            self.average_percent_complete = received_json["average_percent_complete"]
-
-            self.best_steps = received_json["best_steps"]
-            self.average_steps = received_json["average_steps"]
-            self.worst_steps = received_json["worst_steps"]
-
-            self.best_time = received_json["best_time"]
-            self.average_time = received_json["average_time"]
-            self.worst_time = received_json["worst_time"]
-
-            self.best_distance = received_json["best_distance"]
-            self.average_distance = received_json["average_distance"]
-            self.worst_distance = received_json["worst_distance"]
-
-            self.best_reward = received_json["best_reward"]
-            self.average_reward = received_json["average_reward"]
-            self.worst_reward = received_json["worst_reward"]
-
-
-class HyperParameters:
-    _FIELD_BATCH_SIZE = "batch_size"
-    _FIELD_LEARNING_RATE = "learning_rate"
-    _FIELD_DISCOUNT_FACTOR = "discount_factor"
-    _FIELD_LOSS_TYPE = "loss_type"
-    _FIELD_EPISODES_PER_TRAINING_ITERATION = "episodes_per_training_iteration"
-    _FIELD_BETA_ENTROPY = "beta_entropy"
-    _FIELD_EPOCHS = "epochs"
-    # _FIELD_SAC_ALPHA = "sac_alpha"
-    # _FIELD_E_GREEDY_VALUE = "e_greedy_value"
-    # _FIELD_EPSILON_STEPS = "epsilon_steps"
-    # _FIELD_EXPLORATION_TYPE = "exploration_type"
-    # _FIELD_STACK_SIZE = "stack_size"
-    # _FIELD_TERMINATION_CONDITION = "termination_condition"
-
-    def __init__(self, json: dict = None):
-        if json:
-            assert (isinstance(json, dict))
-            self.batch_size = json[self._FIELD_BATCH_SIZE]
-            self.learning_rate = json[self._FIELD_LEARNING_RATE]
-            self.discount_factor = json[self._FIELD_DISCOUNT_FACTOR]
-            self.loss_type = json[self._FIELD_LOSS_TYPE]
-            self.episodes_per_training_iteration = json[self._FIELD_EPISODES_PER_TRAINING_ITERATION]
-            self.beta_entropy = json[self._FIELD_BETA_ENTROPY]
-            self.epochs = json[self._FIELD_EPOCHS]
-            self._validate()
-        else:
-            self.batch_size = None
-            self.learning_rate = None
-            self.discount_factor = None
-            self.loss_type = None
-            self.episodes_per_training_iteration = None
-            self.beta_entropy = None
-            self.epochs = None
-
-    def to_json(self) -> dict:
-        self._validate()
-        new_json = {
-            self._FIELD_BATCH_SIZE: self.batch_size,
-            self._FIELD_LEARNING_RATE: self.learning_rate,
-            self._FIELD_DISCOUNT_FACTOR: self.discount_factor,
-            self._FIELD_LOSS_TYPE: self.loss_type,
-            self._FIELD_EPISODES_PER_TRAINING_ITERATION: self.episodes_per_training_iteration
-        }
-        if self.beta_entropy is not None:
-            new_json[self._FIELD_BETA_ENTROPY] = self.beta_entropy
-        if self.epochs is not None:
-            new_json[self._FIELD_EPOCHS] = self.epochs
-        return new_json
-
-    def _validate(self):
-        assert_integer_greater_than_zero(self.batch_size)
-        assert_float_inclusive_range(self.learning_rate, 0.001, 0.00000001)
-        assert_float_inclusive_range(self.discount_factor, 0.0, 1.0)
-        assert(self.loss_type in VALID_HYPER_PARAMETER_LOSS_TYPE)
-        assert_integer_greater_than_zero(self.episodes_per_training_iteration)
-        assert_optional_float_inclusive_range(self.beta_entropy, 0.0, 1.0)
-        assert_optional_integer_greater_than_zero(self.epochs)
 
 
 class OsFileStats:

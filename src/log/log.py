@@ -15,7 +15,7 @@ import tarfile
 import src.log.parse as parse
 
 from src.log.evaluation_phase import EvaluationPhase
-from src.log.log_meta import LogMeta, LogFile
+from src.log.log_meta import LogMeta
 
 from src.episode.episode import Episode
 from src.personalize.configuration.analysis import TIME_BEFORE_FIRST_STEP
@@ -48,7 +48,7 @@ class Log:
         please_wait.start("Loading")
         self.load_meta(meta_file_name)
         self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
-        discount_factors.reset_for_log(self._log_meta.hyper.discount_factor)
+        discount_factors.reset_for_log(self._log_meta.discount_factor.get())
         please_wait.set_progress(2)
 
         if self._log_file_name.endswith(CONSOLE_LOG_SUFFIX):
@@ -250,15 +250,13 @@ class Log:
                 mid_progress_percent + i / total_episodes * (max_progress_percent - mid_progress_percent))
 
         # Override AWS id with better model name from filename if possible
-        if AWS_UID_REG_EX.match(self._log_meta.model_name):
+        if self._log_meta.model_name.get() and AWS_UID_REG_EX.match(self._log_meta.model_name.get()):
             if TRAINING_FILE_REG_EXP.search(self._log_file_name):
-                self._log_meta.model_name = TRAINING_FILE_REG_EXP.sub("", self._log_file_name)
+                self._log_meta.model_name.set(TRAINING_FILE_REG_EXP.sub("", self._log_file_name))
             else:
-                self._log_meta.model_name = re.sub("\\..*", "", self._log_file_name)
+                self._log_meta.model_name.set(re.sub("\\..*", "", self._log_file_name))
 
     def _analyze_episode_details(self):
-        self._log_meta.episode_stats.episode_count = len(self._episodes)
-
         total_success_steps = 0
         total_success_time = 0
         total_success_distance = 0.0
@@ -266,50 +264,64 @@ class Log:
 
         reward_list = []
 
+        self._log_meta.episode_count.set(len(self._episodes))
+        self._log_meta.success_count.set(0)
+        self._log_meta.iteration_count.set(0)
+
+        self._log_meta.best_steps.set(0)
+        self._log_meta.average_steps.set(0)
+        self._log_meta.worst_steps.set(0)
+
+        self._log_meta.best_time.set(0.0)
+        self._log_meta.average_time.set(0.0)
+        self._log_meta.worst_time.set(0.0)
+
+        self._log_meta.best_distance.set(0.0)
+        self._log_meta.average_distance.set(0.0)
+        self._log_meta.worst_distance.set(0.0)
+
         for e in self._episodes:
             total_percent_complete += e.percent_complete
             reward_list.append(e.total_reward)
 
             if e.lap_complete:
-                self._log_meta.episode_stats.success_count += 1
+                self._log_meta.success_count.set(self._log_meta.success_count.get() + 1)
 
                 raw_time_taken = e.time_taken - TIME_BEFORE_FIRST_STEP
                 total_success_steps += e.step_count
                 total_success_time += raw_time_taken
                 total_success_distance += e.distance_travelled
 
-                if self._log_meta.episode_stats.best_steps == 0 or \
-                        e.step_count < self._log_meta.episode_stats.best_steps:
-                    self._log_meta.episode_stats.best_steps = e.step_count
-                    self._log_meta.episode_stats.best_time = raw_time_taken
+                if self._log_meta.best_steps.get() == 0 or \
+                        e.step_count < self._log_meta.best_steps.get():
+                    self._log_meta.best_steps.set(e.step_count)
+                    self._log_meta.best_time.set(raw_time_taken)
 
-                if self._log_meta.episode_stats.worst_steps < e.step_count:
-                    self._log_meta.episode_stats.worst_steps = e.step_count
-                    self._log_meta.episode_stats.worst_time = raw_time_taken
+                if self._log_meta.worst_steps.get() < e.step_count:
+                    self._log_meta.worst_steps.set(e.step_count)
+                    self._log_meta.worst_time.set(raw_time_taken)
 
-                if self._log_meta.episode_stats.best_distance == 0.0 or \
-                        e.distance_travelled < self._log_meta.episode_stats.best_distance:
-                    self._log_meta.episode_stats.best_distance = e.distance_travelled
+                if self._log_meta.best_distance.get() == 0.0 or \
+                        e.distance_travelled < self._log_meta.best_distance.get():
+                    self._log_meta.best_distance.set(e.distance_travelled)
 
-                if self._log_meta.episode_stats.worst_distance < e.distance_travelled:
-                    self._log_meta.episode_stats.worst_distance = e.distance_travelled
+                if self._log_meta.worst_distance.get() < e.distance_travelled:
+                    self._log_meta.worst_distance.set(e.distance_travelled)
 
         if reward_list:
             r = np.array(reward_list)
-            self._log_meta.episode_stats.best_reward = np.max(r)
-            self._log_meta.episode_stats.average_reward = np.mean(r)
-            self._log_meta.episode_stats.worst_reward = np.min(r)
+            self._log_meta.best_reward.set(np.max(r))
+            self._log_meta.average_reward.set(np.mean(r))
+            self._log_meta.worst_reward.set(np.min(r))
 
-        if self._log_meta.episode_stats.success_count > 0:
-            self._log_meta.episode_stats.average_steps = int(
-                round(total_success_steps / self._log_meta.episode_stats.success_count))
-            self._log_meta.episode_stats.average_time = total_success_time / self._log_meta.episode_stats.success_count
-            self._log_meta.episode_stats.average_distance = \
-                total_success_distance / self._log_meta.episode_stats.success_count
+        if self._log_meta.success_count.get() > 0:
+            self._log_meta.average_steps.set(int(round(total_success_steps / self._log_meta.success_count.get())))
+            self._log_meta.average_time.set(total_success_time / self._log_meta.success_count.get())
+            self._log_meta.average_distance.set(total_success_distance / self._log_meta.success_count.get())
 
-        if self._log_meta.episode_stats.episode_count > 0:
-            self._log_meta.episode_stats.average_percent_complete = \
-                total_percent_complete / self._log_meta.episode_stats.episode_count
+        if self._log_meta.episode_count.get() > 0:
+            self._log_meta.average_percent_complete.set(
+                total_percent_complete / self._log_meta.episode_count.get())
 
     def _divide_episodes_into_quarters(self, please_wait: PleaseWait,
                                        min_progress_percent: float, max_progress_percent: float):

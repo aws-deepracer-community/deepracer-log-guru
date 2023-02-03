@@ -24,52 +24,52 @@ STILL_EVALUATING = "Reset agent"
 
 def parse_intro_event(line_of_text: str, log_meta: LogMeta):
     if _contains_hyper(line_of_text, HYPER_BATCH_SIZE):
-        log_meta.hyper.batch_size = _get_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE)
+        log_meta.batch_size.set(_get_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE))
 
     if _contains_hyper(line_of_text, HYPER_ENTROPY):
-        log_meta.hyper.beta_entropy = _get_hyper_float_value(line_of_text, HYPER_ENTROPY)
+        log_meta.beta_entropy.set(_get_hyper_float_value(line_of_text, HYPER_ENTROPY))
 
     if _contains_hyper(line_of_text, HYPER_DISCOUNT_FACTOR):
-        log_meta.hyper.discount_factor = _get_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR)
+        log_meta.discount_factor.set(_get_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR))
 
     if _contains_hyper(line_of_text, HYPER_LOSS_TYPE):
-        log_meta.hyper.loss_type = _get_hyper_string_value(line_of_text, HYPER_LOSS_TYPE).upper().replace(" ", "_")
+        log_meta.loss_type.set(_get_hyper_string_value(line_of_text, HYPER_LOSS_TYPE).upper().replace(" ", "_"))
 
     if _contains_hyper(line_of_text, HYPER_LEARNING_RATE):
-        log_meta.hyper.learning_rate = _get_hyper_float_value(line_of_text, HYPER_LEARNING_RATE)
+        log_meta.learning_rate.set(_get_hyper_float_value(line_of_text, HYPER_LEARNING_RATE))
 
     if _contains_hyper(line_of_text, HYPER_EPISODES_BETWEEN_TRAINING):
-        log_meta.hyper.episodes_per_training_iteration = _get_hyper_integer_value(line_of_text,
-                                                                                  HYPER_EPISODES_BETWEEN_TRAINING)
+        log_meta.episodes_per_training_iteration.set(_get_hyper_integer_value(line_of_text,
+                                                                                  HYPER_EPISODES_BETWEEN_TRAINING))
 
     if _contains_hyper(line_of_text, HYPER_EPOCHS):
-        log_meta.hyper.epochs = _get_hyper_integer_value(line_of_text, HYPER_EPOCHS)
+        log_meta.epochs.set(_get_hyper_integer_value(line_of_text, HYPER_EPOCHS))
 
     if _contains_parameter(line_of_text, PARAM_WORLD_NAME):
-        log_meta.world_name = _get_parameter_string_value(line_of_text, PARAM_WORLD_NAME)
+        log_meta.world_name.set(_get_parameter_string_value(line_of_text, PARAM_WORLD_NAME))
 
     if _contains_parameter(line_of_text, PARAM_RACE_TYPE):
-        log_meta.race_type = _get_parameter_string_value(line_of_text, PARAM_RACE_TYPE)
+        log_meta.race_type.set(_get_parameter_string_value(line_of_text, PARAM_RACE_TYPE))
 
     if _contains_parameter(line_of_text, PARAM_JOB_TYPE):
-        log_meta.job_type = _get_parameter_string_value(line_of_text, PARAM_JOB_TYPE)
+        log_meta.job_type.set(_get_parameter_string_value(line_of_text, PARAM_JOB_TYPE))
 
-    if log_meta.model_name == "":
+    if not log_meta.model_name.get():
         if line_of_text.startswith(MISC_MODEL_NAME_OLD_LOGS):
-            log_meta.model_name = line_of_text.split("/")[1]
+            log_meta.model_name.set(line_of_text.split("/")[1])
 
         if line_of_text.startswith(MISC_MODEL_NAME_NEW_LOGS_A) and \
                 not line_of_text.startswith(MISC_MODEL_NAME_OLD_LOGS):
-            log_meta.model_name = line_of_text.split("/")[2]
+            log_meta.model_name.set(line_of_text.split("/")[2])
 
         if line_of_text.startswith(MISC_MODEL_NAME_NEW_LOGS_B):
-            log_meta.model_name = line_of_text.split("/")[2]
+            log_meta.model_name.set(line_of_text.split("/")[2])
 
         if line_of_text.startswith(MISC_MODEL_NAME_CLOUD_LOGS):
             split_parts = line_of_text[len(MISC_MODEL_NAME_CLOUD_LOGS):].split("/")
             if split_parts[1].startswith(CLOUD_TRAINING_YAML_FILENAME_A) or split_parts[1].startswith(
                     CLOUD_TRAINING_YAML_FILENAME_B):
-                log_meta.model_name = re.sub("^ *", "", split_parts[0])  # Strip off leading space(s)
+                log_meta.model_name.set(re.sub("^ *", "", split_parts[0]))  # Strip off leading space(s)
 
     if line_of_text.startswith(CONTINUOUS_ACTION_SPACE_START) and CONTINUOUS_ACTION_SPACE_CONTAINS in line_of_text:
         log_meta.action_space.mark_as_continuous()

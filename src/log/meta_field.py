@@ -62,17 +62,17 @@ class MetaField:
             raise MetaFieldMissingMandatoryValue
 
         if self._value is not None:
-            if self._split_path[-1] in output_json:    # TODO - THis is wrong logic for paths
+            parent_node = output_json
+            for node_name in self._split_path[:-1]:
+                try:
+                    parent_node = parent_node[node_name]
+                except KeyError:
+                    parent_node[node_name] = {}
+                    parent_node = parent_node[node_name]
+
+            if self._split_path[-1] in parent_node:
                 raise MetaFieldDuplicate
             else:
-                parent_node = output_json
-                for node_name in self._split_path[:-1]:
-                    try:
-                        parent_node = parent_node[node_name]
-                    except KeyError:
-                        parent_node[node_name] = {}
-                        parent_node = parent_node[node_name]
-
                 parent_node[self._split_path[-1]] = self._value
 
     def get_from_json(self, input_json: dict):

@@ -190,3 +190,18 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         self.assertEqual(1, shallow_nested_field.get())
         self.assertEqual(3, deeply_nested_field.get())
 
+    def test_same_field_name_is_not_duplicate_if_in_different_nested_position(self):
+        outer_field = MetaField("field", int, Optionality.MANDATORY)
+        middle_field = MetaField("middle.field", int, Optionality.MANDATORY)
+        inner_field = MetaField("middle.inner.field", int, Optionality.MANDATORY)
+        genuine_duplicate = MetaField("middle.inner.field", str, Optionality.MANDATORY)
+
+        outer_field.set(1)
+        middle_field.set(2)
+        inner_field.set(3)
+        genuine_duplicate.set("duplicate")
+
+        output_json = MetaField.create_json([outer_field, middle_field, inner_field])
+
+        self.assertEqual({"field": 1, "middle": {"field": 2, "inner": {"field": 3}}}, output_json)
+        self.assertRaises(MetaFieldDuplicate, MetaField.create_json, [genuine_duplicate, inner_field])

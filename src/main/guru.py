@@ -382,7 +382,7 @@ class MainApp(tk.Frame):
                           self._config_manager.get_calculate_new_reward(),
                           self._config_manager.get_calculate_alternate_discount_factors())
 
-        self.status_frame.change_model_name(self.log.get_log_meta().model_name)
+        self.status_frame.change_model_name(self.log.get_log_meta().model_name.get())
         self.apply_new_action_space()
 
         reward_percentiles = RewardPercentiles(self.log.get_episodes(), self._config_manager.get_calculate_new_reward())
@@ -502,8 +502,8 @@ class MainApp(tk.Frame):
         self.reapply_episode_filter()
 
     def menu_callback_episodes_fast_laps(self):
-        es = self.log.get_log_meta().episode_stats
-        target_steps = round((es.average_steps + es.best_steps) / 2)
+        es = self.log.get_log_meta()
+        target_steps = round((es.average_steps.get() + es.best_steps.get()) / 2)
 
         self.episode_filter.reset()
         self.episode_filter.set_filter_min_percent(100)

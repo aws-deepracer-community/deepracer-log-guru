@@ -28,9 +28,9 @@ class OpenFileDialog(Dialog):
         show_laps = False
         for log in model_logs.values():
             log_meta = log.get_log_meta()
-            if log_meta.episode_stats.average_steps > 0:
-                all_best_times.append(log_meta.episode_stats.best_time + TIME_BEFORE_FIRST_STEP)
-                all_average_times.append(log_meta.episode_stats.average_time + TIME_BEFORE_FIRST_STEP)
+            if log_meta.average_steps.get() > 0:
+                all_best_times.append(log_meta.best_time.get() + TIME_BEFORE_FIRST_STEP)
+                all_average_times.append(log_meta.average_time.get() + TIME_BEFORE_FIRST_STEP)
                 show_laps = True
             all_progress_percent.append(self._get_progress_percent(log_meta))
             all_success_percent.append(self._get_success_percent(log_meta))
@@ -68,20 +68,20 @@ class OpenFileDialog(Dialog):
             progress_percent = self._get_progress_percent(log_meta)
             success_percent = self._get_success_percent(log_meta)
 
-            self._place_in_grid(row, 0, tk.Button(master, text=log_meta.model_name, command=callback), "E")
-            self._place_in_grid(row, 1, tk.Label(master, text=log_meta.race_type), "E")
-            self._place_in_grid(row, 2, tk.Label(master, text=log_meta.job_type), "E")
+            self._place_in_grid(row, 0, tk.Button(master, text=log_meta.model_name.get(), command=callback), "E")
+            self._place_in_grid(row, 1, tk.Label(master, text=log_meta.race_type.get()), "E")
+            self._place_in_grid(row, 2, tk.Label(master, text=log_meta.job_type.get()), "E")
 
-            self._place_in_grid(row, 3, self._make_large_integer_label(master, log_meta.episode_stats.episode_count))
+            self._place_in_grid(row, 3, self._make_large_integer_label(master, log_meta.episode_count.get()))
 
             self._place_in_grid(row, 4, self._make_percent_label(master, progress_percent, best_progress_percent))
             self._place_in_grid(row, 5, self._make_percent_label(master, success_percent, best_success_percent))
             if show_laps:
                 self._place_in_grid(row, 6, self._make_lap_time_label(master,
-                                                                      log_meta.episode_stats.best_time,
+                                                                      log_meta.best_time.get(),
                                                                       best_best_times))
                 self._place_in_grid(row, 7, self._make_lap_time_label(master,
-                                                                      log_meta.episode_stats.average_time,
+                                                                      log_meta.average_time.get(),
                                                                       best_average_times))
 
             row += 1
@@ -97,11 +97,11 @@ class OpenFileDialog(Dialog):
 
     @staticmethod
     def _get_progress_percent(log_meta):
-        return log_meta.episode_stats.average_percent_complete
+        return log_meta.average_percent_complete.get()
 
     @staticmethod
     def _get_success_percent(log_meta):
-        return log_meta.episode_stats.success_count / log_meta.episode_stats.episode_count * 100
+        return log_meta.success_count.get() / log_meta.episode_count.get() * 100
 
     @staticmethod
     def _make_percent_label(master, value, best_value):

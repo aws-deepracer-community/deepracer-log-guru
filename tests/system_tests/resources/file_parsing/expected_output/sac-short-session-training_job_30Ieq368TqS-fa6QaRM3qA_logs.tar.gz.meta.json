@@ -39,9 +39,10 @@
     "worst_reward": 9.105999999999996
   },
   "action_space": {
-    "low_speed": 0.5,
-    "high_speed": 1.0,
-    "low_steering": -28.0,
-    "high_steering": 30.0
+    "type": "CONTINUOUS",
+    "min_speed": 0.5,
+    "max_speed": 1.0,
+    "max_left_steering": 30.0,
+    "max_right_steering": -28.0
   }
 }

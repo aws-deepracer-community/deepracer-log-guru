@@ -66,12 +66,20 @@ class LogMeta:
         self.average_reward: Final = self._make_field("episode_stats.average_reward", float, MANDATORY)
         self.worst_reward: Final = self._make_field("episode_stats.worst_reward", float, MANDATORY)
 
+        self.action_space_type: Final = self._make_field("action_space.type", str, MANDATORY)
+        self.action_space_min_speed: Final = self._make_field("action_space.min_speed", float, MANDATORY, 0.1, 4.0)
+        self.action_space_max_speed: Final = self._make_field("action_space.max_speed", float, MANDATORY, 0.1, 4.0)
+        self.action_space_max_left_steering: Final = self._make_field("action_space.max_left_steering", float, MANDATORY, 0.0, 30.0)
+        self.action_space_max_right_steering: Final = self._make_field("action_space.max_right_steering", float, MANDATORY, -30.0, 0.0)
+
         self.action_space = ActionSpace()
 
     def get_as_json(self) -> dict:
         self.guru_version.set(VERSION)
+        self._set_meta_fields_based_on_action_space()
         result = MetaFields.create_json(self._fields)
-        result["action_space"] = self._get_action_space_as_json_list()
+        if not self.action_space.is_continuous():
+            result["action_space"]["actions"] = self._get_action_space_as_json_list()   # DISCRETE ONLY
         return result
 
     def set_from_json(self, received_json):
@@ -83,42 +91,47 @@ class LogMeta:
         self._fields.append(new_field)
         return new_field
 
-    def _get_action_space_as_json_list(self):
+    def _set_meta_fields_based_on_action_space(self):
         if self.action_space.is_continuous():
-            actions_json = dict()
             low_speed, high_speed, low_steering, high_steering = self.action_space.get_continuous_action_limits()
-            actions_json["low_speed"] = low_speed
-            actions_json["high_speed"] = high_speed
-            actions_json["low_steering"] = low_steering
-            actions_json["high_steering"] = high_steering
+            self.action_space_type.set("CONTINUOUS")
         else:
-            actions_json = []
-            a: Action
-            for a in self.action_space.get_all_actions():
-                action_json = dict()
-                action_json["speed"] = a.get_speed()
-                action_json["steering_angle"] = a.get_steering_angle()
-                action_json["index"] = a.get_index()
-                actions_json.append(action_json)
+            low_speed, high_speed, low_steering, high_steering = self.action_space.get_discrete_action_limits()
+            self.action_space_type.set("DISCRETE")
+
+        self.action_space_min_speed.set(float(low_speed))
+        self.action_space_max_speed.set(float(high_speed))
+        self.action_space_max_left_steering.set(float(high_steering))
+        self.action_space_max_right_steering.set(float(low_steering))
+
+    def _get_action_space_as_json_list(self):
+        assert(not self.action_space.is_continuous())
+
+        actions_json = []
+        a: Action
+        for a in self.action_space.get_all_actions():
+            action_json = dict()
+            action_json["speed"] = a.get_speed()
+            action_json["steering_angle"] = a.get_steering_angle()
+            actions_json.append(action_json)
 
         return actions_json
 
-    @staticmethod
-    def _get_action_space_from_json(received_json):
+    def _get_action_space_from_json(self, received_json):
         action_space = ActionSpace()
-        received_action_space = received_json["action_space"]
-        if type(received_action_space) is list:
-            for action_json in received_action_space:
+        if self.action_space_type.get() == "DISCRETE":
+            index = 0
+            for action_json in received_json["action_space"]["actions"]:
                 speed = action_json["speed"]
                 steering_angle = action_json["steering_angle"]
-                index = action_json["index"]
                 action_space.add_action(Action(index, speed, steering_angle))
+                index += 1
         else:
             action_space.mark_as_continuous()
-            action_space.define_continuous_action_limits(received_action_space["low_speed"],
-                                                         received_action_space["high_speed"],
-                                                         received_action_space["low_steering"],
-                                                         received_action_space["high_steering"])
+            action_space.define_continuous_action_limits(self.action_space_min_speed.get(),
+                                                         self.action_space_max_speed.get(),
+                                                         self.action_space_max_right_steering.get(),
+                                                         self.action_space_max_left_steering.get())
         return action_space
 
 

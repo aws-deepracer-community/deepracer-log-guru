@@ -59,6 +59,24 @@ class ActionSpace:
         (low_steering, high_steering) = self._continuous_steering
         return low_speed, high_speed, low_steering, high_steering
 
+    def get_discrete_action_limits(self):
+        assert not self._is_continuous
+        assert len(self._actions) >= 1
+
+        low_speed = self._actions[0].get_speed()
+        high_speed = low_speed
+        low_steering = 0.0
+        high_steering = 0.0
+
+        a: Action
+        for a in self._actions:
+            high_speed = max(high_speed, a.get_speed())
+            low_speed = min(low_speed, a.get_speed())
+            high_steering = max(high_steering, a.get_steering_angle())
+            low_steering = min(low_steering, a.get_steering_angle())
+
+        return low_speed, high_speed, low_steering, high_steering
+
     def get_all_actions(self):
         return self._actions
 

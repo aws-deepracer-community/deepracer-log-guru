@@ -71,7 +71,7 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
     def test_parse_training_drfc_log_tt_discrete_ppo_oct_2021(self):
         self._test_parse_file("deepracer-0_robomaker.1.ynytdrw16nuhl8y1pauseuelw.log")
 
-    def test_parse_training_console_zip_tt_continuous_ppo_sep_2022(self):
+    def test_parse_training_console_zip_tt_continuous_sac_sep_2022(self):
         self._test_parse_file("try-continuous-action-space-training_job_dY6qyhqlQi2LlSh97kPYiw_logs.tar.gz")
 
     def test_parse_training_console_zip_h2hoa_continuous_sac_jan_2023(self):

@@ -45,6 +45,27 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
     if _contains_hyper(line_of_text, HYPER_EPOCHS):
         log_meta.epochs.set(_get_hyper_integer_value(line_of_text, HYPER_EPOCHS))
 
+    if _contains_hyper(line_of_text, HYPER_SAC_ALPHA):
+        log_meta.sac_alpha.set(_get_hyper_float_value(line_of_text, HYPER_SAC_ALPHA))
+
+    if _contains_hyper(line_of_text, HYPER_GREEDY):
+        log_meta.e_greedy_value.set(_get_hyper_float_value(line_of_text, HYPER_GREEDY))
+
+    if _contains_hyper(line_of_text, HYPER_EPSILON_STEPS):
+        log_meta.epsilon_steps.set(_get_hyper_integer_value(line_of_text, HYPER_EPSILON_STEPS))
+
+    if _contains_hyper(line_of_text, HYPER_EXPLORATION_TYPE):
+        log_meta.exploration_type.set(_get_hyper_string_value(line_of_text, HYPER_EXPLORATION_TYPE))
+
+    if _contains_hyper(line_of_text, HYPER_STACK_SIZE):
+        log_meta.stack_size.set(_get_hyper_integer_value(line_of_text, HYPER_STACK_SIZE))
+
+    if _contains_hyper(line_of_text, HYPER_TERM_AVG_SCORE):
+        log_meta.termination_average_score.set(_get_hyper_float_value(line_of_text, HYPER_TERM_AVG_SCORE))
+
+    if _contains_hyper(line_of_text, HYPER_TERM_MAX_EPISODES):
+        log_meta.termination_max_episodes.set(_get_hyper_integer_value(line_of_text, HYPER_TERM_MAX_EPISODES))
+
     if _contains_parameter(line_of_text, PARAM_WORLD_NAME):
         log_meta.world_name.set(_get_parameter_string_value(line_of_text, PARAM_WORLD_NAME))
 
@@ -253,6 +274,13 @@ HYPER_LOSS_TYPE = "loss_type"
 HYPER_LEARNING_RATE = "lr"
 HYPER_EPISODES_BETWEEN_TRAINING = "num_episodes_between_training"
 HYPER_EPOCHS = "num_epochs"
+HYPER_SAC_ALPHA = "sac_alpha"
+HYPER_GREEDY = "e_greedy_value"
+HYPER_EPSILON_STEPS = "epsilon_steps"
+HYPER_EXPLORATION_TYPE = "exploration_type"
+HYPER_STACK_SIZE = "stack_size"
+HYPER_TERM_AVG_SCORE = "term_cond_avg_score"
+HYPER_TERM_MAX_EPISODES = "term_cond_max_episodes"
 
 PARAM_WORLD_NAME = "WORLD_NAME"
 PARAM_RACE_TYPE = "RACE_TYPE"

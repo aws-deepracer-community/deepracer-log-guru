@@ -4,14 +4,22 @@
   "world_name": "red_star_pro",
   "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
-  "hyper": {
+  "hyperparameters": {
     "batch_size": 512,
     "learning_rate": 5e-08,
     "discount_factor": 0.97,
     "loss_type": "HUBER",
     "episodes_per_training_iteration": 20,
     "beta_entropy": 0.001,
-    "epochs": 3
+    "epochs": 3,
+    "e_greedy_value": 0.05,
+    "epsilon_steps": 10000,
+    "exploration_type": "categorical",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 35000.0,
+      "max_episodes": 100000
+    }
   },
   "episode_stats": {
     "episode_count": 20,

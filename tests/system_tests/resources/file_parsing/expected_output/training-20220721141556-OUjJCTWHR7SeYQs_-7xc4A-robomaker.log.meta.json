@@ -4,14 +4,22 @@
   "world_name": "reinvent_base",
   "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
-  "hyper": {
+  "hyperparameters": {
     "batch_size": 128,
     "learning_rate": 2e-05,
     "discount_factor": 0.97,
     "loss_type": "HUBER",
     "episodes_per_training_iteration": 20,
     "beta_entropy": 0.002,
-    "epochs": 10
+    "epochs": 10,
+    "e_greedy_value": 0.05,
+    "epsilon_steps": 10000,
+    "exploration_type": "categorical",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 35000.0,
+      "max_episodes": 100000
+    }
   },
   "episode_stats": {
     "episode_count": 20,

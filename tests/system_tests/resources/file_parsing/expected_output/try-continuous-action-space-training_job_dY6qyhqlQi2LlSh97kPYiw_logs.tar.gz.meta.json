@@ -4,12 +4,21 @@
   "world_name": "2022_september_pro",
   "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
-  "hyper": {
+  "hyperparameters": {
     "batch_size": 64,
     "learning_rate": 0.0003,
     "discount_factor": 0.999,
     "loss_type": "MEAN_SQUARED_ERROR",
-    "episodes_per_training_iteration": 1
+    "episodes_per_training_iteration": 1,
+    "sac_alpha": 0.2,
+    "e_greedy_value": 0.05,
+    "epsilon_steps": 10000,
+    "exploration_type": "additive_noise",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 100000.0,
+      "max_episodes": 100000
+    }
   },
   "episode_stats": {
     "episode_count": 19,

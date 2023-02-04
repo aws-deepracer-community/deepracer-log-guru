@@ -14,7 +14,7 @@ import tkinter as tk
 from src.ui.please_wait import PleaseWait
 from src.log.log import Log
 
-RESOURCE_DIR = os.path.join("resources", "file_parsing")
+RESOURCE_DIR = os.path.join(os.path.dirname(__file__), "..", "resources", "file_parsing")
 INPUT_FILES_DIR = os.path.join(RESOURCE_DIR, "input_log_files")
 EXPECTED_RESULT_DIR = os.path.join(RESOURCE_DIR, "expected_output")
 
@@ -107,7 +107,3 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
 
         # Tear down
         os.remove(actual_output_file)
-
-
-if __name__ == '__main__':
-    unittest.main()

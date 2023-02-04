@@ -13,7 +13,7 @@ from src.log.meta_field import MetaField, MetaFields, MetaFieldWrongDatatype, Op
     MetaFieldDuplicate, MetaFieldNumberOutOfRange
 
 
-class TestFileParsingWithJsonOutput(unittest.TestCase):
+class TestMetaField(unittest.TestCase):
     def test_simple_integer_field_output(self):
         test_integer_field = MetaField("field_1", int, Optionality.OPTIONAL)
         test_integer_field.set(10)

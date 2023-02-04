@@ -12,6 +12,7 @@ import re
 from src.event.event_meta import Event
 from src.log.log_meta import LogMeta
 from src.action_space.action import Action
+from src.log.meta_field import MetaField
 
 #
 # PUBLIC Constants and Interface
@@ -23,48 +24,20 @@ STILL_EVALUATING = "Reset agent"
 
 
 def parse_intro_event(line_of_text: str, log_meta: LogMeta):
-    if _contains_hyper(line_of_text, HYPER_BATCH_SIZE):
-        log_meta.batch_size.set(_get_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE))
-
-    if _contains_hyper(line_of_text, HYPER_ENTROPY):
-        log_meta.beta_entropy.set(_get_hyper_float_value(line_of_text, HYPER_ENTROPY))
-
-    if _contains_hyper(line_of_text, HYPER_DISCOUNT_FACTOR):
-        log_meta.discount_factor.set(_get_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR))
-
-    if _contains_hyper(line_of_text, HYPER_LOSS_TYPE):
-        log_meta.loss_type.set(_get_hyper_string_value(line_of_text, HYPER_LOSS_TYPE).upper().replace(" ", "_"))
-
-    if _contains_hyper(line_of_text, HYPER_LEARNING_RATE):
-        log_meta.learning_rate.set(_get_hyper_float_value(line_of_text, HYPER_LEARNING_RATE))
-
-    if _contains_hyper(line_of_text, HYPER_EPISODES_BETWEEN_TRAINING):
-        log_meta.episodes_per_training_iteration.set(_get_hyper_integer_value(line_of_text,
-                                                                                  HYPER_EPISODES_BETWEEN_TRAINING))
-
-    if _contains_hyper(line_of_text, HYPER_EPOCHS):
-        log_meta.epochs.set(_get_hyper_integer_value(line_of_text, HYPER_EPOCHS))
-
-    if _contains_hyper(line_of_text, HYPER_SAC_ALPHA):
-        log_meta.sac_alpha.set(_get_hyper_float_value(line_of_text, HYPER_SAC_ALPHA))
-
-    if _contains_hyper(line_of_text, HYPER_GREEDY):
-        log_meta.e_greedy_value.set(_get_hyper_float_value(line_of_text, HYPER_GREEDY))
-
-    if _contains_hyper(line_of_text, HYPER_EPSILON_STEPS):
-        log_meta.epsilon_steps.set(_get_hyper_integer_value(line_of_text, HYPER_EPSILON_STEPS))
-
-    if _contains_hyper(line_of_text, HYPER_EXPLORATION_TYPE):
-        log_meta.exploration_type.set(_get_hyper_string_value(line_of_text, HYPER_EXPLORATION_TYPE))
-
-    if _contains_hyper(line_of_text, HYPER_STACK_SIZE):
-        log_meta.stack_size.set(_get_hyper_integer_value(line_of_text, HYPER_STACK_SIZE))
-
-    if _contains_hyper(line_of_text, HYPER_TERM_AVG_SCORE):
-        log_meta.termination_average_score.set(_get_hyper_float_value(line_of_text, HYPER_TERM_AVG_SCORE))
-
-    if _contains_hyper(line_of_text, HYPER_TERM_MAX_EPISODES):
-        log_meta.termination_max_episodes.set(_get_hyper_integer_value(line_of_text, HYPER_TERM_MAX_EPISODES))
+    _get_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE, log_meta.batch_size)
+    _get_hyper_float_value(line_of_text, HYPER_ENTROPY, log_meta.beta_entropy)
+    _get_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR, log_meta.discount_factor)
+    _get_hyper_string_value(line_of_text, HYPER_LOSS_TYPE, log_meta.loss_type)
+    _get_hyper_float_value(line_of_text, HYPER_LEARNING_RATE, log_meta.learning_rate)
+    _get_hyper_integer_value(line_of_text, HYPER_EPISODES_BETWEEN_TRAINING, log_meta.episodes_per_training_iteration)
+    _get_hyper_integer_value(line_of_text, HYPER_EPOCHS, log_meta.epochs)
+    _get_hyper_float_value(line_of_text, HYPER_SAC_ALPHA, log_meta.sac_alpha)
+    _get_hyper_float_value(line_of_text, HYPER_GREEDY, log_meta.e_greedy_value)
+    _get_hyper_integer_value(line_of_text, HYPER_EPSILON_STEPS, log_meta.epsilon_steps)
+    _get_hyper_string_value(line_of_text, HYPER_EXPLORATION_TYPE, log_meta.exploration_type)
+    _get_hyper_integer_value(line_of_text, HYPER_STACK_SIZE, log_meta.stack_size)
+    _get_hyper_float_value(line_of_text, HYPER_TERM_AVG_SCORE, log_meta.termination_average_score)
+    _get_hyper_integer_value(line_of_text, HYPER_TERM_MAX_EPISODES, log_meta.termination_max_episodes)
 
     if _contains_parameter(line_of_text, PARAM_WORLD_NAME):
         log_meta.world_name.set(_get_parameter_string_value(line_of_text, PARAM_WORLD_NAME))
@@ -336,19 +309,22 @@ def _contains_hyper(line_of_text: str, hyper_name: str):
     return line_of_text.startswith('  "' + hyper_name + '": ')
 
 
-def _get_hyper_integer_value(line_of_text: str, hyper_name: str):
-    chop_chars = len(hyper_name) + 6
-    return int(line_of_text[chop_chars:].split(",")[0])
+def _get_hyper_integer_value(line_of_text: str, hyper_name: str, meta_field: MetaField):
+    if _contains_hyper(line_of_text, hyper_name):
+        chop_chars = len(hyper_name) + 6
+        meta_field.set(int(line_of_text[chop_chars:].split(",")[0]))
 
 
-def _get_hyper_float_value(line_of_text: str, hyper_name: str):
-    chop_chars = len(hyper_name) + 6
-    return float(line_of_text[chop_chars:].split(",")[0])
+def _get_hyper_float_value(line_of_text: str, hyper_name: str, meta_field: MetaField):
+    if _contains_hyper(line_of_text, hyper_name):
+        chop_chars = len(hyper_name) + 6
+        meta_field.set(float(line_of_text[chop_chars:].split(",")[0]))
 
 
-def _get_hyper_string_value(line_of_text: str, hyper_name: str):
-    chop_chars = len(hyper_name) + 6
-    return line_of_text[chop_chars:].split('"')[1]
+def _get_hyper_string_value(line_of_text: str, hyper_name: str, meta_field: MetaField):
+    if _contains_hyper(line_of_text, hyper_name):
+        chop_chars = len(hyper_name) + 6
+        meta_field.set(line_of_text[chop_chars:].split('"')[1].upper().replace(" ", "_"))
 
 
 # Parse the high level training settings

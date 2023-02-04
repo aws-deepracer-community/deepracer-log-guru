@@ -14,7 +14,7 @@
     "epochs": 10,
     "e_greedy_value": 0.05,
     "epsilon_steps": 10000,
-    "exploration_type": "categorical",
+    "exploration_type": "CATEGORICAL",
     "stack_size": 1,
     "termination_condition": {
       "average_score": 35000.0,

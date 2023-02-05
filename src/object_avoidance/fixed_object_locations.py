@@ -29,5 +29,10 @@ class FixedObjectLocations:
             objects_json.append({"percent": location.percent, "lane": location.lane.name})
         return objects_json
 
-    def set_from_meta_json_list(self):
-        pass    # TODO
+    def set_from_meta_json_list(self, received_json: dict):
+        for location in received_json:
+            if location["lane"] == "OUTSIDE":
+                lane = Lane.OUTSIDE
+            else:
+                lane = Lane.INSIDE
+            self.add(FixedObjectLocation(location["percent"], lane))

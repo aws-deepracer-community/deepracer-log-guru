@@ -11,6 +11,7 @@ import os
 import unittest
 import tkinter as tk
 
+from log.log_meta import LogMeta
 from src.ui.please_wait import PleaseWait
 from src.log.log import Log
 
@@ -109,12 +110,21 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         please_wait = DummyPleaseWait()
         log = Log(INPUT_FILES_DIR)
         log.parse(filename, please_wait, 10, 20)
+        original_json = log.get_log_meta().get_as_json()
         log.get_log_meta().file_ctime.set(123.456)
         log.get_log_meta().file_mtime.set(1234.5678)
         log.save()
 
+        # As well as seeing if the JSON that is written is correctly, we can use same JSON to test whether the
+        # transfer between JSON and LogMeta is perfectly symmetrical
+        log_meta_copy = LogMeta()
+        log_meta_copy.set_from_json(original_json)
+        derived_copy_of_json = log_meta_copy.get_as_json()
+
         # Verify
         self.assertTrue(filecmp.cmp(expected_output_file, actual_output_file, shallow=False), "Incorrect output JSON")
+        self.assertEqual(original_json, derived_copy_of_json)
 
         # Tear down
         os.remove(actual_output_file)
+

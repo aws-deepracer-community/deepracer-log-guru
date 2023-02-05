@@ -122,10 +122,12 @@ class LogMeta:
 
         return result
 
-    def set_from_json(self, received_json):
+    def set_from_json(self, received_json: dict):
         MetaFields.parse_json(self._fields, received_json)
         self.action_space = self._get_action_space_from_json(received_json)
-        self.fixed_object_locations.set_from_meta_json_list()
+        if "object_avoidance" in received_json["race"]:
+            if "fixed_locations" in received_json["race"]["object_avoidance"]:
+                self.fixed_object_locations.set_from_meta_json_list(received_json["race"]["object_avoidance"]["fixed_locations"])
 
     def _make_field(self, json_path: str, data_type: type, optionality: Optionality, min_value=None, max_value=None):
         new_field = MetaField(json_path, data_type, optionality, min_value, max_value)

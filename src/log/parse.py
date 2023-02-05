@@ -40,10 +40,15 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
     _get_hyper_integer_value(line_of_text, HYPER_TERM_MAX_EPISODES, log_meta.termination_max_episodes)
 
     _get_parameter_string_value(line_of_text, PARAM_WORLD_NAME, log_meta.world_name)
+    _get_parameter_string_value(line_of_text, PARAM_JOB_TYPE, log_meta.job_type)
+
     _get_parameter_string_value(line_of_text, PARAM_RACE_TYPE, log_meta.race_type, {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD"})
+
     _get_parameter_integer_value(line_of_text, PARAM_OA_NUMBER_OF_OBSTACLES, log_meta.oa_number)
     _get_parameter_boolean_value(line_of_text, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS, log_meta.oa_randomize)
-    _get_parameter_string_value(line_of_text, PARAM_JOB_TYPE, log_meta.job_type)
+
+    _get_parameter_integer_value(line_of_text, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number)
+    _get_parameter_float_value(line_of_text, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)
 
     if not log_meta.model_name.get():
         if line_of_text.startswith(MISC_MODEL_NAME_OLD_LOGS):
@@ -259,6 +264,9 @@ PARAM_JOB_TYPE = "JOB_TYPE"
 PARAM_OA_NUMBER_OF_OBSTACLES = "NUMBER_OF_OBSTACLES"
 PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS = "RANDOMIZE_OBSTACLE_LOCATIONS"
 
+PARAM_H2H_NUMBER_OF_BOT_CARS = "NUMBER_OF_BOT_CARS"
+PARAM_H2H_BOT_CAR_SPEED = "BOT_CAR_SPEED"
+
 MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-metadata/"
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
 MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
@@ -351,6 +359,12 @@ def _get_parameter_integer_value(line_of_text: str, parameter_name: str, meta_fi
     if _contains_parameter(line_of_text, parameter_name):
         chop_chars = len(parameter_name) + 6
         meta_field.set(int(line_of_text[chop_chars:]))
+
+
+def _get_parameter_float_value(line_of_text: str, parameter_name: str, meta_field: MetaField):
+    if _contains_parameter(line_of_text, parameter_name):
+        chop_chars = len(parameter_name) + 6
+        meta_field.set(float(line_of_text[chop_chars:]))
 
 
 def _get_parameter_boolean_value(line_of_text: str, parameter_name: str, meta_field: MetaField):

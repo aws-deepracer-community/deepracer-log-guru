@@ -17,6 +17,10 @@
     "object_avoidance": {
       "number": 2,
       "randomize_locations": true
+    },
+    "head_to_head": {
+      "number": 3,
+      "speed": 2.0
     }
   },
   "hyperparameters": {

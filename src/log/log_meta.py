@@ -34,8 +34,12 @@ class LogMeta:
         self.file_mtime = self._make_field("log_file.os_stats.mtime", float, MANDATORY)
 
         self.race_type: Final = self._make_field("race.type", str, MANDATORY)
+
         self.oa_number: Final = self._make_field("race.object_avoidance.number", int, OPTIONAL, 1, None)
         self.oa_randomize: Final = self._make_field("race.object_avoidance.randomize_locations", bool, OPTIONAL)
+
+        self.h2h_number: Final = self._make_field("race.head_to_head.number", int, OPTIONAL, 1, None)
+        self.h2h_speed: Final = self._make_field("race.head_to_head.speed", float, OPTIONAL, 0.0, 4.0)
 
         self.batch_size: Final = self._make_field("hyperparameters.batch_size", int, OPTIONAL, 1, None)
         self.learning_rate: Final = self._make_field("hyperparameters.learning_rate", float, OPTIONAL, 0.00000001,

@@ -10,7 +10,7 @@ import unittest
 
 from src.log.meta_field import MetaField, MetaFields, MetaFieldWrongDatatype, Optionality, \
     MetaFieldMissingMandatoryValue, \
-    MetaFieldDuplicate, MetaFieldNumberOutOfRange
+    MetaFieldDuplicate, MetaFieldNumberOutOfRange, MetaFieldInvalidValue
 
 
 class TestMetaField(unittest.TestCase):
@@ -214,3 +214,13 @@ class TestMetaField(unittest.TestCase):
 
         self.assertEqual({"field": 1, "middle": {"field": 2, "inner": {"field": 3}}}, output_json)
         self.assertRaises(MetaFieldDuplicate, MetaFields.create_json, [genuine_duplicate, inner_field])
+
+    def test_allowed_values(self):
+        field = MetaField("field", str, Optionality.MANDATORY)
+        field.set_allowed_values(["One", "Two"])
+
+        field.set("One")
+        field.set("Two")
+        self.assertRaises(MetaFieldInvalidValue, field.set, "Three")
+
+

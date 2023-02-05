@@ -12,9 +12,16 @@ from enum import Enum
 
 class MetaFieldWrongDatatype(Exception):
     def __init__(self, expected_type: type, actual_type: type, field_name: str):
-        super().__init__("Expected type <{}> but received type <{}> for field {}".format(expected_type.__name__,
+        super().__init__("Expected type <{}> but received type <{}> for field <{}>".format(expected_type.__name__,
                                                                                          actual_type.__name__,
                                                                                          field_name))
+
+
+class MetaFieldInvalidValue(Exception):
+    def __init__(self, allowed_values: list, actual_value, field_name: str):
+        super().__init__(
+            "Expected one of values {} but received value <{}> for field <{}>".format(allowed_values, actual_value,
+                                                                                      field_name))
 
 
 class MetaFieldMissingMandatoryValue(Exception):
@@ -53,6 +60,11 @@ class MetaField:
         self._min_value = min_value
         self._max_value = max_value
         self._value = None
+        self._allowed_values = None
+
+    def set_allowed_values(self, allowed_values: list):
+        assert (self._value is None and self._allowed_values is None)
+        self._allowed_values = allowed_values
 
     def set(self, value):
         if not isinstance(value, self._data_type):
@@ -63,6 +75,9 @@ class MetaField:
 
         if self._max_value is not None and value > self._max_value:
             raise MetaFieldNumberOutOfRange
+
+        if self._allowed_values is not None and value not in self._allowed_values:
+            raise MetaFieldInvalidValue(self._allowed_values, value, self._field_name)
 
         self._value = value
 

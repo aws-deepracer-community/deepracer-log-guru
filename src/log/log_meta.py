@@ -27,6 +27,7 @@ class LogMeta:
         self.model_name: Final = self._make_field("model_name", str, MANDATORY)
         self.world_name: Final = self._make_field("world_name", str, MANDATORY)
         self.job_type: Final = self._make_field("job_type", str, MANDATORY)
+        self.job_type.set_allowed_values(["TRAINING"])
 
         self.file_name = self._make_field("log_file.name", str, MANDATORY)
         self.file_uid = self._make_field("log_file.os_stats.uid", int, MANDATORY)
@@ -35,11 +36,13 @@ class LogMeta:
         self.file_mtime = self._make_field("log_file.os_stats.mtime", float, MANDATORY)
 
         self.race_type: Final = self._make_field("race.type", str, MANDATORY)
+        self.race_type.set_allowed_values(["TIME_TRIAL", "OBJECT_AVOIDANCE", "HEAD_TO_HEAD"])
 
         self.oa_number: Final = self._make_field("race.object_avoidance.number", int, OPTIONAL, 1, None)
         self.oa_min_distance_between: Final = self._make_field("race.object_avoidance.min_distance_between", float, OPTIONAL, 0.0, None)
         self.oa_randomize: Final = self._make_field("race.object_avoidance.randomize_locations", bool, OPTIONAL)
         self.oa_type: Final = self._make_field("race.object_avoidance.type", str, OPTIONAL)
+        self.oa_type.set_allowed_values(["BROWN_BOX", "PURPLE_BOX", "BOT_CAR"])
 
         self.h2h_number: Final = self._make_field("race.head_to_head.number", int, OPTIONAL, 1, None)
         self.h2h_speed: Final = self._make_field("race.head_to_head.speed", float, OPTIONAL, 0.0, 4.0)
@@ -49,6 +52,7 @@ class LogMeta:
                                                      0.001)
         self.discount_factor: Final = self._make_field("hyperparameters.discount_factor", float, OPTIONAL, 0.0, 1.0)
         self.loss_type: Final = self._make_field("hyperparameters.loss_type", str, OPTIONAL)
+        self.loss_type.set_allowed_values(["HUBER", "MEAN_SQUARED_ERROR"])
         self.episodes_per_training_iteration: Final = self._make_field(
             "hyperparameters.episodes_per_training_iteration", int, OPTIONAL, 1, None)
         self.beta_entropy: Final = self._make_field("hyperparameters.beta_entropy", float, OPTIONAL, 0.0, 1.0)
@@ -57,6 +61,7 @@ class LogMeta:
         self.e_greedy_value: Final = self._make_field("hyperparameters.e_greedy_value", float, OPTIONAL, 0.0, None)
         self.epsilon_steps: Final = self._make_field("hyperparameters.epsilon_steps", int, OPTIONAL, 1, None)
         self.exploration_type: Final = self._make_field("hyperparameters.exploration_type", str, OPTIONAL)
+        self.exploration_type.set_allowed_values(["CATEGORICAL", "ADDITIVE_NOISE"])
         self.stack_size: Final = self._make_field("hyperparameters.stack_size", int, OPTIONAL, 1, None)
         self.termination_average_score: Final = self._make_field("hyperparameters.termination_condition.average_score",
                                                                  float, OPTIONAL, 0.0, None)
@@ -87,6 +92,7 @@ class LogMeta:
         self.worst_reward: Final = self._make_field("episode_stats.worst_reward", float, MANDATORY)
 
         self.action_space_type: Final = self._make_field("action_space.type", str, MANDATORY)
+        self.action_space_type.set_allowed_values(["DISCRETE", "CONTINUOUS"])
         self.action_space_min_speed: Final = self._make_field("action_space.min_speed", float, MANDATORY, 0.1, 4.0)
         self.action_space_max_speed: Final = self._make_field("action_space.max_speed", float, MANDATORY, 0.1, 4.0)
         self.action_space_max_left_steering: Final = self._make_field("action_space.max_left_steering", float,

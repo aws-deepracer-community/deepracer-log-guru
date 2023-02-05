@@ -4,6 +4,15 @@
   "world_name": "2022_reinvent_champ",
   "race_type": "HEAD_TO_HEAD_RACING",
   "job_type": "TRAINING",
+  "log_file": {
+    "name": "head-to-head-short-session-training_job_O-uWGmcTSAyrIj9X2PFXxQ_logs.tar.gz",
+    "os_stats": {
+      "uid": 0,
+      "size": 25740,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
   "hyperparameters": {
     "batch_size": 64,
     "learning_rate": 0.0003,

@@ -4,6 +4,15 @@
   "world_name": "reInvent2019_track",
   "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
+  "log_file": {
+    "name": "dmh-mars-v14-proto-ChampCup-g-training_job_GjvAD1blTUaYAeW79EQEBQ_logs.tar.gz",
+    "os_stats": {
+      "uid": 0,
+      "size": 5086633,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
   "hyperparameters": {
     "batch_size": 128,
     "learning_rate": 1e-05,

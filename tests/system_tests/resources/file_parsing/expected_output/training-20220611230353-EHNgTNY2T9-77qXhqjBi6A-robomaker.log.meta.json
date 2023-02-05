@@ -4,6 +4,15 @@
   "world_name": "reinvent_base",
   "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
+  "log_file": {
+    "name": "training-20220611230353-EHNgTNY2T9-77qXhqjBi6A-robomaker.log",
+    "os_stats": {
+      "uid": 0,
+      "size": 5707542,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
   "hyperparameters": {
     "batch_size": 64,
     "learning_rate": 0.0003,

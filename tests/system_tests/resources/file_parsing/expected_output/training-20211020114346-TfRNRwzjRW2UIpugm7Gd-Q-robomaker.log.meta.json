@@ -4,6 +4,15 @@
   "world_name": "red_star_pro",
   "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
+  "log_file": {
+    "name": "training-20211020114346-TfRNRwzjRW2UIpugm7Gd-Q-robomaker.log",
+    "os_stats": {
+      "uid": 0,
+      "size": 657485,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
   "hyperparameters": {
     "batch_size": 512,
     "learning_rate": 5e-08,

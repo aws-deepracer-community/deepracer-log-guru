@@ -4,6 +4,15 @@
   "world_name": "2022_july_pro",
   "race_type": "OBJECT_AVOIDANCE",
   "job_type": "TRAINING",
+  "log_file": {
+    "name": "deepracer-0_robomaker.1.vpbdhdkgumibcp5eye7f60xyg.log",
+    "os_stats": {
+      "uid": 0,
+      "size": 11976801,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
   "hyperparameters": {
     "batch_size": 512,
     "learning_rate": 2e-05,

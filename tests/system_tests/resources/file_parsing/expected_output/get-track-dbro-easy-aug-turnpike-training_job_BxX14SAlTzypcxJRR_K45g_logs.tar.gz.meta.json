@@ -4,6 +4,15 @@
   "world_name": "2022_august_open",
   "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
+  "log_file": {
+    "name": "get-track-dbro-easy-aug-turnpike-training_job_BxX14SAlTzypcxJRR_K45g_logs.tar.gz",
+    "os_stats": {
+      "uid": 0,
+      "size": 169834,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
   "hyperparameters": {
     "batch_size": 64,
     "learning_rate": 0.0003,

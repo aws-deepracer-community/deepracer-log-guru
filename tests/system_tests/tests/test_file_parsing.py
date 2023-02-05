@@ -100,6 +100,8 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         please_wait = DummyPleaseWait()
         log = Log(INPUT_FILES_DIR)
         log.parse(filename, please_wait, 10, 20)
+        log.get_log_meta().file_ctime.set(123.456)
+        log.get_log_meta().file_mtime.set(1234.5678)
         log.save()
 
         # Verify

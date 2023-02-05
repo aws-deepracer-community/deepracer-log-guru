@@ -29,6 +29,12 @@ class LogMeta:
         self.race_type: Final = self._make_field("race_type", str, MANDATORY)
         self.job_type: Final = self._make_field("job_type", str, MANDATORY)
 
+        self.file_name = self._make_field("log_file.name", str, MANDATORY)
+        self.file_uid = self._make_field("log_file.os_stats.uid", int, MANDATORY)
+        self.file_size = self._make_field("log_file.os_stats.size", int, MANDATORY)
+        self.file_ctime = self._make_field("log_file.os_stats.ctime", float, MANDATORY)
+        self.file_mtime = self._make_field("log_file.os_stats.mtime", float, MANDATORY)
+
         self.batch_size: Final = self._make_field("hyperparameters.batch_size", int, OPTIONAL, 1, None)
         self.learning_rate: Final = self._make_field("hyperparameters.learning_rate", float, OPTIONAL, 0.00000001, 0.001)
         self.discount_factor: Final = self._make_field("hyperparameters.discount_factor", float, OPTIONAL, 0.0, 1.0)
@@ -73,6 +79,20 @@ class LogMeta:
         self.action_space_max_right_steering: Final = self._make_field("action_space.max_right_steering", float, MANDATORY, -30.0, 0.0)
 
         self.action_space = ActionSpace()
+
+    def set_file_os_stats(self, stat_result: os.stat_result) -> None:
+        self.file_uid.set(stat_result.st_uid)
+        self.file_size.set(stat_result.st_size)
+        self.file_mtime.set(stat_result.st_mtime)
+        self.file_ctime.set(stat_result.st_ctime)
+
+    def matches_os_stats(self, stat_result: os.stat_result) -> bool:
+        return (
+                stat_result.st_uid == self.file_uid.get() and
+                stat_result.st_size == self.file_size.get() and
+                stat_result.st_mtime == self.file_mtime.get() and
+                stat_result.st_ctime == self.file_ctime.get()
+        )
 
     def get_as_json(self) -> dict:
         self.guru_version.set(VERSION)

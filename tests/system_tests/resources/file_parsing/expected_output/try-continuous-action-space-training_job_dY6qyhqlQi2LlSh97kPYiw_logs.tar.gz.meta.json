@@ -4,6 +4,15 @@
   "world_name": "2022_september_pro",
   "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
+  "log_file": {
+    "name": "try-continuous-action-space-training_job_dY6qyhqlQi2LlSh97kPYiw_logs.tar.gz",
+    "os_stats": {
+      "uid": 0,
+      "size": 66719,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
   "hyperparameters": {
     "batch_size": 64,
     "learning_rate": 0.0003,

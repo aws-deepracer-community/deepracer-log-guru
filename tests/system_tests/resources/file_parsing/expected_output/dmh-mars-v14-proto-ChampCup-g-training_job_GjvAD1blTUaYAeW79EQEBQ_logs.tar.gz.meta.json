@@ -2,7 +2,6 @@
   "guru_version": "4.0.0",
   "model_name": "dmh-mars-v14-proto-ChampCup-g",
   "world_name": "reInvent2019_track",
-  "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
   "log_file": {
     "name": "dmh-mars-v14-proto-ChampCup-g-training_job_GjvAD1blTUaYAeW79EQEBQ_logs.tar.gz",
@@ -12,6 +11,9 @@
       "ctime": 123.456,
       "mtime": 1234.5678
     }
+  },
+  "race": {
+    "type": "TIME_TRIAL"
   },
   "hyperparameters": {
     "batch_size": 128,

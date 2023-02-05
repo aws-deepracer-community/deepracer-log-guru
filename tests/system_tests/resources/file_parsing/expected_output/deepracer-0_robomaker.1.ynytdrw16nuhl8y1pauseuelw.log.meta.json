@@ -2,7 +2,6 @@
   "guru_version": "4.0.0",
   "model_name": "dmh-Oct-C-157",
   "world_name": "red_star_pro",
-  "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
   "log_file": {
     "name": "deepracer-0_robomaker.1.ynytdrw16nuhl8y1pauseuelw.log",
@@ -12,6 +11,9 @@
       "ctime": 123.456,
       "mtime": 1234.5678
     }
+  },
+  "race": {
+    "type": "TIME_TRIAL"
   },
   "hyperparameters": {
     "batch_size": 512,

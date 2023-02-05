@@ -2,7 +2,6 @@
   "guru_version": "4.0.0",
   "model_name": "hands-free-July-OA-Q-08",
   "world_name": "2022_july_pro",
-  "race_type": "OBJECT_AVOIDANCE",
   "job_type": "TRAINING",
   "log_file": {
     "name": "deepracer-0_robomaker.1.vpbdhdkgumibcp5eye7f60xyg.log",
@@ -11,6 +10,13 @@
       "size": 11976801,
       "ctime": 123.456,
       "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "OBJECT_AVOIDANCE",
+    "object_avoidance": {
+      "number": 6,
+      "randomize_locations": true
     }
   },
   "hyperparameters": {

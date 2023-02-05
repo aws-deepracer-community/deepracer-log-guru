@@ -2,7 +2,6 @@
   "guru_version": "4.0.0",
   "model_name": "try-continuous-action-space",
   "world_name": "2022_september_pro",
-  "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
   "log_file": {
     "name": "try-continuous-action-space-training_job_dY6qyhqlQi2LlSh97kPYiw_logs.tar.gz",
@@ -12,6 +11,9 @@
       "ctime": 123.456,
       "mtime": 1234.5678
     }
+  },
+  "race": {
+    "type": "TIME_TRIAL"
   },
   "hyperparameters": {
     "batch_size": 64,

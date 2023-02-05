@@ -26,7 +26,6 @@ class LogMeta:
         self.guru_version: Final = self._make_field("guru_version", str, MANDATORY)
         self.model_name: Final = self._make_field("model_name", str, MANDATORY)
         self.world_name: Final = self._make_field("world_name", str, MANDATORY)
-        self.race_type: Final = self._make_field("race_type", str, MANDATORY)
         self.job_type: Final = self._make_field("job_type", str, MANDATORY)
 
         self.file_name = self._make_field("log_file.name", str, MANDATORY)
@@ -34,6 +33,10 @@ class LogMeta:
         self.file_size = self._make_field("log_file.os_stats.size", int, MANDATORY)
         self.file_ctime = self._make_field("log_file.os_stats.ctime", float, MANDATORY)
         self.file_mtime = self._make_field("log_file.os_stats.mtime", float, MANDATORY)
+
+        self.race_type: Final = self._make_field("race.type", str, MANDATORY)
+        self.oa_number: Final = self._make_field("race.object_avoidance.number", int, OPTIONAL, 1, None)
+        self.oa_randomize: Final = self._make_field("race.object_avoidance.randomize_locations", bool, OPTIONAL)
 
         self.batch_size: Final = self._make_field("hyperparameters.batch_size", int, OPTIONAL, 1, None)
         self.learning_rate: Final = self._make_field("hyperparameters.learning_rate", float, OPTIONAL, 0.00000001, 0.001)

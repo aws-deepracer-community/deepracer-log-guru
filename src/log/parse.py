@@ -43,7 +43,13 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
         log_meta.world_name.set(_get_parameter_string_value(line_of_text, PARAM_WORLD_NAME))
 
     if _contains_parameter(line_of_text, PARAM_RACE_TYPE):
-        log_meta.race_type.set(_get_parameter_string_value(line_of_text, PARAM_RACE_TYPE))
+        log_meta.race_type.set(_get_parameter_string_value(line_of_text, PARAM_RACE_TYPE, {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD"}))
+
+    if _contains_parameter(line_of_text, PARAM_OA_NUMBER_OF_OBSTACLES):
+        log_meta.oa_number.set(_get_parameter_integer_value(line_of_text, PARAM_OA_NUMBER_OF_OBSTACLES))
+
+    if _contains_parameter(line_of_text, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS):
+        log_meta.oa_randomize.set(_get_parameter_boolean_value(line_of_text, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS))
 
     if _contains_parameter(line_of_text, PARAM_JOB_TYPE):
         log_meta.job_type.set(_get_parameter_string_value(line_of_text, PARAM_JOB_TYPE))
@@ -259,6 +265,9 @@ PARAM_WORLD_NAME = "WORLD_NAME"
 PARAM_RACE_TYPE = "RACE_TYPE"
 PARAM_JOB_TYPE = "JOB_TYPE"
 
+PARAM_OA_NUMBER_OF_OBSTACLES = "NUMBER_OF_OBSTACLES"
+PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS = "RANDOMIZE_OBSTACLE_LOCATIONS"
+
 MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-metadata/"
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
 MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
@@ -333,6 +342,20 @@ def _contains_parameter(line_of_text: str, parameter_name: str):
     return line_of_text.startswith(" * /" + parameter_name + ": ")
 
 
-def _get_parameter_string_value(line_of_text: str, parameter_name: str):
+def _get_parameter_string_value(line_of_text: str, parameter_name: str, replacements: dict = None):
     chop_chars = len(parameter_name) + 6
-    return line_of_text[chop_chars:].split("\n")[0]
+    value = line_of_text[chop_chars:].split("\n")[0]
+    if replacements is not None and value in replacements:
+        return replacements[value]
+    else:
+        return value
+
+
+def _get_parameter_integer_value(line_of_text: str, parameter_name: str):
+    chop_chars = len(parameter_name) + 6
+    return int(line_of_text[chop_chars:])
+
+
+def _get_parameter_boolean_value(line_of_text: str, parameter_name: str):
+    chop_chars = len(parameter_name) + 6
+    return bool(line_of_text[chop_chars:])

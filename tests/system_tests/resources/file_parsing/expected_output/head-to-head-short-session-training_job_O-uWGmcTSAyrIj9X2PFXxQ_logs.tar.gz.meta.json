@@ -2,7 +2,6 @@
   "guru_version": "4.0.0",
   "model_name": "head-to-head-short-session",
   "world_name": "2022_reinvent_champ",
-  "race_type": "HEAD_TO_HEAD_RACING",
   "job_type": "TRAINING",
   "log_file": {
     "name": "head-to-head-short-session-training_job_O-uWGmcTSAyrIj9X2PFXxQ_logs.tar.gz",
@@ -11,6 +10,13 @@
       "size": 25740,
       "ctime": 123.456,
       "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "HEAD_TO_HEAD",
+    "object_avoidance": {
+      "number": 2,
+      "randomize_locations": true
     }
   },
   "hyperparameters": {

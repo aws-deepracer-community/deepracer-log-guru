@@ -2,7 +2,6 @@
   "guru_version": "4.0.0",
   "model_name": "sac-short-session",
   "world_name": "2022_reinvent_champ",
-  "race_type": "TIME_TRIAL",
   "job_type": "TRAINING",
   "log_file": {
     "name": "sac-short-session-training_job_30Ieq368TqS-fa6QaRM3qA_logs.tar.gz",
@@ -12,6 +11,9 @@
       "ctime": 123.456,
       "mtime": 1234.5678
     }
+  },
+  "race": {
+    "type": "TIME_TRIAL"
   },
   "hyperparameters": {
     "batch_size": 256,

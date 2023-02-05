@@ -40,7 +40,7 @@ JSON_PATH_VALID_RE = re.compile("^[a-zA-Z0-9_.]*$")  # Allow only letters, numbe
 class MetaField:
     def __init__(self, json_path: str, data_type: type, optionality: Optionality, min_value=None, max_value=None):
         assert (JSON_PATH_VALID_RE.match(json_path))
-        assert (data_type in [int, float, str])
+        assert (data_type in [int, float, str, bool])
         assert (optionality in [Optionality.MANDATORY, Optionality.OPTIONAL])
         assert (min_value is None or isinstance(min_value, data_type))
         assert (max_value is None or isinstance(max_value, data_type))

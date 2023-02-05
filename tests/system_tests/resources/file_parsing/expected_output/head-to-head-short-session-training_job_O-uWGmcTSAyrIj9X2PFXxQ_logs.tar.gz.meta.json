@@ -16,7 +16,8 @@
     "type": "HEAD_TO_HEAD",
     "object_avoidance": {
       "number": 2,
-      "randomize_locations": true
+      "randomize_locations": true,
+      "type": "BROWN_BOX"
     },
     "head_to_head": {
       "number": 3,

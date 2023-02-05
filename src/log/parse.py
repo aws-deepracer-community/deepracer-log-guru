@@ -24,31 +24,40 @@ STILL_EVALUATING = "Reset agent"
 
 
 def parse_intro_event(line_of_text: str, log_meta: LogMeta):
-    _get_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE, log_meta.batch_size)
-    _get_hyper_float_value(line_of_text, HYPER_ENTROPY, log_meta.beta_entropy)
-    _get_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR, log_meta.discount_factor)
-    _get_hyper_string_value(line_of_text, HYPER_LOSS_TYPE, log_meta.loss_type)
-    _get_hyper_float_value(line_of_text, HYPER_LEARNING_RATE, log_meta.learning_rate)
-    _get_hyper_integer_value(line_of_text, HYPER_EPISODES_BETWEEN_TRAINING, log_meta.episodes_per_training_iteration)
-    _get_hyper_integer_value(line_of_text, HYPER_EPOCHS, log_meta.epochs)
-    _get_hyper_float_value(line_of_text, HYPER_SAC_ALPHA, log_meta.sac_alpha)
-    _get_hyper_float_value(line_of_text, HYPER_GREEDY, log_meta.e_greedy_value)
-    _get_hyper_integer_value(line_of_text, HYPER_EPSILON_STEPS, log_meta.epsilon_steps)
-    _get_hyper_string_value(line_of_text, HYPER_EXPLORATION_TYPE, log_meta.exploration_type)
-    _get_hyper_integer_value(line_of_text, HYPER_STACK_SIZE, log_meta.stack_size)
-    _get_hyper_float_value(line_of_text, HYPER_TERM_AVG_SCORE, log_meta.termination_average_score)
-    _get_hyper_integer_value(line_of_text, HYPER_TERM_MAX_EPISODES, log_meta.termination_max_episodes)
+    _set_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE, log_meta.batch_size)
+    _set_hyper_float_value(line_of_text, HYPER_ENTROPY, log_meta.beta_entropy)
+    _set_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR, log_meta.discount_factor)
+    _set_hyper_string_value(line_of_text, HYPER_LOSS_TYPE, log_meta.loss_type)
+    _set_hyper_float_value(line_of_text, HYPER_LEARNING_RATE, log_meta.learning_rate)
+    _set_hyper_integer_value(line_of_text, HYPER_EPISODES_BETWEEN_TRAINING, log_meta.episodes_per_training_iteration)
+    _set_hyper_integer_value(line_of_text, HYPER_EPOCHS, log_meta.epochs)
+    _set_hyper_float_value(line_of_text, HYPER_SAC_ALPHA, log_meta.sac_alpha)
+    _set_hyper_float_value(line_of_text, HYPER_GREEDY, log_meta.e_greedy_value)
+    _set_hyper_integer_value(line_of_text, HYPER_EPSILON_STEPS, log_meta.epsilon_steps)
+    _set_hyper_string_value(line_of_text, HYPER_EXPLORATION_TYPE, log_meta.exploration_type)
+    _set_hyper_integer_value(line_of_text, HYPER_STACK_SIZE, log_meta.stack_size)
+    _set_hyper_float_value(line_of_text, HYPER_TERM_AVG_SCORE, log_meta.termination_average_score)
+    _set_hyper_integer_value(line_of_text, HYPER_TERM_MAX_EPISODES, log_meta.termination_max_episodes)
 
-    _get_parameter_string_value(line_of_text, PARAM_WORLD_NAME, log_meta.world_name)
-    _get_parameter_string_value(line_of_text, PARAM_JOB_TYPE, log_meta.job_type)
+    _set_parameter_string_value(line_of_text, PARAM_WORLD_NAME, log_meta.world_name)
+    _set_parameter_string_value(line_of_text, PARAM_JOB_TYPE, log_meta.job_type)
 
-    _get_parameter_string_value(line_of_text, PARAM_RACE_TYPE, log_meta.race_type, {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD"})
+    _set_parameter_string_value(line_of_text, PARAM_RACE_TYPE, log_meta.race_type, {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD"})
 
-    _get_parameter_integer_value(line_of_text, PARAM_OA_NUMBER_OF_OBSTACLES, log_meta.oa_number)
-    _get_parameter_boolean_value(line_of_text, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS, log_meta.oa_randomize)
+    _set_parameter_integer_value(line_of_text, PARAM_OA_NUMBER_OF_OBSTACLES, log_meta.oa_number)
+    _set_parameter_float_value(line_of_text, PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES, log_meta.oa_min_distance_between)
+    _set_parameter_boolean_value(line_of_text, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS, log_meta.oa_randomize)
+    _set_parameter_string_value(line_of_text, PARAM_OA_OBSTACLE_TYPE, log_meta.oa_type, {"deepracer_box_obs...": "BROWN_BOX"})
 
-    _get_parameter_integer_value(line_of_text, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number)
-    _get_parameter_float_value(line_of_text, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)
+    if _contains_parameter(line_of_text, PARAM_OA_IS_OBSTACLE_BOT_CAR):
+        chop_chars = len(PARAM_OA_IS_OBSTACLE_BOT_CAR) + 6
+        if _text_to_bool(line_of_text[chop_chars:]):
+            log_meta.oa_type.set("BOT_CAR")
+        else:
+            log_meta.oa_type.set("BROWN_BOX")
+
+    _set_parameter_integer_value(line_of_text, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number)
+    _set_parameter_float_value(line_of_text, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)
 
     if not log_meta.model_name.get():
         if line_of_text.startswith(MISC_MODEL_NAME_OLD_LOGS):
@@ -262,7 +271,10 @@ PARAM_RACE_TYPE = "RACE_TYPE"
 PARAM_JOB_TYPE = "JOB_TYPE"
 
 PARAM_OA_NUMBER_OF_OBSTACLES = "NUMBER_OF_OBSTACLES"
+PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES = "MIN_DISTANCE_BETWEEN_OBSTACLES"
 PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS = "RANDOMIZE_OBSTACLE_LOCATIONS"
+PARAM_OA_OBSTACLE_TYPE = "OBSTACLE_TYPE"
+PARAM_OA_IS_OBSTACLE_BOT_CAR = "IS_OBSTACLE_BOT_CAR"
 
 PARAM_H2H_NUMBER_OF_BOT_CARS = "NUMBER_OF_BOT_CARS"
 PARAM_H2H_BOT_CAR_SPEED = "BOT_CAR_SPEED"
@@ -317,19 +329,19 @@ def _contains_hyper(line_of_text: str, hyper_name: str):
     return line_of_text.startswith('  "' + hyper_name + '": ')
 
 
-def _get_hyper_integer_value(line_of_text: str, hyper_name: str, meta_field: MetaField):
+def _set_hyper_integer_value(line_of_text: str, hyper_name: str, meta_field: MetaField):
     if _contains_hyper(line_of_text, hyper_name):
         chop_chars = len(hyper_name) + 6
         meta_field.set(int(line_of_text[chop_chars:].split(",")[0]))
 
 
-def _get_hyper_float_value(line_of_text: str, hyper_name: str, meta_field: MetaField):
+def _set_hyper_float_value(line_of_text: str, hyper_name: str, meta_field: MetaField):
     if _contains_hyper(line_of_text, hyper_name):
         chop_chars = len(hyper_name) + 6
         meta_field.set(float(line_of_text[chop_chars:].split(",")[0]))
 
 
-def _get_hyper_string_value(line_of_text: str, hyper_name: str, meta_field: MetaField):
+def _set_hyper_string_value(line_of_text: str, hyper_name: str, meta_field: MetaField):
     if _contains_hyper(line_of_text, hyper_name):
         chop_chars = len(hyper_name) + 6
         meta_field.set(line_of_text[chop_chars:].split('"')[1].upper().replace(" ", "_"))
@@ -337,14 +349,11 @@ def _get_hyper_string_value(line_of_text: str, hyper_name: str, meta_field: Meta
 
 # Parse the high level training settings
 
-#     if _contains_parameter(line_of_text, PARAM_WORLD_NAME):
-#         log_meta.world_name.set(_get_parameter_string_value(line_of_text, PARAM_WORLD_NAME))
-
 def _contains_parameter(line_of_text: str, parameter_name: str):
     return line_of_text.startswith(" * /" + parameter_name + ": ")
 
 
-def _get_parameter_string_value(line_of_text: str, parameter_name: str, meta_field: MetaField,
+def _set_parameter_string_value(line_of_text: str, parameter_name: str, meta_field: MetaField,
                                 replacements: dict = None):
     if _contains_parameter(line_of_text, parameter_name):
         chop_chars = len(parameter_name) + 6
@@ -355,19 +364,27 @@ def _get_parameter_string_value(line_of_text: str, parameter_name: str, meta_fie
             return meta_field.set(value)
 
 
-def _get_parameter_integer_value(line_of_text: str, parameter_name: str, meta_field: MetaField):
+def _set_parameter_integer_value(line_of_text: str, parameter_name: str, meta_field: MetaField):
     if _contains_parameter(line_of_text, parameter_name):
         chop_chars = len(parameter_name) + 6
         meta_field.set(int(line_of_text[chop_chars:]))
 
 
-def _get_parameter_float_value(line_of_text: str, parameter_name: str, meta_field: MetaField):
+def _set_parameter_float_value(line_of_text: str, parameter_name: str, meta_field: MetaField):
     if _contains_parameter(line_of_text, parameter_name):
         chop_chars = len(parameter_name) + 6
         meta_field.set(float(line_of_text[chop_chars:]))
 
 
-def _get_parameter_boolean_value(line_of_text: str, parameter_name: str, meta_field: MetaField):
+def _set_parameter_boolean_value(line_of_text: str, parameter_name: str, meta_field: MetaField):
     if _contains_parameter(line_of_text, parameter_name):
         chop_chars = len(parameter_name) + 6
-        meta_field.set(bool(line_of_text[chop_chars:]))
+        meta_field.set(_text_to_bool(line_of_text[chop_chars:]))
+
+
+def _text_to_bool(text: str) -> bool:
+    value = text.upper().replace(" ", "").replace("\n", "")
+    assert value in ("TRUE", "FALSE")
+    return value == "TRUE"
+
+

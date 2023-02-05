@@ -36,7 +36,10 @@ class LogMeta:
         self.race_type: Final = self._make_field("race.type", str, MANDATORY)
 
         self.oa_number: Final = self._make_field("race.object_avoidance.number", int, OPTIONAL, 1, None)
+        self.oa_min_distance_between: Final = self._make_field("race.object_avoidance.min_distance_between", float, OPTIONAL, 0.0, None)
         self.oa_randomize: Final = self._make_field("race.object_avoidance.randomize_locations", bool, OPTIONAL)
+        self.oa_type: Final = self._make_field("race.object_avoidance.type", str, OPTIONAL)
+        # TODO - Fixed locations
 
         self.h2h_number: Final = self._make_field("race.head_to_head.number", int, OPTIONAL, 1, None)
         self.h2h_speed: Final = self._make_field("race.head_to_head.speed", float, OPTIONAL, 0.0, 4.0)

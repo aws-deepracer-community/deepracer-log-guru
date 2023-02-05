@@ -16,7 +16,9 @@
     "type": "OBJECT_AVOIDANCE",
     "object_avoidance": {
       "number": 6,
-      "randomize_locations": true
+      "min_distance_between": 5.0,
+      "randomize_locations": true,
+      "type": "BROWN_BOX"
     }
   },
   "hyperparameters": {

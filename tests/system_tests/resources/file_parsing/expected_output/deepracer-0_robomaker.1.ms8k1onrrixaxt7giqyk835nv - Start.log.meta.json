@@ -19,7 +19,20 @@
       "min_distance_between": 4.0,
       "randomize_locations": false,
       "type": "BROWN_BOX",
-      "fixed_locations": "TODO"
+      "fixed_locations": [
+        {
+          "percent": 0.97,
+          "lane": "INSIDE"
+        },
+        {
+          "percent": 0.62,
+          "lane": "INSIDE"
+        },
+        {
+          "percent": 0.1,
+          "lane": "OUTSIDE"
+        }
+      ]
     }
   },
   "hyperparameters": {

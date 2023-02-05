@@ -18,7 +18,28 @@
       "number": 5,
       "randomize_locations": false,
       "type": "PURPLE_BOX",
-      "fixed_locations": "TODO"
+      "fixed_locations": [
+        {
+          "percent": 0.1,
+          "lane": "OUTSIDE"
+        },
+        {
+          "percent": 0.25,
+          "lane": "INSIDE"
+        },
+        {
+          "percent": 0.4,
+          "lane": "OUTSIDE"
+        },
+        {
+          "percent": 0.55,
+          "lane": "INSIDE"
+        },
+        {
+          "percent": 0.7,
+          "lane": "OUTSIDE"
+        }
+      ]
     }
   },
   "hyperparameters": {

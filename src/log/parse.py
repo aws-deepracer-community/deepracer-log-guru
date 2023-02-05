@@ -9,6 +9,7 @@
 import json
 import re
 
+from object_avoidance.fixed_object_locations import FixedObjectLocation, Lane
 from src.event.event_meta import Event
 from src.log.log_meta import LogMeta
 from src.action_space.action import Action
@@ -33,11 +34,11 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
         if PARAM_OA_OBJECT_POSITIONS in parameters:
             positions = parameters[PARAM_OA_OBJECT_POSITIONS]
             assert(isinstance(positions, list))
-
-            log_meta.oa_locations.set("TODO")     # TODO
-            print(parameters[PARAM_OA_OBJECT_POSITIONS][2][4])
-            # ['0.1,-1', '0.25,1', '0.4,-1', '0.55,1', '0.7,-1']
+            # Example: ['0.1,-1', '0.25,1', '0.4,-1', '0.55,1', '0.7,-1']
             # where -1 is OUTSIDE      and +1 means INSIDE
+            for p in positions:
+                parts = p.split(",")
+                log_meta.fixed_object_locations.add(FixedObjectLocation(float(parts[0]), Lane(int(parts[1]))))
 
         _set_parameter_string_value(parameters, PARAM_RACE_TYPE, log_meta.race_type,
                                     {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD"})
@@ -392,5 +393,4 @@ def _text_to_bool(text: str) -> bool:
     value = text.upper().replace(" ", "").replace("\n", "")
     assert value in ("TRUE", "FALSE")
     return value == "TRUE"
-
 

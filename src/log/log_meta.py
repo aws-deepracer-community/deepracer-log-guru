@@ -8,6 +8,7 @@
 import os
 from typing import Final
 
+from object_avoidance.fixed_object_locations import FixedObjectLocations
 from src.action_space.action import Action
 from src.action_space.action_space import ActionSpace
 from src.log.meta_field import MetaField, MetaFields, Optionality
@@ -39,7 +40,6 @@ class LogMeta:
         self.oa_min_distance_between: Final = self._make_field("race.object_avoidance.min_distance_between", float, OPTIONAL, 0.0, None)
         self.oa_randomize: Final = self._make_field("race.object_avoidance.randomize_locations", bool, OPTIONAL)
         self.oa_type: Final = self._make_field("race.object_avoidance.type", str, OPTIONAL)
-        self.oa_locations: Final = self._make_field("race.object_avoidance.fixed_locations", str, OPTIONAL)  # TODO properly
 
         self.h2h_number: Final = self._make_field("race.head_to_head.number", int, OPTIONAL, 1, None)
         self.h2h_speed: Final = self._make_field("race.head_to_head.speed", float, OPTIONAL, 0.0, 4.0)
@@ -95,6 +95,7 @@ class LogMeta:
                                                                        MANDATORY, -30.0, 0.0)
 
         self.action_space = ActionSpace()
+        self.fixed_object_locations = FixedObjectLocations()
 
     def set_file_os_stats(self, stat_result: os.stat_result) -> None:
         self.file_uid.set(stat_result.st_uid)
@@ -115,12 +116,16 @@ class LogMeta:
         self._set_meta_fields_based_on_action_space()
         result = MetaFields.create_json(self._fields)
         if not self.action_space.is_continuous():
-            result["action_space"]["actions"] = self._get_action_space_as_json_list()  # DISCRETE ONLY
+            result["action_space"]["actions"] = self._get_action_space_as_json_list()
+        if self.fixed_object_locations.has_locations():
+            result["race"]["object_avoidance"]["fixed_locations"] = self.fixed_object_locations.get_meta_json_list()
+
         return result
 
     def set_from_json(self, received_json):
         MetaFields.parse_json(self._fields, received_json)
         self.action_space = self._get_action_space_from_json(received_json)
+        self.fixed_object_locations.set_from_meta_json_list()
 
     def _make_field(self, json_path: str, data_type: type, optionality: Optionality, min_value=None, max_value=None):
         new_field = MetaField(json_path, data_type, optionality, min_value, max_value)

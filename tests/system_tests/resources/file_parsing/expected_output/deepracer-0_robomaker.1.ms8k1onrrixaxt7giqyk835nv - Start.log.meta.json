@@ -1,0 +1,129 @@
+{
+  "guru_version": "4.0.0",
+  "model_name": "custom_files",
+  "world_name": "2022_june_pro",
+  "job_type": "TRAINING",
+  "log_file": {
+    "name": "deepracer-0_robomaker.1.ms8k1onrrixaxt7giqyk835nv - Start.log",
+    "os_stats": {
+      "uid": 0,
+      "size": 1629149,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "OBJECT_AVOIDANCE",
+    "object_avoidance": {
+      "number": 3,
+      "min_distance_between": 4.0,
+      "randomize_locations": false,
+      "type": "BROWN_BOX",
+      "fixed_locations": "TODO"
+    }
+  },
+  "hyperparameters": {
+    "batch_size": 512,
+    "learning_rate": 2e-05,
+    "discount_factor": 0.95,
+    "loss_type": "HUBER",
+    "episodes_per_training_iteration": 16,
+    "beta_entropy": 0.01,
+    "epochs": 6,
+    "e_greedy_value": 0.05,
+    "epsilon_steps": 10000,
+    "exploration_type": "CATEGORICAL",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 35000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 39,
+    "iteration_count": 0,
+    "success_count": 6,
+    "average_percent_complete": 44.895915384615385,
+    "best_steps": 314,
+    "average_steps": 324,
+    "worst_steps": 328,
+    "best_time": 20.863,
+    "average_time": 21.488,
+    "worst_time": 21.78000000000003,
+    "best_distance": 54.61992676134055,
+    "average_distance": 55.17342661104933,
+    "worst_distance": 56.02418798200783,
+    "best_reward": 29883.902299999998,
+    "average_reward": 11673.907143589744,
+    "worst_reward": 285.9010999999998
+  },
+  "action_space": {
+    "type": "DISCRETE",
+    "min_speed": 1.3,
+    "max_speed": 4.0,
+    "max_left_steering": 30.0,
+    "max_right_steering": -30.0,
+    "actions": [
+      {
+        "speed": 4.0,
+        "steering_angle": 0
+      },
+      {
+        "speed": 3.8,
+        "steering_angle": -10
+      },
+      {
+        "speed": 3.8,
+        "steering_angle": 10
+      },
+      {
+        "speed": 3.6,
+        "steering_angle": -20
+      },
+      {
+        "speed": 3.6,
+        "steering_angle": 20
+      },
+      {
+        "speed": 3.1,
+        "steering_angle": -20
+      },
+      {
+        "speed": 3.1,
+        "steering_angle": 20
+      },
+      {
+        "speed": 2.5,
+        "steering_angle": 10
+      },
+      {
+        "speed": 2.5,
+        "steering_angle": -10
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": 30
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": -30
+      },
+      {
+        "speed": 1.7,
+        "steering_angle": 30
+      },
+      {
+        "speed": 1.7,
+        "steering_angle": -30
+      },
+      {
+        "speed": 1.3,
+        "steering_angle": 30
+      },
+      {
+        "speed": 1.3,
+        "steering_angle": -30
+      }
+    ]
+  }
+}

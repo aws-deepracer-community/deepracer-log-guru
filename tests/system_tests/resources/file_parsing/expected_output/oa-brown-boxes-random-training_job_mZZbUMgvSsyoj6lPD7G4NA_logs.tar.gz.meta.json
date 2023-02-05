@@ -1,0 +1,107 @@
+{
+  "guru_version": "4.0.0",
+  "model_name": "oa-brown-boxes-random",
+  "world_name": "2022_reinvent_champ",
+  "job_type": "TRAINING",
+  "log_file": {
+    "name": "oa-brown-boxes-random-training_job_mZZbUMgvSsyoj6lPD7G4NA_logs.tar.gz",
+    "os_stats": {
+      "uid": 0,
+      "size": 148585,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "OBJECT_AVOIDANCE",
+    "object_avoidance": {
+      "number": 2,
+      "randomize_locations": true,
+      "type": "BROWN_BOX"
+    }
+  },
+  "hyperparameters": {
+    "batch_size": 128,
+    "learning_rate": 0.0003,
+    "discount_factor": 0.999,
+    "loss_type": "MEAN_SQUARED_ERROR",
+    "episodes_per_training_iteration": 20,
+    "beta_entropy": 0.01,
+    "epochs": 8,
+    "e_greedy_value": 1.0,
+    "epsilon_steps": 10000,
+    "exploration_type": "CATEGORICAL",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 100000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 99,
+    "iteration_count": 0,
+    "success_count": 0,
+    "average_percent_complete": 4.046915151515153,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 223.04700000000005,
+    "average_reward": 90.9620909090909,
+    "worst_reward": 5.001
+  },
+  "action_space": {
+    "type": "DISCRETE",
+    "min_speed": 0.1,
+    "max_speed": 4.0,
+    "max_left_steering": 27.0,
+    "max_right_steering": 0.0,
+    "actions": [
+      {
+        "speed": 2,
+        "steering_angle": 0
+      },
+      {
+        "speed": 3.8,
+        "steering_angle": 3
+      },
+      {
+        "speed": 2,
+        "steering_angle": 6
+      },
+      {
+        "speed": 4,
+        "steering_angle": 9
+      },
+      {
+        "speed": 2,
+        "steering_angle": 12
+      },
+      {
+        "speed": 4,
+        "steering_angle": 15
+      },
+      {
+        "speed": 0.1,
+        "steering_angle": 18
+      },
+      {
+        "speed": 4,
+        "steering_angle": 21
+      },
+      {
+        "speed": 2,
+        "steering_angle": 24
+      },
+      {
+        "speed": 4,
+        "steering_angle": 27
+      }
+    ]
+  }
+}

@@ -31,7 +31,13 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
         _set_parameter_string_value(parameters, PARAM_JOB_TYPE, log_meta.job_type)
 
         if PARAM_OA_OBJECT_POSITIONS in parameters:
+            positions = parameters[PARAM_OA_OBJECT_POSITIONS]
+            assert(isinstance(positions, list))
+
             log_meta.oa_locations.set("TODO")     # TODO
+            print(parameters[PARAM_OA_OBJECT_POSITIONS][2][4])
+            # ['0.1,-1', '0.25,1', '0.4,-1', '0.55,1', '0.7,-1']
+            # where -1 is OUTSIDE      and +1 means INSIDE
 
         _set_parameter_string_value(parameters, PARAM_RACE_TYPE, log_meta.race_type,
                                     {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD"})
@@ -41,7 +47,7 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
                                    log_meta.oa_min_distance_between)
         _set_parameter_boolean_value(parameters, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS, log_meta.oa_randomize)
         _set_parameter_string_value(parameters, PARAM_OA_OBSTACLE_TYPE, log_meta.oa_type,
-                                    {"deepracer_box_obstacle": "PURPLE_BOX"})
+                                    {"deepracer_box_obstacle": "PURPLE_BOX", "box_obstacle": "BROWN_BOX"})
 
         _set_parameter_integer_value(parameters, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number)
         _set_parameter_float_value(parameters, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)

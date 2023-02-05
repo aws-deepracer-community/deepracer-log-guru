@@ -80,8 +80,14 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
     def test_parse_training_console_zip_tt_continuous_sac_jan_2023(self):
         self._test_parse_file("sac-short-session-training_job_30Ieq368TqS-fa6QaRM3qA_logs.tar.gz")
 
-    def test_xxx(self):
+    def test_purple_boxes_in_fixed_positions_trained_by_console(self):
         self._test_parse_file("oa-purple-box-with-fixed-objects-training_job_hVpH4oZFQCSioa0MxKCkpA_logs.tar.gz")
+
+    def test_brown_obstacles_in_random_positions_trained_by_console(self):
+        self._test_parse_file("oa-brown-boxes-random-training_job_mZZbUMgvSsyoj6lPD7G4NA_logs.tar.gz")
+
+    def test_fixed_obstacle_positions_in_drfc_competitive_training_july_2022(self):
+        self._test_parse_file("deepracer-0_robomaker.1.ms8k1onrrixaxt7giqyk835nv - Start.log")
 
     def _test_parse_file(self, filename: str):
         # Setup

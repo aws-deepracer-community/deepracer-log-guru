@@ -24,6 +24,34 @@ STILL_EVALUATING = "Reset agent"
 
 
 def parse_intro_event(line_of_text: str, log_meta: LogMeta):
+    if line_of_text.startswith("{'") and PARAM_JOB_TYPE in line_of_text and PARAM_WORLD_NAME in line_of_text:
+        parameters = json.loads(line_of_text.replace("'", "\""))
+
+        _set_parameter_string_value(parameters, PARAM_WORLD_NAME, log_meta.world_name)
+        _set_parameter_string_value(parameters, PARAM_JOB_TYPE, log_meta.job_type)
+
+        if PARAM_OA_OBJECT_POSITIONS in parameters:
+            log_meta.oa_locations.set("TODO")     # TODO
+
+        _set_parameter_string_value(parameters, PARAM_RACE_TYPE, log_meta.race_type,
+                                    {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD"})
+
+        _set_parameter_integer_value(parameters, PARAM_OA_NUMBER_OF_OBSTACLES, log_meta.oa_number)
+        _set_parameter_float_value(parameters, PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES,
+                                   log_meta.oa_min_distance_between)
+        _set_parameter_boolean_value(parameters, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS, log_meta.oa_randomize)
+        _set_parameter_string_value(parameters, PARAM_OA_OBSTACLE_TYPE, log_meta.oa_type,
+                                    {"deepracer_box_obstacle": "PURPLE_BOX"})
+
+        _set_parameter_integer_value(parameters, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number)
+        _set_parameter_float_value(parameters, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)
+
+        if PARAM_OA_IS_OBSTACLE_BOT_CAR in parameters:
+            if _text_to_bool(parameters[PARAM_OA_IS_OBSTACLE_BOT_CAR]):
+                log_meta.oa_type.set("BOT_CAR")
+            else:
+                log_meta.oa_type.set("BROWN_BOX")
+
     _set_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE, log_meta.batch_size)
     _set_hyper_float_value(line_of_text, HYPER_ENTROPY, log_meta.beta_entropy)
     _set_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR, log_meta.discount_factor)
@@ -38,26 +66,6 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
     _set_hyper_integer_value(line_of_text, HYPER_STACK_SIZE, log_meta.stack_size)
     _set_hyper_float_value(line_of_text, HYPER_TERM_AVG_SCORE, log_meta.termination_average_score)
     _set_hyper_integer_value(line_of_text, HYPER_TERM_MAX_EPISODES, log_meta.termination_max_episodes)
-
-    _set_parameter_string_value(line_of_text, PARAM_WORLD_NAME, log_meta.world_name)
-    _set_parameter_string_value(line_of_text, PARAM_JOB_TYPE, log_meta.job_type)
-
-    _set_parameter_string_value(line_of_text, PARAM_RACE_TYPE, log_meta.race_type, {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD"})
-
-    _set_parameter_integer_value(line_of_text, PARAM_OA_NUMBER_OF_OBSTACLES, log_meta.oa_number)
-    _set_parameter_float_value(line_of_text, PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES, log_meta.oa_min_distance_between)
-    _set_parameter_boolean_value(line_of_text, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS, log_meta.oa_randomize)
-    _set_parameter_string_value(line_of_text, PARAM_OA_OBSTACLE_TYPE, log_meta.oa_type, {"deepracer_box_obs...": "BROWN_BOX"})
-
-    if _contains_parameter(line_of_text, PARAM_OA_IS_OBSTACLE_BOT_CAR):
-        chop_chars = len(PARAM_OA_IS_OBSTACLE_BOT_CAR) + 6
-        if _text_to_bool(line_of_text[chop_chars:]):
-            log_meta.oa_type.set("BOT_CAR")
-        else:
-            log_meta.oa_type.set("BROWN_BOX")
-
-    _set_parameter_integer_value(line_of_text, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number)
-    _set_parameter_float_value(line_of_text, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)
 
     if not log_meta.model_name.get():
         if line_of_text.startswith(MISC_MODEL_NAME_OLD_LOGS):
@@ -275,6 +283,7 @@ PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES = "MIN_DISTANCE_BETWEEN_OBSTACLES"
 PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS = "RANDOMIZE_OBSTACLE_LOCATIONS"
 PARAM_OA_OBSTACLE_TYPE = "OBSTACLE_TYPE"
 PARAM_OA_IS_OBSTACLE_BOT_CAR = "IS_OBSTACLE_BOT_CAR"
+PARAM_OA_OBJECT_POSITIONS = "OBJECT_POSITIONS"
 
 PARAM_H2H_NUMBER_OF_BOT_CARS = "NUMBER_OF_BOT_CARS"
 PARAM_H2H_BOT_CAR_SPEED = "BOT_CAR_SPEED"
@@ -349,37 +358,28 @@ def _set_hyper_string_value(line_of_text: str, hyper_name: str, meta_field: Meta
 
 # Parse the high level training settings
 
-def _contains_parameter(line_of_text: str, parameter_name: str):
-    return line_of_text.startswith(" * /" + parameter_name + ": ")
-
-
-def _set_parameter_string_value(line_of_text: str, parameter_name: str, meta_field: MetaField,
-                                replacements: dict = None):
-    if _contains_parameter(line_of_text, parameter_name):
-        chop_chars = len(parameter_name) + 6
-        value = line_of_text[chop_chars:].split("\n")[0]
+def _set_parameter_string_value(parameters: dict, parameter_name: str, meta_field: MetaField, replacements: dict = None):
+    if parameter_name in parameters:
+        value = parameters[parameter_name]
         if replacements is not None and value in replacements:
-            return meta_field.set(replacements[value])
+            meta_field.set(replacements[value])
         else:
-            return meta_field.set(value)
+            meta_field.set(value)
 
 
-def _set_parameter_integer_value(line_of_text: str, parameter_name: str, meta_field: MetaField):
-    if _contains_parameter(line_of_text, parameter_name):
-        chop_chars = len(parameter_name) + 6
-        meta_field.set(int(line_of_text[chop_chars:]))
+def _set_parameter_integer_value(parameters: dict, parameter_name: str, meta_field: MetaField):
+    if parameter_name in parameters:
+        meta_field.set(int(parameters[parameter_name]))
 
 
-def _set_parameter_float_value(line_of_text: str, parameter_name: str, meta_field: MetaField):
-    if _contains_parameter(line_of_text, parameter_name):
-        chop_chars = len(parameter_name) + 6
-        meta_field.set(float(line_of_text[chop_chars:]))
+def _set_parameter_float_value(parameters: dict, parameter_name: str, meta_field: MetaField):
+    if parameter_name in parameters:
+        meta_field.set(float(parameters[parameter_name]))
 
 
-def _set_parameter_boolean_value(line_of_text: str, parameter_name: str, meta_field: MetaField):
-    if _contains_parameter(line_of_text, parameter_name):
-        chop_chars = len(parameter_name) + 6
-        meta_field.set(_text_to_bool(line_of_text[chop_chars:]))
+def _set_parameter_boolean_value(parameters: dict, parameter_name: str, meta_field: MetaField):
+    if parameter_name in parameters:
+        meta_field.set(_text_to_bool(parameters[parameter_name]))
 
 
 def _text_to_bool(text: str) -> bool:

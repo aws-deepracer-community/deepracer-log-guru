@@ -111,6 +111,8 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         log = Log(INPUT_FILES_DIR)
         log.parse(filename, please_wait, 10, 20)
         original_json = log.get_log_meta().get_as_json()
+        log.get_log_meta().file_ctime.allow_modifications()
+        log.get_log_meta().file_mtime.allow_modifications()
         log.get_log_meta().file_ctime.set(123.456)
         log.get_log_meta().file_mtime.set(1234.5678)
         log.save()

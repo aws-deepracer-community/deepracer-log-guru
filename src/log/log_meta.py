@@ -25,6 +25,7 @@ class LogMeta:
         self._fields = []
         self.guru_version: Final = self._make_field("guru_version", str, MANDATORY)
         self.model_name: Final = self._make_field("model_name", str, MANDATORY)
+        self.model_name.allow_modifications()
         self.job_type: Final = self._make_field("job_type", str, MANDATORY)
         self.job_type.set_allowed_values(["TRAINING"])
 
@@ -85,26 +86,26 @@ class LogMeta:
 
         self.episode_count: Final = self._make_field("episode_stats.episode_count", int, MANDATORY)
         self.iteration_count: Final = self._make_field("episode_stats.iteration_count", int, MANDATORY)
-        self.success_count: Final = self._make_field("episode_stats.success_count", int, MANDATORY)
+        self.success_count: Final = self._make_field("episode_stats.success_count", int, MANDATORY).allow_modifications()
 
         self.average_percent_complete: Final = self._make_field("episode_stats.average_percent_complete", float,
                                                                 MANDATORY)
 
-        self.best_steps: Final = self._make_field("episode_stats.best_steps", int, MANDATORY)
-        self.average_steps: Final = self._make_field("episode_stats.average_steps", int, MANDATORY)
-        self.worst_steps: Final = self._make_field("episode_stats.worst_steps", int, MANDATORY)
+        self.best_steps: Final = self._make_field("episode_stats.best_steps", int, MANDATORY).allow_modifications()
+        self.average_steps: Final = self._make_field("episode_stats.average_steps", int, MANDATORY).allow_modifications()
+        self.worst_steps: Final = self._make_field("episode_stats.worst_steps", int, MANDATORY).allow_modifications()
 
-        self.best_time: Final = self._make_field("episode_stats.best_time", float, MANDATORY)
-        self.average_time: Final = self._make_field("episode_stats.average_time", float, MANDATORY)
-        self.worst_time: Final = self._make_field("episode_stats.worst_time", float, MANDATORY)
+        self.best_time: Final = self._make_field("episode_stats.best_time", float, MANDATORY).allow_modifications()
+        self.average_time: Final = self._make_field("episode_stats.average_time", float, MANDATORY).allow_modifications()
+        self.worst_time: Final = self._make_field("episode_stats.worst_time", float, MANDATORY).allow_modifications()
 
-        self.best_distance: Final = self._make_field("episode_stats.best_distance", float, MANDATORY)
-        self.average_distance: Final = self._make_field("episode_stats.average_distance", float, MANDATORY)
-        self.worst_distance: Final = self._make_field("episode_stats.worst_distance", float, MANDATORY)
+        self.best_distance: Final = self._make_field("episode_stats.best_distance", float, MANDATORY).allow_modifications()
+        self.average_distance: Final = self._make_field("episode_stats.average_distance", float, MANDATORY).allow_modifications()
+        self.worst_distance: Final = self._make_field("episode_stats.worst_distance", float, MANDATORY).allow_modifications()
 
-        self.best_reward: Final = self._make_field("episode_stats.best_reward", float, MANDATORY)
-        self.average_reward: Final = self._make_field("episode_stats.average_reward", float, MANDATORY)
-        self.worst_reward: Final = self._make_field("episode_stats.worst_reward", float, MANDATORY)
+        self.best_reward: Final = self._make_field("episode_stats.best_reward", float, MANDATORY).allow_modifications()
+        self.average_reward: Final = self._make_field("episode_stats.average_reward", float, MANDATORY).allow_modifications()
+        self.worst_reward: Final = self._make_field("episode_stats.worst_reward", float, MANDATORY).allow_modifications()
 
         self.action_space_type: Final = self._make_field("action_space.type", str, MANDATORY)
         self.action_space_type.set_allowed_values(["DISCRETE", "CONTINUOUS"])

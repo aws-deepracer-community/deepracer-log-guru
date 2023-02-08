@@ -8,13 +8,14 @@
 
 import re
 from enum import Enum
+from typing import Self
 
 
 class MetaFieldWrongDatatype(Exception):
     def __init__(self, expected_type: type, actual_type: type, field_name: str):
         super().__init__("Expected type <{}> but received type <{}> for field <{}>".format(expected_type.__name__,
-                                                                                         actual_type.__name__,
-                                                                                         field_name))
+                                                                                           actual_type.__name__,
+                                                                                           field_name))
 
 
 class MetaFieldInvalidValue(Exception):
@@ -22,6 +23,13 @@ class MetaFieldInvalidValue(Exception):
         super().__init__(
             "Expected one of values {} but received value <{}> for field <{}>".format(allowed_values, actual_value,
                                                                                       field_name))
+
+
+class MetaFieldValueModified(Exception):
+    def __init__(self, old_value, new_value, field_name: str):
+        super().__init__(
+            "Value <{}> was changed to <{}> for immutable field <{}>".format(old_value, new_value, field_name)
+            )
 
 
 class MetaFieldMissingMandatoryValue(Exception):
@@ -61,10 +69,15 @@ class MetaField:
         self._max_value = max_value
         self._value = None
         self._allowed_values = None
+        self._is_immutable = True
 
     def set_allowed_values(self, allowed_values: list):
         assert (self._value is None and self._allowed_values is None)
         self._allowed_values = allowed_values
+
+    def allow_modifications(self) -> Self:
+        self._is_immutable = False
+        return self
 
     def set(self, value):
         if not isinstance(value, self._data_type):
@@ -83,6 +96,9 @@ class MetaField:
                         raise MetaFieldInvalidValue(self._allowed_values, item, self._field_name)
             elif value not in self._allowed_values:
                 raise MetaFieldInvalidValue(self._allowed_values, value, self._field_name)
+
+        if self._is_immutable and self._value is not None and self._value != value:
+            raise MetaFieldValueModified(self._value, value, self._field_name)
 
         self._value = value
 

@@ -10,7 +10,7 @@ import unittest
 
 from src.log.meta_field import MetaField, MetaFields, MetaFieldWrongDatatype, Optionality, \
     MetaFieldMissingMandatoryValue, \
-    MetaFieldDuplicate, MetaFieldNumberOutOfRange, MetaFieldInvalidValue
+    MetaFieldDuplicate, MetaFieldNumberOutOfRange, MetaFieldInvalidValue, MetaFieldValueModified
 
 
 class TestMetaField(unittest.TestCase):
@@ -143,14 +143,17 @@ class TestMetaField(unittest.TestCase):
         lower_bound_field = MetaField("Upper", int, Optionality.MANDATORY, 5, None)
         range_bound_field = MetaField("Upper", int, Optionality.MANDATORY, 2, 6)
 
+        lower_bound_field.allow_modifications()
         lower_bound_field.set(6)
         lower_bound_field.set(5)
         self.assertRaises(MetaFieldNumberOutOfRange, lower_bound_field.set, 4)
 
+        upper_bound_field.allow_modifications()
         upper_bound_field.set(9)
         upper_bound_field.set(10)
         self.assertRaises(MetaFieldNumberOutOfRange, upper_bound_field.set, 11)
 
+        range_bound_field.allow_modifications()
         range_bound_field.set(2)
         range_bound_field.set(6)
         self.assertRaises(MetaFieldNumberOutOfRange, range_bound_field.set, 1)
@@ -219,6 +222,7 @@ class TestMetaField(unittest.TestCase):
         field = MetaField("field", str, Optionality.MANDATORY)
         field.set_allowed_values(["One", "Two"])
 
+        field.allow_modifications()
         field.set("One")
         field.set("Two")
         self.assertRaises(MetaFieldInvalidValue, field.set, "Three")
@@ -229,6 +233,20 @@ class TestMetaField(unittest.TestCase):
 
         field.set([3, 2, 1])
         self.assertRaises(MetaFieldInvalidValue, field.set, [3, 2, 1, 99])
+
+    def test_modifications_allowed_or_not(self):
+        mutable = MetaField("mutable", int, Optionality.MANDATORY).allow_modifications()
+        immutable = MetaField("immutable", int, Optionality.MANDATORY)
+
+        mutable.set(22)
+        mutable.set(22)
+        mutable.set(999)
+
+        immutable.set(22)
+        immutable.set(22)
+        self.assertRaises(MetaFieldValueModified, immutable.set, 999)
+
+
 
 
 

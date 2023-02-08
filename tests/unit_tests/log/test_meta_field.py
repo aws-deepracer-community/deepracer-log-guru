@@ -245,8 +245,3 @@ class TestMetaField(unittest.TestCase):
         immutable.set(22)
         immutable.set(22)
         self.assertRaises(MetaFieldValueModified, immutable.set, 999)
-
-
-
-
-

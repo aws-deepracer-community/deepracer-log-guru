@@ -31,6 +31,14 @@ class LogMeta:
 
         self.learning_algorithm: Final = self._make_field("training.learning_algorithm", str, OPTIONAL)
         self.learning_algorithm.set_allowed_values(["CLIPPED_PPO", "SAC"])
+        self.alternate_direction: Final = self._make_field("training.alternate_driving_direction", bool, OPTIONAL)
+        self.start_position_offset: Final = self._make_field("training.start_position_offset", float, OPTIONAL, 0.0,
+                                                             0.999)
+        self.change_start_position: Final = self._make_field("training.change_start_position", bool, OPTIONAL)
+        self.round_robin_advance_distance: Final = self._make_field("training.round_robin_advance_distance", float,
+                                                                    OPTIONAL, 0.0, 0.999)
+        self.min_evaluations_per_iteration: Final = self._make_field("training.minimum_evaluations_per_iteration", int,
+                                                                     OPTIONAL, 0)
 
         self.domain_randomization: Final = self._make_field("environment.domain_randomization", bool, OPTIONAL)
         self.simulation_version: Final = self._make_field("environment.simulation_version", str, MANDATORY)

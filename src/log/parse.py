@@ -54,6 +54,13 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
         _set_parameter_integer_value(parameters, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number)
         _set_parameter_float_value(parameters, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)
 
+        _set_parameter_boolean_value(parameters, PARAM_ALTERNATE_DRIVING_DIRECTION, log_meta.alternate_direction)
+        _set_parameter_float_value(parameters, PARAM_START_POSITION_OFFSET, log_meta.start_position_offset, 0.0)
+        _set_parameter_integer_value(parameters, PARAM_MIN_EVAL_TRIALS, log_meta.min_evaluations_per_iteration)
+        _set_parameter_boolean_value(parameters, PARAM_CHANGE_START_POSITION, log_meta.change_start_position)
+        if log_meta.change_start_position.get():
+            _set_parameter_float_value(parameters, PARAM_ROUND_ROBIN_ADVANCE_DIST, log_meta.round_robin_advance_distance, 0.05)
+
         if PARAM_OA_IS_OBSTACLE_BOT_CAR in parameters:
             if _text_to_bool(parameters[PARAM_OA_IS_OBSTACLE_BOT_CAR]):
                 log_meta.oa_type.set("BOT_CAR")
@@ -336,6 +343,12 @@ PARAM_OA_OBJECT_POSITIONS = "OBJECT_POSITIONS"
 PARAM_H2H_NUMBER_OF_BOT_CARS = "NUMBER_OF_BOT_CARS"
 PARAM_H2H_BOT_CAR_SPEED = "BOT_CAR_SPEED"
 
+PARAM_ALTERNATE_DRIVING_DIRECTION = "ALTERNATE_DRIVING_DIRECTION"
+PARAM_START_POSITION_OFFSET = "START_POSITION_OFFSET"
+PARAM_MIN_EVAL_TRIALS = "MIN_EVAL_TRIALS"
+PARAM_CHANGE_START_POSITION = "CHANGE_START_POSITION"
+PARAM_ROUND_ROBIN_ADVANCE_DIST = "ROUND_ROBIN_ADVANCE_DIST"
+
 MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-metadata/"
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
 MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
@@ -413,28 +426,36 @@ def _set_hyper_string_value(line_of_text: str, hyper_name: str, meta_field: Meta
 # Parse the high level training settings
 
 def _set_parameter_string_value(parameters: dict, parameter_name: str, meta_field: MetaField,
-                                replacements: dict = None):
+                                replacements: dict = None, default=None):
     if parameter_name in parameters:
         value = parameters[parameter_name]
         if replacements is not None and value in replacements:
             meta_field.set(replacements[value])
         else:
             meta_field.set(value)
+    elif default is not None:
+        meta_field.set(default)
 
 
-def _set_parameter_integer_value(parameters: dict, parameter_name: str, meta_field: MetaField):
+def _set_parameter_integer_value(parameters: dict, parameter_name: str, meta_field: MetaField, default=None):
     if parameter_name in parameters:
         meta_field.set(int(parameters[parameter_name]))
+    elif default is not None:
+        meta_field.set(default)
 
 
-def _set_parameter_float_value(parameters: dict, parameter_name: str, meta_field: MetaField):
+def _set_parameter_float_value(parameters: dict, parameter_name: str, meta_field: MetaField, default=None):
     if parameter_name in parameters:
         meta_field.set(float(parameters[parameter_name]))
+    elif default is not None:
+        meta_field.set(default)
 
 
-def _set_parameter_boolean_value(parameters: dict, parameter_name: str, meta_field: MetaField):
+def _set_parameter_boolean_value(parameters: dict, parameter_name: str, meta_field: MetaField, default=None):
     if parameter_name in parameters:
         meta_field.set(_text_to_bool(parameters[parameter_name]))
+    elif default is not None:
+        meta_field.set(default)
 
 
 def _text_to_bool(text: str) -> bool:

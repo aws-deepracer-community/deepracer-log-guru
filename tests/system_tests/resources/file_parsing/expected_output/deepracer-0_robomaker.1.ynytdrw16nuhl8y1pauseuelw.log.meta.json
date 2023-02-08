@@ -3,7 +3,11 @@
   "model_name": "dmh-Oct-C-157",
   "job_type": "TRAINING",
   "training": {
-    "learning_algorithm": "CLIPPED_PPO"
+    "learning_algorithm": "CLIPPED_PPO",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.25,
+    "change_start_position": false,
+    "minimum_evaluations_per_iteration": 5
   },
   "environment": {
     "domain_randomization": false,

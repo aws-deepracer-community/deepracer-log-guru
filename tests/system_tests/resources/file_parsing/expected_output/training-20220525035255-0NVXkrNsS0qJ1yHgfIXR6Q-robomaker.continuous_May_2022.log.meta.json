@@ -3,7 +3,11 @@
   "model_name": "training-20220525035255-0NVXkrNsS0qJ1yHgfIXR6Q-robomaker",
   "job_type": "TRAINING",
   "training": {
-    "learning_algorithm": "CLIPPED_PPO"
+    "learning_algorithm": "CLIPPED_PPO",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.05
   },
   "environment": {
     "simulation_version": "4.0",

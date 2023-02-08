@@ -3,7 +3,12 @@
   "model_name": "hands-free-July-OA-Q-08",
   "job_type": "TRAINING",
   "training": {
-    "learning_algorithm": "CLIPPED_PPO"
+    "learning_algorithm": "CLIPPED_PPO",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.1,
+    "minimum_evaluations_per_iteration": 10
   },
   "environment": {
     "domain_randomization": false,

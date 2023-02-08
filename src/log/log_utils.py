@@ -39,7 +39,7 @@ def get_model_info_for_open_model_dialog(track, log_directory):
             log = Log(log_directory)
             log.load_meta(f)
 
-            if track.has_world_name(log.get_log_meta().world_name.get()):
+            if track.has_world_name(log.get_log_meta().track_name.get()):
                 model_name = log.get_log_meta().model_name.get()
                 model_names.append(model_name)
                 model_logs[model_name] = log
@@ -65,5 +65,5 @@ def get_world_names_of_existing_logs(log_directory):
         if f.endswith(META_FILE_SUFFIX):
             log = Log(log_directory)
             log.load_meta(f)
-            world_names.add(log.get_log_meta().world_name.get())
+            world_names.add(log.get_log_meta().track_name.get())
     return world_names

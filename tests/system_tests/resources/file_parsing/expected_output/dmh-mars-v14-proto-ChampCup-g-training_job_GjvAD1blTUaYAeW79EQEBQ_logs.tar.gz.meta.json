@@ -1,8 +1,11 @@
 {
   "guru_version": "4.0.0",
   "model_name": "dmh-mars-v14-proto-ChampCup-g",
-  "world_name": "reInvent2019_track",
   "job_type": "TRAINING",
+  "environment": {
+    "simulation_version": "3.0",
+    "track_name": "reInvent2019_track"
+  },
   "log_file": {
     "name": "dmh-mars-v14-proto-ChampCup-g-training_job_GjvAD1blTUaYAeW79EQEBQ_logs.tar.gz",
     "os_stats": {

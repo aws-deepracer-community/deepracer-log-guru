@@ -1,8 +1,11 @@
 {
   "guru_version": "4.0.0",
   "model_name": "training-20220525035255-0NVXkrNsS0qJ1yHgfIXR6Q-robomaker",
-  "world_name": "2022_may_open",
   "job_type": "TRAINING",
+  "environment": {
+    "simulation_version": "4.0",
+    "track_name": "2022_may_open"
+  },
   "log_file": {
     "name": "training-20220525035255-0NVXkrNsS0qJ1yHgfIXR6Q-robomaker.continuous_May_2022.log",
     "os_stats": {

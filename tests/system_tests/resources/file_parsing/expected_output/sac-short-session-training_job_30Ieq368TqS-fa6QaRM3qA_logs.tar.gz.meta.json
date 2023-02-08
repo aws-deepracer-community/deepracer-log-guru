@@ -1,8 +1,11 @@
 {
   "guru_version": "4.0.0",
   "model_name": "sac-short-session",
-  "world_name": "2022_reinvent_champ",
   "job_type": "TRAINING",
+  "environment": {
+    "simulation_version": "5.0",
+    "track_name": "2022_reinvent_champ"
+  },
   "log_file": {
     "name": "sac-short-session-training_job_30Ieq368TqS-fa6QaRM3qA_logs.tar.gz",
     "os_stats": {

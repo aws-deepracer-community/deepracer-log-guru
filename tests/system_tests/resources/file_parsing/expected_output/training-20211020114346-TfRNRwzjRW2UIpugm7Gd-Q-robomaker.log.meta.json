@@ -1,8 +1,11 @@
 {
   "guru_version": "4.0.0",
   "model_name": "training-20211020114346-TfRNRwzjRW2UIpugm7Gd-Q-robomaker",
-  "world_name": "red_star_pro",
   "job_type": "TRAINING",
+  "environment": {
+    "simulation_version": "4.0",
+    "track_name": "red_star_pro"
+  },
   "log_file": {
     "name": "training-20211020114346-TfRNRwzjRW2UIpugm7Gd-Q-robomaker.log",
     "os_stats": {

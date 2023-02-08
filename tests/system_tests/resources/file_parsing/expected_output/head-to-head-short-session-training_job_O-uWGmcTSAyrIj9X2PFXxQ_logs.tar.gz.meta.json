@@ -1,8 +1,11 @@
 {
   "guru_version": "4.0.0",
   "model_name": "head-to-head-short-session",
-  "world_name": "2022_reinvent_champ",
   "job_type": "TRAINING",
+  "environment": {
+    "simulation_version": "5.0",
+    "track_name": "2022_reinvent_champ"
+  },
   "log_file": {
     "name": "head-to-head-short-session-training_job_O-uWGmcTSAyrIj9X2PFXxQ_logs.tar.gz",
     "os_stats": {

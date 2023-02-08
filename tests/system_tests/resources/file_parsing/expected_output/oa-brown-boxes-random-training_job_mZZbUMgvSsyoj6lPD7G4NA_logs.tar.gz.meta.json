@@ -1,8 +1,11 @@
 {
   "guru_version": "4.0.0",
   "model_name": "oa-brown-boxes-random",
-  "world_name": "2022_reinvent_champ",
   "job_type": "TRAINING",
+  "environment": {
+    "simulation_version": "5.0",
+    "track_name": "2022_reinvent_champ"
+  },
   "log_file": {
     "name": "oa-brown-boxes-random-training_job_mZZbUMgvSsyoj6lPD7G4NA_logs.tar.gz",
     "os_stats": {

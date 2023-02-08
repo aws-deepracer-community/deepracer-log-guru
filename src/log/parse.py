@@ -28,8 +28,9 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
     if line_of_text.startswith("{'") and PARAM_JOB_TYPE in line_of_text and PARAM_WORLD_NAME in line_of_text:
         parameters = json.loads(line_of_text.replace("'", "\""))
 
-        _set_parameter_string_value(parameters, PARAM_WORLD_NAME, log_meta.world_name)
+        _set_parameter_string_value(parameters, PARAM_WORLD_NAME, log_meta.track_name)
         _set_parameter_string_value(parameters, PARAM_JOB_TYPE, log_meta.job_type)
+        _set_parameter_boolean_value(parameters, PARAM_DOMAIN_RANDOMIZATION, log_meta.domain_randomization)
 
         if PARAM_OA_OBJECT_POSITIONS in parameters:
             positions = parameters[PARAM_OA_OBJECT_POSITIONS]
@@ -91,8 +92,11 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
                     CLOUD_TRAINING_YAML_FILENAME_B):
                 log_meta.model_name.set(re.sub("^ *", "", split_parts[0]))  # Strip off leading space(s)
 
-    if line_of_text.startswith(CONTINUOUS_ACTION_SPACE_START) and CONTINUOUS_ACTION_SPACE_CONTAINS in line_of_text:
-        log_meta.action_space.mark_as_continuous()
+    if line_of_text.startswith(SPECIAL_TRAINING_PARAMS_START):
+        if CONTINUOUS_ACTION_SPACE_CONTAINS in line_of_text:
+            log_meta.action_space.mark_as_continuous()
+        simapp_pos = line_of_text.find(SIMAPP_VERSION_CONTAINS)
+        log_meta.simulation_version.set(line_of_text[simapp_pos + len(SIMAPP_VERSION_CONTAINS):][:3])
 
     if line_of_text.startswith(MISC_ACTION_SPACE_A):
         _parse_actions(line_of_text, log_meta, MISC_ACTION_SPACE_A)
@@ -284,6 +288,7 @@ HYPER_TERM_MAX_EPISODES = "term_cond_max_episodes"
 PARAM_WORLD_NAME = "WORLD_NAME"
 PARAM_RACE_TYPE = "RACE_TYPE"
 PARAM_JOB_TYPE = "JOB_TYPE"
+PARAM_DOMAIN_RANDOMIZATION = "ENABLE_DOMAIN_RANDOMIZATION"
 
 PARAM_OA_NUMBER_OF_OBSTACLES = "NUMBER_OF_OBSTACLES"
 PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES = "MIN_DISTANCE_BETWEEN_OBSTACLES"
@@ -299,8 +304,9 @@ MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-me
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
 MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
 
-CONTINUOUS_ACTION_SPACE_START = "Sensor list ["
+SPECIAL_TRAINING_PARAMS_START = "Sensor list ["
 CONTINUOUS_ACTION_SPACE_CONTAINS = "action_space_type continuous"
+SIMAPP_VERSION_CONTAINS = ", simapp_version "
 
 # For handling cloud, here are the example of cloud and non-cloud
 #   cloud       [s3] Successfully downloaded yaml file from s3 key DMH-Champ-Round1-OA-B-3/training-params.yaml

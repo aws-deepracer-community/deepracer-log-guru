@@ -1,8 +1,11 @@
 {
   "guru_version": "4.0.0",
   "model_name": "training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker",
-  "world_name": "reinvent_base",
   "job_type": "TRAINING",
+  "environment": {
+    "simulation_version": "5.0",
+    "track_name": "reinvent_base"
+  },
   "log_file": {
     "name": "training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker.log",
     "os_stats": {

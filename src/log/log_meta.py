@@ -25,9 +25,13 @@ class LogMeta:
         self._fields = []
         self.guru_version: Final = self._make_field("guru_version", str, MANDATORY)
         self.model_name: Final = self._make_field("model_name", str, MANDATORY)
-        self.world_name: Final = self._make_field("world_name", str, MANDATORY)
         self.job_type: Final = self._make_field("job_type", str, MANDATORY)
         self.job_type.set_allowed_values(["TRAINING"])
+
+        # self.track_name: Final = self._make_field("environment.track_name", str, MANDATORY)
+        self.domain_randomization: Final = self._make_field("environment.domain_randomization", bool, OPTIONAL)
+        self.simulation_version: Final = self._make_field("environment.simulation_version", str, MANDATORY)
+        self.track_name: Final = self._make_field("environment.track_name", str, MANDATORY)
 
         self.file_name = self._make_field("log_file.name", str, MANDATORY)
         self.file_uid = self._make_field("log_file.os_stats.uid", int, MANDATORY)

@@ -2,6 +2,9 @@
   "guru_version": "4.0.0",
   "model_name": "try-continuous-action-space",
   "job_type": "TRAINING",
+  "training": {
+    "learning_algorithm": "SAC"
+  },
   "environment": {
     "simulation_version": "5.0",
     "track_name": "2022_september_pro"
@@ -17,6 +20,14 @@
   },
   "race": {
     "type": "TIME_TRIAL"
+  },
+  "car": {
+    "sensors": [
+      "SINGLE_CAMERA"
+    ]
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
   },
   "hyperparameters": {
     "batch_size": 64,

@@ -2,6 +2,9 @@
   "guru_version": "4.0.0",
   "model_name": "dmh-Oct-C-157",
   "job_type": "TRAINING",
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO"
+  },
   "environment": {
     "domain_randomization": false,
     "simulation_version": "4.0",
@@ -18,6 +21,14 @@
   },
   "race": {
     "type": "TIME_TRIAL"
+  },
+  "car": {
+    "sensors": [
+      "STEREO_CAMERAS"
+    ]
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
   },
   "hyperparameters": {
     "batch_size": 512,

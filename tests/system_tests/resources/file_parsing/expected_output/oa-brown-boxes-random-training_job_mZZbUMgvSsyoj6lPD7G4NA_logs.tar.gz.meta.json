@@ -2,6 +2,9 @@
   "guru_version": "4.0.0",
   "model_name": "oa-brown-boxes-random",
   "job_type": "TRAINING",
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO"
+  },
   "environment": {
     "simulation_version": "5.0",
     "track_name": "2022_reinvent_champ"
@@ -22,6 +25,20 @@
       "randomize_locations": true,
       "type": "BROWN_BOX"
     }
+  },
+  "car": {
+    "sensors": [
+      "SECTOR_LIDAR",
+      "STEREO_CAMERAS"
+    ],
+    "lidar": {
+      "number_of_sectors": 8,
+      "number_of_values_per_sector": 8,
+      "clipping_distance": 2.0
+    }
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
   },
   "hyperparameters": {
     "batch_size": 128,

@@ -2,6 +2,9 @@
   "guru_version": "4.0.0",
   "model_name": "custom_files",
   "job_type": "TRAINING",
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO"
+  },
   "environment": {
     "domain_randomization": false,
     "simulation_version": "5.0",
@@ -38,6 +41,20 @@
         }
       ]
     }
+  },
+  "car": {
+    "sensors": [
+      "STEREO_CAMERAS",
+      "LIDAR"
+    ],
+    "lidar": {
+      "number_of_sectors": 8,
+      "number_of_values_per_sector": 8,
+      "clipping_distance": 2.0
+    }
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
   },
   "hyperparameters": {
     "batch_size": 512,

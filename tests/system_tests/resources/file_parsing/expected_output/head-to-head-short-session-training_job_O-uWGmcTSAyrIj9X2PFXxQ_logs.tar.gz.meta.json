@@ -2,6 +2,9 @@
   "guru_version": "4.0.0",
   "model_name": "head-to-head-short-session",
   "job_type": "TRAINING",
+  "training": {
+    "learning_algorithm": "SAC"
+  },
   "environment": {
     "simulation_version": "5.0",
     "track_name": "2022_reinvent_champ"
@@ -26,6 +29,20 @@
       "number": 3,
       "speed": 2.0
     }
+  },
+  "car": {
+    "sensors": [
+      "SECTOR_LIDAR",
+      "STEREO_CAMERAS"
+    ],
+    "lidar": {
+      "number_of_sectors": 8,
+      "number_of_values_per_sector": 8,
+      "clipping_distance": 2.0
+    }
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
   },
   "hyperparameters": {
     "batch_size": 64,

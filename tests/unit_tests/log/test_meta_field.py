@@ -223,4 +223,12 @@ class TestMetaField(unittest.TestCase):
         field.set("Two")
         self.assertRaises(MetaFieldInvalidValue, field.set, "Three")
 
+    def test_list_allowed_value(self):
+        field = MetaField("field", list, Optionality.MANDATORY)
+        field.set_allowed_values([1, 2, 3])
+
+        field.set([3, 2, 1])
+        self.assertRaises(MetaFieldInvalidValue, field.set, [3, 2, 1, 99])
+
+
 

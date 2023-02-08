@@ -34,7 +34,7 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
 
         if PARAM_OA_OBJECT_POSITIONS in parameters:
             positions = parameters[PARAM_OA_OBJECT_POSITIONS]
-            assert(isinstance(positions, list))
+            assert (isinstance(positions, list))
             # Example: ['0.1,-1', '0.25,1', '0.4,-1', '0.55,1', '0.7,-1']
             # where -1 is OUTSIDE      and +1 means INSIDE
             for p in positions:
@@ -92,11 +92,47 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
                     CLOUD_TRAINING_YAML_FILENAME_B):
                 log_meta.model_name.set(re.sub("^ *", "", split_parts[0]))  # Strip off leading space(s)
 
-    if line_of_text.startswith(SPECIAL_TRAINING_PARAMS_START):
+    if line_of_text.startswith(SPECIAL_PARAMS_START_A) or line_of_text.startswith(SPECIAL_PARAMS_START_B):
+        # Example line_of_text    (second example is from an older log in 2020)
+        #
+        # Sensor list ['SECTOR_LIDAR', 'STEREO_CAMERAS'], network DEEP_CONVOLUTIONAL_NETWORK_SHALLOW, simapp_version 5.0, training_algorithm clipped_ppo, action_space_type discrete lidar_config {'num_sectors': 8, 'num_values_per_sector': 8, 'clipping_dist': 2.0}
+        # Sensor list [u'FRONT_FACING_CAMERA'], network DEEP_CONVOLUTIONAL_NETWORK_SHALLOW, simapp_version 3.0
+
         if CONTINUOUS_ACTION_SPACE_CONTAINS in line_of_text:
             log_meta.action_space.mark_as_continuous()
-        simapp_pos = line_of_text.find(SIMAPP_VERSION_CONTAINS)
-        log_meta.simulation_version.set(line_of_text[simapp_pos + len(SIMAPP_VERSION_CONTAINS):][:3])
+
+        pos = line_of_text.find(SIMAPP_VERSION_CONTAINS)
+        log_meta.simulation_version.set(line_of_text[pos + len(SIMAPP_VERSION_CONTAINS):][:3])
+
+        pos = line_of_text.find(NEURAL_TOPOLOGY_CONTAINS)
+        topology = line_of_text[pos + len(NEURAL_TOPOLOGY_CONTAINS):].split(",")[0]
+        if topology == "DEEP_CONVOLUTIONAL_NETWORK_SHALLOW":
+            topology = "DEEP_CONVOLUTIONAL_3_LAYER"
+        log_meta.neural_network_topology.set(topology)
+
+        if TRAINING_ALGORITHM_CONTAINS in line_of_text:
+            pos = line_of_text.find(TRAINING_ALGORITHM_CONTAINS)
+            log_meta.learning_algorithm.set(line_of_text[pos + len(TRAINING_ALGORITHM_CONTAINS):].split(",")[0].upper())
+        else:
+            log_meta.learning_algorithm.set("CLIPPED_PPO")
+
+        if SENSOR_LIST_CONTAINS in line_of_text:
+            pos = line_of_text.find(SENSOR_LIST_CONTAINS)
+            data_string = '{"sensors": ' + line_of_text[pos + len(SENSOR_LIST_CONTAINS):].split("]")[0] + "]}"
+            data_string = data_string.replace("[u'", "['").replace(", u'", ", '").replace("'", "\"")
+            sensors_list: list = json.loads(data_string)["sensors"]
+            if "FRONT_FACING_CAMERA" in sensors_list:
+                sensors_list.remove("FRONT_FACING_CAMERA")
+                sensors_list.append("SINGLE_CAMERA")
+            log_meta.sensors.set(sensors_list)
+
+            if LIDAR_CONFIG_CONTAINS in line_of_text and ("LIDAR" in sensors_list or "SECTOR_LIDAR" in sensors_list):
+                pos = line_of_text.find(LIDAR_CONFIG_CONTAINS)
+                data_string = line_of_text[pos + len(LIDAR_CONFIG_CONTAINS):].split("}")[0] + "}"
+                data_fields = json.loads(data_string.replace("'", "\""))
+                log_meta.lidar_number_of_sectors.set(data_fields["num_sectors"])
+                log_meta.lidar_number_of_values_per_sector.set(data_fields["num_values_per_sector"])
+                log_meta.lidar_clipping_distance.set(data_fields["clipping_dist"])
 
     if line_of_text.startswith(MISC_ACTION_SPACE_A):
         _parse_actions(line_of_text, log_meta, MISC_ACTION_SPACE_A)
@@ -304,9 +340,14 @@ MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-me
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
 MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
 
-SPECIAL_TRAINING_PARAMS_START = "Sensor list ["
+SPECIAL_PARAMS_START_A = "Sensor list ['"
+SPECIAL_PARAMS_START_B = "Sensor list [u'"
 CONTINUOUS_ACTION_SPACE_CONTAINS = "action_space_type continuous"
 SIMAPP_VERSION_CONTAINS = ", simapp_version "
+SENSOR_LIST_CONTAINS = "Sensor list "
+LIDAR_CONFIG_CONTAINS = " lidar_config "
+NEURAL_TOPOLOGY_CONTAINS = "], network "
+TRAINING_ALGORITHM_CONTAINS = ", training_algorithm "
 
 # For handling cloud, here are the example of cloud and non-cloud
 #   cloud       [s3] Successfully downloaded yaml file from s3 key DMH-Champ-Round1-OA-B-3/training-params.yaml
@@ -371,7 +412,8 @@ def _set_hyper_string_value(line_of_text: str, hyper_name: str, meta_field: Meta
 
 # Parse the high level training settings
 
-def _set_parameter_string_value(parameters: dict, parameter_name: str, meta_field: MetaField, replacements: dict = None):
+def _set_parameter_string_value(parameters: dict, parameter_name: str, meta_field: MetaField,
+                                replacements: dict = None):
     if parameter_name in parameters:
         value = parameters[parameter_name]
         if replacements is not None and value in replacements:
@@ -399,4 +441,3 @@ def _text_to_bool(text: str) -> bool:
     value = text.upper().replace(" ", "").replace("\n", "")
     assert value in ("TRUE", "FALSE")
     return value == "TRUE"
-

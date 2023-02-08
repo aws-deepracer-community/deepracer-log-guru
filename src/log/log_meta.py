@@ -28,9 +28,12 @@ class LogMeta:
         self.job_type: Final = self._make_field("job_type", str, MANDATORY)
         self.job_type.set_allowed_values(["TRAINING"])
 
-        # self.track_name: Final = self._make_field("environment.track_name", str, MANDATORY)
+        self.learning_algorithm: Final = self._make_field("training.learning_algorithm", str, OPTIONAL)
+        self.learning_algorithm.set_allowed_values(["CLIPPED_PPO", "SAC"])
+
         self.domain_randomization: Final = self._make_field("environment.domain_randomization", bool, OPTIONAL)
         self.simulation_version: Final = self._make_field("environment.simulation_version", str, MANDATORY)
+        self.simulation_version.set_allowed_values(["3.0", "4.0", "5.0"])
         self.track_name: Final = self._make_field("environment.track_name", str, MANDATORY)
 
         self.file_name = self._make_field("log_file.name", str, MANDATORY)
@@ -50,6 +53,14 @@ class LogMeta:
 
         self.h2h_number: Final = self._make_field("race.head_to_head.number", int, OPTIONAL, 1, None)
         self.h2h_speed: Final = self._make_field("race.head_to_head.speed", float, OPTIONAL, 0.0, 4.0)
+
+        self.sensors: Final = self._make_field("car.sensors", list, MANDATORY)
+        self.sensors.set_allowed_values(["SINGLE_CAMERA", "STEREO_CAMERAS", "LIDAR", "SECTOR_LIDAR"])
+        self.lidar_number_of_sectors: Final = self._make_field("car.lidar.number_of_sectors", int, OPTIONAL)
+        self.lidar_number_of_values_per_sector: Final = self._make_field("car.lidar.number_of_values_per_sector", int, OPTIONAL)
+        self.lidar_clipping_distance: Final = self._make_field("car.lidar.clipping_distance", float, OPTIONAL)
+        self.neural_network_topology: Final = self._make_field("neural_network.topology", str, MANDATORY)
+        self.neural_network_topology.set_allowed_values(["DEEP_CONVOLUTIONAL_3_LAYER"])
 
         self.batch_size: Final = self._make_field("hyperparameters.batch_size", int, OPTIONAL, 1, None)
         self.learning_rate: Final = self._make_field("hyperparameters.learning_rate", float, OPTIONAL, 0.00000001,

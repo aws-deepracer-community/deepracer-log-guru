@@ -2,6 +2,9 @@
   "guru_version": "4.0.0",
   "model_name": "dmh-mars-v14-proto-ChampCup-g",
   "job_type": "TRAINING",
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO"
+  },
   "environment": {
     "simulation_version": "3.0",
     "track_name": "reInvent2019_track"
@@ -17,6 +20,14 @@
   },
   "race": {
     "type": "TIME_TRIAL"
+  },
+  "car": {
+    "sensors": [
+      "SINGLE_CAMERA"
+    ]
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
   },
   "hyperparameters": {
     "batch_size": 128,

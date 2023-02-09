@@ -33,7 +33,10 @@ class MetaFieldValueModified(Exception):
 
 
 class MetaFieldMissingMandatoryValue(Exception):
-    pass
+    def __init__(self, field_name: str):
+        super().__init__(
+            "Missing value for mandatory field <{}>".format(field_name)
+            )
 
 
 class MetaFieldDuplicate(Exception):
@@ -130,14 +133,14 @@ class MetaField:
                 parent_node = parent_node[node_name]
             except KeyError:
                 if self._optionality == Optionality.MANDATORY:
-                    raise MetaFieldMissingMandatoryValue
+                    raise MetaFieldMissingMandatoryValue(self._field_name)
                 else:
                     return
         try:
             self.set(parent_node[self._split_path[-1]])
         except KeyError:
             if self._optionality == Optionality.MANDATORY:
-                raise MetaFieldMissingMandatoryValue
+                raise MetaFieldMissingMandatoryValue(self._field_name)
 
 
 class MetaFields:

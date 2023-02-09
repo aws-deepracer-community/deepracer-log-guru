@@ -1,7 +1,13 @@
 {
   "guru_version": "4.0.0",
   "model_name": "training-20220611230353-EHNgTNY2T9-77qXhqjBi6A-robomaker",
-  "job_type": "TRAINING",
+  "job": {
+    "type": "TRAINING",
+    "platform": "AWS_CONSOLE",
+    "workers": 1,
+    "worker_id": 0,
+    "start_date": "TODO"
+  },
   "training": {
     "learning_algorithm": "CLIPPED_PPO",
     "alternate_driving_direction": false,

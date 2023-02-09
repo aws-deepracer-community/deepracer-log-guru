@@ -26,8 +26,14 @@ class LogMeta:
         self.guru_version: Final = self._make_field("guru_version", str, MANDATORY)
         self.model_name: Final = self._make_field("model_name", str, MANDATORY)
         self.model_name.allow_modifications()
-        self.job_type: Final = self._make_field("job_type", str, MANDATORY)
+
+        self.job_type: Final = self._make_field("job.type", str, MANDATORY)
         self.job_type.set_allowed_values(["TRAINING"])
+        self.platform: Final = self._make_field("job.platform", str, MANDATORY)
+        self.platform.set_allowed_values(["AWS_CONSOLE", "DEEPRACER_FOR_CLOUD"])
+        self.workers: Final = self._make_field("job.workers", int, MANDATORY, 1, None)
+        self.worker_id: Final = self._make_field("job.worker_id", int, MANDATORY, 0, None)
+        self.start_date: Final = self._make_field("job.start_date", str, MANDATORY)
 
         self.learning_algorithm: Final = self._make_field("training.learning_algorithm", str, OPTIONAL)
         self.learning_algorithm.set_allowed_values(["CLIPPED_PPO", "SAC"])
@@ -45,11 +51,11 @@ class LogMeta:
         self.simulation_version.set_allowed_values(["3.0", "4.0", "5.0"])
         self.track_name: Final = self._make_field("environment.track_name", str, MANDATORY)
 
-        self.file_name = self._make_field("log_file.name", str, MANDATORY)
-        self.file_uid = self._make_field("log_file.os_stats.uid", int, MANDATORY)
-        self.file_size = self._make_field("log_file.os_stats.size", int, MANDATORY)
-        self.file_ctime = self._make_field("log_file.os_stats.ctime", float, MANDATORY)
-        self.file_mtime = self._make_field("log_file.os_stats.mtime", float, MANDATORY)
+        self.file_name: Final = self._make_field("log_file.name", str, MANDATORY)
+        self.file_uid: Final = self._make_field("log_file.os_stats.uid", int, MANDATORY)
+        self.file_size: Final = self._make_field("log_file.os_stats.size", int, MANDATORY)
+        self.file_ctime: Final = self._make_field("log_file.os_stats.ctime", float, MANDATORY)
+        self.file_mtime: Final = self._make_field("log_file.os_stats.mtime", float, MANDATORY)
 
         self.race_type: Final = self._make_field("race.type", str, MANDATORY)
         self.race_type.set_allowed_values(["TIME_TRIAL", "OBJECT_AVOIDANCE", "HEAD_TO_HEAD"])

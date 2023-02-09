@@ -25,12 +25,28 @@ STILL_EVALUATING = "Reset agent"
 
 
 def parse_intro_event(line_of_text: str, log_meta: LogMeta):
+
+    if line_of_text.startswith(DRFC_WORKER_INFO_LINE):
+        # Example:
+        # Starting as worker 0, using world 2022_july_pro and configuration training_params.yaml.
+        log_meta.platform.set("DEEPRACER_FOR_CLOUD")
+        pos = line_of_text.find(DRFC_WORKER_INFO_LINE)
+        log_meta.worker_id.set(int(line_of_text[pos + len(DRFC_WORKER_INFO_LINE):].split(",")[0]))
+        log_meta.start_date.set("TODO")
+
     if line_of_text.startswith("{'") and PARAM_JOB_TYPE in line_of_text and PARAM_WORLD_NAME in line_of_text:
+        if log_meta.platform.get() is None:
+            log_meta.platform.set("AWS_CONSOLE")
+            log_meta.workers.set(1)
+            log_meta.worker_id.set(0)
+            log_meta.start_date.set("TODO")
+
         parameters = json.loads(line_of_text.replace("'", "\""))
 
         _set_parameter_string_value(parameters, PARAM_WORLD_NAME, log_meta.track_name)
         _set_parameter_string_value(parameters, PARAM_JOB_TYPE, log_meta.job_type)
         _set_parameter_boolean_value(parameters, PARAM_DOMAIN_RANDOMIZATION, log_meta.domain_randomization)
+        _set_parameter_integer_value(parameters, PARAM_NUM_WORKERS, log_meta.workers)
 
         if PARAM_OA_OBJECT_POSITIONS in parameters:
             positions = parameters[PARAM_OA_OBJECT_POSITIONS]
@@ -332,6 +348,7 @@ PARAM_WORLD_NAME = "WORLD_NAME"
 PARAM_RACE_TYPE = "RACE_TYPE"
 PARAM_JOB_TYPE = "JOB_TYPE"
 PARAM_DOMAIN_RANDOMIZATION = "ENABLE_DOMAIN_RANDOMIZATION"
+PARAM_NUM_WORKERS = "NUM_WORKERS"
 
 PARAM_OA_NUMBER_OF_OBSTACLES = "NUMBER_OF_OBSTACLES"
 PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES = "MIN_DISTANCE_BETWEEN_OBSTACLES"
@@ -352,6 +369,8 @@ PARAM_ROUND_ROBIN_ADVANCE_DIST = "ROUND_ROBIN_ADVANCE_DIST"
 MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-metadata/"
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
 MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
+
+DRFC_WORKER_INFO_LINE = "Starting as worker "
 
 SPECIAL_PARAMS_START_A = "Sensor list ['"
 SPECIAL_PARAMS_START_B = "Sensor list [u'"

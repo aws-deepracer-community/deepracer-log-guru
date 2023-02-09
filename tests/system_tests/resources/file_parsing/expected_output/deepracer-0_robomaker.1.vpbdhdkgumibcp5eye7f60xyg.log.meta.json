@@ -1,7 +1,13 @@
 {
   "guru_version": "4.0.0",
   "model_name": "hands-free-July-OA-Q-08",
-  "job_type": "TRAINING",
+  "job": {
+    "type": "TRAINING",
+    "platform": "DEEPRACER_FOR_CLOUD",
+    "workers": 2,
+    "worker_id": 0,
+    "start_date": "TODO"
+  },
   "training": {
     "learning_algorithm": "CLIPPED_PPO",
     "alternate_driving_direction": false,

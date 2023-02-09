@@ -1,7 +1,13 @@
 {
   "guru_version": "4.0.0",
   "model_name": "try-continuous-action-space",
-  "job_type": "TRAINING",
+  "job": {
+    "type": "TRAINING",
+    "platform": "AWS_CONSOLE",
+    "workers": 1,
+    "worker_id": 0,
+    "start_date": "TODO"
+  },
   "training": {
     "learning_algorithm": "SAC",
     "alternate_driving_direction": false,

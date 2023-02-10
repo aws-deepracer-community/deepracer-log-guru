@@ -41,6 +41,9 @@
     }
   },
   "car": {
+    "trim_colour": "BLACK",
+    "name": "Banana-stereo-and-lidar",
+    "shell_type": "f1_car_banana_01",
     "sensors": [
       "SECTOR_LIDAR",
       "STEREO_CAMERAS"

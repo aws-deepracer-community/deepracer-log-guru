@@ -61,6 +61,11 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
         _set_parameter_boolean_value(parameters, PARAM_DOMAIN_RANDOMIZATION, log_meta.domain_randomization)
         _set_parameter_integer_value(parameters, PARAM_NUM_WORKERS, log_meta.workers)
 
+        _set_parameter_string_value(parameters, PARAM_CAR_NAME, log_meta.car_name)
+        _set_parameter_string_value(parameters, PARAM_BODY_SHELL_TYPE, log_meta.car_shell_type, is_within_list=True)
+        _set_parameter_string_value(parameters, PARAM_CAR_COLOR, log_meta.car_trim_colour, is_within_list=True,
+                                    convert_to_upper=True)
+
         if PARAM_OA_OBJECT_POSITIONS in parameters:
             positions = parameters[PARAM_OA_OBJECT_POSITIONS]
             assert (isinstance(positions, list))
@@ -363,6 +368,10 @@ PARAM_JOB_TYPE = "JOB_TYPE"
 PARAM_DOMAIN_RANDOMIZATION = "ENABLE_DOMAIN_RANDOMIZATION"
 PARAM_NUM_WORKERS = "NUM_WORKERS"
 
+PARAM_CAR_NAME = "CAR_NAME"
+PARAM_BODY_SHELL_TYPE = "BODY_SHELL_TYPE"
+PARAM_CAR_COLOR = "CAR_COLOR"
+
 PARAM_OA_NUMBER_OF_OBSTACLES = "NUMBER_OF_OBSTACLES"
 PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES = "MIN_DISTANCE_BETWEEN_OBSTACLES"
 PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS = "RANDOMIZE_OBSTACLE_LOCATIONS"
@@ -461,9 +470,15 @@ def _set_hyper_string_value(line_of_text: str, hyper_name: str, meta_field: Meta
 # Parse the high level training settings
 
 def _set_parameter_string_value(parameters: dict, parameter_name: str, meta_field: MetaField,
-                                replacements: dict = None, default=None):
+                                replacements: dict = None, default=None, is_within_list: bool = False, convert_to_upper: bool = False):
     if parameter_name in parameters:
         value = parameters[parameter_name]
+        if is_within_list:
+            assert isinstance(value, list)
+            assert len(value) == 1
+            value = value[0]
+        if convert_to_upper:
+            value = value.upper()
         if replacements is not None and value in replacements:
             meta_field.set(replacements[value])
         else:

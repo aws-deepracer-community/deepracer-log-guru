@@ -32,6 +32,8 @@
     "type": "TIME_TRIAL"
   },
   "car": {
+    "trim_colour": "BLACK",
+    "shell_type": "deepracer",
     "sensors": [
       "SINGLE_CAMERA"
     ]

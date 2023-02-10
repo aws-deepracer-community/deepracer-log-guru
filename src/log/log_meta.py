@@ -69,7 +69,13 @@ class LogMeta:
         self.h2h_number: Final = self._make_field("race.head_to_head.number", int, OPTIONAL, 1, None)
         self.h2h_speed: Final = self._make_field("race.head_to_head.speed", float, OPTIONAL, 0.0, 4.0)
 
+        self.car_trim_colour: Final = self._make_field("car.trim_colour", str, MANDATORY)
+        self.car_trim_colour.set_allowed_values(["BLACK", "GREY", "BLUE", "RED", "ORANGE", "WHITE", "PURPLE"])
+        self.car_name: Final = self._make_field("car.name", str, OPTIONAL)
+        self.car_shell_type: Final = self._make_field("car.shell_type", str, MANDATORY)
+
         self.sensors: Final = self._make_field("car.sensors", list, MANDATORY)
+
         self.sensors.set_allowed_values(["SINGLE_CAMERA", "STEREO_CAMERAS", "LIDAR", "SECTOR_LIDAR"])
         self.lidar_number_of_sectors: Final = self._make_field("car.lidar.number_of_sectors", int, OPTIONAL)
         self.lidar_number_of_values_per_sector: Final = self._make_field("car.lidar.number_of_values_per_sector", int, OPTIONAL)

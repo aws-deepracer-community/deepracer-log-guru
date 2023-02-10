@@ -32,6 +32,9 @@
     "type": "TIME_TRIAL"
   },
   "car": {
+    "trim_colour": "BLACK",
+    "name": "banana-mono",
+    "shell_type": "f1_car_banana_01",
     "sensors": [
       "SINGLE_CAMERA"
     ]

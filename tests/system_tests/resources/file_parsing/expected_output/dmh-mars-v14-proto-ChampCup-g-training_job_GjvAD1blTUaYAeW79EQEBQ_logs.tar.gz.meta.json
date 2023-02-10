@@ -32,6 +32,9 @@
     "type": "TIME_TRIAL"
   },
   "car": {
+    "trim_colour": "RED",
+    "name": "ReInventRacers-MARS",
+    "shell_type": "f1_2021",
     "sensors": [
       "SINGLE_CAMERA"
     ]

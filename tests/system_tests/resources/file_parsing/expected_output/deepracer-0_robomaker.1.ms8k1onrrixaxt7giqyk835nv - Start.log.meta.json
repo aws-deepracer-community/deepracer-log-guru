@@ -54,6 +54,9 @@
     }
   },
   "car": {
+    "trim_colour": "BLACK",
+    "name": "FastCar",
+    "shell_type": "deepracer",
     "sensors": [
       "STEREO_CAMERAS",
       "LIDAR"

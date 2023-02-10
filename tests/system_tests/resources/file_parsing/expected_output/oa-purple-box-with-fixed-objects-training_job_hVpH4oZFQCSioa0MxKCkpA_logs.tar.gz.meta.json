@@ -59,6 +59,9 @@
     }
   },
   "car": {
+    "trim_colour": "BLUE",
+    "name": "dfgdfgdgs",
+    "shell_type": "deepracer",
     "sensors": [
       "SECTOR_LIDAR",
       "STEREO_CAMERAS"

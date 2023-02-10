@@ -6,7 +6,7 @@
     "platform": "DEEPRACER_FOR_CLOUD",
     "workers": 2,
     "worker_id": 0,
-    "start_date": "TODO"
+    "start_date": "2021-10-19"
   },
   "training": {
     "learning_algorithm": "CLIPPED_PPO",

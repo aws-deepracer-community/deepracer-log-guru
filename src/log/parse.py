@@ -8,12 +8,14 @@
 
 import json
 import re
+from datetime import date
 
 from object_avoidance.fixed_object_locations import FixedObjectLocation, Lane
 from src.event.event_meta import Event
 from src.log.log_meta import LogMeta
 from src.action_space.action import Action
 from src.log.meta_field import MetaField
+
 
 #
 # PUBLIC Constants and Interface
@@ -26,20 +28,31 @@ STILL_EVALUATING = "Reset agent"
 
 def parse_intro_event(line_of_text: str, log_meta: LogMeta):
 
+    if DATE_LINE_CPU_WARNING in line_of_text:
+        # Example:
+        # 2023-02-05 16:23:13.599375: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 AVX512F FMA
+        start_date = date.fromisoformat(line_of_text.split(" ")[0])
+        log_meta.start_date.set(str(start_date))
+
+    if DATE_LINE_PASSING_ARG in line_of_text:
+        # Example:
+        # 10/07/2022 13:55:29 passing arg to libvncserver: -rfbport
+        date_parts = line_of_text.split(" ")[0].split("/")
+        start_date = date(int(date_parts[2]), int(date_parts[1]), int(date_parts[0]))
+        log_meta.start_date.set(str(start_date))
+
     if line_of_text.startswith(DRFC_WORKER_INFO_LINE):
         # Example:
         # Starting as worker 0, using world 2022_july_pro and configuration training_params.yaml.
         log_meta.platform.set("DEEPRACER_FOR_CLOUD")
         pos = line_of_text.find(DRFC_WORKER_INFO_LINE)
         log_meta.worker_id.set(int(line_of_text[pos + len(DRFC_WORKER_INFO_LINE):].split(",")[0]))
-        log_meta.start_date.set("TODO")
 
     if line_of_text.startswith("{'") and PARAM_JOB_TYPE in line_of_text and PARAM_WORLD_NAME in line_of_text:
         if log_meta.platform.get() is None:
             log_meta.platform.set("AWS_CONSOLE")
             log_meta.workers.set(1)
             log_meta.worker_id.set(0)
-            log_meta.start_date.set("TODO")
 
         parameters = json.loads(line_of_text.replace("'", "\""))
 
@@ -369,6 +382,9 @@ PARAM_ROUND_ROBIN_ADVANCE_DIST = "ROUND_ROBIN_ADVANCE_DIST"
 MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-metadata/"
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"
 MISC_MODEL_NAME_NEW_LOGS_B = "[s3] Successfully downloaded model metadata"
+
+DATE_LINE_CPU_WARNING = "Your CPU supports instructions "
+DATE_LINE_PASSING_ARG = "passing arg to libvncserver"
 
 DRFC_WORKER_INFO_LINE = "Starting as worker "
 

@@ -6,7 +6,7 @@
     "platform": "AWS_CONSOLE",
     "workers": 1,
     "worker_id": 0,
-    "start_date": "TODO"
+    "start_date": "2023-01-30"
   },
   "training": {
     "learning_algorithm": "SAC",

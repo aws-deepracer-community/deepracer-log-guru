@@ -76,17 +76,33 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
                 log_meta.fixed_object_locations.add(FixedObjectLocation(float(parts[0]), Lane(int(parts[1]))))
 
         _set_parameter_string_value(parameters, PARAM_RACE_TYPE, log_meta.race_type,
-                                    {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD"})
+                                    {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD", "HEAD_TO_BOT": "HEAD_TO_HEAD"})
 
-        _set_parameter_integer_value(parameters, PARAM_OA_NUMBER_OF_OBSTACLES, log_meta.oa_number)
-        _set_parameter_float_value(parameters, PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES,
-                                   log_meta.oa_min_distance_between)
-        _set_parameter_boolean_value(parameters, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS, log_meta.oa_randomize)
-        _set_parameter_string_value(parameters, PARAM_OA_OBSTACLE_TYPE, log_meta.oa_type,
-                                    {"deepracer_box_obstacle": "PURPLE_BOX", "box_obstacle": "BROWN_BOX"})
+        if log_meta.race_type.get() != "TIME_TRIAL":    # Important because H2H can be trained with obstacles too
+            _set_parameter_integer_value(parameters, PARAM_OA_NUMBER_OF_OBSTACLES, log_meta.oa_number)
+            _set_parameter_float_value(parameters, PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES,
+                                       log_meta.oa_min_distance_between)
+            _set_parameter_boolean_value(parameters, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS, log_meta.oa_randomize)
+            _set_parameter_string_value(parameters, PARAM_OA_OBSTACLE_TYPE, log_meta.oa_type,
+                                        {"deepracer_box_obstacle": "PURPLE_BOX", "box_obstacle": "BROWN_BOX"})
 
-        _set_parameter_integer_value(parameters, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number)
-        _set_parameter_float_value(parameters, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)
+        if log_meta.race_type.get() == "HEAD_TO_HEAD":
+            _set_parameter_integer_value(parameters, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number_of_bots)
+            _set_parameter_float_value(parameters, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)
+
+            _set_parameter_float_value(parameters, PARAM_H2H_MIN_DISTANCE_BETWEEN,
+                                       log_meta.h2h_min_distance_between)
+            _set_parameter_boolean_value(parameters, PARAM_H2H_RANDOMIZE_BOT_LOCATIONS,
+                                         log_meta.h2h_randomize_bot_locations)
+
+            _set_parameter_boolean_value(parameters, PARAM_H2H_IS_LANE_CHANGE, log_meta.h2h_allow_lane_changes)
+            if log_meta.h2h_allow_lane_changes.get():
+                _set_parameter_float_value(parameters, PARAM_H2H_LOWER_LANE_CHANGE_TIME,
+                                           log_meta.h2h_lower_lane_change_time)
+                _set_parameter_float_value(parameters, PARAM_H2H_UPPER_LANE_CHANGE_TIME,
+                                           log_meta.h2h_upper_lane_change_time)
+                _set_parameter_float_value(parameters, PARAM_H2H_LANE_CHANGE_DISTANCE,
+                                           log_meta.h2h_lane_change_distance)
 
         _set_parameter_boolean_value(parameters, PARAM_ALTERNATE_DRIVING_DIRECTION, log_meta.alternate_direction)
         _set_parameter_float_value(parameters, PARAM_START_POSITION_OFFSET, log_meta.start_position_offset, 0.0)
@@ -381,6 +397,12 @@ PARAM_OA_OBJECT_POSITIONS = "OBJECT_POSITIONS"
 
 PARAM_H2H_NUMBER_OF_BOT_CARS = "NUMBER_OF_BOT_CARS"
 PARAM_H2H_BOT_CAR_SPEED = "BOT_CAR_SPEED"
+PARAM_H2H_MIN_DISTANCE_BETWEEN = "MIN_DISTANCE_BETWEEN_BOT_CARS"
+PARAM_H2H_RANDOMIZE_BOT_LOCATIONS = "RANDOMIZE_BOT_CAR_LOCATIONS"
+PARAM_H2H_IS_LANE_CHANGE = "IS_LANE_CHANGE"
+PARAM_H2H_LOWER_LANE_CHANGE_TIME = "LOWER_LANE_CHANGE_TIME"
+PARAM_H2H_UPPER_LANE_CHANGE_TIME = "UPPER_LANE_CHANGE_TIME"
+PARAM_H2H_LANE_CHANGE_DISTANCE = "LANE_CHANGE_DISTANCE"
 
 PARAM_ALTERNATE_DRIVING_DIRECTION = "ALTERNATE_DRIVING_DIRECTION"
 PARAM_START_POSITION_OFFSET = "START_POSITION_OFFSET"

@@ -90,6 +90,9 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
     def test_fixed_obstacle_positions_in_drfc_competitive_training_july_2022(self):
         self._test_parse_file("deepracer-0_robomaker.1.ms8k1onrrixaxt7giqyk835nv - Start.log")
 
+    def test_xxx(self):
+        self._test_parse_file("deepracer-0_robomaker.1.mh77xxe01xgkyky72m378gnwp.log")
+
     def _test_parse_file(self, filename: str):
         # Setup
         self.assertTrue(os.path.isdir(RESOURCE_DIR))

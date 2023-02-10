@@ -37,7 +37,12 @@
     },
     "head_to_head": {
       "number": 3,
-      "speed": 2.0
+      "speed": 2.0,
+      "allow_lane_changes": true,
+      "lane_changes": {
+        "lower_change_time": 2.0,
+        "upper_change_time": 4.0
+      }
     }
   },
   "car": {

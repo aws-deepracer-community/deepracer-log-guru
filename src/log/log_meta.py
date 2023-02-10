@@ -66,8 +66,17 @@ class LogMeta:
         self.oa_type: Final = self._make_field("race.object_avoidance.type", str, OPTIONAL)
         self.oa_type.set_allowed_values(["BROWN_BOX", "PURPLE_BOX", "BOT_CAR"])
 
-        self.h2h_number: Final = self._make_field("race.head_to_head.number", int, OPTIONAL, 1, None)
-        self.h2h_speed: Final = self._make_field("race.head_to_head.speed", float, OPTIONAL, 0.0, 4.0)
+        self.h2h_number_of_bots: Final = self._make_field("race.head_to_head.number", int, OPTIONAL, 1, None)
+        self.h2h_speed: Final = self._make_field("race.head_to_head.speed", float, OPTIONAL, 0.1, 4.0)
+        self.h2h_min_distance_between: Final = self._make_field("race.head_to_head.min_distance_between", float, OPTIONAL, 0.0, None)
+        self.h2h_randomize_bot_locations: Final = self._make_field("race.head_to_head.randomize_bot_locations", bool, OPTIONAL)
+        self.h2h_allow_lane_changes: Final = self._make_field("race.head_to_head.allow_lane_changes", bool, OPTIONAL)
+        self.h2h_lower_lane_change_time: Final = self._make_field("race.head_to_head.lane_changes.lower_change_time", float,
+                                                                  OPTIONAL, 1.0, 5.0)
+        self.h2h_upper_lane_change_time: Final = self._make_field("race.head_to_head.lane_changes.upper_change_time", float,
+                                                                  OPTIONAL, 1.0, 5.0)
+        self.h2h_lane_change_distance: Final = self._make_field("race.head_to_head.lane_changes.distance", float,
+                                                                OPTIONAL, 0.0, None)
 
         self.car_trim_colour: Final = self._make_field("car.trim_colour", str, MANDATORY)
         self.car_trim_colour.set_allowed_values(["BLACK", "GREY", "BLUE", "RED", "ORANGE", "WHITE", "PURPLE"])

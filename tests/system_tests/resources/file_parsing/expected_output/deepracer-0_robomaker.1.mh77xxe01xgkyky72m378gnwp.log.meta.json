@@ -1,0 +1,131 @@
+{
+  "guru_version": "4.0.0",
+  "model_name": "Head-To-Bot-Test",
+  "job": {
+    "type": "TRAINING",
+    "platform": "DEEPRACER_FOR_CLOUD",
+    "workers": 2,
+    "worker_id": 0,
+    "start_date": "2023-02-10"
+  },
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.1,
+    "minimum_evaluations_per_iteration": 5
+  },
+  "environment": {
+    "domain_randomization": false,
+    "simulation_version": "5.0",
+    "track_name": "2022_reinvent_champ"
+  },
+  "log_file": {
+    "name": "deepracer-0_robomaker.1.mh77xxe01xgkyky72m378gnwp.log",
+    "os_stats": {
+      "uid": 0,
+      "size": 233443,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "HEAD_TO_HEAD",
+    "head_to_head": {
+      "number": 3,
+      "speed": 2.5,
+      "min_distance_between": 2.0,
+      "randomize_bot_locations": true,
+      "allow_lane_changes": true,
+      "lane_changes": {
+        "lower_change_time": 3.0,
+        "upper_change_time": 5.0,
+        "distance": 1.0
+      }
+    }
+  },
+  "car": {
+    "trim_colour": "BLACK",
+    "name": "FastCar",
+    "shell_type": "deepracer",
+    "sensors": [
+      "SINGLE_CAMERA"
+    ]
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
+  },
+  "hyperparameters": {
+    "batch_size": 256,
+    "learning_rate": 0.0003,
+    "discount_factor": 0.97,
+    "loss_type": "HUBER",
+    "episodes_per_training_iteration": 20,
+    "beta_entropy": 0.01,
+    "epochs": 5,
+    "e_greedy_value": 0.05,
+    "epsilon_steps": 10000,
+    "exploration_type": "CATEGORICAL",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 35000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 40,
+    "iteration_count": 0,
+    "success_count": 0,
+    "average_percent_complete": 5.5539524999999985,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 1440.0,
+    "average_reward": 341.10003500000005,
+    "worst_reward": 55.00020000000001
+  },
+  "action_space": {
+    "type": "DISCRETE",
+    "min_speed": 1.0,
+    "max_speed": 4.0,
+    "max_left_steering": 30.0,
+    "max_right_steering": -30.0,
+    "actions": [
+      {
+        "speed": 4.0,
+        "steering_angle": 0
+      },
+      {
+        "speed": 1.0,
+        "steering_angle": 30
+      },
+      {
+        "speed": 1.5,
+        "steering_angle": 20
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": 10
+      },
+      {
+        "speed": 1.0,
+        "steering_angle": -30
+      },
+      {
+        "speed": 1.5,
+        "steering_angle": -20
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": -10
+      }
+    ]
+  }
+}

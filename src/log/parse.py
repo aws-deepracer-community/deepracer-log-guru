@@ -60,6 +60,8 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
         _set_parameter_string_value(parameters, PARAM_JOB_TYPE, log_meta.job_type)
         _set_parameter_boolean_value(parameters, PARAM_DOMAIN_RANDOMIZATION, log_meta.domain_randomization)
         _set_parameter_integer_value(parameters, PARAM_NUM_WORKERS, log_meta.workers)
+        if log_meta.platform.get() == "DEEPRACER_FOR_CLOUD":
+            _set_parameter_string_value(parameters, "SIMTRACE_S3_PREFIX", log_meta.model_name)
 
         _set_parameter_string_value(parameters, PARAM_CAR_NAME, log_meta.car_name)
         _set_parameter_string_value(parameters, PARAM_BODY_SHELL_TYPE, log_meta.car_shell_type, is_within_list=True)

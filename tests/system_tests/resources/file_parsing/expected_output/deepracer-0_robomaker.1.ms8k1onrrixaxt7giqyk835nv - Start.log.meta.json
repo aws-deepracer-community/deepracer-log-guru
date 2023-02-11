@@ -1,6 +1,6 @@
 {
   "guru_version": "4.0.0",
-  "model_name": "custom_files",
+  "model_name": "hands-free-June-OBJ-G-26",
   "job": {
     "type": "TRAINING",
     "platform": "DEEPRACER_FOR_CLOUD",

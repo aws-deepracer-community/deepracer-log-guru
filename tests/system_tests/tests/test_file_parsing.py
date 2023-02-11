@@ -90,8 +90,23 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
     def test_fixed_obstacle_positions_in_drfc_competitive_training_july_2022(self):
         self._test_parse_file("deepracer-0_robomaker.1.ms8k1onrrixaxt7giqyk835nv - Start.log")
 
-    def test_head_to_head_trained_using_drfc(self):
+    def test_head_to_head_trained_using_drfc_worker_1(self):
         self._test_parse_file("deepracer-0_robomaker.1.mh77xxe01xgkyky72m378gnwp.log")
+
+    def test_head_to_head_trained_using_drfc_worker_2(self):
+        self._test_parse_file("deepracer-0_robomaker.2.pleai77ybzcn6yor58nl46ic7.log")
+
+    def test_short_time_trial_trained_using_drfc_worker_1(self):
+        self._test_parse_file("deepracer-0_robomaker.1.74she0uhr3drkcy411ceh6144.log")
+
+    def test_short_time_trial_trained_using_drfc_worker_2(self):
+        self._test_parse_file("deepracer-0_robomaker.2.fqjslgl03wfq10avi4kci3ajq.log")
+
+    def test_short_time_trial_trained_using_drfc_worker_3(self):
+        self._test_parse_file("deepracer-0_robomaker.3.j5u195tk4t2e1lwarox2idzpw.log")
+
+    def test_short_time_trial_trained_using_drfc_worker_4(self):
+        self._test_parse_file("deepracer-0_robomaker.4.q21uw5u7jh904ky13gzf6jai2.log")
 
     def _test_parse_file(self, filename: str):
         # Setup

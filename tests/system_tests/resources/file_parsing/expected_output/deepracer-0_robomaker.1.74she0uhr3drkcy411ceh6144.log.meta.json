@@ -1,0 +1,119 @@
+{
+  "guru_version": "4.0.0",
+  "model_name": "Four-Worker-Test",
+  "job": {
+    "type": "TRAINING",
+    "platform": "DEEPRACER_FOR_CLOUD",
+    "workers": 4,
+    "worker_id": 0,
+    "start_date": "2023-02-11"
+  },
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.1,
+    "minimum_evaluations_per_iteration": 5
+  },
+  "environment": {
+    "domain_randomization": false,
+    "simulation_version": "5.0",
+    "track_name": "2022_reinvent_champ"
+  },
+  "log_file": {
+    "name": "deepracer-0_robomaker.1.74she0uhr3drkcy411ceh6144.log",
+    "os_stats": {
+      "uid": 0,
+      "size": 120787,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "TIME_TRIAL"
+  },
+  "car": {
+    "trim_colour": "BLACK",
+    "name": "FastCar",
+    "shell_type": "deepracer",
+    "sensors": [
+      "SINGLE_CAMERA"
+    ]
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
+  },
+  "hyperparameters": {
+    "batch_size": 256,
+    "learning_rate": 0.0003,
+    "discount_factor": 0.97,
+    "loss_type": "HUBER",
+    "episodes_per_training_iteration": 40,
+    "beta_entropy": 0.01,
+    "epochs": 5,
+    "e_greedy_value": 0.05,
+    "epsilon_steps": 10000,
+    "exploration_type": "CATEGORICAL",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 35000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 16,
+    "iteration_count": 0,
+    "success_count": 0,
+    "average_percent_complete": 5.510362500000001,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 1174.0,
+    "average_reward": 368.43759375,
+    "worst_reward": 67.0
+  },
+  "action_space": {
+    "type": "DISCRETE",
+    "min_speed": 1.0,
+    "max_speed": 4.0,
+    "max_left_steering": 30.0,
+    "max_right_steering": -30.0,
+    "actions": [
+      {
+        "speed": 4.0,
+        "steering_angle": 0
+      },
+      {
+        "speed": 1.0,
+        "steering_angle": 30
+      },
+      {
+        "speed": 1.5,
+        "steering_angle": 20
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": 10
+      },
+      {
+        "speed": 1.0,
+        "steering_angle": -30
+      },
+      {
+        "speed": 1.5,
+        "steering_angle": -20
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": -10
+      }
+    ]
+  }
+}

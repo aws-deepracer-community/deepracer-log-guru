@@ -1,5 +1,5 @@
 {
-  "guru_version": "4.0.0",
+  "guru_version": "4.0.0.DEVELOPMENT",
   "model_name": "oa-brown-boxes-random",
   "job": {
     "type": "TRAINING",

@@ -1,5 +1,5 @@
 {
-  "guru_version": "4.0.0",
+  "guru_version": "4.0.0.DEVELOPMENT",
   "model_name": "training-20211020114346-TfRNRwzjRW2UIpugm7Gd-Q-robomaker",
   "job": {
     "type": "TRAINING",

@@ -15,7 +15,6 @@ from src.action_space.action_space import ActionSpace
 from src.log.meta_field import MetaField, MetaFields, Optionality
 from src.main.version import VERSION
 
-
 MANDATORY = Optionality.MANDATORY
 OPTIONAL = Optionality.OPTIONAL
 
@@ -74,9 +73,6 @@ class ActionSpaceType(Enum):
     DISCRETE = auto()
     CONTINUOUS = auto()
 
-#   LIST IS MORE COMPLICATED AGAIN ....
-#         self.sensors.set_allowed_values(["SINGLE_CAMERA", "STEREO_CAMERAS", "LIDAR", "SECTOR_LIDAR"])
-
 
 class LogMeta:
     def __init__(self):
@@ -115,18 +111,23 @@ class LogMeta:
         self.race_type: Final = self._make_field("race.type", RaceType, MANDATORY)
 
         self.oa_number: Final = self._make_field("race.object_avoidance.number", int, OPTIONAL, 1, None)
-        self.oa_min_distance_between: Final = self._make_field("race.object_avoidance.min_distance_between", float, OPTIONAL, 0.0, None)
+        self.oa_min_distance_between: Final = self._make_field("race.object_avoidance.min_distance_between", float,
+                                                               OPTIONAL, 0.0, None)
         self.oa_randomize: Final = self._make_field("race.object_avoidance.randomize_locations", bool, OPTIONAL)
         self.oa_type: Final = self._make_field("race.object_avoidance.type", ObstacleType, OPTIONAL)
 
         self.h2h_number_of_bots: Final = self._make_field("race.head_to_head.number", int, OPTIONAL, 1, None)
         self.h2h_speed: Final = self._make_field("race.head_to_head.speed", float, OPTIONAL, 0.1, 4.0)
-        self.h2h_min_distance_between: Final = self._make_field("race.head_to_head.min_distance_between", float, OPTIONAL, 0.0, None)
-        self.h2h_randomize_bot_locations: Final = self._make_field("race.head_to_head.randomize_bot_locations", bool, OPTIONAL)
+        self.h2h_min_distance_between: Final = self._make_field("race.head_to_head.min_distance_between", float,
+                                                                OPTIONAL, 0.0, None)
+        self.h2h_randomize_bot_locations: Final = self._make_field("race.head_to_head.randomize_bot_locations", bool,
+                                                                   OPTIONAL)
         self.h2h_allow_lane_changes: Final = self._make_field("race.head_to_head.allow_lane_changes", bool, OPTIONAL)
-        self.h2h_lower_lane_change_time: Final = self._make_field("race.head_to_head.lane_changes.lower_change_time", float,
+        self.h2h_lower_lane_change_time: Final = self._make_field("race.head_to_head.lane_changes.lower_change_time",
+                                                                  float,
                                                                   OPTIONAL, 1.0, 5.0)
-        self.h2h_upper_lane_change_time: Final = self._make_field("race.head_to_head.lane_changes.upper_change_time", float,
+        self.h2h_upper_lane_change_time: Final = self._make_field("race.head_to_head.lane_changes.upper_change_time",
+                                                                  float,
                                                                   OPTIONAL, 1.0, 5.0)
         self.h2h_lane_change_distance: Final = self._make_field("race.head_to_head.lane_changes.distance", float,
                                                                 OPTIONAL, 0.0, None)
@@ -136,12 +137,14 @@ class LogMeta:
         self.car_shell_type: Final = self._make_field("car.shell_type", str, MANDATORY)
 
         self.sensors: Final = self._make_field("car.sensors", list, MANDATORY)
-
         self.sensors.set_allowed_values(["SINGLE_CAMERA", "STEREO_CAMERAS", "LIDAR", "SECTOR_LIDAR"])
+
         self.lidar_number_of_sectors: Final = self._make_field("car.lidar.number_of_sectors", int, OPTIONAL)
-        self.lidar_number_of_values_per_sector: Final = self._make_field("car.lidar.number_of_values_per_sector", int, OPTIONAL)
+        self.lidar_number_of_values_per_sector: Final = self._make_field("car.lidar.number_of_values_per_sector", int,
+                                                                         OPTIONAL)
         self.lidar_clipping_distance: Final = self._make_field("car.lidar.clipping_distance", float, OPTIONAL)
-        self.neural_network_topology: Final = self._make_field("neural_network.topology", NeuralNetworkTopology, MANDATORY)
+        self.neural_network_topology: Final = self._make_field("neural_network.topology", NeuralNetworkTopology,
+                                                               MANDATORY)
 
         self.batch_size: Final = self._make_field("hyperparameters.batch_size", int, OPTIONAL, 1, None)
         self.learning_rate: Final = self._make_field("hyperparameters.learning_rate", float, OPTIONAL, 0.00000001,
@@ -164,26 +167,34 @@ class LogMeta:
 
         self.episode_count: Final = self._make_field("episode_stats.episode_count", int, MANDATORY)
         self.iteration_count: Final = self._make_field("episode_stats.iteration_count", int, MANDATORY)
-        self.success_count: Final = self._make_field("episode_stats.success_count", int, MANDATORY).allow_modifications()
+        self.success_count: Final = self._make_field("episode_stats.success_count", int,
+                                                     MANDATORY).allow_modifications()
 
         self.average_percent_complete: Final = self._make_field("episode_stats.average_percent_complete", float,
                                                                 MANDATORY)
 
         self.best_steps: Final = self._make_field("episode_stats.best_steps", int, MANDATORY).allow_modifications()
-        self.average_steps: Final = self._make_field("episode_stats.average_steps", int, MANDATORY).allow_modifications()
+        self.average_steps: Final = self._make_field("episode_stats.average_steps", int,
+                                                     MANDATORY).allow_modifications()
         self.worst_steps: Final = self._make_field("episode_stats.worst_steps", int, MANDATORY).allow_modifications()
 
         self.best_time: Final = self._make_field("episode_stats.best_time", float, MANDATORY).allow_modifications()
-        self.average_time: Final = self._make_field("episode_stats.average_time", float, MANDATORY).allow_modifications()
+        self.average_time: Final = self._make_field("episode_stats.average_time", float,
+                                                    MANDATORY).allow_modifications()
         self.worst_time: Final = self._make_field("episode_stats.worst_time", float, MANDATORY).allow_modifications()
 
-        self.best_distance: Final = self._make_field("episode_stats.best_distance", float, MANDATORY).allow_modifications()
-        self.average_distance: Final = self._make_field("episode_stats.average_distance", float, MANDATORY).allow_modifications()
-        self.worst_distance: Final = self._make_field("episode_stats.worst_distance", float, MANDATORY).allow_modifications()
+        self.best_distance: Final = self._make_field("episode_stats.best_distance", float,
+                                                     MANDATORY).allow_modifications()
+        self.average_distance: Final = self._make_field("episode_stats.average_distance", float,
+                                                        MANDATORY).allow_modifications()
+        self.worst_distance: Final = self._make_field("episode_stats.worst_distance", float,
+                                                      MANDATORY).allow_modifications()
 
         self.best_reward: Final = self._make_field("episode_stats.best_reward", float, MANDATORY).allow_modifications()
-        self.average_reward: Final = self._make_field("episode_stats.average_reward", float, MANDATORY).allow_modifications()
-        self.worst_reward: Final = self._make_field("episode_stats.worst_reward", float, MANDATORY).allow_modifications()
+        self.average_reward: Final = self._make_field("episode_stats.average_reward", float,
+                                                      MANDATORY).allow_modifications()
+        self.worst_reward: Final = self._make_field("episode_stats.worst_reward", float,
+                                                    MANDATORY).allow_modifications()
 
         self.action_space_type: Final = self._make_field("action_space.type", ActionSpaceType, MANDATORY)
         self.action_space_min_speed: Final = self._make_field("action_space.min_speed", float, MANDATORY, 0.1, 4.0)
@@ -221,19 +232,21 @@ class LogMeta:
 
         return result
 
-    def set_from_json(self, received_json: dict):
+    def set_from_json(self, received_json: dict) -> None:
         MetaFields.parse_json(self._fields, received_json)
         self.action_space = self._get_action_space_from_json(received_json)
         if "object_avoidance" in received_json["race"]:
             if "fixed_locations" in received_json["race"]["object_avoidance"]:
-                self.fixed_object_locations.set_from_meta_json_list(received_json["race"]["object_avoidance"]["fixed_locations"])
+                self.fixed_object_locations.set_from_meta_json_list(
+                    received_json["race"]["object_avoidance"]["fixed_locations"])
 
-    def _make_field(self, json_path: str, data_type: type, optionality: Optionality, min_value=None, max_value=None):
+    def _make_field(self, json_path: str, data_type: type, optionality: Optionality, min_value=None,
+                    max_value=None) -> MetaField:
         new_field = MetaField(json_path, data_type, optionality, min_value, max_value)
         self._fields.append(new_field)
         return new_field
 
-    def _set_meta_fields_based_on_action_space(self):
+    def _set_meta_fields_based_on_action_space(self) -> None:
         if self.action_space.is_continuous():
             low_speed, high_speed, low_steering, high_steering = self.action_space.get_continuous_action_limits()
             self.action_space_type.set(ActionSpaceType.CONTINUOUS)
@@ -246,7 +259,7 @@ class LogMeta:
         self.action_space_max_left_steering.set(float(high_steering))
         self.action_space_max_right_steering.set(float(low_steering))
 
-    def _get_action_space_as_json_list(self):
+    def _get_action_space_as_json_list(self) -> list:
         assert (not self.action_space.is_continuous())
 
         actions_json = []
@@ -259,7 +272,7 @@ class LogMeta:
 
         return actions_json
 
-    def _get_action_space_from_json(self, received_json):
+    def _get_action_space_from_json(self, received_json) -> ActionSpace:
         action_space = ActionSpace()
         if self.action_space_type.get() == ActionSpaceType.DISCRETE:
             index = 0

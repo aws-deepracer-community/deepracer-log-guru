@@ -13,6 +13,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 import src.secret_sauce.glue.glue as ss
+from log.log_meta import RaceType
 
 from src.analyze.track.analyze_heatmap import AnalyzeHeatmap
 from src.analyze.track.analyze_exit_points import AnalyzeExitPoints
@@ -709,7 +710,7 @@ class MainApp(tk.Frame):
         self.switch_analyzer(self.analyze_route)
 
     def expect_objects(self):
-        return self.log is not None and self.log.get_log_meta().race_type == "OBJECT_AVOIDANCE"
+        return self.log is not None and self.log.get_log_meta().race_type == RaceType.OBJECT_AVOIDANCE
 
 
 

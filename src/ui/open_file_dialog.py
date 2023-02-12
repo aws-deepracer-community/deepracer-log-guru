@@ -69,8 +69,8 @@ class OpenFileDialog(Dialog):
             success_percent = self._get_success_percent(log_meta)
 
             self._place_in_grid(row, 0, tk.Button(master, text=log_meta.model_name.get(), command=callback), "E")
-            self._place_in_grid(row, 1, tk.Label(master, text=log_meta.race_type.get()), "E")
-            self._place_in_grid(row, 2, tk.Label(master, text=log_meta.job_type.get()), "E")
+            self._place_in_grid(row, 1, tk.Label(master, text=log_meta.race_type.get().name), "E")
+            self._place_in_grid(row, 2, tk.Label(master, text=log_meta.job_type.get().name), "E")
 
             self._place_in_grid(row, 3, self._make_large_integer_label(master, log_meta.episode_count.get()))
 

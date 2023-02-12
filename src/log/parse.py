@@ -327,17 +327,19 @@ def _parse_date_from_cpu_warning(line_of_text: str, log_meta: LogMeta) -> None:
     # Example:
     # 2023-02-05 16:23:13.599375: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 AVX512F FMA
     #
-    start_date = date.fromisoformat(line_of_text.split(" ")[0])
-    log_meta.start_date.set(str(start_date))
+    if not log_meta.start_date.get():    # Edge condition, date can cross midnight, so trust only the 1st one found
+        start_date = date.fromisoformat(line_of_text.split(" ")[0])
+        log_meta.start_date.set(str(start_date))
 
 
 def _parse_date_from_argument_message(line_of_text: str, log_meta: LogMeta) -> None:
     # Example:
     # 10/07/2022 13:55:29 passing arg to libvncserver: -rfbport
     #
-    date_parts = line_of_text.split(" ")[0].split("/")
-    start_date = date(int(date_parts[2]), int(date_parts[1]), int(date_parts[0]))
-    log_meta.start_date.set(str(start_date))
+    if not log_meta.start_date.get():    # Edge condition, date can cross midnight, so trust only the 1st one found
+        date_parts = line_of_text.split(" ")[0].split("/")
+        start_date = date(int(date_parts[2]), int(date_parts[1]), int(date_parts[0]))
+        log_meta.start_date.set(str(start_date))
 
 
 def _parse_drfc_worker_id(line_of_text: str, log_meta: LogMeta) -> None:

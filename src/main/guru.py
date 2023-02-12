@@ -211,6 +211,7 @@ class MainApp(tk.Frame):
         # Configure the rest of the application window and then make it appear
         #
 
+        self.already_drawing = False
         self.master.title("Deep Racer Guru v" + VERSION)
         self.menu_bar = MenuBar(root, self, False, False)
 
@@ -219,7 +220,6 @@ class MainApp(tk.Frame):
         # All done, so display main window now
         #
 
-        self.already_drawing = False
         self.update()
 
 

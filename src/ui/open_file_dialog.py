@@ -13,13 +13,18 @@ from src.ui.dialog import Dialog
 from src.log.log_utils import get_model_info_for_open_model_dialog
 
 from src.utils.formatting import get_pretty_whole_percentage, get_pretty_large_integer, get_pretty_hours_and_minutes
+from ui.please_wait import PleaseWait
 
 
 class OpenFileDialog(Dialog):
+    def __init__(self, parent, please_wait: PleaseWait):
+        self._please_wait = please_wait
+        super().__init__(parent, "Open File")
 
     def body(self, master):
         model_logs, model_names, all_logs_count = get_model_info_for_open_model_dialog(self.parent.current_track,
-                                                                                       self.parent.get_log_directory())
+                                                                                       self.parent.get_log_directory(),
+                                                                                       self._please_wait)
         all_best_times = []
         all_average_times = []
         all_progress_percent = []

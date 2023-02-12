@@ -7,10 +7,12 @@
 #
 
 import unittest
+from enum import Enum, auto
 
 from src.log.meta_field import MetaField, MetaFields, MetaFieldWrongDatatype, Optionality, \
     MetaFieldMissingMandatoryValue, \
-    MetaFieldDuplicate, MetaFieldNumberOutOfRange, MetaFieldInvalidValue, MetaFieldValueModified
+    MetaFieldDuplicate, MetaFieldNumberOutOfRange, MetaFieldInvalidValue, MetaFieldValueModified, \
+    MetaFieldUnknownEnumValue
 
 
 class TestMetaField(unittest.TestCase):
@@ -245,3 +247,26 @@ class TestMetaField(unittest.TestCase):
         immutable.set(22)
         immutable.set(22)
         self.assertRaises(MetaFieldValueModified, immutable.set, 999)
+
+    def test_enum_field(self):
+        class ExampleEnum(Enum):
+            HELLO = auto()
+            WORLD = auto()
+
+        enum_field = MetaField("enum", ExampleEnum, Optionality.MANDATORY).allow_modifications()
+
+        enum_field.set(ExampleEnum.HELLO)
+        enum_field.set(ExampleEnum.WORLD)
+        self.assertRaises(MetaFieldWrongDatatype, enum_field.set, 1)
+        self.assertRaises(MetaFieldUnknownEnumValue, enum_field.set_enum_str, "BOO")
+        enum_field.set_enum_str("HELLO")
+
+        output_json = MetaFields.create_json([enum_field])
+
+        self.assertEqual({"enum": "HELLO"}, output_json)
+
+
+
+
+
+

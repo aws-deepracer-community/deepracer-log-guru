@@ -9,10 +9,11 @@
 import json
 import re
 from datetime import date
+from enum import Enum
 
 from object_avoidance.fixed_object_locations import FixedObjectLocation, Lane
 from src.event.event_meta import Event
-from src.log.log_meta import LogMeta
+from src.log.log_meta import LogMeta, NeuralNetworkTopology, Platform, RaceType, ObstacleType, LearningAlgorithm
 from src.action_space.action import Action
 from src.log.meta_field import MetaField
 
@@ -26,113 +27,25 @@ SENT_SIGTERM = "Sent SIGTERM"
 STILL_EVALUATING = "Reset agent"
 
 
+
+
+
 def parse_intro_event(line_of_text: str, log_meta: LogMeta):
 
     if DATE_LINE_CPU_WARNING in line_of_text:
-        # Example:
-        # 2023-02-05 16:23:13.599375: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 AVX512F FMA
-        start_date = date.fromisoformat(line_of_text.split(" ")[0])
-        log_meta.start_date.set(str(start_date))
+        _parse_date_from_cpu_warning(line_of_text, log_meta)
 
     if DATE_LINE_PASSING_ARG in line_of_text:
-        # Example:
-        # 10/07/2022 13:55:29 passing arg to libvncserver: -rfbport
-        date_parts = line_of_text.split(" ")[0].split("/")
-        start_date = date(int(date_parts[2]), int(date_parts[1]), int(date_parts[0]))
-        log_meta.start_date.set(str(start_date))
+        _parse_date_from_argument_message(line_of_text, log_meta)
 
-    if line_of_text.startswith(DRFC_WORKER_INFO_LINE):
-        # Example:
-        # Starting as worker 0, using world 2022_july_pro and configuration training_params.yaml.
-        log_meta.platform.set("DEEPRACER_FOR_CLOUD")
-        pos = line_of_text.find(DRFC_WORKER_INFO_LINE)
-        log_meta.worker_id.set(int(line_of_text[pos + len(DRFC_WORKER_INFO_LINE):].split(",")[0]))
+    if line_of_text.startswith(DRFC_WORKER_INFO_LINE):#
+        _parse_drfc_worker_id(line_of_text, log_meta)
 
     if line_of_text.startswith("{'") and PARAM_JOB_TYPE in line_of_text and PARAM_WORLD_NAME in line_of_text:
-        if log_meta.platform.get() is None:
-            log_meta.platform.set("AWS_CONSOLE")
-            log_meta.workers.set(1)
-            log_meta.worker_id.set(0)
+        _parse_intro_event_parameters(line_of_text, log_meta)
 
-        parameters = json.loads(line_of_text.replace("'", "\""))
-
-        _set_parameter_string_value(parameters, PARAM_WORLD_NAME, log_meta.track_name)
-        _set_parameter_string_value(parameters, PARAM_JOB_TYPE, log_meta.job_type)
-        _set_parameter_boolean_value(parameters, PARAM_DOMAIN_RANDOMIZATION, log_meta.domain_randomization)
-        _set_parameter_integer_value(parameters, PARAM_NUM_WORKERS, log_meta.workers)
-        if log_meta.platform.get() == "DEEPRACER_FOR_CLOUD":
-            _set_parameter_string_value(parameters, "SIMTRACE_S3_PREFIX", log_meta.model_name)
-
-        _set_parameter_string_value(parameters, PARAM_CAR_NAME, log_meta.car_name)
-        _set_parameter_string_value(parameters, PARAM_BODY_SHELL_TYPE, log_meta.car_shell_type, is_within_list=True)
-        _set_parameter_string_value(parameters, PARAM_CAR_COLOR, log_meta.car_trim_colour, is_within_list=True,
-                                    convert_to_upper=True)
-
-        if PARAM_OA_OBJECT_POSITIONS in parameters:
-            positions = parameters[PARAM_OA_OBJECT_POSITIONS]
-            assert (isinstance(positions, list))
-            # Example: ['0.1,-1', '0.25,1', '0.4,-1', '0.55,1', '0.7,-1']
-            # where -1 is OUTSIDE      and +1 means INSIDE
-            for p in positions:
-                parts = p.split(",")
-                log_meta.fixed_object_locations.add(FixedObjectLocation(float(parts[0]), Lane(int(parts[1]))))
-
-        _set_parameter_string_value(parameters, PARAM_RACE_TYPE, log_meta.race_type,
-                                    {"HEAD_TO_HEAD_RACING": "HEAD_TO_HEAD", "HEAD_TO_BOT": "HEAD_TO_HEAD"})
-
-        if log_meta.race_type.get() != "TIME_TRIAL":    # Important because H2H can be trained with obstacles too
-            _set_parameter_integer_value(parameters, PARAM_OA_NUMBER_OF_OBSTACLES, log_meta.oa_number)
-            _set_parameter_float_value(parameters, PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES,
-                                       log_meta.oa_min_distance_between)
-            _set_parameter_boolean_value(parameters, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS, log_meta.oa_randomize)
-            _set_parameter_string_value(parameters, PARAM_OA_OBSTACLE_TYPE, log_meta.oa_type,
-                                        {"deepracer_box_obstacle": "PURPLE_BOX", "box_obstacle": "BROWN_BOX"})
-
-        if log_meta.race_type.get() == "HEAD_TO_HEAD":
-            _set_parameter_integer_value(parameters, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number_of_bots)
-            _set_parameter_float_value(parameters, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)
-
-            _set_parameter_float_value(parameters, PARAM_H2H_MIN_DISTANCE_BETWEEN,
-                                       log_meta.h2h_min_distance_between)
-            _set_parameter_boolean_value(parameters, PARAM_H2H_RANDOMIZE_BOT_LOCATIONS,
-                                         log_meta.h2h_randomize_bot_locations)
-
-            _set_parameter_boolean_value(parameters, PARAM_H2H_IS_LANE_CHANGE, log_meta.h2h_allow_lane_changes)
-            if log_meta.h2h_allow_lane_changes.get():
-                _set_parameter_float_value(parameters, PARAM_H2H_LOWER_LANE_CHANGE_TIME,
-                                           log_meta.h2h_lower_lane_change_time)
-                _set_parameter_float_value(parameters, PARAM_H2H_UPPER_LANE_CHANGE_TIME,
-                                           log_meta.h2h_upper_lane_change_time)
-                _set_parameter_float_value(parameters, PARAM_H2H_LANE_CHANGE_DISTANCE,
-                                           log_meta.h2h_lane_change_distance)
-
-        _set_parameter_boolean_value(parameters, PARAM_ALTERNATE_DRIVING_DIRECTION, log_meta.alternate_direction)
-        _set_parameter_float_value(parameters, PARAM_START_POSITION_OFFSET, log_meta.start_position_offset, 0.0)
-        _set_parameter_integer_value(parameters, PARAM_MIN_EVAL_TRIALS, log_meta.min_evaluations_per_iteration)
-        _set_parameter_boolean_value(parameters, PARAM_CHANGE_START_POSITION, log_meta.change_start_position)
-        if log_meta.change_start_position.get():
-            _set_parameter_float_value(parameters, PARAM_ROUND_ROBIN_ADVANCE_DIST, log_meta.round_robin_advance_distance, 0.05)
-
-        if PARAM_OA_IS_OBSTACLE_BOT_CAR in parameters:
-            if _text_to_bool(parameters[PARAM_OA_IS_OBSTACLE_BOT_CAR]):
-                log_meta.oa_type.set("BOT_CAR")
-            else:
-                log_meta.oa_type.set("BROWN_BOX")
-
-    _set_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE, log_meta.batch_size)
-    _set_hyper_float_value(line_of_text, HYPER_ENTROPY, log_meta.beta_entropy)
-    _set_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR, log_meta.discount_factor)
-    _set_hyper_string_value(line_of_text, HYPER_LOSS_TYPE, log_meta.loss_type)
-    _set_hyper_float_value(line_of_text, HYPER_LEARNING_RATE, log_meta.learning_rate)
-    _set_hyper_integer_value(line_of_text, HYPER_EPISODES_BETWEEN_TRAINING, log_meta.episodes_per_training_iteration)
-    _set_hyper_integer_value(line_of_text, HYPER_EPOCHS, log_meta.epochs)
-    _set_hyper_float_value(line_of_text, HYPER_SAC_ALPHA, log_meta.sac_alpha)
-    _set_hyper_float_value(line_of_text, HYPER_GREEDY, log_meta.e_greedy_value)
-    _set_hyper_integer_value(line_of_text, HYPER_EPSILON_STEPS, log_meta.epsilon_steps)
-    _set_hyper_string_value(line_of_text, HYPER_EXPLORATION_TYPE, log_meta.exploration_type)
-    _set_hyper_integer_value(line_of_text, HYPER_STACK_SIZE, log_meta.stack_size)
-    _set_hyper_float_value(line_of_text, HYPER_TERM_AVG_SCORE, log_meta.termination_average_score)
-    _set_hyper_integer_value(line_of_text, HYPER_TERM_MAX_EPISODES, log_meta.termination_max_episodes)
+    if line_of_text.startswith('  "') and ":" in line_of_text:
+        _parse_hyperparameters(line_of_text, log_meta)
 
     if not log_meta.model_name.get():
         if line_of_text.startswith(MISC_MODEL_NAME_OLD_LOGS):
@@ -152,52 +65,193 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
                 log_meta.model_name.set(re.sub("^ *", "", split_parts[0]))  # Strip off leading space(s)
 
     if line_of_text.startswith(SPECIAL_PARAMS_START_A) or line_of_text.startswith(SPECIAL_PARAMS_START_B):
-        # Example line_of_text    (second example is from an older log in 2020)
-        #
-        # Sensor list ['SECTOR_LIDAR', 'STEREO_CAMERAS'], network DEEP_CONVOLUTIONAL_NETWORK_SHALLOW, simapp_version 5.0, training_algorithm clipped_ppo, action_space_type discrete lidar_config {'num_sectors': 8, 'num_values_per_sector': 8, 'clipping_dist': 2.0}
-        # Sensor list [u'FRONT_FACING_CAMERA'], network DEEP_CONVOLUTIONAL_NETWORK_SHALLOW, simapp_version 3.0
-
-        if CONTINUOUS_ACTION_SPACE_CONTAINS in line_of_text:
-            log_meta.action_space.mark_as_continuous()
-
-        pos = line_of_text.find(SIMAPP_VERSION_CONTAINS)
-        log_meta.simulation_version.set(line_of_text[pos + len(SIMAPP_VERSION_CONTAINS):][:3])
-
-        pos = line_of_text.find(NEURAL_TOPOLOGY_CONTAINS)
-        topology = line_of_text[pos + len(NEURAL_TOPOLOGY_CONTAINS):].split(",")[0]
-        if topology == "DEEP_CONVOLUTIONAL_NETWORK_SHALLOW":
-            topology = "DEEP_CONVOLUTIONAL_3_LAYER"
-        log_meta.neural_network_topology.set(topology)
-
-        if TRAINING_ALGORITHM_CONTAINS in line_of_text:
-            pos = line_of_text.find(TRAINING_ALGORITHM_CONTAINS)
-            log_meta.learning_algorithm.set(line_of_text[pos + len(TRAINING_ALGORITHM_CONTAINS):].split(",")[0].upper())
-        else:
-            log_meta.learning_algorithm.set("CLIPPED_PPO")
-
-        if SENSOR_LIST_CONTAINS in line_of_text:
-            pos = line_of_text.find(SENSOR_LIST_CONTAINS)
-            data_string = '{"sensors": ' + line_of_text[pos + len(SENSOR_LIST_CONTAINS):].split("]")[0] + "]}"
-            data_string = data_string.replace("[u'", "['").replace(", u'", ", '").replace("'", "\"")
-            sensors_list: list = json.loads(data_string)["sensors"]
-            if "FRONT_FACING_CAMERA" in sensors_list:
-                sensors_list.remove("FRONT_FACING_CAMERA")
-                sensors_list.append("SINGLE_CAMERA")
-            log_meta.sensors.set(sensors_list)
-
-            if LIDAR_CONFIG_CONTAINS in line_of_text and ("LIDAR" in sensors_list or "SECTOR_LIDAR" in sensors_list):
-                pos = line_of_text.find(LIDAR_CONFIG_CONTAINS)
-                data_string = line_of_text[pos + len(LIDAR_CONFIG_CONTAINS):].split("}")[0] + "}"
-                data_fields = json.loads(data_string.replace("'", "\""))
-                log_meta.lidar_number_of_sectors.set(data_fields["num_sectors"])
-                log_meta.lidar_number_of_values_per_sector.set(data_fields["num_values_per_sector"])
-                log_meta.lidar_clipping_distance.set(data_fields["clipping_dist"])
+        _parse_special_params(line_of_text, log_meta)
 
     if line_of_text.startswith(MISC_ACTION_SPACE_A):
         _parse_actions(line_of_text, log_meta, MISC_ACTION_SPACE_A)
 
     if line_of_text.startswith(MISC_ACTION_SPACE_B):
         _parse_actions(line_of_text, log_meta, MISC_ACTION_SPACE_B)
+
+
+def _parse_date_from_cpu_warning(line_of_text: str, log_meta: LogMeta):
+    # Example:
+    # 2023-02-05 16:23:13.599375: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 AVX512F FMA
+    #
+    start_date = date.fromisoformat(line_of_text.split(" ")[0])
+    log_meta.start_date.set(str(start_date))
+
+
+def _parse_date_from_argument_message(line_of_text: str, log_meta: LogMeta):
+    # Example:
+    # 10/07/2022 13:55:29 passing arg to libvncserver: -rfbport
+    #
+    date_parts = line_of_text.split(" ")[0].split("/")
+    start_date = date(int(date_parts[2]), int(date_parts[1]), int(date_parts[0]))
+    log_meta.start_date.set(str(start_date))
+
+
+def _parse_drfc_worker_id(line_of_text: str, log_meta: LogMeta):
+    # Example:
+    # Starting as worker 0, using world 2022_july_pro and configuration training_params.yaml.
+    #
+    log_meta.platform.set(Platform.DEEPRACER_FOR_CLOUD)
+    pos = line_of_text.find(DRFC_WORKER_INFO_LINE)
+    log_meta.worker_id.set(int(line_of_text[pos + len(DRFC_WORKER_INFO_LINE):].split(",")[0]))
+
+def _parse_hyperparameters(line_of_text: str, log_meta: LogMeta):
+    # Example:
+    #   "batch_size": 256,
+    #   "beta_entropy": 0.01,
+    #   "discount_factor": 0.97,
+    #   "e_greedy_value": 0.05,
+    #   "epsilon_steps": 10000,
+    #   "exploration_type": "categorical",
+    #   "loss_type": "huber",
+    #   "lr": 0.0003,
+    #   "num_episodes_between_training": 40,
+    #   "num_epochs": 5,
+    #   "stack_size": 1,
+    #   "term_cond_avg_score": 35000.0,
+    #   "term_cond_max_episodes": 100000
+    _set_hyper_integer_value(line_of_text, HYPER_BATCH_SIZE, log_meta.batch_size)
+    _set_hyper_float_value(line_of_text, HYPER_ENTROPY, log_meta.beta_entropy)
+    _set_hyper_float_value(line_of_text, HYPER_DISCOUNT_FACTOR, log_meta.discount_factor)
+    _set_hyper_string_value(line_of_text, HYPER_LOSS_TYPE, log_meta.loss_type, convert_to_enum=True)
+    _set_hyper_float_value(line_of_text, HYPER_LEARNING_RATE, log_meta.learning_rate)
+    _set_hyper_integer_value(line_of_text, HYPER_EPISODES_BETWEEN_TRAINING, log_meta.episodes_per_training_iteration)
+    _set_hyper_integer_value(line_of_text, HYPER_EPOCHS, log_meta.epochs)
+    _set_hyper_float_value(line_of_text, HYPER_SAC_ALPHA, log_meta.sac_alpha)
+    _set_hyper_float_value(line_of_text, HYPER_GREEDY, log_meta.e_greedy_value)
+    _set_hyper_integer_value(line_of_text, HYPER_EPSILON_STEPS, log_meta.epsilon_steps)
+    _set_hyper_string_value(line_of_text, HYPER_EXPLORATION_TYPE, log_meta.exploration_type, convert_to_enum=True)
+    _set_hyper_integer_value(line_of_text, HYPER_STACK_SIZE, log_meta.stack_size)
+    _set_hyper_float_value(line_of_text, HYPER_TERM_AVG_SCORE, log_meta.termination_average_score)
+    _set_hyper_integer_value(line_of_text, HYPER_TERM_MAX_EPISODES, log_meta.termination_max_episodes)
+
+
+def _parse_special_params(line_of_text: str, log_meta: LogMeta):
+    # Example line_of_text    (second example is from an older log in 2020)
+    #
+    # Sensor list ['SECTOR_LIDAR', 'STEREO_CAMERAS'], network DEEP_CONVOLUTIONAL_NETWORK_SHALLOW, simapp_version 5.0, training_algorithm clipped_ppo, action_space_type discrete lidar_config {'num_sectors': 8, 'num_values_per_sector': 8, 'clipping_dist': 2.0}
+    # Sensor list [u'FRONT_FACING_CAMERA'], network DEEP_CONVOLUTIONAL_NETWORK_SHALLOW, simapp_version 3.0
+
+    if CONTINUOUS_ACTION_SPACE_CONTAINS in line_of_text:
+        log_meta.action_space.mark_as_continuous()
+
+    pos = line_of_text.find(SIMAPP_VERSION_CONTAINS)
+    log_meta.simulation_version.set(line_of_text[pos + len(SIMAPP_VERSION_CONTAINS):][:3])
+
+    pos = line_of_text.find(NEURAL_TOPOLOGY_CONTAINS)
+    topology = line_of_text[pos + len(NEURAL_TOPOLOGY_CONTAINS):].split(",")[0]
+    assert topology == "DEEP_CONVOLUTIONAL_NETWORK_SHALLOW"
+    log_meta.neural_network_topology.set(NeuralNetworkTopology.DEEP_CONVOLUTIONAL_3_LAYER)
+
+    if TRAINING_ALGORITHM_CONTAINS in line_of_text:
+        pos = line_of_text.find(TRAINING_ALGORITHM_CONTAINS)
+        log_meta.learning_algorithm.set_enum_str(
+            line_of_text[pos + len(TRAINING_ALGORITHM_CONTAINS):].split(",")[0].upper())
+    else:
+        log_meta.learning_algorithm.set(LearningAlgorithm.CLIPPED_PPO)
+
+    if SENSOR_LIST_CONTAINS in line_of_text:
+        pos = line_of_text.find(SENSOR_LIST_CONTAINS)
+        data_string = '{"sensors": ' + line_of_text[pos + len(SENSOR_LIST_CONTAINS):].split("]")[0] + "]}"
+        data_string = data_string.replace("[u'", "['").replace(", u'", ", '").replace("'", "\"")
+        sensors_list: list = json.loads(data_string)["sensors"]
+        if "FRONT_FACING_CAMERA" in sensors_list:
+            sensors_list.remove("FRONT_FACING_CAMERA")
+            sensors_list.append("SINGLE_CAMERA")
+        log_meta.sensors.set(sensors_list)
+
+        if LIDAR_CONFIG_CONTAINS in line_of_text and ("LIDAR" in sensors_list or "SECTOR_LIDAR" in sensors_list):
+            pos = line_of_text.find(LIDAR_CONFIG_CONTAINS)
+            data_string = line_of_text[pos + len(LIDAR_CONFIG_CONTAINS):].split("}")[0] + "}"
+            data_fields = json.loads(data_string.replace("'", "\""))
+            log_meta.lidar_number_of_sectors.set(data_fields["num_sectors"])
+            log_meta.lidar_number_of_values_per_sector.set(data_fields["num_values_per_sector"])
+            log_meta.lidar_clipping_distance.set(data_fields["clipping_dist"])
+
+
+def _parse_intro_event_parameters(line_of_text: str, log_meta: LogMeta):
+    # Console example:
+    # {'METRICS_S3_BUCKET': ['aws-deepracer-data-us-east-1-1'], 'METRICS_S3_OBJECT_KEY': ['data-56b52007-8142-46cd-a9cc-370feb620f0c/models/278f5eae-b941-48e4-a859-cc4a25400115/metrics/training/training-20230205161827-mZZbUMgvSsyoj6lPD7G4NA.json'], 'SIMTRACE_S3_PREFIX': 'data-56b52007-8142-46cd-a9cc-370feb620f0c/models/278f5eae-b941-48e4-a859-cc4a25400115/sim-trace/training', 'SAGEMAKER_SHARED_S3_BUCKET': ['aws-deepracer-data-us-east-1-1'], 'JOB_TYPE': 'TRAINING', 'METRIC_NAMESPACE': 'AWSDeepRacer', 'TARGET_REWARD_SCORE': 'None', 'RACE_TYPE': 'OBJECT_AVOIDANCE', 'WORLD_NAME': '2022_reinvent_champ', 'MP4_S3_OBJECT_PREFIX': 'data-56b52007-8142-46cd-a9cc-370feb620f0c/models/278f5eae-b941-48e4-a859-cc4a25400115/videos/training/training-20230205161827-mZZbUMgvSsyoj6lPD7G4NA', 'ROBOMAKER_SIMULATION_JOB_ACCOUNT_ID': '372026249783', 'TRAINING_JOB_ARN': 'arn:aws:deepracer:us-east-1:694264024003:training_job/mZZbUMgvSsyoj6lPD7G4NA', 'RANDOMIZE_OBSTACLE_LOCATIONS': 'true', 'ALTERNATE_DRIVING_DIRECTION': 'false', 'CAR_COLOR': ['Blue'], 'REWARD_FILE_S3_KEY': 'data-56b52007-8142-46cd-a9cc-370feb620f0c/models/278f5eae-b941-48e4-a859-cc4a25400115/reward_function.py', 'OBSTACLE_TYPE': 'box_obstacle', 'METRIC_NAME': 'TrainingRewardScore', 'AWS_REGION': 'us-east-1', 'MP4_S3_BUCKET': 'aws-deepracer-data-us-east-1-1', 'S3_KMS_CMK_ARN': 'arn:aws:kms:us-east-1:372026249783:key/82661b8b-a07c-4982-9c61-a5b83f3f2023', 'CAR_NAME': 'dfgdfgdgs', 'SIMTRACE_S3_BUCKET': 'aws-deepracer-data-us-east-1-1', 'BODY_SHELL_TYPE': ['deepracer'], 'KINESIS_VIDEO_STREAM_NAME': 'dr-kvs-372026249783-20230205161826-859bb483-3cd5-468d-903c-a79869a65332', 'SAGEMAKER_SHARED_S3_PREFIX': ['data-56b52007-8142-46cd-a9cc-370feb620f0c/models/278f5eae-b941-48e4-a859-cc4a25400115/sagemaker-robomaker-artifacts'], 'CHANGE_START_POSITION': 'true', 'NUMBER_OF_EPISODES': '0', 'NUMBER_OF_OBSTACLES': '2', 'MODEL_METADATA_FILE_S3_KEY': ['data-56b52007-8142-46cd-a9cc-370feb620f0c/models/278f5eae-b941-48e4-a859-cc4a25400115/model_metadata.json']}
+    #
+    # DRFC example:
+    # {'ALTERNATE_DRIVING_DIRECTION': 'False', 'AWS_REGION': 'us-east-1', 'BODY_SHELL_TYPE': ['deepracer'], 'BOT_CAR_SPEED': '2.5', 'CAR_COLOR': ['Black'], 'CAR_NAME': 'FastCar', 'CHANGE_START_POSITION': 'True', 'DISPLAY_NAME': 'FastCar', 'ENABLE_DOMAIN_RANDOMIZATION': 'False', 'IS_LANE_CHANGE': 'True', 'JOB_TYPE': 'TRAINING', 'KINESIS_VIDEO_STREAM_NAME': 'None', 'LANE_CHANGE_DISTANCE': '1.0', 'LOWER_LANE_CHANGE_TIME': '3.0', 'METRICS_S3_BUCKET': ['dmh-base-2023-jan-bucket-1x1o0jxxrxubo'], 'METRICS_S3_OBJECT_KEY': ['Head-To-Bot-Test/metrics/TrainingMetrics.json'], 'MIN_DISTANCE_BETWEEN_BOT_CARS': '2.0', 'MIN_EVAL_TRIALS': '5', 'MODEL_METADATA_FILE_S3_KEY': ['custom_files/model_metadata.json'], 'NUMBER_OF_BOT_CARS': '3', 'NUM_WORKERS': '2', 'PENALTY_SECONDS': '5.0', 'RACER_NAME': 'FastCar', 'RACE_TYPE': 'HEAD_TO_BOT', 'RANDOMIZE_BOT_CAR_LOCATIONS': 'True', 'REWARD_FILE_S3_KEY': 'custom_files/reward_function.py', 'ROBOMAKER_SIMULATION_JOB_ACCOUNT_ID': 'Dummy', 'ROUND_ROBIN_ADVANCE_DIST': '0.1', 'SAGEMAKER_SHARED_S3_BUCKET': ['dmh-base-2023-jan-bucket-1x1o0jxxrxubo'], 'SAGEMAKER_SHARED_S3_PREFIX': ['Head-To-Bot-Test'], 'SIMTRACE_S3_BUCKET': 'dmh-base-2023-jan-bucket-1x1o0jxxrxubo', 'SIMTRACE_S3_PREFIX': 'Head-To-Bot-Test', 'START_POSITION_OFFSET': '0.0', 'TRAINING_JOB_ARN': 'arn:Dummy', 'UPPER_LANE_CHANGE_TIME': '5.0', 'WORLD_NAME': '2022_reinvent_champ'}
+    #
+    if log_meta.platform.get() is None:
+        log_meta.platform.set(Platform.AWS_CONSOLE)
+        log_meta.workers.set(1)
+        log_meta.worker_id.set(0)
+
+    parameters = json.loads(line_of_text.replace("'", "\""))
+
+    _set_parameter_string_value(parameters, PARAM_WORLD_NAME, log_meta.track_name)
+    _set_parameter_string_value(parameters, PARAM_JOB_TYPE, log_meta.job_type, convert_to_enum=True)
+    _set_parameter_boolean_value(parameters, PARAM_DOMAIN_RANDOMIZATION, log_meta.domain_randomization)
+    _set_parameter_integer_value(parameters, PARAM_NUM_WORKERS, log_meta.workers)
+    if log_meta.platform.get() == Platform.DEEPRACER_FOR_CLOUD:
+        _set_parameter_string_value(parameters, "SIMTRACE_S3_PREFIX", log_meta.model_name)
+
+    _set_parameter_string_value(parameters, PARAM_CAR_NAME, log_meta.car_name)
+    _set_parameter_string_value(parameters, PARAM_BODY_SHELL_TYPE, log_meta.car_shell_type, is_within_list=True)
+    _set_parameter_string_value(parameters, PARAM_CAR_COLOR, log_meta.car_trim_colour, is_within_list=True,
+                                convert_to_upper=True, convert_to_enum=True)
+
+    if PARAM_OA_OBJECT_POSITIONS in parameters:
+        positions = parameters[PARAM_OA_OBJECT_POSITIONS]
+        assert (isinstance(positions, list))
+        # Example: ['0.1,-1', '0.25,1', '0.4,-1', '0.55,1', '0.7,-1']
+        # where -1 is OUTSIDE      and +1 means INSIDE
+        for p in positions:
+            parts = p.split(",")
+            log_meta.fixed_object_locations.add(FixedObjectLocation(float(parts[0]), Lane(int(parts[1]))))
+
+    _set_parameter_string_value(parameters, PARAM_RACE_TYPE, log_meta.race_type,
+                                {"HEAD_TO_HEAD_RACING": RaceType.HEAD_TO_HEAD,
+                                 "HEAD_TO_BOT": RaceType.HEAD_TO_HEAD}, convert_to_enum=True)
+
+    if log_meta.race_type.get() != RaceType.TIME_TRIAL:  # Important because H2H can be trained with obstacles too
+        _set_parameter_integer_value(parameters, PARAM_OA_NUMBER_OF_OBSTACLES, log_meta.oa_number)
+        _set_parameter_float_value(parameters, PARAM_OA_MIN_DISTANCE_BETWEEN_OBSTACLES,
+                                   log_meta.oa_min_distance_between)
+        _set_parameter_boolean_value(parameters, PARAM_OA_RANDOMIZE_OBSTACLE_LOCATIONS, log_meta.oa_randomize)
+        _set_parameter_string_value(parameters, PARAM_OA_OBSTACLE_TYPE, log_meta.oa_type,
+                                    {"deepracer_box_obstacle": ObstacleType.PURPLE_BOX,
+                                     "box_obstacle": ObstacleType.BROWN_BOX}, convert_to_enum=True)
+
+    if log_meta.race_type.get() == RaceType.HEAD_TO_HEAD:
+        _set_parameter_integer_value(parameters, PARAM_H2H_NUMBER_OF_BOT_CARS, log_meta.h2h_number_of_bots)
+        _set_parameter_float_value(parameters, PARAM_H2H_BOT_CAR_SPEED, log_meta.h2h_speed)
+
+        _set_parameter_float_value(parameters, PARAM_H2H_MIN_DISTANCE_BETWEEN,
+                                   log_meta.h2h_min_distance_between)
+        _set_parameter_boolean_value(parameters, PARAM_H2H_RANDOMIZE_BOT_LOCATIONS,
+                                     log_meta.h2h_randomize_bot_locations)
+
+        _set_parameter_boolean_value(parameters, PARAM_H2H_IS_LANE_CHANGE, log_meta.h2h_allow_lane_changes)
+        if log_meta.h2h_allow_lane_changes.get():
+            _set_parameter_float_value(parameters, PARAM_H2H_LOWER_LANE_CHANGE_TIME,
+                                       log_meta.h2h_lower_lane_change_time)
+            _set_parameter_float_value(parameters, PARAM_H2H_UPPER_LANE_CHANGE_TIME,
+                                       log_meta.h2h_upper_lane_change_time)
+            _set_parameter_float_value(parameters, PARAM_H2H_LANE_CHANGE_DISTANCE,
+                                       log_meta.h2h_lane_change_distance)
+
+    _set_parameter_boolean_value(parameters, PARAM_ALTERNATE_DRIVING_DIRECTION, log_meta.alternate_direction)
+    _set_parameter_float_value(parameters, PARAM_START_POSITION_OFFSET, log_meta.start_position_offset, 0.0)
+    _set_parameter_integer_value(parameters, PARAM_MIN_EVAL_TRIALS, log_meta.min_evaluations_per_iteration)
+    _set_parameter_boolean_value(parameters, PARAM_CHANGE_START_POSITION, log_meta.change_start_position)
+    if log_meta.change_start_position.get():
+        _set_parameter_float_value(parameters, PARAM_ROUND_ROBIN_ADVANCE_DIST, log_meta.round_robin_advance_distance,
+                                   0.05)
+
+    if PARAM_OA_IS_OBSTACLE_BOT_CAR in parameters:
+        if _text_to_bool(parameters[PARAM_OA_IS_OBSTACLE_BOT_CAR]):
+            log_meta.oa_type.set(ObstacleType.BOT_CAR)
+        else:
+            log_meta.oa_type.set(ObstacleType.BROWN_BOX)
 
 
 def parse_object_locations(line_of_text: str):
@@ -485,16 +539,20 @@ def _set_hyper_float_value(line_of_text: str, hyper_name: str, meta_field: MetaF
         meta_field.set(float(line_of_text[chop_chars:].split(",")[0]))
 
 
-def _set_hyper_string_value(line_of_text: str, hyper_name: str, meta_field: MetaField):
+def _set_hyper_string_value(line_of_text: str, hyper_name: str, meta_field: MetaField, convert_to_enum: bool = False):
     if _contains_hyper(line_of_text, hyper_name):
         chop_chars = len(hyper_name) + 6
-        meta_field.set(line_of_text[chop_chars:].split('"')[1].upper().replace(" ", "_"))
+        new_value = line_of_text[chop_chars:].split('"')[1].upper().replace(" ", "_")
+        if convert_to_enum:
+            meta_field.set_enum_str(new_value)
+        else:
+            meta_field.set(new_value)
 
 
 # Parse the high level training settings
 
 def _set_parameter_string_value(parameters: dict, parameter_name: str, meta_field: MetaField,
-                                replacements: dict = None, default=None, is_within_list: bool = False, convert_to_upper: bool = False):
+                                replacements: dict = None, default=None, is_within_list: bool = False, convert_to_upper: bool = False, convert_to_enum: bool = False):
     if parameter_name in parameters:
         value = parameters[parameter_name]
         if is_within_list:
@@ -504,7 +562,9 @@ def _set_parameter_string_value(parameters: dict, parameter_name: str, meta_fiel
         if convert_to_upper:
             value = value.upper()
         if replacements is not None and value in replacements:
-            meta_field.set(replacements[value])
+            value = replacements[value]
+        if convert_to_enum and not isinstance(value, Enum):
+            meta_field.set_enum_str(value)
         else:
             meta_field.set(value)
     elif default is not None:

@@ -6,6 +6,7 @@
 # Copyright (c) 2021 dmh23
 #
 import os
+from enum import Enum, auto
 from typing import Final
 
 from object_avoidance.fixed_object_locations import FixedObjectLocations
@@ -14,10 +15,67 @@ from src.action_space.action_space import ActionSpace
 from src.log.meta_field import MetaField, MetaFields, Optionality
 from src.main.version import VERSION
 
-# VALID_HYPER_PARAMETER_LOSS_TYPE = ["HUBER", "MEAN_SQUARED_ERROR"]
 
 MANDATORY = Optionality.MANDATORY
 OPTIONAL = Optionality.OPTIONAL
+
+
+class LossType(Enum):
+    HUBER = auto()
+    MEAN_SQUARED_ERROR = auto()
+
+
+class JobType(Enum):
+    TRAINING = auto()
+
+
+class Platform(Enum):
+    AWS_CONSOLE = auto()
+    DEEPRACER_FOR_CLOUD = auto()
+
+
+class LearningAlgorithm(Enum):
+    CLIPPED_PPO = auto()
+    SAC = auto()
+
+
+class RaceType(Enum):
+    TIME_TRIAL = auto()
+    OBJECT_AVOIDANCE = auto()
+    HEAD_TO_HEAD = auto()
+
+
+class ObstacleType(Enum):
+    BROWN_BOX = auto()
+    PURPLE_BOX = auto()
+    BOT_CAR = auto()
+
+
+class CarTrimColour(Enum):
+    BLACK = auto()
+    GREY = auto()
+    BLUE = auto()
+    RED = auto()
+    ORANGE = auto()
+    WHITE = auto()
+    PURPLE = auto()
+
+
+class NeuralNetworkTopology(Enum):
+    DEEP_CONVOLUTIONAL_3_LAYER = auto()
+
+
+class ExplorationType(Enum):
+    CATEGORICAL = auto()
+    ADDITIVE_NOISE = auto()
+
+
+class ActionSpaceType(Enum):
+    DISCRETE = auto()
+    CONTINUOUS = auto()
+
+#   LIST IS MORE COMPLICATED AGAIN ....
+#         self.sensors.set_allowed_values(["SINGLE_CAMERA", "STEREO_CAMERAS", "LIDAR", "SECTOR_LIDAR"])
 
 
 class LogMeta:
@@ -27,16 +85,13 @@ class LogMeta:
         self.model_name: Final = self._make_field("model_name", str, MANDATORY)
         self.model_name.allow_modifications()
 
-        self.job_type: Final = self._make_field("job.type", str, MANDATORY)
-        self.job_type.set_allowed_values(["TRAINING"])
-        self.platform: Final = self._make_field("job.platform", str, MANDATORY)
-        self.platform.set_allowed_values(["AWS_CONSOLE", "DEEPRACER_FOR_CLOUD"])
+        self.job_type: Final = self._make_field("job.type", JobType, MANDATORY)
+        self.platform: Final = self._make_field("job.platform", Platform, MANDATORY)
         self.workers: Final = self._make_field("job.workers", int, MANDATORY, 1, None)
         self.worker_id: Final = self._make_field("job.worker_id", int, MANDATORY, 0, None)
         self.start_date: Final = self._make_field("job.start_date", str, MANDATORY)
 
-        self.learning_algorithm: Final = self._make_field("training.learning_algorithm", str, OPTIONAL)
-        self.learning_algorithm.set_allowed_values(["CLIPPED_PPO", "SAC"])
+        self.learning_algorithm: Final = self._make_field("training.learning_algorithm", LearningAlgorithm, OPTIONAL)
         self.alternate_direction: Final = self._make_field("training.alternate_driving_direction", bool, OPTIONAL)
         self.start_position_offset: Final = self._make_field("training.start_position_offset", float, OPTIONAL, 0.0,
                                                              0.999)
@@ -57,14 +112,12 @@ class LogMeta:
         self.file_ctime: Final = self._make_field("log_file.os_stats.ctime", float, MANDATORY)
         self.file_mtime: Final = self._make_field("log_file.os_stats.mtime", float, MANDATORY)
 
-        self.race_type: Final = self._make_field("race.type", str, MANDATORY)
-        self.race_type.set_allowed_values(["TIME_TRIAL", "OBJECT_AVOIDANCE", "HEAD_TO_HEAD"])
+        self.race_type: Final = self._make_field("race.type", RaceType, MANDATORY)
 
         self.oa_number: Final = self._make_field("race.object_avoidance.number", int, OPTIONAL, 1, None)
         self.oa_min_distance_between: Final = self._make_field("race.object_avoidance.min_distance_between", float, OPTIONAL, 0.0, None)
         self.oa_randomize: Final = self._make_field("race.object_avoidance.randomize_locations", bool, OPTIONAL)
-        self.oa_type: Final = self._make_field("race.object_avoidance.type", str, OPTIONAL)
-        self.oa_type.set_allowed_values(["BROWN_BOX", "PURPLE_BOX", "BOT_CAR"])
+        self.oa_type: Final = self._make_field("race.object_avoidance.type", ObstacleType, OPTIONAL)
 
         self.h2h_number_of_bots: Final = self._make_field("race.head_to_head.number", int, OPTIONAL, 1, None)
         self.h2h_speed: Final = self._make_field("race.head_to_head.speed", float, OPTIONAL, 0.1, 4.0)
@@ -78,8 +131,7 @@ class LogMeta:
         self.h2h_lane_change_distance: Final = self._make_field("race.head_to_head.lane_changes.distance", float,
                                                                 OPTIONAL, 0.0, None)
 
-        self.car_trim_colour: Final = self._make_field("car.trim_colour", str, MANDATORY)
-        self.car_trim_colour.set_allowed_values(["BLACK", "GREY", "BLUE", "RED", "ORANGE", "WHITE", "PURPLE"])
+        self.car_trim_colour: Final = self._make_field("car.trim_colour", CarTrimColour, MANDATORY)
         self.car_name: Final = self._make_field("car.name", str, OPTIONAL)
         self.car_shell_type: Final = self._make_field("car.shell_type", str, MANDATORY)
 
@@ -89,15 +141,13 @@ class LogMeta:
         self.lidar_number_of_sectors: Final = self._make_field("car.lidar.number_of_sectors", int, OPTIONAL)
         self.lidar_number_of_values_per_sector: Final = self._make_field("car.lidar.number_of_values_per_sector", int, OPTIONAL)
         self.lidar_clipping_distance: Final = self._make_field("car.lidar.clipping_distance", float, OPTIONAL)
-        self.neural_network_topology: Final = self._make_field("neural_network.topology", str, MANDATORY)
-        self.neural_network_topology.set_allowed_values(["DEEP_CONVOLUTIONAL_3_LAYER"])
+        self.neural_network_topology: Final = self._make_field("neural_network.topology", NeuralNetworkTopology, MANDATORY)
 
         self.batch_size: Final = self._make_field("hyperparameters.batch_size", int, OPTIONAL, 1, None)
         self.learning_rate: Final = self._make_field("hyperparameters.learning_rate", float, OPTIONAL, 0.00000001,
                                                      0.001)
         self.discount_factor: Final = self._make_field("hyperparameters.discount_factor", float, OPTIONAL, 0.0, 1.0)
-        self.loss_type: Final = self._make_field("hyperparameters.loss_type", str, OPTIONAL)
-        self.loss_type.set_allowed_values(["HUBER", "MEAN_SQUARED_ERROR"])
+        self.loss_type: Final = self._make_field("hyperparameters.loss_type", LossType, OPTIONAL)
         self.episodes_per_training_iteration: Final = self._make_field(
             "hyperparameters.episodes_per_training_iteration", int, OPTIONAL, 1, None)
         self.beta_entropy: Final = self._make_field("hyperparameters.beta_entropy", float, OPTIONAL, 0.0, 1.0)
@@ -105,8 +155,7 @@ class LogMeta:
         self.sac_alpha: Final = self._make_field("hyperparameters.sac_alpha", float, OPTIONAL, 0.0, None)
         self.e_greedy_value: Final = self._make_field("hyperparameters.e_greedy_value", float, OPTIONAL, 0.0, None)
         self.epsilon_steps: Final = self._make_field("hyperparameters.epsilon_steps", int, OPTIONAL, 1, None)
-        self.exploration_type: Final = self._make_field("hyperparameters.exploration_type", str, OPTIONAL)
-        self.exploration_type.set_allowed_values(["CATEGORICAL", "ADDITIVE_NOISE"])
+        self.exploration_type: Final = self._make_field("hyperparameters.exploration_type", ExplorationType, OPTIONAL)
         self.stack_size: Final = self._make_field("hyperparameters.stack_size", int, OPTIONAL, 1, None)
         self.termination_average_score: Final = self._make_field("hyperparameters.termination_condition.average_score",
                                                                  float, OPTIONAL, 0.0, None)
@@ -136,8 +185,7 @@ class LogMeta:
         self.average_reward: Final = self._make_field("episode_stats.average_reward", float, MANDATORY).allow_modifications()
         self.worst_reward: Final = self._make_field("episode_stats.worst_reward", float, MANDATORY).allow_modifications()
 
-        self.action_space_type: Final = self._make_field("action_space.type", str, MANDATORY)
-        self.action_space_type.set_allowed_values(["DISCRETE", "CONTINUOUS"])
+        self.action_space_type: Final = self._make_field("action_space.type", ActionSpaceType, MANDATORY)
         self.action_space_min_speed: Final = self._make_field("action_space.min_speed", float, MANDATORY, 0.1, 4.0)
         self.action_space_max_speed: Final = self._make_field("action_space.max_speed", float, MANDATORY, 0.1, 4.0)
         self.action_space_max_left_steering: Final = self._make_field("action_space.max_left_steering", float,
@@ -188,10 +236,10 @@ class LogMeta:
     def _set_meta_fields_based_on_action_space(self):
         if self.action_space.is_continuous():
             low_speed, high_speed, low_steering, high_steering = self.action_space.get_continuous_action_limits()
-            self.action_space_type.set("CONTINUOUS")
+            self.action_space_type.set(ActionSpaceType.CONTINUOUS)
         else:
             low_speed, high_speed, low_steering, high_steering = self.action_space.get_discrete_action_limits()
-            self.action_space_type.set("DISCRETE")
+            self.action_space_type.set(ActionSpaceType.DISCRETE)
 
         self.action_space_min_speed.set(float(low_speed))
         self.action_space_max_speed.set(float(high_speed))
@@ -213,7 +261,7 @@ class LogMeta:
 
     def _get_action_space_from_json(self, received_json):
         action_space = ActionSpace()
-        if self.action_space_type.get() == "DISCRETE":
+        if self.action_space_type.get() == ActionSpaceType.DISCRETE:
             index = 0
             for action_json in received_json["action_space"]["actions"]:
                 speed = action_json["speed"]

@@ -52,14 +52,16 @@ def _remove_invalid_meta_files(log_directory: str) -> None:
                 os.remove(os.path.join(log_directory, f))
 
 
-def _is_log_valid(file: str, all_files: list, log_directory: str):
-    if file[:-len(META_FILE_SUFFIX)] not in all_files:
+def _is_log_valid(meta_file: str, all_files: list, log_directory: str):
+    log_file = meta_file[:-len(META_FILE_SUFFIX)]
+    if log_file not in all_files:
         return False
     try:
         log = Log(log_directory)
-        log.load_meta(file)
-        return log.get_log_meta().guru_version.get() == VERSION
-    except Exception:       # TODO proper exception class for Guru
+        log.load_meta(meta_file)
+        return log.get_log_meta().guru_version.get() == VERSION and log.get_log_meta().matches_os_stats(
+            os.stat(os.path.join(log_directory, log_file)))
+    except Exception:  # TODO proper exception class for Guru
         return False
 
 
@@ -84,7 +86,7 @@ def _import_logs_without_meta(log_files: list, please_wait: PleaseWait, log_dire
         try:
             log.parse(f, please_wait, i / total_count * 100, (i + 1) / total_count * 100)
             log.save()
-        except Exception as ex:     # TODO - Trapping specific exceptions not working (Python issue?)
+        except Exception as ex:  # TODO - Trapping specific exceptions not working (Python issue?)
             print("Skipping file <{}> due to processing error <{}>".format(f, ex))
     please_wait.stop()
 

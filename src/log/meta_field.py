@@ -7,56 +7,66 @@
 #
 
 import re
-from enum import Enum
+from enum import Enum, auto
 from typing import Self
 
 
-class MetaFieldUnknownEnumValue(Exception):
+class MetaFieldValidationIssue(Exception):
+    pass
+
+
+class MetaFieldUnknownEnumValue(MetaFieldValidationIssue):
     def __init__(self, enum_type: type, actual_value: str, field_name: str):
         super().__init__(
             "Unknown value <{}> of enumeration type <{}> for field <{}>".format(actual_value, enum_type.__name__,
                                                                                 field_name))
 
 
-class MetaFieldWrongDatatype(Exception):
+class MetaFieldWrongDatatype(MetaFieldValidationIssue):
     def __init__(self, expected_type: type, actual_type: type, field_name: str):
         super().__init__("Expected type <{}> but received type <{}> for field <{}>".format(expected_type.__name__,
                                                                                            actual_type.__name__,
                                                                                            field_name))
 
 
-class MetaFieldInvalidValue(Exception):
+class MetaFieldInvalidValue(MetaFieldValidationIssue):
     def __init__(self, allowed_values: list, actual_value, field_name: str):
         super().__init__(
             "Expected one of values {} but received value <{}> for field <{}>".format(allowed_values, actual_value,
                                                                                       field_name))
 
 
-class MetaFieldValueModified(Exception):
+class MetaFieldValueModified(MetaFieldValidationIssue):
     def __init__(self, old_value, new_value, field_name: str):
         super().__init__(
             "Value <{}> was changed to <{}> for immutable field <{}>".format(old_value, new_value, field_name)
         )
 
 
-class MetaFieldMissingMandatoryValue(Exception):
+class MetaFieldMissingMandatoryValue(MetaFieldValidationIssue):
     def __init__(self, field_name: str):
         super().__init__(
             "Missing value for mandatory field <{}>".format(field_name)
         )
 
 
-class MetaFieldDuplicate(Exception):
-    pass
+class MetaFieldDuplicate(MetaFieldValidationIssue):
+    def __init__(self, field_name: str):
+        super().__init__(
+            "Duplicate definition of field <{}>".format(field_name)
+        )
 
 
-class MetaFieldNumberOutOfRange(Exception):
-    pass
+class MetaFieldNumberOutOfRange(MetaFieldValidationIssue):
+    def __init__(self, value, field_name: str, low_range, high_range):
+        super().__init__(
+            "Value <{}> of field <{}> is not in range <{}> to <{}>".format(value, field_name, low_range, high_range)
+        )
 
 
 class Optionality(Enum):
-    MANDATORY = 1,
-    OPTIONAL = 2
+    MANDATORY = auto(),
+    OPTIONAL = auto()
 
 
 JSON_PATH_VALID_RE = re.compile("^[a-zA-Z0-9_.]*$")  # Allow only letters, numbers, underscores and full stops
@@ -96,10 +106,10 @@ class MetaField:
             raise MetaFieldWrongDatatype(self._data_type, type(value), self._field_name)
 
         if self._min_value is not None and value < self._min_value:
-            raise MetaFieldNumberOutOfRange
+            raise MetaFieldNumberOutOfRange(value, self._field_name, self._min_value, self._max_value)
 
         if self._max_value is not None and value > self._max_value:
-            raise MetaFieldNumberOutOfRange
+            raise MetaFieldNumberOutOfRange(value, self._field_name, self._min_value, self._max_value)
 
         if self._allowed_values is not None:
             if isinstance(value, list):
@@ -139,7 +149,7 @@ class MetaField:
                     parent_node = parent_node[node_name]
 
             if self._split_path[-1] in parent_node:
-                raise MetaFieldDuplicate
+                raise MetaFieldDuplicate(self._field_name)
             else:
                 if self._is_enum:
                     value = self._value.name

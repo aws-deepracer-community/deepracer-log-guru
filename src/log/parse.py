@@ -17,7 +17,6 @@ from src.log.log_meta import LogMeta, NeuralNetworkTopology, Platform, RaceType,
 from src.action_space.action import Action
 from src.log.meta_field import MetaField
 
-
 #
 # PUBLIC Constants
 #
@@ -31,8 +30,7 @@ STILL_EVALUATING = "Reset agent"
 # PUBLIC Interface
 #
 
-def parse_intro_event(line_of_text: str, log_meta: LogMeta) -> None:
-
+def parse_intro_event(line_of_text: str, log_meta: LogMeta):
     if DATE_LINE_CPU_WARNING in line_of_text:
         _parse_date_from_cpu_warning(line_of_text, log_meta)
 

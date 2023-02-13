@@ -81,8 +81,11 @@ def _import_logs_without_meta(log_files: list, please_wait: PleaseWait, log_dire
     total_count = len(log_files)
     for i, f in enumerate(log_files):
         log = Log(log_directory)
-        log.parse(f, please_wait, i / total_count * 100, (i + 1) / total_count * 100)
-        log.save()
+        try:
+            log.parse(f, please_wait, i / total_count * 100, (i + 1) / total_count * 100)
+            log.save()
+        except Exception as ex:     # TODO - Trapping specific exceptions not working (Python issue?)
+            print("Skipping file <{}> due to processing error <{}>".format(f, ex))
     please_wait.stop()
 
 
@@ -101,5 +104,3 @@ def _get_model_info(track: Track, log_directory: str):
                 model_names.append(model_name)
                 model_logs[model_name] = log
     return model_logs, model_names, all_logs_count
-
-

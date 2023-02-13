@@ -60,7 +60,7 @@
   },
   "episode_stats": {
     "episode_count": 563,
-    "iteration_count": 0,
+    "iteration_count": 29,
     "success_count": 48,
     "average_percent_complete": 33.88343570159857,
     "best_steps": 213,

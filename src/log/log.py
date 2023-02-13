@@ -234,8 +234,14 @@ class Log:
 
         total_episodes = len(episode_events)
 
-        while len(episode_events) > len(episode_iterations):
-            episode_iterations.append(iteration_id)
+        # Multi-worker training doesn't have evaluations between each iteration, so calculate iteration breakdown
+        if self._log_meta.worker_id.get() > 0 and iteration_id == 0:
+            episodes_per_iteration = int(self._log_meta.episodes_per_training_iteration.get() / self._log_meta.workers.get())
+            for i in range(0, len(episode_events)):
+                episode_iterations.append(int(i / episodes_per_iteration))
+        else:
+            while len(episode_events) > len(episode_iterations):
+                episode_iterations.append(iteration_id)
 
         for i, e in enumerate(episode_events):
             self._episodes.append(Episode(i, episode_iterations[i], e, episode_object_locations[i],
@@ -259,9 +265,13 @@ class Log:
 
         reward_list = []
 
+        if len(self._episodes) == 0:
+            self._log_meta.iteration_count.set(0)
+        else:
+            self._log_meta.iteration_count.set(self._episodes[-1].iteration + 1)
+
         self._log_meta.episode_count.set(len(self._episodes))
         self._log_meta.success_count.set(0)
-        self._log_meta.iteration_count.set(0)
 
         self._log_meta.best_steps.set(0)
         self._log_meta.average_steps.set(0)

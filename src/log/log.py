@@ -51,6 +51,9 @@ class Log:
         discount_factors.reset_for_log(self._log_meta.discount_factor.get())
         please_wait.set_progress(2)
 
+        if track is not None:
+            assert track.has_world_name(self._log_meta.track_name.get())
+
         if self._log_file_name.endswith(CONSOLE_LOG_SUFFIX):
             with tarfile.open(os.path.join(self._log_directory, self._log_file_name), "r") as tar:
                 for member in tar:

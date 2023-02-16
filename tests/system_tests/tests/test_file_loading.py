@@ -8,11 +8,10 @@
 
 import os
 import unittest
-import tkinter as tk
 
 from episode.episode import Episode
-from src.ui.please_wait import PleaseWait
 from src.log.log import Log
+from system_tests.tests.dummy_please_wait import DummyPleaseWait
 from tracks.reinvent_2018_track import Reinvent2018Track
 
 INPUT_FILES_DIR = os.path.join(os.path.dirname(__file__), "..", "resources", "file_parsing", "input_log_files")
@@ -20,30 +19,7 @@ INPUT_FILES_DIR = os.path.join(os.path.dirname(__file__), "..", "resources", "fi
 FILE_EXTENSION = ".meta.json"
 
 
-class DummyPleaseWait(PleaseWait):
-    def __init__(self, test_case: unittest.TestCase):
-        super().__init__(tk.Frame(), tk.Canvas())
-        self.start_percent = 100
-        self.current_percent = 0
-        self._test_case = test_case
-
-    def start(self, title):
-        pass
-
-    def stop(self, pause_seconds=0):
-        pass
-
-    def set_progress(self, percent_done: float):
-        self._test_case.assertTrue(self.current_percent <= percent_done <= 100)
-        self.current_percent = percent_done
-        if percent_done < self.start_percent:
-            self.start_percent = percent_done
-
-
 class TestFileLoadingOfAllEpisodes(unittest.TestCase):
-
-    # TODO - centralize the dummy please wait AND ensure it checks basic forward progress of the percent_done
-
     def test_example_1(self):
         expected_step_counts = [139, 141, 142, 87, 156, 132, 138, 144, 143, 137, 133, 144, 147, 141, 133, 141, 140,
                                 142, 131, 138]
@@ -55,7 +31,8 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
         first_episode: Episode = log.get_episodes()[0]
         # print(first_episode.quarter)
 
-    def _test_load_episodes(self, filename: str, track_type: type, expected_step_counts: list, expected_quarters: list) -> Log:
+    def _test_load_episodes(self, filename: str, track_type: type, expected_step_counts: list,
+                            expected_quarters: list) -> Log:
         # Setup
         self.assertEqual(len(expected_quarters), len(expected_step_counts))  # Ensure valid test case
         meta_filename = filename + FILE_EXTENSION

@@ -9,31 +9,16 @@
 import filecmp
 import os
 import unittest
-import tkinter as tk
 
 from log.log_meta import LogMeta
-from src.ui.please_wait import PleaseWait
 from src.log.log import Log
+from system_tests.tests.dummy_please_wait import DummyPleaseWait
 
 RESOURCE_DIR = os.path.join(os.path.dirname(__file__), "..", "resources", "file_parsing")
 INPUT_FILES_DIR = os.path.join(RESOURCE_DIR, "input_log_files")
 EXPECTED_RESULT_DIR = os.path.join(RESOURCE_DIR, "expected_output")
 
 FILE_EXTENSION = ".meta.json"
-
-
-class DummyPleaseWait(PleaseWait):
-    def __init__(self):
-        super().__init__(tk.Frame(), tk.Canvas())
-
-    def start(self, title):
-        pass
-
-    def stop(self, pause_seconds=0):
-        pass
-
-    def set_progress(self, percent_done: float):
-        pass
 
 
 class TestFileParsingWithJsonOutput(unittest.TestCase):
@@ -125,7 +110,7 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
             os.remove(actual_output_file)
 
         # Execute
-        please_wait = DummyPleaseWait()
+        please_wait = DummyPleaseWait(self)
         log = Log(INPUT_FILES_DIR)
         log.parse(filename, please_wait, 10, 20)
         original_json = log.get_log_meta().get_as_json()
@@ -144,7 +129,8 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
         # Verify
         self.assertTrue(filecmp.cmp(expected_output_file, actual_output_file, shallow=False), "Incorrect output JSON")
         self.assertEqual(original_json, derived_copy_of_json)
+        self.assertEqual(10, round(please_wait.start_percent))
+        self.assertEqual(20, round(please_wait.current_percent))
 
         # Tear down
         os.remove(actual_output_file)
-

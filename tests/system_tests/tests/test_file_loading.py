@@ -10,6 +10,7 @@ import os
 import unittest
 import tkinter as tk
 
+from episode.episode import Episode
 from src.ui.please_wait import PleaseWait
 from src.log.log import Log
 from tracks.reinvent_2018_track import Reinvent2018Track
@@ -20,8 +21,11 @@ FILE_EXTENSION = ".meta.json"
 
 
 class DummyPleaseWait(PleaseWait):
-    def __init__(self):
+    def __init__(self, test_case: unittest.TestCase):
         super().__init__(tk.Frame(), tk.Canvas())
+        self.start_percent = 100
+        self.current_percent = 0
+        self._test_case = test_case
 
     def start(self, title):
         pass
@@ -30,38 +34,63 @@ class DummyPleaseWait(PleaseWait):
         pass
 
     def set_progress(self, percent_done: float):
-        pass
+        self._test_case.assertTrue(self.current_percent <= percent_done <= 100)
+        self.current_percent = percent_done
+        if percent_done < self.start_percent:
+            self.start_percent = percent_done
 
 
 class TestFileLoadingOfAllEpisodes(unittest.TestCase):
 
-    def test_example_1(self):
-        self._test_load_episodes("training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker.log", Reinvent2018Track)
+    # TODO - centralize the dummy please wait AND ensure it checks basic forward progress of the percent_done
 
-    def _test_load_episodes(self, filename: str, track_type: type):
+    def test_example_1(self):
+        expected_step_counts = [139, 141, 142, 87, 156, 132, 138, 144, 143, 137, 133, 144, 147, 141, 133, 141, 140,
+                                142, 131, 138]
+        expected_quarters = [1] * 5 + [2] * 5 + [3] * 5 + [4] * 5
+        log = self._test_load_episodes("training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker.log",
+                                       Reinvent2018Track,
+                                       expected_step_counts, expected_quarters)
+
+        first_episode: Episode = log.get_episodes()[0]
+        # print(first_episode.quarter)
+
+    def _test_load_episodes(self, filename: str, track_type: type, expected_step_counts: list, expected_quarters: list) -> Log:
         # Setup
+        self.assertEqual(len(expected_quarters), len(expected_step_counts))  # Ensure valid test case
         meta_filename = filename + FILE_EXTENSION
         self.assertTrue(os.path.isdir(INPUT_FILES_DIR))
         input_file = os.path.join(INPUT_FILES_DIR, filename)
         actual_output_file = os.path.join(INPUT_FILES_DIR, meta_filename)
         self.assertTrue(os.path.isfile(input_file))
 
-        please_wait = DummyPleaseWait()
+        please_wait = DummyPleaseWait(self)
         log = Log(INPUT_FILES_DIR)
         log.parse(filename, please_wait, 10, 20)
         log.save()
-        assert(os.path.isfile(actual_output_file))
+        assert (os.path.isfile(actual_output_file))
 
         all_tracks = {}
         track = track_type()
         track.prepare(all_tracks)
 
         # Execute
+        please_wait = DummyPleaseWait(self)
         log = Log(INPUT_FILES_DIR)
         log.load_all(meta_filename, please_wait, track)
 
-        # Verify
-        self.assertEqual(log.get_log_meta().episode_count.get(), len(log.get_episodes()))
-
         # Tear down
         os.remove(actual_output_file)
+
+        # Verify
+        self.assertEqual(2, please_wait.start_percent)
+        self.assertEqual(100, please_wait.current_percent)
+        self.assertEqual(log.get_log_meta().episode_count.get(), len(log.get_episodes()))
+        self.assertEqual(len(expected_step_counts), len(log.get_episodes()))
+        for index, e in enumerate(log.get_episodes()):
+            self.assertEqual(expected_step_counts[index], e.step_count)
+            self.assertEqual(expected_quarters[index], e.quarter)
+            self.assertEqual(index, e.id)
+
+        # Return for additional specific validation
+        return log

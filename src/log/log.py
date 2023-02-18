@@ -11,6 +11,7 @@ import numpy as np
 import os
 import json
 import tarfile
+from typing import Union
 
 import src.log.parse as parse
 
@@ -43,11 +44,12 @@ class Log:
             received_json = json.load(file)
             self._log_meta.set_from_json(received_json)
 
-    def load_all(self, meta_file_name, please_wait: PleaseWait, track: Track,
+    def load_all(self, meta_file_names: Union[str, list], please_wait: PleaseWait, track: Track,
                  calculate_new_reward=False, calculate_alternate_discount_factors=False):
+        # TODO - for #115 - support multiple log files (i.e. a list in "meta_file_names")
         please_wait.start("Loading")
-        self.load_meta(meta_file_name)
-        self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
+        self.load_meta(meta_file_names)
+        self._log_file_name = meta_file_names[:-len(META_FILE_SUFFIX)]
         discount_factors.reset_for_log(self._log_meta.discount_factor.get())
         please_wait.set_progress(2)
 

@@ -7,20 +7,26 @@
 #
 
 import os
+import shutil
+from typing import Union
 import unittest
 
 from episode.episode import Episode
 from src.log.log import Log
 from system_tests.tests.dummy_please_wait import DummyPleaseWait
 from tracks.reinvent_2018_track import Reinvent2018Track
+from tracks.reinvent_2022_track import Reinvent2022Track
 
-INPUT_FILES_DIR = os.path.join(os.path.dirname(__file__), "..", "resources", "file_parsing", "input_log_files")
+RESOURCE_DIR = os.path.join(os.path.dirname(__file__), "..", "resources", "file_parsing")
+INPUT_FILES_DIR = os.path.join(RESOURCE_DIR, "input_log_files")
+META_FILES_DIR = os.path.join(RESOURCE_DIR, "expected_output")
+
 
 FILE_EXTENSION = ".meta.json"
 
 
 class TestFileLoadingOfAllEpisodes(unittest.TestCase):
-    def test_example_1(self):
+    def test_load_single_short_log_file(self):
         expected_step_counts = [139, 141, 142, 87, 156, 132, 138, 144, 143, 137, 133, 144, 147, 141, 133, 141, 140,
                                 142, 131, 138]
         expected_quarters = [1] * 5 + [2] * 5 + [3] * 5 + [4] * 5
@@ -31,21 +37,29 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
         first_episode: Episode = log.get_episodes()[0]
         # print(first_episode.quarter)
 
-    def _test_load_episodes(self, filename: str, track_type: type, expected_step_counts: list,
-                            expected_quarters: list) -> Log:
-        # Setup
-        self.assertEqual(len(expected_quarters), len(expected_step_counts))  # Ensure valid test case
-        meta_filename = filename + FILE_EXTENSION
-        self.assertTrue(os.path.isdir(INPUT_FILES_DIR))
-        input_file = os.path.join(INPUT_FILES_DIR, filename)
-        actual_output_file = os.path.join(INPUT_FILES_DIR, meta_filename)
-        self.assertTrue(os.path.isfile(input_file))
+    def test_load_two_worker_log_files(self):
+        expected_step_counts = [999, 888]
+        expected_quarters = [1] * 2
+        log = self._test_load_episodes(["deepracer-0_robomaker.1.mh77xxe01xgkyky72m378gnwp.log", "deepracer-0_robomaker.2.pleai77ybzcn6yor58nl46ic7.log"],
+                                       Reinvent2022Track,
+                                       expected_step_counts, expected_quarters)
 
-        please_wait = DummyPleaseWait(self)
-        log = Log(INPUT_FILES_DIR)
-        log.parse(filename, please_wait, 10, 20)
-        log.save()
-        assert (os.path.isfile(actual_output_file))
+    def _test_load_episodes(self, filenames: Union[str, list], track_type: type, expected_step_counts: list,
+                            expected_quarters: list) -> Log:
+        # Check valid test case & basic environment
+        self.assertEqual(len(expected_quarters), len(expected_step_counts))  # Ensure valid test case
+        self.assertTrue(os.path.isdir(INPUT_FILES_DIR))
+        if isinstance(filenames, str):
+            filenames = [filenames]
+        for f in filenames:
+            self.assertTrue(os.path.isfile(os.path.join(INPUT_FILES_DIR, f)))
+
+        # Setup meta JSON files
+        meta_filenames = []
+        for f in filenames:
+            meta_filename = f + FILE_EXTENSION
+            shutil.copyfile(os.path.join(META_FILES_DIR, meta_filename), os.path.join(INPUT_FILES_DIR, meta_filename))
+            meta_filenames.append(meta_filename)
 
         all_tracks = {}
         track = track_type()
@@ -54,10 +68,16 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
         # Execute
         please_wait = DummyPleaseWait(self)
         log = Log(INPUT_FILES_DIR)
-        log.load_all(meta_filename, please_wait, track)
+        log.get_log_meta().file_mtime.allow_modifications()
+        log.get_log_meta().file_ctime.allow_modifications()
+        if len(meta_filenames) == 1:
+            log.load_all(meta_filenames[0], please_wait, track)
+        else:
+            log.load_all(meta_filenames, please_wait, track)
 
         # Tear down
-        os.remove(actual_output_file)
+        for f in filenames:
+            os.remove(os.path.join(INPUT_FILES_DIR, f + FILE_EXTENSION))
 
         # Verify
         self.assertEqual(2, please_wait.start_percent)

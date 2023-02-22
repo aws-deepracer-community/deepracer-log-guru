@@ -46,15 +46,58 @@ class Log:
 
     def load_all(self, meta_file_names: Union[str, list], please_wait: PleaseWait, track: Track,
                  calculate_new_reward=False, calculate_alternate_discount_factors=False):
-        # TODO - for #115 - support multiple log files (i.e. a list in "meta_file_names")
         please_wait.start("Loading")
-        self.load_meta(meta_file_names)
-        self._log_file_name = meta_file_names[:-len(META_FILE_SUFFIX)]
+
+        if isinstance(meta_file_names, list):
+            multi_evaluation_phases = []
+            multi_log_meta = []
+            progress_start = 0
+            progress_per_log = 95 / len(meta_file_names)
+            episodes_by_iteration = {}
+            for meta_file in meta_file_names:
+                self._load_all_single_episode(meta_file, please_wait, track, calculate_new_reward,
+                                              calculate_alternate_discount_factors, progress_start, progress_start + progress_per_log)
+                multi_evaluation_phases.append(self._evaluation_phases)
+                multi_log_meta.append(self._log_meta)
+                for e in self._episodes:
+                    i = e.iteration
+                    if i in episodes_by_iteration:
+                        episodes_by_iteration[i].append(e)
+                    else:
+                        episodes_by_iteration[i] = [e]
+                self._evaluation_phases = []
+                self._episodes = []
+                self._log_meta = LogMeta()
+                progress_start += progress_per_log
+            iteration_ids = list(episodes_by_iteration)
+            iteration_ids.sort()
+            for i in iteration_ids:
+                self._episodes += episodes_by_iteration[i]
+            for new_id, e in enumerate(self._episodes):
+                e.id = new_id
+            for e in multi_evaluation_phases:
+                if len(e) > 0:
+                    assert(len(self._evaluation_phases)) == 0
+                    self._evaluation_phases = e
+            self._log_meta.merge_from_multi_logs(multi_log_meta)
+        else:
+            self._load_all_single_episode(meta_file_names, please_wait, track, calculate_new_reward,
+                                          calculate_alternate_discount_factors, 0, 95)
+
+        self._divide_episodes_into_quarters(please_wait, 95, 100)
+        please_wait.set_progress(100)
+        please_wait.stop(0.3)
+
+    def _load_all_single_episode(self, meta_file_name: str, please_wait: PleaseWait, track: Track,
+                                 calculate_new_reward, calculate_alternate_discount_factors, progress_start, progress_finish):
+        self.load_meta(meta_file_name)
+        self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
         discount_factors.reset_for_log(self._log_meta.discount_factor.get())
-        please_wait.set_progress(2)
 
         if track is not None:
             assert track.has_world_name(self._log_meta.track_name.get())
+
+        progress_middle = (progress_finish - progress_start) / 2 + progress_start
 
         if self._log_file_name.endswith(CONSOLE_LOG_SUFFIX):
             with tarfile.open(os.path.join(self._log_directory, self._log_file_name), "r") as tar:
@@ -64,19 +107,15 @@ class Log:
                         self._parse_episode_events(
                             binary_io, True,
                             please_wait,
-                            2, 50, 95, True, False, member.size, track,
+                            progress_start, progress_middle, progress_finish, True, False, member.size, track,
                             calculate_new_reward, calculate_alternate_discount_factors)
         else:
             with open(os.path.join(self._log_directory, self._log_file_name), "r") as file_io:
                 self._parse_episode_events(
                     file_io, False,
                     please_wait,
-                    2, 50, 95, True, False, 0, track,
+                    progress_start, progress_middle, progress_finish, True, False, 0, track,
                     calculate_new_reward, calculate_alternate_discount_factors)
-
-        self._divide_episodes_into_quarters(please_wait, 95, 100)
-        please_wait.set_progress(100)
-        please_wait.stop(0.3)
 
     def parse(self, log_file_name, please_wait: PleaseWait, min_progress_percent: float, max_progress_percent: float):
         self._log_file_name = log_file_name
@@ -106,8 +145,12 @@ class Log:
 
         self._analyze_episode_details()
 
-    def save(self):
-        with open(os.path.join(self._log_directory, self._meta_file_name), "w+") as meta_file:
+    def save(self, log_directory_override_for_testing: str = None):
+        if log_directory_override_for_testing is not None:
+            log_directory = log_directory_override_for_testing
+        else:
+            log_directory = self._log_directory
+        with open(os.path.join(log_directory, self._meta_file_name), "w+") as meta_file:
             log_json = self._log_meta.get_as_json()
             json.dump(log_json, meta_file, indent=2)
 

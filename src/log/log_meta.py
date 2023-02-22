@@ -7,7 +7,7 @@
 #
 import os
 from enum import Enum, auto
-from typing import Final
+from typing import Final, Self
 
 from object_avoidance.fixed_object_locations import FixedObjectLocations
 from src.action_space.action import Action
@@ -239,6 +239,12 @@ class LogMeta:
             if "fixed_locations" in received_json["race"]["object_avoidance"]:
                 self.fixed_object_locations.set_from_meta_json_list(
                     received_json["race"]["object_avoidance"]["fixed_locations"])
+
+    def merge_from_multi_logs(self, multi_log_meta: list[Self]):
+        total_episodes = 0
+        for m in multi_log_meta:
+            total_episodes += m.episode_count.get()
+        self.episode_count.set(total_episodes)
 
     def _make_field(self, json_path: str, data_type: type, optionality: Optionality, min_value=None,
                     max_value=None) -> MetaField:

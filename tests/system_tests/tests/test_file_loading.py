@@ -48,7 +48,7 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
                                 39, 30, 29, 24, 26, 22, 16, 30, 23, 20,
                                 37]
 
-        expected_quarters = [1] * 20 + [2] * 20 + [3] * 40 + [4] * 1    # This is actually incorrect but Ok for now
+        expected_quarters = [1] * 20 + [2] * 20 + [3] * 21 + [4] * 20
         log = self._test_load_episodes(["deepracer-0_robomaker.1.mh77xxe01xgkyky72m378gnwp.log", "deepracer-0_robomaker.2.pleai77ybzcn6yor58nl46ic7.log"],
                                        Reinvent2022Track,
                                        expected_step_counts, expected_quarters)

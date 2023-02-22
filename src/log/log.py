@@ -380,7 +380,7 @@ class Log:
                                        min_progress_percent: float, max_progress_percent: float):
         total_iterations = self._episodes[-1].iteration + 1
 
-        if total_iterations < 4:
+        if total_iterations < 8:
             self._divide_episodes_into_quarters_ignoring_iteration(please_wait,
                                                                    min_progress_percent, max_progress_percent)
         else:

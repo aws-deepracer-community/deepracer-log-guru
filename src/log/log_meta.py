@@ -241,7 +241,13 @@ class LogMeta:
                     received_json["race"]["object_avoidance"]["fixed_locations"])
 
     def merge_from_multi_logs(self, multi_log_meta: list[Self]):
+        assert len(multi_log_meta) >= 2
+        self._fields = multi_log_meta[0]._fields   # Fudge to test the testing framework!!
+        self.action_space = multi_log_meta[0].action_space
+        self.fixed_object_locations = multi_log_meta[0].fixed_object_locations
+        # TODO - Finish this for ALL the meta data
         total_episodes = 0
+        m: LogMeta
         for m in multi_log_meta:
             total_episodes += m.episode_count.get()
         self.episode_count.set(total_episodes)

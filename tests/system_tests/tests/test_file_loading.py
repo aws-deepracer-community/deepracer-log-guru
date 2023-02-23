@@ -5,6 +5,7 @@
 #
 # Copyright (c) 2023 dmh23
 #
+import filecmp
 import json
 import os
 import shutil
@@ -20,6 +21,8 @@ from tracks.reinvent_2022_track import Reinvent2022Track
 RESOURCE_DIR = os.path.join(os.path.dirname(__file__), "..", "resources", "file_parsing")
 INPUT_FILES_DIR = os.path.join(RESOURCE_DIR, "input_log_files")
 META_FILES_DIR = os.path.join(RESOURCE_DIR, "expected_output")
+
+EXPECTED_MULTI_META = os.path.join(os.path.dirname(__file__), "..", "resources", "file_loading")
 
 
 FILE_EXTENSION = ".meta.json"
@@ -53,7 +56,10 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
                                        Reinvent2022Track,
                                        expected_step_counts, expected_quarters)
 
+        self._verify_log_meta_json(log, "test_load_two_worker_log_files.json")
+
         # TODO - lots more checks on "log" and its contents
+        # TODO - including testing a complete log meta setup, have a file to do JSON diff rather than code asserts)
 
     def _test_load_episodes(self, filenames: Union[str, list], track_type: type, expected_step_counts: list,
                             expected_quarters: list) -> Log:
@@ -111,6 +117,18 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
 
         # Return for additional specific validation
         return log
+
+    def _verify_log_meta_json(self, log: Log, expected_json_filename: str):
+        actual_json_output_file = os.path.join(INPUT_FILES_DIR, "Multi_meta.json")
+        expected_json_output_file = os.path.join(EXPECTED_MULTI_META, expected_json_filename)
+        with open(actual_json_output_file, "w+") as meta_file:
+            log_json = log._log_meta.get_as_json()
+            json.dump(log_json, meta_file, indent=2)
+
+        self.assertTrue(filecmp.cmp(expected_json_output_file, actual_json_output_file, shallow=False), "Incorrect multi JSON")
+        os.remove(actual_json_output_file)
+
+
 
 # 25, 24, 25, 27, 15, 35, 22, 20, 22, 25
 # 60, 34, 38, 41, 20, 33, 16, 17, 26, 25

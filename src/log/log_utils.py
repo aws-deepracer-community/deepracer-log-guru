@@ -29,6 +29,8 @@ class OpenFileInfo:
 def get_model_info_for_open_model_dialog(track: Track, log_directory: str, please_wait: PleaseWait) -> (list[OpenFileInfo], int):
     _refresh_meta(log_directory, please_wait)
     log_info, excluded_log_count = _get_open_file_model_info(track, log_directory)
+    _fix_multi_worker_log_info_duplicates(log_info)
+    _fix_remaining_log_info_duplicates(log_info)
     return _sorted_log_info(log_info), excluded_log_count
 
 
@@ -103,7 +105,6 @@ def _import_logs_without_meta(log_files: list, please_wait: PleaseWait, log_dire
 def _get_open_file_model_info(track: Track, log_directory: str) -> (list[OpenFileInfo], int):
     excluded_log_count = 0
     log_info = []
-    used_names = []
 
     for f in os.listdir(log_directory):
         if f.endswith(META_FILE_SUFFIX):
@@ -113,21 +114,28 @@ def _get_open_file_model_info(track: Track, log_directory: str) -> (list[OpenFil
                 log_meta = log.get_log_meta()
                 display_name = log_meta.model_name.get()
                 meta_filenames = [f]
-
-                # Simple fudge to deal with duplicate UI names for now  TODO - Handle worker id etc. intelligently
-                if display_name in used_names:
-                    i = 1
-                    while f"{display_name} ({i})" in used_names:
-                        i += 1
-                    display_name = f"{display_name} ({i})"
-                used_names.append(display_name)
-                # End of fudge
-
                 log_info.append(OpenFileInfo(display_name, log_meta, meta_filenames))
             else:
                 excluded_log_count += 1
 
     return log_info, excluded_log_count
+
+
+def _fix_multi_worker_log_info_duplicates(log_info: list[OpenFileInfo]):
+    pass
+
+
+def _fix_remaining_log_info_duplicates(log_info: list[OpenFileInfo]):
+    used_names = []
+    duplicate_names = []
+    for log in log_info:
+        if log.display_name in used_names:
+            duplicate_names.append(log.display_name)
+        else:
+            used_names.append(log.display_name)
+    for log in log_info:
+        if log.display_name in duplicate_names and log.log_meta.workers.get() > 1:
+            log.display_name += f" (worker {log.log_meta.worker_id.get() + 1} / {log.log_meta.workers.get()})"
 
 
 def _sorted_log_info(log_info: list[OpenFileInfo]):

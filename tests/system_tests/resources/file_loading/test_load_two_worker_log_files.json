@@ -26,8 +26,8 @@
     "os_stats": {
       "uid": 0,
       "size": 233443,
-      "ctime": 1676041555.232067,
-      "mtime": 1676041461.9187503
+      "ctime": 123.456,
+      "mtime": 1234.5678
     }
   },
   "race": {
@@ -74,10 +74,10 @@
     }
   },
   "episode_stats": {
-    "episode_count": 40,
-    "iteration_count": 4,
+    "episode_count": 81,
+    "iteration_count": 5,
     "success_count": 0,
-    "average_percent_complete": 5.5539524999999985,
+    "average_percent_complete": 5.226025925925925,
     "best_steps": 0,
     "average_steps": 0,
     "worst_steps": 0,
@@ -88,8 +88,8 @@
     "average_distance": 0.0,
     "worst_distance": 0.0,
     "best_reward": 1440.0,
-    "average_reward": 341.10003500000005,
-    "worst_reward": 55.00020000000001
+    "average_reward": 327.11113827160494,
+    "worst_reward": 8.0
   },
   "action_space": {
     "type": "DISCRETE",

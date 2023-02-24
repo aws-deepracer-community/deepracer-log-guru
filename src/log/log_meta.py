@@ -242,15 +242,144 @@ class LogMeta:
 
     def merge_from_multi_logs(self, multi_log_meta: list[Self]):
         assert len(multi_log_meta) >= 2
-        self._fields = multi_log_meta[0]._fields   # Fudge to test the testing framework!!
+        # self._fields = multi_log_meta[0]._fields   # Fudge to test the testing framework!!
+        # self.action_space = multi_log_meta[0].action_space
+        # self.fixed_object_locations = multi_log_meta[0].fixed_object_locations
+        # TODO - Finish this for ALL the meta data
+
+        # Some fields are different per log, so need to be arbitrarily set to the value in the FIRST merged log
+        self.worker_id.set(multi_log_meta[0].worker_id.get())
+        self.alternate_direction.set(multi_log_meta[0].alternate_direction.get())
+        self.start_position_offset.set(multi_log_meta[0].start_position_offset.get())
+        self.change_start_position.set(multi_log_meta[0].change_start_position.get())
+        self.round_robin_advance_distance.set(multi_log_meta[0].round_robin_advance_distance.get())
+        self.file_name.set(multi_log_meta[0].file_name.get())
+        self.file_uid.set(multi_log_meta[0].file_uid.get())
+        self.file_size.set(multi_log_meta[0].file_size.get())
+        self.file_ctime.set(multi_log_meta[0].file_ctime.get())
+        self.file_mtime.set(multi_log_meta[0].file_mtime.get())
+        self.oa_number.set(multi_log_meta[0].oa_number.get())
+        self.oa_min_distance_between.set(multi_log_meta[0].oa_min_distance_between.get())
+        self.oa_randomize.set(multi_log_meta[0].oa_randomize.get())
+        self.oa_type.set(multi_log_meta[0].oa_type.get())
+        self.h2h_number_of_bots.set(multi_log_meta[0].h2h_number_of_bots.get())
+        self.h2h_speed.set(multi_log_meta[0].h2h_speed.get())
+        self.h2h_min_distance_between.set(multi_log_meta[0].h2h_min_distance_between.get())
+        self.h2h_randomize_bot_locations.set(multi_log_meta[0].h2h_randomize_bot_locations.get())
+        self.h2h_allow_lane_changes.set(multi_log_meta[0].h2h_allow_lane_changes.get())
+        self.h2h_lower_lane_change_time.set(multi_log_meta[0].h2h_lower_lane_change_time.get())
+        self.h2h_upper_lane_change_time.set(multi_log_meta[0].h2h_upper_lane_change_time.get())
+        self.h2h_lane_change_distance.set(multi_log_meta[0].h2h_lane_change_distance.get())
         self.action_space = multi_log_meta[0].action_space
         self.fixed_object_locations = multi_log_meta[0].fixed_object_locations
-        # TODO - Finish this for ALL the meta data
-        total_episodes = 0
+
+        # Initialize cumulative calculations to be in the log meta at the end
+        episode_count = 0
+        success_count = 0
+
+        # Initialize comparative (best/worst) calculations to the first log meta (better behaviour than presuming 0)
+        iteration_count = multi_log_meta[0].iteration_count.get()
+        best_steps = multi_log_meta[0].best_steps.get()
+        worst_steps = multi_log_meta[0].worst_steps.get()
+        best_time = multi_log_meta[0].best_time.get()
+        worst_time = multi_log_meta[0].worst_time.get()
+        best_distance = multi_log_meta[0].best_distance.get()
+        worst_distance = multi_log_meta[0].worst_distance.get()
+        best_reward = multi_log_meta[0].best_reward.get()
+        worst_reward = multi_log_meta[0].worst_reward.get()
+
+        # Initialize averages which need to calculated from a sum ... tot up "total_for" each one and calculate later
+        total_for_average_percent_complete = 0
+        total_for_average_steps = 0
+        total_for_average_time = 0
+        total_for_average_distance = 0
+        total_for_average_reward = 0
+
         m: LogMeta
         for m in multi_log_meta:
-            total_episodes += m.episode_count.get()
-        self.episode_count.set(total_episodes)
+            # Many of the fields are same for all meta - the duplicate detection per field will catch any problems
+            self.guru_version.set(m.guru_version.get())
+            self.model_name.set(m.model_name.get())
+            self.job_type.set(m.job_type.get())
+            self.platform.set(m.platform.get())
+            self.workers.set(m.workers.get())
+            self.start_date.set(m.start_date.get())
+            self.learning_algorithm.set(m.learning_algorithm.get())
+            self.min_evaluations_per_iteration.set(m.min_evaluations_per_iteration.get())
+            self.domain_randomization.set(m.domain_randomization.get())
+            self.simulation_version.set(m.simulation_version.get())
+            self.track_name.set(m.track_name.get())
+            self.race_type.set(m.race_type.get())
+            self.car_trim_colour.set(m.car_trim_colour.get())
+            self.car_name.set(m.car_name.get())
+            self.car_shell_type.set(m.car_shell_type.get())
+            self.sensors.set(m.sensors.get())
+            self.lidar_number_of_sectors.set(m.lidar_number_of_sectors.get())
+            self.lidar_number_of_values_per_sector.set(m.lidar_number_of_values_per_sector.get())
+            self.lidar_clipping_distance.set(m.lidar_clipping_distance.get())
+            self.neural_network_topology.set(m.neural_network_topology.get())
+            self.batch_size.set(m.batch_size.get())
+            self.learning_rate.set(m.learning_rate.get())
+            self.discount_factor.set(m.discount_factor.get())
+            self.loss_type.set(m.loss_type.get())
+            self.episodes_per_training_iteration.set(m.episodes_per_training_iteration.get())
+            self.beta_entropy.set(m.beta_entropy.get())
+            self.epochs.set(m.epochs.get())
+            self.sac_alpha.set(m.sac_alpha.get())
+            self.e_greedy_value.set(m.e_greedy_value.get())
+            self.epsilon_steps.set(m.epsilon_steps.get())
+            self.exploration_type.set(m.exploration_type.get())
+            self.stack_size.set(m.stack_size.get())
+            self.termination_average_score.set(m.termination_average_score.get())
+            self.termination_max_episodes.set(m.termination_max_episodes.get())
+            self.action_space_type.set(m.action_space_type.get())
+            self.action_space_min_speed.set(m.action_space_min_speed.get())
+            self.action_space_max_speed.set(m.action_space_max_speed.get())
+            self.action_space_max_left_steering.set(m.action_space_max_left_steering.get())
+            self.action_space_max_right_steering.set(m.action_space_max_right_steering.get())
+
+            # Cumulative calculations
+            episode_count += m.episode_count.get()
+            success_count += m.success_count.get()
+
+            # Comparative calculations
+            iteration_count = max(iteration_count, m.iteration_count.get())
+            best_steps = min(best_steps, m.best_steps.get())
+            worst_steps = max(worst_steps, m.worst_steps.get())
+            best_time = min(best_time, m.best_time.get())
+            worst_time = max(worst_time, m.worst_time.get())
+            best_distance = min(best_distance, m.best_distance.get())
+            worst_distance = max(worst_distance, m.worst_distance.get())
+            best_reward = max(best_reward, m.best_reward.get())
+            worst_reward = min(worst_reward, m.worst_reward.get())
+
+            # Totting up for averages
+            total_for_average_percent_complete += m.average_percent_complete.get() * m.episode_count.get()
+
+            total_for_average_steps += m.average_steps.get() * m.episode_count.get()
+            total_for_average_time += m.average_time.get() * m.episode_count.get()
+            total_for_average_distance += m.average_distance.get() * m.episode_count.get()
+            total_for_average_reward += m.average_reward.get() * m.episode_count.get()
+
+        # Finally we are ready to set the calculated stats combined from all the meta
+        self.episode_count.set(episode_count)
+        self.success_count.set(success_count)
+        self.iteration_count.set(iteration_count)
+
+        self.best_steps.set(best_steps)
+        self.worst_steps.set(worst_steps)
+        self.best_time.set(best_time)
+        self.worst_time.set(worst_time)
+        self.best_distance.set(best_distance)
+        self.worst_distance.set(worst_distance)
+        self.best_reward.set(best_reward)
+        self.worst_reward.set(worst_reward)
+
+        self.average_percent_complete.set(total_for_average_percent_complete / episode_count)
+        self.average_steps.set(round(total_for_average_steps / episode_count))
+        self.average_time.set(total_for_average_time / episode_count)
+        self.average_distance.set(total_for_average_distance / episode_count)
+        self.average_reward.set(total_for_average_reward / episode_count)
 
     def _make_field(self, json_path: str, data_type: type, optionality: Optionality, min_value=None,
                     max_value=None) -> MetaField:

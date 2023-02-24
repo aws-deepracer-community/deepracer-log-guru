@@ -102,6 +102,9 @@ class MetaField:
         return self
 
     def set(self, value):
+        if value is None:
+            return
+
         if not isinstance(value, self._data_type):
             raise MetaFieldWrongDatatype(self._data_type, type(value), self._field_name)
 

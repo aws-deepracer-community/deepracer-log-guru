@@ -265,6 +265,14 @@ class TestMetaField(unittest.TestCase):
 
         self.assertEqual({"enum": "HELLO"}, output_json)
 
+    def test_setting_to_null_is_ignored(self):
+        field = MetaField("hello", int, Optionality.MANDATORY)
+        field.set(1)
+        self.assertRaises(MetaFieldValueModified, field.set, 2)
+        field.set(None)
+        self.assertEqual(1, field.get())
+
+
 
 
 

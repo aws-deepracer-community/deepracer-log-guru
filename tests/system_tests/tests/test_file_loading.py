@@ -121,6 +121,10 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
     def _verify_log_meta_json(self, log: Log, expected_json_filename: str):
         actual_json_output_file = os.path.join(INPUT_FILES_DIR, "Multi_meta.json")
         expected_json_output_file = os.path.join(EXPECTED_MULTI_META, expected_json_filename)
+        log.get_log_meta().file_ctime.allow_modifications()
+        log.get_log_meta().file_mtime.allow_modifications()
+        log.get_log_meta().file_ctime.set(123.456)
+        log.get_log_meta().file_mtime.set(1234.5678)
         with open(actual_json_output_file, "w+") as meta_file:
             log_json = log._log_meta.get_as_json()
             json.dump(log_json, meta_file, indent=2)

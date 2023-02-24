@@ -29,7 +29,8 @@ class OpenFileInfo:
 def get_model_info_for_open_model_dialog(track: Track, log_directory: str, please_wait: PleaseWait) -> (list[OpenFileInfo], int):
     _refresh_meta(log_directory, please_wait)
     log_info, excluded_log_count = _get_open_file_model_info(track, log_directory)
-    _fix_multi_worker_log_info_duplicates(log_info)
+    _add_multi_worker_log_info(log_info)
+    _fix_worker_log_info_duplicates(log_info)
     _fix_remaining_log_info_duplicates(log_info)
     return _sorted_log_info(log_info), excluded_log_count
 
@@ -121,11 +122,11 @@ def _get_open_file_model_info(track: Track, log_directory: str) -> (list[OpenFil
     return log_info, excluded_log_count
 
 
-def _fix_multi_worker_log_info_duplicates(log_info: list[OpenFileInfo]):
+def _add_multi_worker_log_info(log_info: list[OpenFileInfo]):
     pass
 
 
-def _fix_remaining_log_info_duplicates(log_info: list[OpenFileInfo]):
+def _fix_worker_log_info_duplicates(log_info: list[OpenFileInfo]):
     used_names = []
     duplicate_names = []
     for log in log_info:
@@ -136,6 +137,19 @@ def _fix_remaining_log_info_duplicates(log_info: list[OpenFileInfo]):
     for log in log_info:
         if log.display_name in duplicate_names and log.log_meta.workers.get() > 1:
             log.display_name += f" (worker {log.log_meta.worker_id.get() + 1} / {log.log_meta.workers.get()})"
+
+
+def _fix_remaining_log_info_duplicates(log_info: list[OpenFileInfo]):
+    used_names = []
+    for log in log_info:
+        old_name = log.display_name
+        new_name = old_name
+        i = 1
+        while new_name in used_names:
+            new_name = f"{old_name} ({i})"
+            i += 1
+        log.display_name = new_name
+        used_names.append(new_name)
 
 
 def _sorted_log_info(log_info: list[OpenFileInfo]):

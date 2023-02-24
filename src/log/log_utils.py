@@ -8,6 +8,7 @@
 
 import os
 
+from log.log_meta import LogMeta
 from main.version import VERSION
 from src.log.log import LOG_FILE_SUFFIX, Log, META_FILE_SUFFIX, CONSOLE_LOG_SUFFIX
 from tracks.track import Track
@@ -18,9 +19,17 @@ from ui.please_wait import PleaseWait
 # Public Interface
 #
 
-def get_model_info_for_open_model_dialog(track: Track, log_directory: str, please_wait: PleaseWait):
+class OpenFileInfo:
+    def __init__(self, display_name: str, log_meta: LogMeta, source_meta_files: list[str]):
+        self.display_name = display_name
+        self.log_meta = log_meta
+        self.source_files = source_meta_files
+
+
+def get_model_info_for_open_model_dialog(track: Track, log_directory: str, please_wait: PleaseWait) -> (list[OpenFileInfo], int):
     _refresh_meta(log_directory, please_wait)
-    return _get_model_info(track, log_directory)
+    log_info, excluded_log_count = _get_open_file_model_info(track, log_directory)
+    return _sorted_log_info(log_info), excluded_log_count
 
 
 def get_world_names_of_existing_logs(log_directory: str, please_wait: PleaseWait):
@@ -91,18 +100,46 @@ def _import_logs_without_meta(log_files: list, please_wait: PleaseWait, log_dire
     please_wait.stop()
 
 
-def _get_model_info(track: Track, log_directory: str):
-    all_logs_count = 0
-    model_names = []
-    model_logs = {}
+def _get_open_file_model_info(track: Track, log_directory: str) -> (list[OpenFileInfo], int):
+    excluded_log_count = 0
+    log_info = []
+    used_names = []
+
     for f in os.listdir(log_directory):
         if f.endswith(META_FILE_SUFFIX):
-            all_logs_count += 1
             log = Log(log_directory)
             log.load_meta(f)
-
             if track.has_world_name(log.get_log_meta().track_name.get()):
-                model_name = log.get_log_meta().model_name.get()
-                model_names.append(model_name)
-                model_logs[model_name] = log
-    return model_logs, model_names, all_logs_count
+                log_meta = log.get_log_meta()
+                display_name = log_meta.model_name.get()
+                meta_filenames = [f]
+
+                # Simple fudge to deal with duplicate UI names for now  TODO - Handle worker id etc. intelligently
+                if display_name in used_names:
+                    i = 1
+                    while f"{display_name} ({i})" in used_names:
+                        i += 1
+                    display_name = f"{display_name} ({i})"
+                used_names.append(display_name)
+                # End of fudge
+
+                log_info.append(OpenFileInfo(display_name, log_meta, meta_filenames))
+            else:
+                excluded_log_count += 1
+
+    return log_info, excluded_log_count
+
+
+def _sorted_log_info(log_info: list[OpenFileInfo]):
+    all_names = []
+    indexed_logs = {}
+
+    for log in log_info:
+        all_names.append(log.display_name)
+        indexed_logs[log.display_name] = log
+
+    result = []
+    for name in sorted(all_names):
+        result.append(indexed_logs[name])
+
+    return result

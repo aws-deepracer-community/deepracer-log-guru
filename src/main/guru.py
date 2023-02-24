@@ -375,7 +375,6 @@ class MainApp(tk.Frame):
             self.menu_bar.refresh()
 
     def callback_open_this_file(self, file_name):
-
         redraw_menu_afterwards = not self.log
 
         self.log = Log(self._config_manager.get_log_directory())

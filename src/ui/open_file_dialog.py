@@ -10,9 +10,9 @@ import tkinter as tk
 
 from src.personalize.configuration.analysis import TIME_BEFORE_FIRST_STEP
 from src.ui.dialog import Dialog
-from src.log.log_utils import get_model_info_for_open_model_dialog
+from src.log.log_utils import get_model_info_for_open_model_dialog, OpenFileInfo
 
-from src.utils.formatting import get_pretty_whole_percentage, get_pretty_large_integer, get_pretty_hours_and_minutes
+from src.utils.formatting import get_pretty_whole_percentage, get_pretty_large_integer
 from ui.please_wait import PleaseWait
 
 
@@ -22,17 +22,18 @@ class OpenFileDialog(Dialog):
         super().__init__(parent, "Open File")
 
     def body(self, master):
-        model_logs, model_names, all_logs_count = get_model_info_for_open_model_dialog(self.parent.current_track,
-                                                                                       self.parent.get_log_directory(),
-                                                                                       self._please_wait)
+        log_info, hidden_log_count = get_model_info_for_open_model_dialog(self.parent.current_track,
+                                                                          self.parent.get_log_directory(),
+                                                                          self._please_wait)
         all_best_times = []
         all_average_times = []
         all_progress_percent = []
         all_success_percent = []
 
         show_laps = False
-        for log in model_logs.values():
-            log_meta = log.get_log_meta()
+        log: OpenFileInfo
+        for log in log_info:
+            log_meta = log.log_meta
             if log_meta.average_steps.get() > 0:
                 all_best_times.append(log_meta.best_time.get() + TIME_BEFORE_FIRST_STEP)
                 all_average_times.append(log_meta.average_time.get() + TIME_BEFORE_FIRST_STEP)
@@ -63,17 +64,16 @@ class OpenFileDialog(Dialog):
 
         row = 1
 
-        for model_name in sorted(model_names):
-            log = model_logs[model_name]
+        for log in log_info:
+            file_names = log.source_files[0]
+            callback = lambda file_names=file_names: self._callback_open_file(file_names)
 
-            callback = lambda file_name=log.get_meta_file_name(): self._callback_open_file(file_name)
-
-            log_meta = log.get_log_meta()
+            log_meta = log.log_meta
 
             progress_percent = self._get_progress_percent(log_meta)
             success_percent = self._get_success_percent(log_meta)
 
-            self._place_in_grid(row, 0, tk.Button(master, text=log_meta.model_name.get(), command=callback), "E")
+            self._place_in_grid(row, 0, tk.Button(master, text=log.display_name, command=callback), "E")
             self._place_in_grid(row, 1, tk.Label(master, text=log_meta.race_type.get().name), "E")
             self._place_in_grid(row, 2, tk.Label(master, text=log_meta.job_type.get().name), "E")
 
@@ -91,12 +91,11 @@ class OpenFileDialog(Dialog):
 
             row += 1
 
-        if all_logs_count > len(model_logs) and all_logs_count > 0:
-            hidden_count = all_logs_count - len(model_logs)
-            if hidden_count == 1:
+        if hidden_log_count > 0:
+            if hidden_log_count == 1:
                 hidden_text = "Note: One log file is not shown, choose the correct track to see it"
             else:
-                hidden_text = "Note: " + str(hidden_count) + " log files are not shown, choose other tracks to see them"
+                hidden_text = "Note: " + str(hidden_log_count) + " log files are not shown, choose other tracks to see them"
             tk.Label(master, text=hidden_text, foreground="red").grid(row=row, column=0, columnspan=6,
                                                                       pady=5, sticky="W")
 

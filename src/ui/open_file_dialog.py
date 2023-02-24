@@ -65,8 +65,12 @@ class OpenFileDialog(Dialog):
         row = 1
 
         for log in log_info:
-            file_names = log.source_files[0]
-            callback = lambda file_names=file_names: self._callback_open_file(file_names)
+            if len(log.source_files) == 1:
+                file_names = log.source_files[0]
+            else:
+                file_names = log.source_files
+
+            def callback(f=file_names): self._callback_open_file(f)
 
             log_meta = log.log_meta
 
@@ -95,7 +99,8 @@ class OpenFileDialog(Dialog):
             if hidden_log_count == 1:
                 hidden_text = "Note: One log file is not shown, choose the correct track to see it"
             else:
-                hidden_text = "Note: " + str(hidden_log_count) + " log files are not shown, choose other tracks to see them"
+                hidden_text = "Note: " + str(
+                    hidden_log_count) + " log files are not shown, choose other tracks to see them"
             tk.Label(master, text=hidden_text, foreground="red").grid(row=row, column=0, columnspan=6,
                                                                       pady=5, sticky="W")
 

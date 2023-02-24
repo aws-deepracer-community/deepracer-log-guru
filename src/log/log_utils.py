@@ -123,7 +123,27 @@ def _get_open_file_model_info(track: Track, log_directory: str) -> (list[OpenFil
 
 
 def _add_multi_worker_log_info(log_info: list[OpenFileInfo]):
-    pass
+    model_workers = {}
+    for log in log_info:
+        log_meta = log.log_meta
+        if log_meta.workers.get() >= 2:
+            model_name = log_meta.model_name.get()
+            if model_name in model_workers:
+                model_workers[model_name][log_meta.worker_id.get()] = log
+            else:
+                model_workers[model_name] = {log_meta.worker_id.get(): log}
+    for model_name, workers in model_workers.items():
+        keys = list(workers.keys())
+        if len(keys) > 1:
+            source_files = []
+            log_metas = []
+            for i in sorted(keys):
+                source_files.append(workers[i].source_files[0])
+                log_metas.append(workers[i].log_meta)
+            # meta_data = LogMeta()
+            # meta_data.merge_from_multi_logs(log_metas)
+            meta_data = log_metas[0]   # TEMP FUDGE
+            log_info.append(OpenFileInfo(model_name + " (multi-worker)", meta_data, source_files))
 
 
 def _fix_worker_log_info_duplicates(log_info: list[OpenFileInfo]):

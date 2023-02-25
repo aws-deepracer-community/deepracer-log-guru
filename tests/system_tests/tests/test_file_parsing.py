@@ -93,6 +93,18 @@ class TestFileParsingWithJsonOutput(unittest.TestCase):
     def test_short_time_trial_trained_using_drfc_worker_4(self):
         self._test_parse_file("deepracer-0_robomaker.4.q21uw5u7jh904ky13gzf6jai2.log")
 
+    def test_short_time_trial_with_complete_laps_trained_using_drfc_worker_1(self):
+        self._test_parse_file("deepracer-0_robomaker.1.qwctpyyzmr74z3u19kc8pskvh.log")
+
+    def test_short_time_trial_with_complete_laps_trained_using_drfc_worker_2(self):
+        self._test_parse_file("deepracer-0_robomaker.2.439iylb5afjhz7nl8by8yr9p2.log")
+
+    def test_short_time_trial_with_complete_laps_trained_using_drfc_worker_3(self):
+        self._test_parse_file("deepracer-0_robomaker.3.kngqw8no1z62pkyozmqqnocad.log")
+
+    def test_short_time_trial_with_complete_laps_trained_using_drfc_worker_4(self):
+        self._test_parse_file("deepracer-0_robomaker.4.4fswvtmen73c861vyh3zwuv9c.log")
+
     def _test_parse_file(self, filename: str):
         # Setup
         self.assertTrue(os.path.isdir(RESOURCE_DIR))

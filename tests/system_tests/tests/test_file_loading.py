@@ -15,6 +15,7 @@ import unittest
 from episode.episode import Episode
 from src.log.log import Log
 from system_tests.tests.dummy_please_wait import DummyPleaseWait
+from tracks.fumiaki_loop_2020_track import FumiakiLoop2020Track
 from tracks.reinvent_2018_track import Reinvent2018Track
 from tracks.reinvent_2022_track import Reinvent2022Track
 
@@ -59,7 +60,28 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
         self._verify_log_meta_json(log, "test_load_two_worker_log_files.json")
 
         # TODO - lots more checks on "log" and its contents
-        # TODO - including testing a complete log meta setup, have a file to do JSON diff rather than code asserts)
+
+    def test_load_four_worker_log_files(self):
+        expected_step_counts = [165, 183, 391, 73, 366, 26, 50, 364, 195, 240,
+                                95, 76, 386, 78, 362, 277, 51, 332, 272, 361,
+                                360, 140, 371, 371, 112, 118, 46, 190, 200, 314,
+                                368, 53, 66, 30, 376, 29, 103, 367, 238, 154,
+                                75, 52, 360, 381, 39, 174, 51,
+                                238, 179, 80, 71, 33, 363, 374,
+                                146, 129, 79, 126, 31, 31, 89, 290, 365, 87,
+                                66, 126, 141, 87, 112, 27, 120, 38, 29, 158]
+
+        expected_quarters = [1] * 18 + [2] * 19 + [3] * 19 + [4] * 18
+        log = self._test_load_episodes(["deepracer-0_robomaker.1.qwctpyyzmr74z3u19kc8pskvh.log",
+                                        "deepracer-0_robomaker.2.439iylb5afjhz7nl8by8yr9p2.log",
+                                        "deepracer-0_robomaker.3.kngqw8no1z62pkyozmqqnocad.log",
+                                        "deepracer-0_robomaker.4.4fswvtmen73c861vyh3zwuv9c.log"],
+                                       FumiakiLoop2020Track,
+                                       expected_step_counts, expected_quarters)
+
+        self._verify_log_meta_json(log, "test_load_four_worker_log_files.json")
+
+        # TODO - lots more checks on "log" and its contents
 
     def _test_load_episodes(self, filenames: Union[str, list], track_type: type, expected_step_counts: list,
                             expected_quarters: list) -> Log:

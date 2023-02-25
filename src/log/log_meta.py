@@ -355,11 +355,12 @@ class LogMeta:
 
             # Totting up for averages
             total_for_average_percent_complete += m.average_percent_complete.get() * m.episode_count.get()
-
-            total_for_average_steps += m.average_steps.get() * m.episode_count.get()
-            total_for_average_time += m.average_time.get() * m.episode_count.get()
-            total_for_average_distance += m.average_distance.get() * m.episode_count.get()
             total_for_average_reward += m.average_reward.get() * m.episode_count.get()
+
+            if m.success_count.get() > 0:
+                total_for_average_steps += m.average_steps.get() * m.success_count.get()         # BEWARE - Success laps
+                total_for_average_time += m.average_time.get() * m.success_count.get()           # BEWARE - Success laps
+                total_for_average_distance += m.average_distance.get() * m.success_count.get()   # BEWARE - Success laps
 
         # Finally we are ready to set the calculated stats combined from all the meta
         self.episode_count.set(episode_count)
@@ -376,10 +377,16 @@ class LogMeta:
         self.worst_reward.set(worst_reward)
 
         self.average_percent_complete.set(total_for_average_percent_complete / episode_count)
-        self.average_steps.set(round(total_for_average_steps / episode_count))
-        self.average_time.set(total_for_average_time / episode_count)
-        self.average_distance.set(total_for_average_distance / episode_count)
         self.average_reward.set(total_for_average_reward / episode_count)
+
+        if success_count > 0:
+            self.average_steps.set(round(total_for_average_steps / success_count))    # BEWARE - Success laps
+            self.average_time.set(total_for_average_time / success_count)             # BEWARE - Success laps
+            self.average_distance.set(total_for_average_distance / success_count)     # BEWARE - Success laps
+        else:
+            self.average_steps.set(0)
+            self.average_time.set(0.0)
+            self.average_distance.set(0.0)
 
     def _make_field(self, json_path: str, data_type: type, optionality: Optionality, min_value=None,
                     max_value=None) -> MetaField:

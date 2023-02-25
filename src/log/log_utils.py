@@ -10,7 +10,7 @@ import os
 
 from log.log_meta import LogMeta
 from main.version import VERSION
-from src.log.log import LOG_FILE_SUFFIX, Log, META_FILE_SUFFIX, CONSOLE_LOG_SUFFIX
+from src.log.log import LOG_FILE_SUFFIX, Log, META_FILE_SUFFIX, CONSOLE_LOG_SUFFIX, make_new_log_meta
 from tracks.track import Track
 from ui.please_wait import PleaseWait
 
@@ -140,9 +140,8 @@ def _add_multi_worker_log_info(log_info: list[OpenFileInfo]):
             for i in sorted(keys):
                 source_files.append(workers[i].source_files[0])
                 log_metas.append(workers[i].log_meta)
-            # meta_data = LogMeta()
-            # meta_data.merge_from_multi_logs(log_metas)
-            meta_data = log_metas[0]   # TEMP FUDGE
+            meta_data = make_new_log_meta()
+            meta_data.merge_from_multi_logs(log_metas)
             log_info.append(OpenFileInfo(model_name + " (multi-worker)", meta_data, source_files))
 
 

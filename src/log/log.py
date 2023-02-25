@@ -33,6 +33,13 @@ AWS_UID_REG_EX = re.compile('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0
 TRAINING_FILE_REG_EXP = re.compile("-training_job_........*_logs.*")
 
 
+# Bit of fudge, there's a funny typing behaviour in Python, basically other files like log_utils.py won't match
+# Enum properly if they call LogMeta() directly, but work fine if they call this wrapper
+
+def make_new_log_meta():
+    return LogMeta()
+
+
 class Log:
     #
     # PUBLIC interface

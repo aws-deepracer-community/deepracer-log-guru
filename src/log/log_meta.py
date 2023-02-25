@@ -242,10 +242,6 @@ class LogMeta:
 
     def merge_from_multi_logs(self, multi_log_meta: list[Self]):
         assert len(multi_log_meta) >= 2
-        # self._fields = multi_log_meta[0]._fields   # Fudge to test the testing framework!!
-        # self.action_space = multi_log_meta[0].action_space
-        # self.fixed_object_locations = multi_log_meta[0].fixed_object_locations
-        # TODO - Finish this for ALL the meta data
 
         # Some fields are different per log, so need to be arbitrarily set to the value in the FIRST merged log
         self.worker_id.set(multi_log_meta[0].worker_id.get())

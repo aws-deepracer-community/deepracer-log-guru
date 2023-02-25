@@ -34,12 +34,9 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
         expected_step_counts = [139, 141, 142, 87, 156, 132, 138, 144, 143, 137, 133, 144, 147, 141, 133, 141, 140,
                                 142, 131, 138]
         expected_quarters = [1] * 5 + [2] * 5 + [3] * 5 + [4] * 5
-        log = self._test_load_episodes("training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker.log",
-                                       Reinvent2018Track,
-                                       expected_step_counts, expected_quarters)
-
-        first_episode: Episode = log.get_episodes()[0]
-        # print(first_episode.quarter)
+        self._test_load_episodes("training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker.log",
+                                 Reinvent2018Track,
+                                 expected_step_counts, expected_quarters)
 
     def test_load_two_worker_log_files(self):
         expected_step_counts = [25, 24, 25, 27, 15, 35, 22, 20, 22, 25,
@@ -58,8 +55,6 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
                                        expected_step_counts, expected_quarters)
 
         self._verify_log_meta_json(log, "test_load_two_worker_log_files.json")
-
-        # TODO - lots more checks on "log" and its contents
 
     def test_load_four_worker_log_files(self):
         expected_step_counts = [165, 183, 391, 73, 366, 26, 50, 364, 195, 240,
@@ -81,7 +76,38 @@ class TestFileLoadingOfAllEpisodes(unittest.TestCase):
 
         self._verify_log_meta_json(log, "test_load_four_worker_log_files.json")
 
-        # TODO - lots more checks on "log" and its contents
+        # Should be the 11th step of the 3rd episode in 2nd worker
+        # SIM_TRACE_LOG:2,11,-7.9529,-0.2597,27.0350,-30.00,1.00,4,25.0000,False,True,1.1486,75,52.87,39.632,in_progress,0.00
+        # 75 : 62 45
+        # B - Bonus fast section
+        sample_episode = log.get_episodes()[12]
+        sample_event = sample_episode.events[10]
+        self.assertEqual(12, sample_episode.id)
+        self.assertEqual(12, sample_event.episode)
+        self.assertEqual(11, sample_event.step)
+        self.assertEqual("\n75 : 62 45\nB - Bonus fast section\n", sample_event.debug_log)
+        self.assertEqual(39.632, sample_event.time)
+        self.assertEqual(3, sample_event.sequence_count)
+        self.assertEqual("R", sample_event.track_side)
+        self.assertEqual(3.7, round(sample_event.projected_travel_distance, 1))
+        self.assertTrue(sample_event.all_wheels_on_track)
+        self.assertEqual(1.0, round(sample_event.track_speed, 1))
+
+        # Last step in the last episode of the last worker
+        # SIM_TRACE_LOG:19,158,-0.3655,2.3368,-40.3193,-5.00,4.00,2,0.1000,True,False,49.6239,140,52.87,557.678,off_track,0.00
+        # ERROR - Going directly off track
+        sample_episode = log.get_episodes()[-1]
+        sample_event = sample_episode.events[-1]
+        self.assertEqual(73, sample_episode.id)
+        self.assertEqual(73, sample_event.episode)
+        self.assertEqual(158, sample_event.step)
+        self.assertEqual("\nERROR - Going directly off track\n", sample_event.debug_log)
+        self.assertEqual(557.678, sample_event.time)
+        self.assertEqual(5, sample_event.sequence_count)
+        self.assertEqual("L", sample_event.track_side)
+        self.assertEqual(0.0, round(sample_event.projected_travel_distance, 1))
+        self.assertFalse(sample_event.all_wheels_on_track)
+        self.assertEqual(2.4, round(sample_event.track_speed, 1))
 
     def _test_load_episodes(self, filenames: Union[str, list], track_type: type, expected_step_counts: list,
                             expected_quarters: list) -> Log:

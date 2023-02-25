@@ -82,6 +82,8 @@ class Log:
                 self._episodes += episodes_by_iteration[i]
             for new_id, e in enumerate(self._episodes):
                 e.id = new_id
+                for v in e.events:
+                    v.episode = new_id
             for e in multi_evaluation_phases:
                 if len(e) > 0:
                     assert(len(self._evaluation_phases)) == 0

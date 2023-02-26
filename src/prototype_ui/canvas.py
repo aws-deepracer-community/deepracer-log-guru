@@ -1,12 +1,11 @@
-import sys
-from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsRectItem, QApplication, QGraphicsPixmapItem, \
-    QMainWindow, QLabel, QAbstractGraphicsShapeItem
+from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsRectItem, QGraphicsPixmapItem, \
+    QAbstractGraphicsShapeItem
 from PyQt6.QtGui import QBrush, QPen, QPixmap, QPainter
 from PyQt6.QtCore import Qt
 
 
 class Canvas(QGraphicsView):
-    def __init__(self, width: int, height: int, background_colour: Qt.GlobalColor):
+    def __init__(self, background_colour: Qt.GlobalColor):
         super().__init__(None)
         self._background_colour = background_colour
         self._width = self.geometry().width()
@@ -53,5 +52,3 @@ class Canvas(QGraphicsView):
         rect.setPen(pen)
 
         return [rect]
-
-

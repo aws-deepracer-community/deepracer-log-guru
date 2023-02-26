@@ -1,5 +1,4 @@
 import sys
-import os
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QApplication, QLabel, QProgressBar
@@ -15,7 +14,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setMinimumSize(200, 200)
-        # self.resize(500, 400)
+        self.resize(1800, 400)
         self.setWindowTitle("Example")
 
         # Status Bar
@@ -37,7 +36,7 @@ class MainWindow(QMainWindow):
         self._actions.file_new.triggered.connect(self._new_file)
         self._actions.file_open.triggered.connect(self._open_file)
 
-        self.canvas = Canvas(400, 300, Qt.GlobalColor.gray)
+        self.canvas = Canvas(Qt.GlobalColor.gray)
         self.setCentralWidget(self.canvas)
 
         self.show()

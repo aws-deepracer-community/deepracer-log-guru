@@ -5,6 +5,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QApplication, QLabel, QProgressBar
 
 from prototype_ui.actions import Actions
+from prototype_ui.canvas import Canvas
 from prototype_ui.menubar import MenuBarManager
 from prototype_ui.toolbar import ToolBarManager
 
@@ -14,7 +15,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setMinimumSize(200, 200)
-        self.resize(500, 400)
+        # self.resize(500, 400)
         self.setWindowTitle("Example")
 
         # Status Bar
@@ -36,7 +37,7 @@ class MainWindow(QMainWindow):
         self._actions.file_new.triggered.connect(self._new_file)
         self._actions.file_open.triggered.connect(self._open_file)
 
-        self.canvas = QLabel("Hello")
+        self.canvas = Canvas(400, 300, Qt.GlobalColor.gray)
         self.setCentralWidget(self.canvas)
 
         self.show()

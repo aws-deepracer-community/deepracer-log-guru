@@ -6,7 +6,7 @@
 # Copyright (c) 2021 dmh23
 #
 
-from src.personalize.reward_functions.private.feb_2023_fumiaki_loop_2 import reward_function
+from src.personalize.reward_functions.private.feb_2023_fumiaki_loop_3 import reward_function
 
 NEW_REWARD_FUNCTION = reward_function
 

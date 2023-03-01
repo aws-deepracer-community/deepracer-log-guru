@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsRectItem, QGraphicsPixmapItem, \
     QAbstractGraphicsShapeItem
 from PyQt6.QtGui import QBrush, QPen, QPixmap, QPainter
@@ -37,18 +39,10 @@ class Canvas(QGraphicsView):
             scene.addItem(i)
         self.setScene(scene)
 
-    # Hardcoded examples for now - these will be abstract shortly
+    @abstractmethod
     def _paint(self, painter: QPainter):
-        painter.fillRect(0, 0, round(self._width / 2), round(self._height / 2), Qt.GlobalColor.darkYellow)
+        pass
 
-    # Hardcoded examples for now - these will be abstract shortly
+    @abstractmethod
     def _get_scene_items(self) -> list[QAbstractGraphicsShapeItem]:
-        rect = QGraphicsRectItem(0, 0, self._width / 3, self._height / 3)
-        rect.setPos(self._width / 10, self._height / 10)
-        brush = QBrush(Qt.GlobalColor.red)
-        rect.setBrush(brush)
-        pen = QPen(Qt.GlobalColor.cyan)
-        pen.setWidth(10)
-        rect.setPen(pen)
-
-        return [rect]
+        pass

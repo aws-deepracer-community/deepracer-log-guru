@@ -4,9 +4,9 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QApplication, QLabel, QProgressBar
 
 from prototype_ui.actions import Actions
-from prototype_ui.canvas import Canvas
 from prototype_ui.menubar import MenuBarManager
 from prototype_ui.toolbar import ToolBarManager
+from prototype_ui.track_analysis_canvas import TrackAnalysisCanvas, SolidCircle, TrackArea
 
 
 class MainWindow(QMainWindow):
@@ -36,10 +36,16 @@ class MainWindow(QMainWindow):
         self._actions.file_new.triggered.connect(self._new_file)
         self._actions.file_open.triggered.connect(self._open_file)
 
-        self.canvas = Canvas(Qt.GlobalColor.gray)
+        self.canvas = TrackAnalysisCanvas()
         self.setCentralWidget(self.canvas)
 
         self.show()
+
+        # Example of drawing stuff in the track canvas until I integrate with Tracks etc.
+        self.canvas.set_track_area(TrackArea(0, 0, 100, 100))
+        self.canvas.add_fixed_shape(SolidCircle((90, 90), 20, Qt.GlobalColor.red))
+        self.canvas.add_fixed_shape(SolidCircle((50, 50), 20, Qt.GlobalColor.white))
+        self.canvas.add_fixed_shape(SolidCircle((10, 10), 20, Qt.GlobalColor.blue))
 
     def _new_file(self):
         print("New File")

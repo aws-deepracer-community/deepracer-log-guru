@@ -28,6 +28,8 @@ class Actions:
         self.file_save_as.setShortcut("Ctrl+A")
         self.file_save_as.setIcon(style.standardIcon(QStyle.StandardPixmap.SP_DialogOpenButton))
 
+        self.file_save_as.setCheckable(True)
+
     @staticmethod
     def get_custom_icon(icon_name: str):
         file_path = os.path.join(ICON_DIRECTORY, icon_name + ".png")

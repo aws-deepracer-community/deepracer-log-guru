@@ -16,5 +16,6 @@ class MenuBarManager:
         menu = self._menu_bar.addMenu("File")
         menu.addAction(self._actions.file_new)
         menu.addAction(self._actions.file_open)
+        menu.addSeparator()
         menu.addAction(self._actions.file_save)
         menu.addAction(self._actions.file_save_as)

@@ -91,7 +91,7 @@ def multi_draw(track_graphics :TrackGraphics, visitors, colours, threshold):
     assert len(colours) == len(visitors)
     assert threshold >= 1
 
-    min_x = visitors[0].min_x
+    min_x = visitors[0]._min_x
     min_y = visitors[0].min_y
     granularity = visitors[0].granularity
 

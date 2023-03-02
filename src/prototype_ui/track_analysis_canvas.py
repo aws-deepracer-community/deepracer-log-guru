@@ -7,6 +7,8 @@ from PyQt6.QtWidgets import QGraphicsRectItem, QAbstractGraphicsShapeItem
 from PyQt6.QtGui import QBrush, QPen, QPainter, QColor
 from PyQt6.QtCore import Qt, QPointF, QPoint
 
+Point = (float | int, float | int)     # Typedef which we will use a lot for graphics
+
 
 class CanvasItem(ABC):
     pass
@@ -32,10 +34,18 @@ class TrackArea:
 
 
 class Scale:
-    def __init__(self, min_x, max_y, scale):
-        self.min_x = min_x
-        self.max_y = max_y
-        self.scale = scale
+    def __init__(self, min_x, max_y, scale_factor):
+        self._min_x = min_x
+        self._max_y = max_y
+        self._scale_factor = scale_factor
+
+    def apply(self, point: Point) -> Point:
+        (x, y) = point
+
+        x = (x - self._min_x) * self._scale_factor
+        y = (self._max_y - y) * self._scale_factor
+
+        return round(x), round(y)
 
 
 class TrackAnalysisCanvas(Canvas):
@@ -98,20 +108,33 @@ class TrackAnalysisCanvas(Canvas):
 
 # plot_dot() in v3
 
-class SolidCircle(FixedShape):
-    def __init__(self, point: (float | int, float | int), radius: float | int, colour: Qt.GlobalColor):
+class FilledCircle(FixedShape):
+    def __init__(self, point: Point, radius: float | int, colour: Qt.GlobalColor):
         self._point = point
         self._pen = QPen(colour)
+        self._radius = radius
         self._pen.setWidth(radius)
 
     def paint(self, painter: QPainter, scale: Scale):
-        (x, y) = self._point
-
-        x = (x - scale.min_x) * scale.scale
-        y = (scale.max_y - y) * scale.scale
-
+        x, y = scale.apply(self._point)
         painter.setPen(self._pen)
-        painter.drawPoint(int(x), int(y))
+        painter.drawEllipse(round(x), round(y), self._radius, self._radius)
+
+
+# def plot_line(self, point1, point2, width, fill_colour, dash_pattern=None)    in v3
+
+class Line(FixedShape):
+    def __init__(self, start: Point, finish: Point, width: int, colour: Qt.GlobalColor, dash_pattern="??????"):
+        self._start = start
+        self._finish = finish
+        self._pen = QPen(colour)
+        self._pen.setWidth(width)
+
+    def paint(self, painter: QPainter, scale: Scale):
+        x1, y1 = scale.apply(self._start)
+        x2, y2 = scale.apply(self._finish)
+        painter.setPen(self._pen)
+        painter.drawLine(x1, y1, x2, y2)
 
 
 

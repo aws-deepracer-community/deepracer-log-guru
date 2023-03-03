@@ -92,15 +92,16 @@ class TrackAnalysisCanvas(Canvas):
             f.paint(painter, scale)
 
     def _get_scene_items(self) -> list[QAbstractGraphicsShapeItem]:
-        rect = QGraphicsRectItem(0, 0, self._width / 20, self._height / 20)
-        rect.setPos(self._width / 10, self._height / 10)
-        brush = QBrush(Qt.GlobalColor.red)
-        rect.setBrush(brush)
-        pen = QPen(Qt.GlobalColor.cyan)
-        pen.setWidth(10)
-        rect.setPen(pen)
-
-        return [rect]
+        # rect = QGraphicsRectItem(0, 0, self._width / 20, self._height / 20)
+        # rect.setPos(self._width / 10, self._height / 10)
+        # brush = QBrush(Qt.GlobalColor.red)
+        # rect.setBrush(brush)
+        # pen = QPen(Qt.GlobalColor.cyan)
+        # pen.setWidth(10)
+        # rect.setPen(pen)
+        #
+        # return [rect]
+        return []
 
     def add_fixed_shape(self, item: FixedShape):
         self._fixed_shapes.append(item)

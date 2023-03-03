@@ -7,6 +7,7 @@ from prototype_ui.actions import Actions
 from prototype_ui.menubar import MenuBarManager
 from prototype_ui.toolbar import ToolBarManager
 from prototype_ui.track_analysis_canvas import TrackAnalysisCanvas, FilledCircle, TrackArea, Line
+from prototype_ui.tracks_v4 import get_all_tracks
 
 
 class MainWindow(QMainWindow):
@@ -41,12 +42,14 @@ class MainWindow(QMainWindow):
 
         self.show()
 
-        # Example of drawing stuff in the track canvas until I integrate with Tracks etc.
-        self.canvas.set_track_area(TrackArea(0, 0, 100, 100))
-        self.canvas.add_fixed_shape(FilledCircle((90, 90), 20, Qt.GlobalColor.red))
-        self.canvas.add_fixed_shape(FilledCircle((50, 50), 20, Qt.GlobalColor.white))
-        self.canvas.add_fixed_shape(FilledCircle((10, 10), 20, Qt.GlobalColor.blue))
-        self.canvas.add_fixed_shape(Line((0, 100), (100, 0), 10, Qt.GlobalColor.yellow))
+        # Initialise tracks & draw here temporarily to prove everything works or not
+
+        self._tracks = get_all_tracks()
+        track = self._tracks["reinvent_base"]
+        track.configure_track_canvas(self.canvas)
+        # self.canvas.set_track_area(TrackArea(0, 0, 10, 10))
+        track.draw_track_edges(self.canvas, Qt.GlobalColor.red)
+        track.draw_waypoints(self.canvas, Qt.GlobalColor.blue, 2, 5)
 
     def _new_file(self):
         print("New File")

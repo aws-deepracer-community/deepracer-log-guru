@@ -89,6 +89,10 @@ hot_rod_speedway_annotations = []
 
 hot_rod_super_speedway_annotations = []
 
+hot_rod_super_speedway_cw_annotations = []
+
+hot_rod_super_speedway_ccw_annotations = []
+
 reinvent_2018_wide_annotations = []
 
 playa_raceway_annotations = []

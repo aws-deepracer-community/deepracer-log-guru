@@ -1,7 +1,7 @@
 # deepracer-log-guru
 
 ## Announcement
-20th October 2022: Version 3.2.15 is now available with support for all the latest tracks including the 2022 re:Invent Championship track
+5th March 2023: Version 3.2.16 is now available with support for the clockwise version of the Hot Rod Super Speedway track for the March 2023 Virtual Circuit race
 
 ## Introduction
 
@@ -33,6 +33,7 @@ See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_rac
 * [Troubleshooting](docs/trouble_shooting.md)
 
 ## Old Announcements
+* 20th October 2022: Version 3.2.15 is now available with support for all the latest tracks including the 2022 re:Invent Championship track
 * 6th September 2022: Version 3.2.14 is now available with support for the new Roger Super Raceway track
 * 3rd August 2022: Version 3.2.13 is now available with support for the new Jochem Highway and Jochem Turnpike tracks
 * 6th July 2022: Version 3.2.12 is now available with support for the new DBro Raceway and DBro Super Raceway tracks

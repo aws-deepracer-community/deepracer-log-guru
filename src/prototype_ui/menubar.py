@@ -14,6 +14,8 @@ class MenuBarManager:
 
     def _create_file_menu(self):
         menu = self._menu_bar.addMenu("File")
+        menu.addAction(self._actions.change_directory)
+        menu.addSeparator()
         menu.addAction(self._actions.file_new)
         menu.addAction(self._actions.file_open)
         menu.addSeparator()

@@ -1,8 +1,9 @@
 import sys
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMainWindow, QApplication, QLabel, QProgressBar
+from PyQt6.QtWidgets import QMainWindow, QApplication, QLabel, QProgressBar, QFileDialog
 
+from configuration.config_manager import ConfigManager
 from prototype_ui.actions import Actions
 from prototype_ui.menubar import MenuBarManager
 from prototype_ui.toolbar import ToolBarManager
@@ -13,6 +14,12 @@ from prototype_ui.tracks_v4 import get_all_tracks
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        #
+        # First of all, get config manager up and running so we have access to any settings that it manages for us
+        #
+        self._config_manager = ConfigManager()
+
+        # PROTOTYPE FROM HERE
 
         self.setMinimumSize(200, 200)
         self.resize(1800, 400)
@@ -34,6 +41,7 @@ class MainWindow(QMainWindow):
         self._tool_bar_manager = ToolBarManager(self.addToolBar("Main"), self._actions)
 
         # Connect actions with callback methods to implement them
+        self._actions.change_directory.triggered.connect(self._change_directory)
         self._actions.file_new.triggered.connect(self._new_file)
         self._actions.file_open.triggered.connect(self._open_file)
 
@@ -57,6 +65,12 @@ class MainWindow(QMainWindow):
 
     def _open_file(self):
         self.canvas.setCursor(Qt.CursorShape.CrossCursor)
+
+    def _change_directory(self):
+        new_directory = QFileDialog.getExistingDirectory(self, self._actions.change_directory.statusTip(), self._config_manager.get_log_directory())
+        if new_directory != "":
+            self._config_manager.set_log_directory(new_directory)
+            # self.menu_bar.refresh()   # TODO - Equivalent in new UI is to be determined
 
 
 if __name__ == '__main__':

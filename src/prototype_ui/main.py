@@ -6,11 +6,12 @@ from PyQt6.QtWidgets import QMainWindow, QApplication, QLabel, QProgressBar, QFi
 from configuration.config_manager import ConfigManager
 from prototype_ui.actions import Actions
 from prototype_ui.menubar import MenuBarManager
-from prototype_ui.open_file_dialog import OpenFileDialog
 from prototype_ui.please_wait import PleaseWait
 from prototype_ui.toolbar import ToolBarManager
 from prototype_ui.track_analysis_canvas import TrackAnalysisCanvas, FilledCircle, TrackArea, Line
 from prototype_ui.tracks_v4 import get_all_tracks
+from prototype_ui.open_file_dialog import OpenFileDialog
+
 
 
 class MainWindow(QMainWindow):
@@ -51,7 +52,7 @@ class MainWindow(QMainWindow):
         # Initialise tracks & draw here temporarily to prove everything works or not
 
         self._tracks = get_all_tracks()
-        self._current_track = self._tracks["reinvent_base"]
+        self._current_track = self._tracks["arctic_pro_cw"]
         self._current_track.configure_track_canvas(self.canvas)
         # self.canvas.set_track_area(TrackArea(0, 0, 10, 10))
         self._current_track.draw_track_edges(self.canvas, Qt.GlobalColor.red)

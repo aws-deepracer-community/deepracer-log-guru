@@ -13,7 +13,8 @@ from object_avoidance.fixed_object_locations import FixedObjectLocations
 from src.action_space.action import Action
 from src.action_space.action_space import ActionSpace
 from src.log.meta_field import MetaField, MetaFields, Optionality
-from src.main.version import VERSION
+
+LOG_META_VERSION = "4.0.0.DRAFT"
 
 MANDATORY = Optionality.MANDATORY
 OPTIONAL = Optionality.OPTIONAL
@@ -222,7 +223,7 @@ class LogMeta:
         )
 
     def get_as_json(self) -> dict:
-        self.guru_version.set(VERSION)
+        self.guru_version.set(LOG_META_VERSION)
         self._set_meta_fields_based_on_action_space()
         result = MetaFields.create_json(self._fields)
         if not self.action_space.is_continuous():

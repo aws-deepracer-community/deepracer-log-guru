@@ -39,6 +39,10 @@ reinvent_2018_annotations = [
 
 championship_cup_2019_annotations = []
 
+championship_cup_2019_cw_annotations = []
+
+championship_cup_2019_ccw_annotations = []
+
 roger_raceway_annotations = []
 
 fumiaki_loop_annotations = []

@@ -61,26 +61,32 @@ from src.tracks.jennens_super_speedway_track import JennensSuperSpeedwayTrack
 from src.tracks.reinvent_2022_track import Reinvent2022Track
 from src.tracks.hot_rod_super_speedway_cw_track import HotRodSuperSpeedwayClockwiseTrack
 from src.tracks.hot_rod_super_speedway_ccw_track import HotRodSuperSpeedwayCounterClockwiseTrack
+from tracks.champ_cup_2019_track_ccw import ChampionshipCup2019CounterClockwiseTrack
+from tracks.champ_cup_2019_track_cw import ChampionshipCup2019ClockwiseTrack
 
 
 def get_all_tracks():
     tracks = {}
 
     for t in [AmericanHillsSpeedwayTrack(), AsiaPacificBayLoopTrack(), EuropeanSeasideCircuitTrack(),
-              Reinvent2018Track(), Reinvent2018WideTrack(), ChampionshipCup2019Track(), StratusLoop2020Track(),
+              Reinvent2018Track(), Reinvent2018WideTrack(),
+              ChampionshipCup2019Track(),
+              ChampionshipCup2019ClockwiseTrack(), ChampionshipCup2019CounterClockwiseTrack(),
+              StratusLoop2020Track(), HotRodSpeedwayTrack(), HotRodSuperSpeedwayTrack(),
+              HotRodSuperSpeedwayClockwiseTrack(), HotRodSuperSpeedwayCounterClockwiseTrack(),
               CumuloTurnpikeTrack(), YunSpeedwayTrack(),
               RogerRacewayTrack(), FumiakiLoop2020Track(), SummitRacewayTrack(),
               Sola2020Track(), Baadal2020Track(), Barcelona2020Track(), BowtieTrack(),
               PoChunSuperSpeedwayTrack(), PoChunSpeedwayTrack(), LarsCircuitTrack(), LarsLoopTrack(),
               KueiRacewayTrack(), KueiSuperRacewayTrack(), CosmicLoopTrack(), CosmicCircuitTrack(),
-              BajaTurnpikeTrack(), BajaHighwayTrack(), HotRodSpeedwayTrack(), HotRodSuperSpeedwayTrack(),
+              BajaTurnpikeTrack(), BajaHighwayTrack(),
               PlayaRacewayTrack(), PlayaSuperRacewayTrack(), ExpeditionSuperLoopTrack(), ExpeditionLoopTrack(),
               VivalasLoooTrack(), VivalasSpeedwayTrack(), SummitSpeedwayTrack(), RogueRacewayTrack(),
               RogueCircuitTrack(), AceSpeedwayTrack(), AceSuperSpeedwayTrack(), RossRacewayTrack(),
               RossSuperSpeedwayTrack(), OvalTrack(), BreadCentricLoopTrack(), BreadCentricSpeedwayTrack(),
               DBroRacewayTrack(), DBroSuperRacewayTrack(), JochemTurnpikeTrack(), JochemHighwayTrack(),
               RogerSuperRacewayTrack(), RogerRingTrack(), JennensSuperSpeedwayTrack(), JennensFamilySpeedwayTrack(),
-              Reinvent2022Track(), HotRodSuperSpeedwayClockwiseTrack(), HotRodSuperSpeedwayCounterClockwiseTrack()
+              Reinvent2022Track()
               ]:
         t.prepare(tracks)
 

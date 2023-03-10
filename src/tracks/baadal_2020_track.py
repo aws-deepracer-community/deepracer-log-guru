@@ -18,7 +18,7 @@ class Baadal2020Track(Track):
         self._ui_description = "Baadal is the Hindi word for cloud. The Baadal track combines long arching straightaways perfect for passing opportunities coupled with tight windings corners."
         self._ui_length_in_m = 39.0  # metres
         self._ui_width_in_cm = 107  # centimetres
-        self._world_name = "AmericasGenerated..."
+        self._world_name = "AmericasGeneratedInclStart"
         self._track_sector_dividers = [90, 160, 210]
         self._annotations = config.baadal_2020_annotations
         self._track_width = 1.07

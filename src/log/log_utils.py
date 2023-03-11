@@ -8,8 +8,7 @@
 
 import os
 
-from src.log.log_meta import LogMeta
-from src.main.version import VERSION
+from src.log.log_meta import LogMeta, LOG_META_VERSION
 from src.log.log import LOG_FILE_SUFFIX, Log, META_FILE_SUFFIX, CONSOLE_LOG_SUFFIX, make_new_log_meta
 from src.tracks.track import Track
 from src.ui.please_wait import PleaseWait
@@ -71,7 +70,7 @@ def _is_log_valid(meta_file: str, all_files: list, log_directory: str):
     try:
         log = Log(log_directory)
         log.load_meta(meta_file)
-        return log.get_log_meta().guru_version.get() == VERSION and log.get_log_meta().matches_os_stats(
+        return log.get_log_meta().guru_version.get() == LOG_META_VERSION and log.get_log_meta().matches_os_stats(
             os.stat(os.path.join(log_directory, log_file)))
     except Exception:  # TODO proper exception class for Guru
         return False

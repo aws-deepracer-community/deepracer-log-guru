@@ -8,11 +8,11 @@
 
 import os
 
-from log.log_meta import LogMeta
-from main.version import VERSION
+from src.log.log_meta import LogMeta
+from src.main.version import VERSION
 from src.log.log import LOG_FILE_SUFFIX, Log, META_FILE_SUFFIX, CONSOLE_LOG_SUFFIX, make_new_log_meta
-from tracks.track import Track
-from ui.please_wait import PleaseWait
+from src.tracks.track import Track
+from src.ui.please_wait import PleaseWait
 
 
 #

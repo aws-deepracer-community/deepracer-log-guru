@@ -13,7 +13,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 import src.secret_sauce.glue.glue as ss
-from log.log_meta import RaceType
+from src.log.log_meta import RaceType
 
 from src.analyze.track.analyze_heatmap import AnalyzeHeatmap
 from src.analyze.track.analyze_exit_points import AnalyzeExitPoints

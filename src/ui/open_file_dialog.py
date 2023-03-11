@@ -11,9 +11,8 @@ import tkinter as tk
 from src.personalize.configuration.analysis import TIME_BEFORE_FIRST_STEP
 from src.ui.dialog import Dialog
 from src.log.log_utils import get_model_info_for_open_model_dialog, OpenFileInfo
-
 from src.utils.formatting import get_pretty_whole_percentage, get_pretty_large_integer
-from ui.please_wait import PleaseWait
+from src.ui.please_wait import PleaseWait
 
 
 class OpenFileDialog(Dialog):

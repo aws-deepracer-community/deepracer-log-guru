@@ -11,7 +11,7 @@ import re
 from datetime import date
 from enum import Enum
 
-from object_avoidance.fixed_object_locations import FixedObjectLocation, Lane
+from src.object_avoidance.fixed_object_locations import FixedObjectLocation, Lane
 from src.event.event_meta import Event
 from src.log.log_meta import LogMeta, NeuralNetworkTopology, Platform, RaceType, ObstacleType, LearningAlgorithm
 from src.action_space.action import Action

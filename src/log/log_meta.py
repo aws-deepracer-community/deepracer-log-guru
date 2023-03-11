@@ -9,7 +9,7 @@ import os
 from enum import Enum, auto
 from typing import Final, Self
 
-from object_avoidance.fixed_object_locations import FixedObjectLocations
+from src.object_avoidance.fixed_object_locations import FixedObjectLocations
 from src.action_space.action import Action
 from src.action_space.action_space import ActionSpace
 from src.log.meta_field import MetaField, MetaFields, Optionality

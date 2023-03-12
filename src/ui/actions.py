@@ -11,9 +11,6 @@ ICON_DIRECTORY = os.path.join("../icons")
 ICON_FILE_EXTENSION = ".png"
 
 
-# Open, Info, Directory, Options, Exit
-
-
 class Actions:
     def __init__(self, style: QStyle):
         self._style = style

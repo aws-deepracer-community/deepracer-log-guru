@@ -1,5 +1,4 @@
 import sys
-import time
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QApplication, QProgressBar, QFileDialog
@@ -12,6 +11,7 @@ from src.ui.toolbar import ToolBarManager
 from src.graphics.track_analysis_canvas import TrackAnalysisCanvas
 from src.tracks.tracks import get_all_tracks
 from src.ui.open_file_dialog import OpenFileDialog
+from ui.icons import get_custom_icon
 
 
 class MainWindow(QMainWindow):
@@ -26,7 +26,8 @@ class MainWindow(QMainWindow):
 
         self.setMinimumSize(200, 200)
         self.resize(1800, 400)
-        self.setWindowTitle("Example")
+        self.setWindowTitle("DeepRacer Guru")
+        self.setWindowIcon(get_custom_icon("window_icon"))
 
         # Status Bar
         self._please_wait = PleaseWait(self.statusBar(), self.set_busy_cursor, self.set_normal_cursor)

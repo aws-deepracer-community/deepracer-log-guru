@@ -6,8 +6,7 @@
 # Copyright (c) 2021 dmh23
 #
 
-from src.graphics.track_graphics import TrackGraphics
-import math
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 
 from src.utils.colors import get_color_for_data, ColorPalette
 

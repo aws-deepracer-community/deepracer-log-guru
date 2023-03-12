@@ -1,3 +1,6 @@
+# v4 UI STATUS - CONVERSION IN PROGRESS
+# *************************************
+
 #
 # DeepRacer Guru
 #
@@ -6,8 +9,9 @@
 # Copyright (c) 2021 dmh23
 #
 
-import tkinter as tk
 import time
+
+from PyQt6.QtWidgets import QStatusBar, QLabel, QProgressBar
 
 NEARLY_COMPLETE = 99.99
 REDRAW_INTERVAL = 0.15
@@ -15,80 +19,43 @@ SMALL_JUMP = 2
 BIG_JUMP = 25
 
 
-class PleaseWait():
-    def __init__(self, root :tk.Frame, canvas :tk.Canvas):
-        self.canvas = canvas
-        self.root = root
-
-        self.percent_done = 0.0
-        self.widgets = []
-        self.title = ""
-        self.last_drawn_at = time.time()
+class PleaseWait:
+    def __init__(self, status_bar: QStatusBar, set_busy_cursor_method: callable, set_normal_cursor_method: callable):
+        self._percent_done = 0
+        self._status_bar = status_bar
+        self._set_busy_cursor_method = set_busy_cursor_method
+        self._set_normal_cursor_method = set_normal_cursor_method
+        self._progress_bar = QProgressBar()
+        self._progress_bar.setRange(0, 100)
+        self._label_widget = QLabel()
 
     def start(self, title):
-        self.stop()
-        self.root.config(cursor="watch")
-        self.title = title
-        self.redraw()
+        self._set_busy_cursor_method()
+
+        self._percent_done = 0
+
+        self._label_widget = QLabel(title)
+        self._progress_bar.setValue(0)
+
+        self._status_bar.addWidget(self._label_widget)
+        self._status_bar.addWidget(self._progress_bar)
+        self._progress_bar.show()
+        self._label_widget.show()
+        self._status_bar.clearMessage()
+
+        self._status_bar.repaint()
 
     def stop(self, pause_seconds=0):
         time.sleep(pause_seconds)
-        self.remove_previous_widgets()
-        self.canvas.update()
-        self.percent_done = 0.0
-        self.root.config(cursor="")
+        self._status_bar.removeWidget(self._label_widget)
+        self._status_bar.removeWidget(self._progress_bar)
+        self._status_bar.repaint()
+        self._set_normal_cursor_method()
 
-    def set_progress(self, percent_done: float):
-        if percent_done < 0.0:
-            percent_done = 0.0
-        if percent_done > 100.0:
-            percent_done = 100.0
+    def set_progress(self, percent_done: int | float):
+        percent_done = min(100, max(0, round(percent_done)))
 
-        jump = percent_done - self.percent_done
-        if percent_done >= NEARLY_COMPLETE > self.percent_done or jump >= BIG_JUMP or \
-                (jump >= SMALL_JUMP and time.time() - self.last_drawn_at >= REDRAW_INTERVAL):
-            self.percent_done = percent_done
-            self.redraw()
-            self.last_drawn_at = time.time()
-
-    def redraw(self):
-        self.remove_previous_widgets()
-
-        x = self.canvas.winfo_width() / 2
-        y = self.canvas.winfo_height() / 2
-
-        total_width = 200
-        outline_width = 6
-
-        self.widgets.append(self.canvas.create_rectangle(
-            x - total_width/2, y - 30,
-            x + total_width/2, y + 30,
-            fill="black", outline="grey", width=outline_width))
-
-        if self.percent_done > 0:
-            percent_width = (total_width - 2 * outline_width) * self.percent_done / 100
-            percent_left = x - total_width / 2 + outline_width
-            self.widgets.append(self.canvas.create_rectangle(
-                percent_left, y - 30 + outline_width,
-                percent_left + percent_width, y + 30 - outline_width,
-                fill="grey", width=0))
-
-        self.widgets.append(self.canvas.create_text(
-            x, y, text=self.title,
-            fill="Blue", font=("", 16)))
-
-        self.canvas.update()
-
-    def remove_previous_widgets(self):
-        for w in self.widgets:
-            self.canvas.delete(w)
-
-        self.widgets = []
-
-
-
-
-
-
-
-
+        if percent_done > self._percent_done:
+            self._percent_done = percent_done
+            self._progress_bar.setValue(percent_done)
+            self._status_bar.repaint()

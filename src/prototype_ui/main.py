@@ -1,17 +1,17 @@
 import sys
+import time
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMainWindow, QApplication, QLabel, QProgressBar, QFileDialog
+from PyQt6.QtWidgets import QMainWindow, QApplication, QProgressBar, QFileDialog
 
-from configuration.config_manager import ConfigManager
-from prototype_ui.actions import Actions
-from prototype_ui.menubar import MenuBarManager
-from prototype_ui.please_wait import PleaseWait
-from prototype_ui.toolbar import ToolBarManager
-from prototype_ui.track_analysis_canvas import TrackAnalysisCanvas, FilledCircle, TrackArea, Line
-from prototype_ui.tracks_v4 import get_all_tracks
-from prototype_ui.open_file_dialog import OpenFileDialog
-
+from src.configuration.config_manager import ConfigManager
+from src.ui.actions import Actions
+from src.ui.menubar import MenuBarManager
+from src.ui.please_wait import PleaseWait
+from src.ui.toolbar import ToolBarManager
+from src.graphics.track_analysis_canvas import TrackAnalysisCanvas
+from src.tracks.tracks import get_all_tracks
+from src.ui.open_file_dialog import OpenFileDialog
 
 
 class MainWindow(QMainWindow):
@@ -60,11 +60,9 @@ class MainWindow(QMainWindow):
 
     def set_busy_cursor(self):
         self.setCursor(Qt.CursorShape.WaitCursor)
-        self.repaint()
 
     def set_normal_cursor(self):
-        self.setCursor(Qt.CursorShape.ArrowCursor)
-        self.repaint()
+        self.unsetCursor()
 
     def make_status_bar_tall_enough_to_contain_progress_bar(self):
         dummy_sizing_progress_bar = QProgressBar()
@@ -75,10 +73,8 @@ class MainWindow(QMainWindow):
 
     def _new_file(self):
         print("New File")
-        self.statusBar().showMessage("Hello Briefly", 5000)    # 5 secs
 
     def _open_file(self):
-        # self.canvas.setCursor(Qt.CursorShape.CrossCursor)
         dlg = OpenFileDialog(self, self._please_wait, self._current_track, self._config_manager.get_log_directory())
         if dlg.exec():
             print("Success!")

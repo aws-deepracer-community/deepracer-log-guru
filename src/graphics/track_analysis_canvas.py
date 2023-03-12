@@ -1,11 +1,12 @@
+# v4 UI STATUS - BRAND NEW
+# ************************
+
 from abc import ABC
 
-from PyQt6.uic.properties import QtGui
-
-from prototype_ui.canvas import Canvas
-from PyQt6.QtWidgets import QGraphicsRectItem, QAbstractGraphicsShapeItem
-from PyQt6.QtGui import QBrush, QPen, QPainter, QColor
-from PyQt6.QtCore import Qt, QPointF, QPoint
+from graphics.canvas import Canvas
+from PyQt6.QtWidgets import QAbstractGraphicsShapeItem
+from PyQt6.QtGui import QPen, QPainter
+from PyQt6.QtCore import Qt
 
 Point = (float | int, float | int)     # Typedef which we will use a lot for graphics
 

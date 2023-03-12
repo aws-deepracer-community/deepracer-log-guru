@@ -14,7 +14,7 @@ from src.action_space.action import Action
 from src.action_space.action_space import ActionSpace
 from src.log.meta_field import MetaField, MetaFields, Optionality
 
-LOG_META_VERSION = "4.0.0.DRAFT"
+LOG_META_VERSION = "4.0.0.DRAFTxx"
 
 MANDATORY = Optionality.MANDATORY
 OPTIONAL = Optionality.OPTIONAL

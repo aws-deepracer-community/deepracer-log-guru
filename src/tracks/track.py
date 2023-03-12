@@ -1,3 +1,6 @@
+# v4 UI STATUS - CONVERSION IN PROGRESS
+# *************************************
+
 #
 # DeepRacer Guru
 #
@@ -5,12 +8,14 @@
 #
 # Copyright (c) 2021 dmh23
 #
+from PyQt6.QtCore import Qt
 
 import src.utils.geometry as geometry
+from graphics.track_analysis_canvas import TrackAnalysisCanvas, TrackArea, Line, FilledCircle
 from src.analyze.util.heatmap import HeatMap
 from src.analyze.util.visitor import VisitorMap
 from src.configuration.real_world import VEHICLE_LENGTH, VEHICLE_WIDTH, BOX_OBSTACLE_WIDTH, BOX_OBSTACLE_LENGTH
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 from src.utils.types import Point
 
 DISPLAY_BORDER = 0.3
@@ -106,19 +111,19 @@ class Track:
 
         all_tracks[self._world_name] = self
 
-    def configure_track_graphics(self, track_graphics: TrackGraphics):
-        track_graphics.set_track_area(
-            self._min_x - DISPLAY_BORDER, self._min_y - DISPLAY_BORDER,
-            self._max_x + DISPLAY_BORDER, self._max_y + DISPLAY_BORDER)
+    def configure_track_canvas(self, canvas: TrackAnalysisCanvas):
+        area = TrackArea(self._min_x - DISPLAY_BORDER, self._min_y - DISPLAY_BORDER,
+                         self._max_x + DISPLAY_BORDER, self._max_y + DISPLAY_BORDER)
+        canvas.set_track_area(area)
 
-    def draw_track_edges(self, track_graphics: TrackGraphics, colour: str):
+    def draw_track_edges(self, track_canvas: TrackAnalysisCanvas, colour: Qt.GlobalColor):
         previous_left = self._drawing_points[-1].left
         previous_right = self._drawing_points[-1].right
 
         for p in self._drawing_points:
-            track_graphics.plot_line(previous_left, p.left, 3, colour)
+            track_canvas.add_fixed_shape(Line(previous_left, p.left, 3, colour))
             previous_left = p.left
-            track_graphics.plot_line(previous_right, p.right, 3, colour)
+            track_canvas.add_fixed_shape(Line(previous_right, p.right, 3, colour))
             previous_right = p.right
 
     def draw_section_highlight(self, track_graphics: TrackGraphics, colour: str, start: int, finish: int):
@@ -144,13 +149,13 @@ class Track:
             if p.is_divider:
                 track_graphics.plot_line(p.left, p.right, 3, colour, (4, 2))
 
-    def draw_waypoints(self, track_graphics: TrackGraphics, colour: str, minor_size: int, major_size: int):
+    def draw_waypoints(self, track_canvas: TrackAnalysisCanvas, colour: Qt.GlobalColor, minor_size: int, major_size: int):
         assert major_size >= minor_size
         for (i, p) in enumerate(self._drawing_points):
             if i % 10 == 0:
-                track_graphics.plot_dot(p.middle, major_size, colour)
+                track_canvas.add_fixed_shape(FilledCircle(p.middle, major_size, colour))
             else:
-                track_graphics.plot_dot(p.middle, minor_size, colour)
+                track_canvas.add_fixed_shape(FilledCircle(p.middle, minor_size, colour))
 
     def draw_waypoint_labels(self, track_graphics: TrackGraphics, colour: str, font_size: int):
         last_label_position = None

@@ -1,9 +1,13 @@
+# v4 UI STATUS - BRAND NEW
+# ************************
+
 import os
 
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QStyle
 
-ICON_DIRECTORY = os.path.join("icons")
+
+ICON_DIRECTORY = os.path.join("../prototype_ui/icons")
 ICON_FILE_EXTENSION = ".png"
 
 

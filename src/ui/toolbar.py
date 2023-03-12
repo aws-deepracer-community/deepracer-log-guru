@@ -1,6 +1,9 @@
+# v4 UI STATUS - BRAND NEW
+# ************************
+
 from PyQt6.QtWidgets import QToolBar
 
-from prototype_ui.actions import Actions
+from src.ui.actions import Actions
 
 
 class ToolBarManager:

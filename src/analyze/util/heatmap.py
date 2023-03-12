@@ -9,7 +9,7 @@ import math
 import typing
 import numpy as np
 
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 from src.utils.colors import get_color_for_data, ColorPalette
 
 

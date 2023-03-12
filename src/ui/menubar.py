@@ -1,6 +1,9 @@
+# v4 UI STATUS - CONVERSION IN PROGRESS
+# *************************************
+
 from PyQt6.QtWidgets import QMenuBar
 
-from prototype_ui.actions import Actions
+from src.ui.actions import Actions
 
 
 class MenuBarManager:

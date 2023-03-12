@@ -1,3 +1,6 @@
+# v4 UI STATUS - BRAND NEW
+# ************************
+
 from abc import abstractmethod
 
 from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView, QGraphicsRectItem, QGraphicsPixmapItem, \

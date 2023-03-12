@@ -39,9 +39,13 @@ class MainWindow(QMainWindow):
         self._tool_bar_manager = ToolBarManager(self.addToolBar("Main"), self._actions)
 
         # Connect actions with callback methods to implement them
-        self._actions.change_directory.triggered.connect(self._change_directory)
-        self._actions.file_new.triggered.connect(self._new_file)
-        self._actions.file_open.triggered.connect(self._open_file)
+        self._actions.open_file.triggered.connect(self._action_open_file)
+        self._actions.file_info.triggered.connect(self._action_file_info)
+        self._actions.change_log_directory.triggered.connect(self._action_change_log_directory)
+        self._actions.set_file_options.triggered.connect(self._action_set_file_options)
+        self._actions.exit.triggered.connect(self._action_exit)
+
+        # Canvas etc. comments TODO
 
         self.canvas = TrackAnalysisCanvas()
         self.setCentralWidget(self.canvas)
@@ -71,21 +75,27 @@ class MainWindow(QMainWindow):
         self.statusBar().removeWidget(dummy_sizing_progress_bar)
         self.statusBar().setMinimumHeight(h)
 
-    def _new_file(self):
-        print("New File")
-
-    def _open_file(self):
+    def _action_open_file(self):
         dlg = OpenFileDialog(self, self._please_wait, self._current_track, self._config_manager.get_log_directory())
         if dlg.exec():
             print("Success!")
         else:
             print("Cancel!")
 
-    def _change_directory(self):
-        new_directory = QFileDialog.getExistingDirectory(self, self._actions.change_directory.statusTip(), self._config_manager.get_log_directory())
+    def _action_file_info(self):
+        print("File Info - NOT IMPLEMENTED YET IN VERSION 4")
+
+    def _action_change_log_directory(self):
+        new_directory = QFileDialog.getExistingDirectory(self, self._actions.change_log_directory.statusTip(), self._config_manager.get_log_directory())
         if new_directory != "":
             self._config_manager.set_log_directory(new_directory)
             # self.menu_bar.refresh()   # TODO - Equivalent in new UI is to be determined
+
+    def _action_set_file_options(self):
+        print("File Options - NOT IMPLEMENTED YET IN VERSION 4")
+
+    def _action_exit(self):
+        print("File Exit - NOT IMPLEMENTED YET IN VERSION 4")
 
 
 if __name__ == '__main__':

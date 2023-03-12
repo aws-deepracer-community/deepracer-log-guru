@@ -13,9 +13,6 @@ class ToolBarManager:
         self.setup_tool_bar()
 
     def setup_tool_bar(self):
-        self._toolbar.addAction(self._actions.change_directory)
-
-        self._toolbar.addAction(self._actions.file_new)
-        self._toolbar.addAction(self._actions.file_open)
-        self._toolbar.addAction(self._actions.file_save)
-        self._toolbar.addAction(self._actions.file_save_as)
+        self._toolbar.addAction(self._actions.open_file)
+        self._toolbar.addAction(self._actions.file_info)
+        self._toolbar.addAction(self._actions.change_log_directory)

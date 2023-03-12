@@ -7,8 +7,11 @@ from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QStyle
 
 
-ICON_DIRECTORY = os.path.join("../prototype_ui/icons")
+ICON_DIRECTORY = os.path.join("../icons")
 ICON_FILE_EXTENSION = ".png"
+
+
+# Open, Info, Directory, Options, Exit
 
 
 class Actions:
@@ -17,33 +20,30 @@ class Actions:
         assert os.path.isdir(ICON_DIRECTORY)
 
         # REAL
-        self.change_directory = QAction("Directory")
-        self.change_directory.setShortcut("Ctrl+D")
-        self.change_directory.setStatusTip("Change log file source directory")
-        self.change_directory.setIcon(style.standardIcon(QStyle.StandardPixmap.SP_DirIcon))
+        self.open_file = QAction("Open")
+        self.open_file.setShortcut("Ctrl+O")
+        self.open_file.setStatusTip("Open log file(s)")
+        self.open_file.setIcon(self.get_custom_icon("open_file"))
 
-        # TEMPORARY TESTS
-        self.file_new = QAction("New")
-        self.file_new.setShortcut("Ctrl+N")
-        self.file_new.setStatusTip("BLAH BLAH")
-        self.file_new.setIcon(style.standardIcon(QStyle.StandardPixmap.SP_ArrowBack))
+        self.file_info = QAction("Info")
+        self.file_info.setShortcut("Ctrl+I")
+        self.file_info.setStatusTip("Get information about the currently open log file(s)")
+        self.file_info.setIcon(self.get_custom_icon("file_info"))
 
-        self.file_open = QAction("Open")
-        self.file_open.setShortcut("Ctrl+O")
-        self.file_open.setStatusTip("BLAH BLAH")
-        self.file_open.setIcon(self.get_custom_icon("sample_icon"))
+        self.change_log_directory = QAction("Directory")
+        self.change_log_directory.setShortcut("Ctrl+D")
+        self.change_log_directory.setStatusTip("Change log file source directory")
+        self.change_log_directory.setIcon(self.get_custom_icon("change_log_directory"))
 
-        self.file_save = QAction("Save")
-        self.file_save.setShortcut("Ctrl+S")
-        self.file_save.setStatusTip("BLAH BLAH")
-        self.file_save.setIcon(style.standardIcon(QStyle.StandardPixmap.SP_DirHomeIcon))
+        self.set_file_options = QAction("Options")
+        self.set_file_options.setStatusTip("Set special options for opening log file(s)")
 
-        self.file_save_as = QAction("Save As")
-        self.file_save_as.setShortcut("Ctrl+A")
-        self.file_save_as.setStatusTip("BLAH BLAH")
-        self.file_save_as.setIcon(style.standardIcon(QStyle.StandardPixmap.SP_DialogOpenButton))
+        self.exit = QAction("Exit")
+        self.exit.setStatusTip("Exit application")
 
-        self.file_save_as.setCheckable(True)
+        # Example of how to set a standard icon when I need to ....
+
+        #         self.change_log_directory.setIcon(style.standardIcon(QStyle.StandardPixmap.SP_DirIcon))
 
     @staticmethod
     def get_custom_icon(icon_name: str):

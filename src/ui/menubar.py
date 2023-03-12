@@ -17,10 +17,11 @@ class MenuBarManager:
 
     def _create_file_menu(self):
         menu = self._menu_bar.addMenu("File")
-        menu.addAction(self._actions.change_directory)
+        menu.addAction(self._actions.open_file)
+        menu.addAction(self._actions.file_info)
+        menu.addAction(self._actions.change_log_directory)
         menu.addSeparator()
-        menu.addAction(self._actions.file_new)
-        menu.addAction(self._actions.file_open)
+        menu.addAction(self._actions.set_file_options)
         menu.addSeparator()
-        menu.addAction(self._actions.file_save)
-        menu.addAction(self._actions.file_save_as)
+        menu.addAction(self._actions.exit)
+

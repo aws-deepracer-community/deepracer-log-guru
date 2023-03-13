@@ -1,12 +1,13 @@
 import unittest
 import tkinter as tk
 
+from PyQt6.QtWidgets import QStatusBar
+
 from ui.please_wait import PleaseWait
 
 
 class DummyPleaseWait(PleaseWait):
     def __init__(self, test_case: unittest.TestCase):
-        super().__init__(tk.Frame(), tk.Canvas())
         self.start_percent = 100
         self.current_percent = 0
         self._test_case = test_case

@@ -3,6 +3,7 @@ import sys
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QApplication, QProgressBar, QFileDialog
 
+from src.log.log import Log
 from src.configuration.config_manager import ConfigManager
 from src.ui.actions import Actions
 from src.ui.menubar import MenuBarManager
@@ -18,7 +19,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         #
-        # First of all, get config manager up and running so we have access to any settings that it manages for us
+        # First of all, get config manager up and running so that we have access to any settings that it manages for us
         #
         self._config_manager = ConfigManager()
 
@@ -45,6 +46,13 @@ class MainWindow(QMainWindow):
         self._actions.change_log_directory.triggered.connect(self._action_change_log_directory)
         self._actions.set_file_options.triggered.connect(self._action_set_file_options)
         self._actions.exit.triggered.connect(self._action_exit)
+
+        # Internal variable(s) to communicate from dialogs to main after they are closed
+        self._open_file_dialog_chosen_files = None
+
+        # Main variables to keep details of current open logs etc.
+        self._log = None
+        self._log_file_names = None
 
         # Canvas etc. comments TODO
 
@@ -78,13 +86,20 @@ class MainWindow(QMainWindow):
 
     def _action_open_file(self):
         dlg = OpenFileDialog(self, self._please_wait, self._current_track, self._config_manager.get_log_directory(), self._chosen_open_file_callback)
-        if dlg.exec():
-            print("Success!")
-        else:
-            print("Cancel!")
+        if not dlg.exec():
+            print("Cancelled dialog")
+            return
 
-    def _chosen_open_file_callback(self, file_names):
-        print("Will open file(s): ", file_names)
+        self.setWindowTitle(self._open_file_dialog_chosen_model_title)
+        self._log_file_names = self._open_file_dialog_chosen_files
+        self._log = Log(self._config_manager.get_log_directory())
+        self._log.load_all(self._log_file_names, self._please_wait, self._current_track,
+                           self._config_manager.get_calculate_new_reward(),
+                           self._config_manager.get_calculate_alternate_discount_factors())
+
+    def _chosen_open_file_callback(self, file_names, model_title):
+        self._open_file_dialog_chosen_files = file_names
+        self._open_file_dialog_chosen_model_title = model_title
 
     def _action_file_info(self):
         print("File Info - NOT IMPLEMENTED YET IN VERSION 4")

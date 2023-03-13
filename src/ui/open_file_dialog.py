@@ -85,7 +85,8 @@ class OpenFileDialog(QDialog):
 
             # self._place_in_grid(row, 0, tk.Button(master, text=log.display_name, command=callback), "E")
             button = QPushButton(log.display_name)
-            button.clicked.connect(lambda state, x=file_names: self._callback_open_file(x))  # Magic ?!!?!?!
+            button.setStyleSheet("text-align:left")
+            button.clicked.connect(lambda state, x=file_names, y=log.display_name: self._callback_open_file(x, y))  # Magic ?!!?!?!
             log_layout.addWidget(button, row, 0)
 
             log_layout.addWidget(_make_centred_label(log_meta.race_type.get().name), row, 1)
@@ -113,8 +114,8 @@ class OpenFileDialog(QDialog):
 
         self.setLayout(layout)
 
-    def _callback_open_file(self, file_names):
-        self._chosen_file_callback(file_names)
+    def _callback_open_file(self, file_names, model_title):
+        self._chosen_file_callback(file_names, model_title)
         self.accept()
 
     @staticmethod

@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
 
         # Main variables to keep details of current open logs etc.
         self._log: Log | None = None
-        self._log_file_names = None
+        self._current_model_ui_title = ""
 
         # Canvas etc. comments TODO
 
@@ -90,10 +90,11 @@ class MainWindow(QMainWindow):
             print("Cancelled dialog")
             return
 
-        self.setWindowTitle(self._open_file_dialog_chosen_model_title)
-        self._log_file_names = self._open_file_dialog_chosen_files
+        self._current_model_ui_title = self._open_file_dialog_chosen_model_title
+        self.setWindowTitle(self._current_model_ui_title)
+
         self._log = Log(self._config_manager.get_log_directory())
-        self._log.load_all(self._log_file_names, self._please_wait, self._current_track,
+        self._log.load_all(self._open_file_dialog_chosen_files, self._please_wait, self._current_track,
                            self._config_manager.get_calculate_new_reward(),
                            self._config_manager.get_calculate_alternate_discount_factors())
 
@@ -103,9 +104,10 @@ class MainWindow(QMainWindow):
 
     def _action_file_info(self):
         print("DEBUG FILE INFO")
-        print(self._log.get_log_directory())
-        print(self._log.get_log_file_name())
-        print(self._log.get_meta_file_name())
+        print("Title / Model Name =", self._current_model_ui_title)
+        print("Log directory =", self._log.get_log_directory())
+        print("Log filename(s) =", self._log.get_log_file_name())
+        print("Log meta filename(s) =", self._log.get_meta_file_name())
 
     def _action_change_log_directory(self):
         new_directory = QFileDialog.getExistingDirectory(self, self._actions.change_log_directory.statusTip(), self._config_manager.get_log_directory())

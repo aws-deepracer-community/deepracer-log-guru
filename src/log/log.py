@@ -46,7 +46,11 @@ class Log:
     #
 
     def load_meta(self, meta_file_name: str):
-        self._meta_file_name = meta_file_name
+        if self._meta_file_name == "":
+            self._meta_file_name = meta_file_name
+        else:
+            self._meta_file_name = [self._meta_file_name, meta_file_name]
+
         with open(os.path.join(self._log_directory, meta_file_name), 'rb') as file:
             received_json = json.load(file)
             self._log_meta.set_from_json(received_json)
@@ -100,16 +104,21 @@ class Log:
     def _load_all_single_episode(self, meta_file_name: str, please_wait: PleaseWait, track: Track,
                                  calculate_new_reward, calculate_alternate_discount_factors, progress_start, progress_finish):
         self.load_meta(meta_file_name)
-        self._log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
+        log_file_name = meta_file_name[:-len(META_FILE_SUFFIX)]
         discount_factors.reset_for_log(self._log_meta.discount_factor.get())
+
+        if self._log_file_name == "":
+            self._log_file_name = log_file_name
+        else:
+            self._log_file_name = [self._log_file_name, log_file_name]
 
         if track is not None:
             assert track.has_world_name(self._log_meta.track_name.get())
 
         progress_middle = (progress_finish - progress_start) / 2 + progress_start
 
-        if self._log_file_name.endswith(CONSOLE_LOG_SUFFIX):
-            with tarfile.open(os.path.join(self._log_directory, self._log_file_name), "r") as tar:
+        if log_file_name.endswith(CONSOLE_LOG_SUFFIX):
+            with tarfile.open(os.path.join(self._log_directory, log_file_name), "r") as tar:
                 for member in tar:
                     if "/logs/training" in member.name and member.name.endswith("-robomaker.log"):
                         binary_io = tar.extractfile(member)
@@ -119,7 +128,7 @@ class Log:
                             progress_start, progress_middle, progress_finish, True, False, member.size, track,
                             calculate_new_reward, calculate_alternate_discount_factors)
         else:
-            with open(os.path.join(self._log_directory, self._log_file_name), "r") as file_io:
+            with open(os.path.join(self._log_directory, log_file_name), "r") as file_io:
                 self._parse_episode_events(
                     file_io, False,
                     please_wait,
@@ -169,6 +178,9 @@ class Log:
     def get_log_file_name(self):
         return self._log_file_name
 
+    def get_log_directory(self):
+        return self._log_directory
+
     def get_evaluation_phases(self):
         return self._evaluation_phases
 
@@ -213,9 +225,14 @@ class Log:
         saved_object_locations = None
         iteration_id = 0
 
-        log_file_path = os.path.join(self._log_directory, self._log_file_name)
+        if isinstance(self._log_file_name, list):
+            log_file_name = self._log_file_name[-1]
+        else:
+            log_file_name = self._log_file_name
+
+        log_file_path = os.path.join(self._log_directory, log_file_name)
         self._log_meta.set_file_os_stats(os.stat(log_file_path))
-        self._log_meta.file_name.set(self._log_file_name)
+        self._log_meta.file_name.set(log_file_name)
 
         # TODO - This fudge goes away when all the file handling is re-located into here ...
         if file_size_override > 0:
@@ -309,10 +326,10 @@ class Log:
 
         # Override AWS id with better model name from filename if possible
         if self._log_meta.model_name.get() and AWS_UID_REG_EX.match(self._log_meta.model_name.get()):
-            if TRAINING_FILE_REG_EXP.search(self._log_file_name):
-                self._log_meta.model_name.set(TRAINING_FILE_REG_EXP.sub("", self._log_file_name))
+            if TRAINING_FILE_REG_EXP.search(log_file_name):
+                self._log_meta.model_name.set(TRAINING_FILE_REG_EXP.sub("", log_file_name))
             else:
-                self._log_meta.model_name.set(re.sub("\\..*", "", self._log_file_name))
+                self._log_meta.model_name.set(re.sub("\\..*", "", log_file_name))
 
     def _analyze_episode_details(self):
         total_success_steps = 0

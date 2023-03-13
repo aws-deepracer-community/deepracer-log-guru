@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         self._open_file_dialog_chosen_files = None
 
         # Main variables to keep details of current open logs etc.
-        self._log = None
+        self._log: Log | None = None
         self._log_file_names = None
 
         # Canvas etc. comments TODO
@@ -102,7 +102,10 @@ class MainWindow(QMainWindow):
         self._open_file_dialog_chosen_model_title = model_title
 
     def _action_file_info(self):
-        print("File Info - NOT IMPLEMENTED YET IN VERSION 4")
+        print("DEBUG FILE INFO")
+        print(self._log.get_log_directory())
+        print(self._log.get_log_file_name())
+        print(self._log.get_meta_file_name())
 
     def _action_change_log_directory(self):
         new_directory = QFileDialog.getExistingDirectory(self, self._actions.change_log_directory.statusTip(), self._config_manager.get_log_directory())
@@ -114,7 +117,7 @@ class MainWindow(QMainWindow):
         print("File Options - NOT IMPLEMENTED YET IN VERSION 4")
 
     def _action_exit(self):
-        print("File Exit - NOT IMPLEMENTED YET IN VERSION 4")
+        self.close()
 
 
 if __name__ == '__main__':

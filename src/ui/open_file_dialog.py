@@ -21,8 +21,10 @@ from utils.formatting import get_pretty_whole_percentage, get_pretty_large_integ
 
 
 class OpenFileDialog(QDialog):
-    def __init__(self, parent: QMainWindow, please_wait: PleaseWait, current_track: Track, log_directory: str):
+    def __init__(self, parent: QMainWindow, please_wait: PleaseWait, current_track: Track, log_directory: str, chosen_file_callback: callable):
         super().__init__(parent)
+
+        self._chosen_file_callback = chosen_file_callback
 
         log_info, hidden_log_count = get_model_info_for_open_model_dialog(current_track, log_directory, please_wait)
 
@@ -76,16 +78,15 @@ class OpenFileDialog(QDialog):
             else:
                 file_names = log.source_files
 
-            # TODO equivalent:
-            #   def callback(f=file_names): self._callback_open_file(f)
-
             log_meta = log.log_meta
 
             progress_percent = self._get_progress_percent(log_meta)
             success_percent = self._get_success_percent(log_meta)
 
             # self._place_in_grid(row, 0, tk.Button(master, text=log.display_name, command=callback), "E")
-            log_layout.addWidget(QPushButton(log.display_name), row, 0)
+            button = QPushButton(log.display_name)
+            button.clicked.connect(lambda state, x=file_names: self._callback_open_file(x))  # Magic ?!!?!?!
+            log_layout.addWidget(button, row, 0)
 
             log_layout.addWidget(_make_centred_label(log_meta.race_type.get().name), row, 1)
             log_layout.addWidget(_make_centred_label(log_meta.job_type.get().name), row, 2)
@@ -111,6 +112,10 @@ class OpenFileDialog(QDialog):
         layout.addWidget(button_box, alignment=Qt.AlignmentFlag.AlignCenter)
 
         self.setLayout(layout)
+
+    def _callback_open_file(self, file_names):
+        self._chosen_file_callback(file_names)
+        self.accept()
 
     @staticmethod
     def _get_progress_percent(log_meta):

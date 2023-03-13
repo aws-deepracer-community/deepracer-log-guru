@@ -77,11 +77,14 @@ class MainWindow(QMainWindow):
         self.statusBar().setMinimumHeight(h)
 
     def _action_open_file(self):
-        dlg = OpenFileDialog(self, self._please_wait, self._current_track, self._config_manager.get_log_directory())
+        dlg = OpenFileDialog(self, self._please_wait, self._current_track, self._config_manager.get_log_directory(), self._chosen_open_file_callback)
         if dlg.exec():
             print("Success!")
         else:
             print("Cancel!")
+
+    def _chosen_open_file_callback(self, file_names):
+        print("Will open file(s): ", file_names)
 
     def _action_file_info(self):
         print("File Info - NOT IMPLEMENTED YET IN VERSION 4")

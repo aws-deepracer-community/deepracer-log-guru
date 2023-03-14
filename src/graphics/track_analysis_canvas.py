@@ -120,7 +120,6 @@ class FilledCircle(FixedShape):
         self._brush.setStyle(Qt.BrushStyle.SolidPattern)
 
     def paint(self, painter: QPainter, scale: Scale):
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         x, y = scale.apply(self._point)
         painter.setPen(self._pen)
         painter.setBrush(self._brush)

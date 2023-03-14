@@ -28,11 +28,10 @@ class Canvas(QGraphicsView):
         super().paintEvent(event)
 
     def _recreate_scene(self):
-        # print("REDRAW***", self._width, self._height)
-
         pixmap = QPixmap(self._width, self._height)
         pixmap.fill(self._background_colour)
         painter = QPainter(pixmap)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         self._paint(painter)
         painter.end()
 

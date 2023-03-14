@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
         # PROTOTYPE FROM HERE
 
         self.setMinimumSize(200, 200)
-        self.resize(1800, 400)
+        self.resize(1000, 800)
         self.setWindowTitle("DeepRacer Guru")
         self.setWindowIcon(get_custom_icon("window_icon"))
 
@@ -67,9 +67,10 @@ class MainWindow(QMainWindow):
         self._tracks = get_all_tracks()
         self._current_track = self._tracks["arctic_pro_cw"]
         self._current_track.configure_track_canvas(self.canvas)
-        # self.canvas.set_track_area(TrackArea(0, 0, 10, 10))
-        self._current_track.draw_track_edges(self.canvas, Qt.GlobalColor.red)
-        self._current_track.draw_waypoints(self.canvas, Qt.GlobalColor.blue, 2, 5)
+
+        self._current_track.draw_track_edges(self.canvas, Qt.GlobalColor.darkGray)
+        self._current_track.draw_waypoints(self.canvas, Qt.GlobalColor.blue, 3, 4)
+        self._current_track.draw_section_highlight(self.canvas, Qt.GlobalColor.green, 0, 20)
 
     def set_busy_cursor(self):
         self.setCursor(Qt.CursorShape.WaitCursor)

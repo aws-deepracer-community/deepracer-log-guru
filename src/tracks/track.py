@@ -121,12 +121,12 @@ class Track:
         previous_right = self._drawing_points[-1].right
 
         for p in self._drawing_points:
-            track_canvas.add_fixed_shape(Line(previous_left, p.left, 3, colour))
+            track_canvas.add_fixed_shape(Line(previous_left, p.left, 2, colour))
             previous_left = p.left
-            track_canvas.add_fixed_shape(Line(previous_right, p.right, 3, colour))
+            track_canvas.add_fixed_shape(Line(previous_right, p.right, 2, colour))
             previous_right = p.right
 
-    def draw_section_highlight(self, track_graphics: TrackGraphics, colour: str, start: int, finish: int):
+    def draw_section_highlight(self, track_canvas: TrackAnalysisCanvas, colour: Qt.GlobalColor, start: int, finish: int):
         previous_left = self._drawing_points[start].left_outer
         previous_right = self._drawing_points[start].right_outer
 
@@ -136,9 +136,9 @@ class Track:
             highlight_points = self._drawing_points[start:] + self._drawing_points[:finish + 1]
 
         for p in highlight_points:
-            track_graphics.plot_line(previous_left, p.left_outer, 5, colour)
+            track_canvas.add_fixed_shape(Line(previous_left, p.left_outer, 3, colour))
             previous_left = p.left_outer
-            track_graphics.plot_line(previous_right, p.right_outer, 5, colour)
+            track_canvas.add_fixed_shape(Line(previous_right, p.right_outer, 3, colour))
             previous_right = p.right_outer
 
     def draw_starting_line(self, track_graphics: TrackGraphics, colour: str):

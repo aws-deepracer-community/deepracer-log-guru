@@ -63,9 +63,10 @@ from src.tracks.hot_rod_super_speedway_cw_track import HotRodSuperSpeedwayClockw
 from src.tracks.hot_rod_super_speedway_ccw_track import HotRodSuperSpeedwayCounterClockwiseTrack
 from src.tracks.champ_cup_2019_track_ccw import ChampionshipCup2019CounterClockwiseTrack
 from src.tracks.champ_cup_2019_track_cw import ChampionshipCup2019ClockwiseTrack
+from tracks.track import Track
 
 
-def get_all_tracks():
+def get_all_tracks() -> dict[str, Track]:
     tracks = {}
 
     for t in [AmericanHillsSpeedwayTrack(), AsiaPacificBayLoopTrack(), EuropeanSeasideCircuitTrack(),

@@ -5,7 +5,7 @@ from abc import ABC
 
 from graphics.canvas import Canvas
 from PyQt6.QtWidgets import QAbstractGraphicsShapeItem
-from PyQt6.QtGui import QPen, QPainter
+from PyQt6.QtGui import QPen, QPainter, QBrush
 from PyQt6.QtCore import Qt
 
 Point = (float | int, float | int)     # Typedef which we will use a lot for graphics
@@ -111,16 +111,24 @@ class TrackAnalysisCanvas(Canvas):
 # plot_dot() in v3
 
 class FilledCircle(FixedShape):
-    def __init__(self, point: Point, radius: float | int, colour: Qt.GlobalColor):
+    def __init__(self, point: Point, diameter: int, colour: Qt.GlobalColor):
         self._point = point
         self._pen = QPen(colour)
-        self._radius = radius
-        self._pen.setWidth(radius)
+        self._diameter = diameter
+        self._brush = QBrush()
+        self._brush.setColor(colour)
+        self._brush.setStyle(Qt.BrushStyle.SolidPattern)
 
     def paint(self, painter: QPainter, scale: Scale):
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         x, y = scale.apply(self._point)
         painter.setPen(self._pen)
-        painter.drawEllipse(round(x), round(y), self._radius, self._radius)
+        painter.setBrush(self._brush)
+        radius = self._diameter / 2
+        if self._diameter >= 3:
+            painter.drawEllipse(round(x - radius), round(y - radius), self._diameter, self._diameter)
+        else:
+            painter.drawPoint(round(x), round(y))
 
 
 # def plot_line(self, point1, point2, width, fill_colour, dash_pattern=None)    in v3

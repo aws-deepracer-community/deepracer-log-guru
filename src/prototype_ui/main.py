@@ -1,6 +1,7 @@
 import sys
 
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QMainWindow, QApplication, QProgressBar, QFileDialog
 
 from src.log.log import Log
@@ -68,9 +69,12 @@ class MainWindow(QMainWindow):
         self._current_track = self._tracks["arctic_pro_cw"]
         self._current_track.configure_track_canvas(self.canvas)
 
-        self._current_track.draw_track_edges(self.canvas, Qt.GlobalColor.darkGray)
-        self._current_track.draw_waypoints(self.canvas, Qt.GlobalColor.blue, 3, 4)
-        self._current_track.draw_section_highlight(self.canvas, Qt.GlobalColor.green, 0, 20)
+        self._current_track.draw_track_edges(self.canvas, QColor("dimGray"))
+        self._current_track.draw_waypoints(self.canvas, QColor("dimGray"), 2, 8)
+        self._current_track.draw_section_highlight(self.canvas, QColor("dimGray"), 0, 20)
+        self._current_track.draw_starting_line(self.canvas, QColor("dimGray"))
+        self._current_track.draw_sector_dividers(self.canvas, QColor("dimGray"))
+        self._current_track.draw_waypoint_labels(self.canvas, QColor("dimGray"), 9)
 
     def set_busy_cursor(self):
         self.setCursor(Qt.CursorShape.WaitCursor)

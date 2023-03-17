@@ -122,9 +122,9 @@ class Track:
         previous_right = self._drawing_points[-1].right
 
         for p in self._drawing_points:
-            track_canvas.add_fixed_shape(Line(previous_left, p.left, 2, colour))
+            track_canvas.add_fixed_shape(Line(previous_left, p.left, 3, colour))
             previous_left = p.left
-            track_canvas.add_fixed_shape(Line(previous_right, p.right, 2, colour))
+            track_canvas.add_fixed_shape(Line(previous_right, p.right, 3, colour))
             previous_right = p.right
 
     def draw_section_highlight(self, track_canvas: TrackAnalysisCanvas, colour: QColor, start: int, finish: int):

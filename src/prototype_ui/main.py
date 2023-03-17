@@ -69,12 +69,13 @@ class MainWindow(QMainWindow):
         self._current_track = self._tracks["arctic_pro_cw"]
         self._current_track.configure_track_canvas(self.canvas)
 
-        self._current_track.draw_track_edges(self.canvas, QColor("dimGray"))
-        self._current_track.draw_waypoints(self.canvas, QColor("dimGray"), 2, 8)
-        self._current_track.draw_section_highlight(self.canvas, QColor("dimGray"), 0, 20)
-        self._current_track.draw_starting_line(self.canvas, QColor("dimGray"))
-        self._current_track.draw_sector_dividers(self.canvas, QColor("dimGray"))
-        self._current_track.draw_waypoint_labels(self.canvas, QColor("dimGray"), 9)
+        track_grey = QColor(75, 75, 75)
+        self._current_track.draw_track_edges(self.canvas, track_grey)
+        self._current_track.draw_waypoints(self.canvas, track_grey, 2, 8)
+        self._current_track.draw_section_highlight(self.canvas, track_grey, 0, 20)
+        self._current_track.draw_starting_line(self.canvas, track_grey)
+        self._current_track.draw_sector_dividers(self.canvas, track_grey)
+        self._current_track.draw_waypoint_labels(self.canvas, track_grey, 9)
 
     def set_busy_cursor(self):
         self.setCursor(Qt.CursorShape.WaitCursor)

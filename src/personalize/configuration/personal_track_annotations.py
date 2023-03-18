@@ -39,17 +39,17 @@ reinvent_2018_annotations = [
 
 championship_cup_2019_annotations = []
 
-championship_cup_2019_cw_annotations = []
+smile_speedway_cw_annotations = []
 
-championship_cup_2019_ccw_annotations = []
+smile_speedway_ccw_annotations = []
 
 roger_raceway_annotations = []
 
 fumiaki_loop_annotations = []
 
-summit_raceway_annotations = []
+aws_summit_raceway_annotations = []
 
-sola_2020_annotations = []
+sola_speedway_annotations = []
 
 baadal_2020_annotations = []
 
@@ -97,7 +97,7 @@ hot_rod_super_speedway_cw_annotations = []
 
 hot_rod_super_speedway_ccw_annotations = []
 
-reinvent_2018_wide_annotations = []
+a_to_z_speedway_annotations = []
 
 playa_raceway_annotations = []
 
@@ -111,7 +111,7 @@ vivalas_loop_annotations = []
 
 vivalas_speedway_annotations = []
 
-summit_speedway_annotations = []
+rl_speedway_annotations = []
 
 rogue_raceway_annotations = []
 

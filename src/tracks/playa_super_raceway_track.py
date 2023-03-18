@@ -16,7 +16,7 @@ class PlayaSuperRacewayTrack(Track):
 
         self._ui_name = "Playa Super Raceway"
         self._ui_description = "At 59.8m the Playa Super Raceway features back-to-back hairpin turns and two straightaway opportunities to generate speed. A successful run will require skillful command of time (steps) and (action) space."
-        self._ui_length_in_m = 59.8  # metres  (99.99 = not stated in AWS DR GUI)
+        self._ui_length_in_m = 59.8  # metres
         self._ui_width_in_cm = 107  # centimetres   # TODO
         self._world_name = "morgan_pro"
         self._track_sector_dividers = [55, 123, 189]

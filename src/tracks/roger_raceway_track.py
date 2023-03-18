@@ -15,7 +15,7 @@ class RogerRacewayTrack(Track):
         super().__init__()
 
         self._ui_name = "Roger Raceway"
-        self._ui_description = "The Roger Raceway is named in honor of the 2019 Championship Cup bronze medalist Roger Chu."
+        self._ui_description = "Named in honor of the 2019 Championship Cup bronze medalist, Roger Chu, the Roger Raceway boasts a variety of complex curves for a worthy training challenge."
         self._ui_length_in_m = 60  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "July_2020"

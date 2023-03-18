@@ -15,7 +15,7 @@ class EuropeanSeasideCircuitTrack(Track):
         super().__init__()
 
         self._ui_name = "European Seaside Circuit"
-        self._ui_description = "A highly technical track, the European Seaside Circuit’s tight turns weave through a timeless Mediterranean cliffside village"
+        self._ui_description = "A highly technical track, the European Seaside Circuit’s tight turns weave through a timeless Mediterranean cliffside village, without buildings."
         self._ui_length_in_m = 60.0  # metres
         self._ui_width_in_cm = 128  # centimetres
         self._world_name = "Monaco"

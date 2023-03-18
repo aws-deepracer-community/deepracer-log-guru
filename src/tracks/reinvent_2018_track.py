@@ -15,7 +15,7 @@ class Reinvent2018Track(Track):
         super().__init__()
 
         self._ui_name = "re:Invent 2018"
-        self._ui_description = "The official 2019 DeepRacer League Summit Circuit track."
+        self._ui_description = "Inspired by Monza, re:Invent 2018 was the first Championship Cup track. This short, classic speedway remains a perennial rookie favorite."
         self._ui_length_in_m = 17.6  # metres
         self._ui_width_in_cm = 76  # centimetres
         self._world_name = "reinvent_base"

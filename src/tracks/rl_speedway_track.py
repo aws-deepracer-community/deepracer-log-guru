@@ -10,17 +10,19 @@ from src.tracks.track import Track
 import src.personalize.configuration.personal_track_annotations as config
 
 
-class SummitSpeedwayTrack(Track):
+class RLSpeedwayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Summit Speedway"
+        # NB Renamed from "Summit Speedway" in March 2023
+        # NB So when replacing/amending CW/CCW tracks, it may be best to keep the old name for the "original" track
+        self._ui_name = "RL Speedway"
         self._ui_description = "Kick starting the 2022 AWS DeepRacer Virtual Circuit with the debut of the Summit Speedway (25.23m). This track is comprised of short sprints and multiple hard decelerating 90 degree turns. Put your developer skills to the test and race the Summit Speedway in-person at AWS Summits returning in 2022!"
         self._ui_length_in_m = 25.23  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "2022_summit_speedway"
         self._track_sector_dividers = [34, 58, 98]
-        self._annotations = config.summit_speedway_annotations
+        self._annotations = config.rl_speedway_annotations
         self._track_width = 1.067
 
         self._track_waypoints = [(8.548611640930176, 3.173937439918518), (8.346963882446289, 3.172876000404358),

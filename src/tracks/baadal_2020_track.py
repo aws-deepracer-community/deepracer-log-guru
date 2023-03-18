@@ -15,7 +15,7 @@ class Baadal2020Track(Track):
         super().__init__()
 
         self._ui_name = "Baadal Track"
-        self._ui_description = "Baadal is the Hindi word for cloud. The Baadal track combines long arching straightaways perfect for passing opportunities coupled with tight windings corners."
+        self._ui_description = "\"Baadal\" is the Hindi word for \"cloud\". The Baadal Track’s tight winding corners open up into long arching straightaways, perfect for passing opportunities."
         self._ui_length_in_m = 39.0  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "AmericasGenerated..."

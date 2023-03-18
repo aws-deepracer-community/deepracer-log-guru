@@ -16,7 +16,7 @@ class KueiRacewayTrack(Track):
 
         self._ui_name = "Kuei Raceway"
         self._ui_description = "Kuei Raceway is a fast short track (46.15m) with a friendly high speed arch and two straightaways interspersed between 2 hairpins, a chicane, and a technical cutback hairpin. It is named after 3rd place DeepRacer League finalists Kuei of NCTU CGI Taiwan."
-        self._ui_length_in_m = 99.99  # metres  (99.99 = not stated in AWS DR GUI)
+        self._ui_length_in_m = 46.15  # metres
         self._ui_width_in_cm = 107  # centimetres   # TODO
         self._world_name = "hamption_open"
         self._track_sector_dividers = [20, 36, 50]

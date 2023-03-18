@@ -19,7 +19,7 @@ class SmileSpeedwayCounterClockwiseTrack(Track):
         self._ui_length_in_m = 23.12  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "reInvent2019_track_ccw"
-        self._track_sector_dividers = [25, 48]
+        self._track_sector_dividers = [25, 49]
         self._annotations = config.smile_speedway_ccw_annotations
         self._track_width = 1.06
 

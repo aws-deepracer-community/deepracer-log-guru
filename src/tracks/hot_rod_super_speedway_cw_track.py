@@ -19,7 +19,7 @@ class HotRodSuperSpeedwayClockwiseTrack(Track):
         self._ui_length_in_m = 59.69  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "arctic_pro_cw"
-        self._track_sector_dividers = [35, 72, 114, 152]
+        self._track_sector_dividers = [37, 74, 116, 154]
         self._annotations = config.hot_rod_super_speedway_cw_annotations
         self._track_width = 1.066
 

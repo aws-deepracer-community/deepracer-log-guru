@@ -45,8 +45,9 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
     if _contains_hyper(line_of_text, HYPER_EPOCHS):
         log_meta.hyper.epochs = _get_hyper_integer_value(line_of_text, HYPER_EPOCHS)
 
-    if _contains_parameter(line_of_text, PARAM_WORLD_NAME):
-        log_meta.world_name = _get_parameter_string_value(line_of_text, PARAM_WORLD_NAME)
+    if NEW_PARAM_WORLD_NAME in line_of_text:
+        pos = line_of_text.find(NEW_PARAM_WORLD_NAME)
+        log_meta.world_name = line_of_text[pos + len(NEW_PARAM_WORLD_NAME):].split("'", 2)[0]
 
     if _contains_parameter(line_of_text, PARAM_RACE_TYPE):
         log_meta.race_type = _get_parameter_string_value(line_of_text, PARAM_RACE_TYPE)
@@ -235,9 +236,10 @@ HYPER_LEARNING_RATE = "lr"
 HYPER_EPISODES_BETWEEN_TRAINING = "num_episodes_between_training"
 HYPER_EPOCHS = "num_epochs"
 
-PARAM_WORLD_NAME = "WORLD_NAME"
 PARAM_RACE_TYPE = "RACE_TYPE"
 PARAM_JOB_TYPE = "JOB_TYPE"
+
+NEW_PARAM_WORLD_NAME = "'WORLD_NAME': '"
 
 MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-metadata/"
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"

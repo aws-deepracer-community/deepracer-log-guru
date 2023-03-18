@@ -16,7 +16,7 @@ class RogueCircuitTrack(Track):
 
         self._ui_name = "Rogue Circuit"
         self._ui_description = "Named in honor of the 2021 DeepRacer Championship Cup winner, Sairam Naragoni, the Rogue Circuit is a short track (48.06m) features a variety of moderate curves and sweeping turns."
-        self._ui_length_in_m = 48.06  # metres     (NOT STATED)
+        self._ui_length_in_m = 48.06  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "2022_march_open"
         self._track_sector_dividers = [46, 100]

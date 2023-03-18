@@ -15,7 +15,7 @@ class AsiaPacificBayLoopTrack(Track):
         super().__init__()
 
         self._ui_name = "Asia Pacific Bay Loop"
-        self._ui_description = "Streak through the iconic lights and modern architecture of Marina Bay’s waterfront on the Asia Pacific Bay Loop, a fast and open nighttime trac"
+        self._ui_description = "Streak through the Marina Bay’s waterfront on the Asia Pacific Bay Loop, a fast and open nighttime track."
         self._ui_length_in_m = 60.0  # metres
         self._ui_width_in_cm = 135  # centimetres
         self._world_name = "Singapore"

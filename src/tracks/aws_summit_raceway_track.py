@@ -10,17 +10,17 @@ from src.tracks.track import Track
 import src.personalize.configuration.personal_track_annotations as config
 
 
-class SummitRacewayTrack(Track):
+class AwsSummitRacewayTrack(Track):
     def __init__(self):
         super().__init__()
 
         self._ui_name = "AWS Summit Raceway"
-        self._ui_description = "Start preparing your models for the 2020 AWS DeepRacer League by taking part in this pre-season time-trial race."
+        self._ui_description = "Created to prepare racers for the 2020 AWS DeepRacer League, the AWS Summit Raceway provides a solid training warm up for any agent."
         self._ui_length_in_m = 22.57  # metres
         self._ui_width_in_cm = 91  # centimetres
         self._world_name = "Vegas_track"
         self._track_sector_dividers = [38, 66, 104]
-        self._annotations = config.summit_raceway_annotations
+        self._annotations = config.aws_summit_raceway_annotations
         self._track_width = 1.07
 
         self._track_waypoints = [

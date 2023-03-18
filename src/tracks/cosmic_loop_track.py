@@ -16,7 +16,7 @@ class CosmicLoopTrack(Track):
 
         self._ui_name = "Cosmic Loop"
         self._ui_description = "Cosmic Loop is a short track (46.18m) that features a single sprint straightaway and a challenging technical section with multiple 90 degree turns and and two hairpins. A successful run will require skillful command of time (steps) and (action) space."
-        self._ui_length_in_m = 99.99  # metres  (99.99 = not stated in AWS DR GUI)
+        self._ui_length_in_m = 46.18  # metres
         self._ui_width_in_cm = 107  # centimetres   # TODO
         self._world_name = "jyllandsringen_open"
         self._track_sector_dividers = [38, 74, 103]

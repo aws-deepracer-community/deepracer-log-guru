@@ -23,8 +23,9 @@ Either:
 * Download the latest release zip file from the [Releases section](https://github.com/dmh23/deep_racer_guru/releases) of Github
 * Unzip the entire contents of the zip file into a convenient location
 
-Or: (NOT RECOMMENDED CURRENTLY DUE TO ISSUES IN CODE MERGING)
+Or:
 * Git "clone" the [Source code](https://github.com/dmh23/deep_racer_guru) directly from Github
+* Make sure you use the __master__ branch to run the most recent released code
 
 ## Launch Deep Racer Guru
 ### Manual Launch
@@ -32,7 +33,7 @@ Or: (NOT RECOMMENDED CURRENTLY DUE TO ISSUES IN CODE MERGING)
 Run it manually using the following example commands:
 
     cd C:\DRG-Demo\projects\deep_racer_guru
-    C:\DRG-Demo\python\3.9.13\python.exe -m src.main.guru
+    C:\DRG-Demo\python\3.9.4\python.exe -m src.main.guru
 
 Note:
 * You must "cd" to the root directory/folder where you unzipped or cloned the Deep Racer Guru code

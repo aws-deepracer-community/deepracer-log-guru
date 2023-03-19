@@ -6,18 +6,19 @@
 # Copyright (c) 2021 dmh23
 #
 
-from tkinter import Menu
+from tkinter import Menu, messagebox
 
 import src.log.log_utils
 from src.ui.file_options_dialog import FileOptionsDialog
 from src.ui.open_file_dialog import OpenFileDialog
+from src.ui.new_files_dialog import NewFilesDialog
 from src.ui.episode_filter_dialog import EpisodeFilterDialog
 from src.ui.action_filter_dialog import ActionSpaceFilterDialog
 
 import src.secret_sauce.glue.glue as ss
 
 
-class MenuBar:
+class MenuBar():
     def __init__(self, root, main_app, file_is_open:bool, is_continuous_action_space:bool):
         self.main_app = main_app
         self.root = root
@@ -41,6 +42,7 @@ class MenuBar:
         self.add_zoom_menu()
         self.add_view_menu()
         self.add_secret_sauce_menu()
+        self.add_admin_menu()
 
         self.root.config(menu=self.menubar)
 
@@ -49,7 +51,7 @@ class MenuBar:
         self._create_menus()
 
     def add_track_menu(self):
-        existing_log_world_names = src.log.log_utils.get_world_names_of_existing_logs(self.main_app.get_log_directory(), self.main_app.please_wait)
+        existing_log_world_names = src.log.log_utils.get_world_names_of_existing_logs(self.main_app.get_log_directory())
 
         menu = Menu(self.menubar, tearoff=0)
 
@@ -75,9 +77,9 @@ class MenuBar:
 
     def add_file_menu(self):
         menu = Menu(self.menubar, tearoff=0)
-        menu.add_command(label="Open", command=self.open_file)
-        menu.add_command(label="Info", command=self.main_app.menu_callback_view_log_file_info)
-        menu.add_command(label="Directory", command=self.main_app.menu_callback_switch_directory)
+        menu.add_command(label="New File(s)", command=self.new_files)
+        menu.add_command(label="Open File", command=self.open_file)
+        menu.add_command(label="Switch Directory", command=self.main_app.menu_callback_switch_directory)
         menu.add_separator()
         menu.add_command(label="Options", command=self.file_options)
         menu.add_separator()
@@ -234,8 +236,19 @@ class MenuBar:
         if ss.SHOW_SS:
             ss.make_menu(self.menubar, self.main_app)
 
+    def add_admin_menu(self):
+        menu = Menu(self.menubar, tearoff=0)
+        menu.add_command(label="Re-calculate Log Meta", command=self.refresh_all_log_meta)
+        menu.add_command(label="View Log File Info", command=self.main_app.menu_callback_view_log_file_info)
+
+        self.menubar.add_cascade(label="Admin", menu=menu)
+
+    def new_files(self):
+        NewFilesDialog(self.main_app, self.main_app.please_wait)
+        self.refresh()
+
     def open_file(self):
-        OpenFileDialog(self.main_app, self.main_app.please_wait)
+        OpenFileDialog(self.main_app, "Open File")
 
     def file_options(self):
         FileOptionsDialog(self.main_app)
@@ -258,3 +271,8 @@ class MenuBar:
     def open_action_space_filter_dialog(self):
         ActionSpaceFilterDialog(self.main_app)
 
+    def refresh_all_log_meta(self):
+        src.log.log_utils.refresh_all_log_meta(self.main_app.please_wait, self.main_app.get_log_directory())
+        self.main_app.please_wait.stop()
+        messagebox.showinfo("Refresh All Log Meta", "Refresh succeeded!")
+        self.refresh()

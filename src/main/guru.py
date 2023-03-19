@@ -13,7 +13,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 import src.secret_sauce.glue.glue as ss
-from src.log.log_meta import RaceType
 
 from src.analyze.track.analyze_heatmap import AnalyzeHeatmap
 from src.analyze.track.analyze_exit_points import AnalyzeExitPoints
@@ -211,7 +210,6 @@ class MainApp(tk.Frame):
         # Configure the rest of the application window and then make it appear
         #
 
-        self.already_drawing = False
         self.master.title("Deep Racer Guru v" + VERSION)
         self.menu_bar = MenuBar(root, self, False, False)
 
@@ -220,6 +218,7 @@ class MainApp(tk.Frame):
         # All done, so display main window now
         #
 
+        self.already_drawing = False
         self.update()
 
 
@@ -375,6 +374,7 @@ class MainApp(tk.Frame):
             self.menu_bar.refresh()
 
     def callback_open_this_file(self, file_name):
+
         redraw_menu_afterwards = not self.log
 
         self.log = Log(self._config_manager.get_log_directory())
@@ -382,7 +382,7 @@ class MainApp(tk.Frame):
                           self._config_manager.get_calculate_new_reward(),
                           self._config_manager.get_calculate_alternate_discount_factors())
 
-        self.status_frame.change_model_name(self.log.get_log_meta().model_name.get())
+        self.status_frame.change_model_name(self.log.get_log_meta().model_name)
         self.apply_new_action_space()
 
         reward_percentiles = RewardPercentiles(self.log.get_episodes(), self._config_manager.get_calculate_new_reward())
@@ -502,8 +502,8 @@ class MainApp(tk.Frame):
         self.reapply_episode_filter()
 
     def menu_callback_episodes_fast_laps(self):
-        es = self.log.get_log_meta()
-        target_steps = round((es.average_steps.get() + es.best_steps.get()) / 2)
+        es = self.log.get_log_meta().episode_stats
+        target_steps = round((es.average_steps + es.best_steps) / 2)
 
         self.episode_filter.reset()
         self.episode_filter.set_filter_min_percent(100)
@@ -709,7 +709,7 @@ class MainApp(tk.Frame):
         self.switch_analyzer(self.analyze_route)
 
     def expect_objects(self):
-        return self.log is not None and self.log.get_log_meta().race_type == RaceType.OBJECT_AVOIDANCE
+        return self.log is not None and self.log.get_log_meta().race_type == "OBJECT_AVOIDANCE"
 
 
 

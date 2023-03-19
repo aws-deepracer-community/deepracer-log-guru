@@ -6,7 +6,8 @@
 # Copyright (c) 2021 dmh23
 #
 
-from src.graphics.track_graphics_old_v3 import TrackGraphics
+from src.graphics.track_graphics import TrackGraphics
+import math
 
 from src.utils.colors import get_color_for_data, ColorPalette
 
@@ -90,7 +91,7 @@ def multi_draw(track_graphics :TrackGraphics, visitors, colours, threshold):
     assert len(colours) == len(visitors)
     assert threshold >= 1
 
-    min_x = visitors[0]._min_x
+    min_x = visitors[0].min_x
     min_y = visitors[0].min_y
     granularity = visitors[0].granularity
 

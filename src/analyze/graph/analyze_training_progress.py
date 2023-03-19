@@ -126,8 +126,8 @@ class AnalyzeTrainingProgress(GraphAnalyzer):
         axes.set_xlabel("Training Iteration")
 
         if self.log_meta and self.is_fixed_scale():
-            best = self.log_meta.best_reward.get()
-            worst = self.log_meta.worst_reward.get()
+            best = self.log_meta.episode_stats.best_reward
+            worst = self.log_meta.episode_stats.worst_reward
             if best != worst:
                 border = 0.02 * (best - worst)
                 axes.set_ybound(worst - border, best + border)

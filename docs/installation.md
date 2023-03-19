@@ -1,15 +1,19 @@
 # Installation Instructions
 
 ## Install Python
-Download and install [Python 3.11.1](https://www.python.org/downloads/release/python-3111/)
+Download and install [Python 3.9.13](https://www.python.org/downloads/release/python-3913/)
+
+Note - If you change the install options, be sure you still install *pip* and *tkinter*:
+
+![](pictures/installation/python_install_options.png)
 
 ## Install Additional Python Packages
 
 Download additional packages by running this command in the directory where you just installed Python:
 
-    python -m pip install matplotlib==3.6.3 numpy==1.24.1 scipy==1.10.0 PyQt6==6.4.1
+    python -m pip install matplotlib==3.3.3 numpy==1.19.3 scipy==1.6.0
     
-For example:         ** TODO - SCREENSHOT IS OUT OF DATE **
+For example:
 
 ![](pictures/installation/pip_install.png)
 
@@ -29,7 +33,7 @@ Or:
 Run it manually using the following example commands:
 
     cd C:\DRG-Demo\projects\deep_racer_guru
-    C:\DRG-Demo\python\3.9.4\python.exe -m src.main.guru
+    C:\DRG-Demo\python\3.9.13\python.exe -m src.main.guru
 
 Note:
 * You must "cd" to the root directory/folder where you unzipped or cloned the Deep Racer Guru code

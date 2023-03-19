@@ -13,7 +13,7 @@ import src.analyze.core.measurement_brightness as measurement_brightness
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.configuration.config_manager import ConfigManager
 from src.episode.episode import Episode
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 from src.ui.please_wait import PleaseWait
 from src.analyze.core.controls import ConvergenceGranularityControl, TrackAppearanceControl,\
     EpisodeRadioButtonControl, MoreFiltersControl, MeasurementControl, SkipControl

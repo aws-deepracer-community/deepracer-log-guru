@@ -40,12 +40,12 @@ from src.analyze.graph.analyze_discount_factors import AnalyzeDiscountFactors
 from src.action_space.action_space_filter import ActionSpaceFilter
 from src.configuration.config_manager import ConfigManager
 from src.episode.episode_filter import EpisodeFilter
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 from src.log.log import Log
 from src.main.version import VERSION
 from src.main.view_manager import ViewManager
 from src.tracks.tracks import get_all_tracks
-from src.ui.menu_bar import MenuBar
+from src.ui.menu_bar_old_v3 import MenuBar
 from src.ui.please_wait import PleaseWait
 from src.ui.status_frame import StatusFrame
 from src.analyze.core.episode_selector import EpisodeSelector

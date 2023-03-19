@@ -18,7 +18,7 @@ import src.secret_sauce.glue.glue as ss
 import src.analyze.core.measurement_brightness as measurement_brightness
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.event.event_meta import Event
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 from src.ui.log_event_info_window import LogEventInfoWindow
 from src.analyze.core.episode_selector import EpisodeSelector
 from src.analyze.core.controls import MeasurementControl, TrackAppearanceControl, MoreFiltersControl

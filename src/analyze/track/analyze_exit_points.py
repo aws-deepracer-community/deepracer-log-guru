@@ -10,7 +10,7 @@ import tkinter as tk
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.episode.episode import LAP_COMPLETE, OFF_TRACK, CRASHED, REVERSED, LOST_CONTROL
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 
 from src.analyze.core.controls import EpisodeRadioButtonControl, OutcomesCheckButtonControl
 

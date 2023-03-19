@@ -10,7 +10,7 @@ import tkinter as tk
 
 from src.analyze.core.controls import InformationTextControl, NumericButtonsControl
 from src.analyze.track.track_analyzer import TrackAnalyzer
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 from src.utils import geometry
 
 BEARING_STEP = 2

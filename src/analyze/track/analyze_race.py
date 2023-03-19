@@ -14,7 +14,7 @@ import tkinter as tk
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.episode.episode import Episode
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 
 from src.analyze.core.controls import VideoControls, LapTimeControl
 from src.personalize.configuration.appearance import RACE_COLOURS

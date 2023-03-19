@@ -8,7 +8,7 @@
 
 import tkinter as tk
 
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 from src.analyze.core.analyzer import Analyzer
 
 

@@ -14,7 +14,7 @@ from src.analyze.core.controls import CurveDirectionControl, CurveSteeringDegree
 
 from src.analyze.track.track_analyzer import TrackAnalyzer
 from src.episode.episode import extract_all_sequences
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 from src.sequences.sequences import Sequences
 
 BACKWARDS_DISTANCE = 2

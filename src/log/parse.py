@@ -435,6 +435,11 @@ def _parse_intro_event_parameters(line_of_text: str, log_meta: LogMeta) -> None:
         log_meta.workers.set(1)
         log_meta.worker_id.set(0)
 
+    FAULTY_REVERSE_DIR_SYNTAX = "'REVERSE_DIR': False"
+    FIXED_REVERSE_DIR_SYNTAX = "'REVERSE_DIR': 'False'"
+    if FAULTY_REVERSE_DIR_SYNTAX in line_of_text:
+        line_of_text = line_of_text.replace(FAULTY_REVERSE_DIR_SYNTAX, FIXED_REVERSE_DIR_SYNTAX)
+
     parameters = json.loads(line_of_text.replace("'", "\""))
 
     _set_parameter_string_value(parameters, PARAM_WORLD_NAME, log_meta.track_name)

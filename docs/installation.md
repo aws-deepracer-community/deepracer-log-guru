@@ -23,9 +23,8 @@ Either:
 * Download the latest release zip file from the [Releases section](https://github.com/dmh23/deep_racer_guru/releases) of Github
 * Unzip the entire contents of the zip file into a convenient location
 
-Or:
+Or: (NOT RECOMMENDED CURRENTLY DUE TO ISSUES IN CODE MERGING)
 * Git "clone" the [Source code](https://github.com/dmh23/deep_racer_guru) directly from Github
-* Make sure you use the __master__ branch to run the most recent released code
 
 ## Launch Deep Racer Guru
 ### Manual Launch

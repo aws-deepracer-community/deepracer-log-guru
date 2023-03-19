@@ -37,6 +37,11 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
     if DATE_LINE_PASSING_ARG in line_of_text:
         _parse_date_from_argument_message(line_of_text, log_meta)
 
+    # Fudge to prevent merge conflicts - remove this again
+    if NEW_PARAM_WORLD_NAME in line_of_text:
+        pos = line_of_text.find(NEW_PARAM_WORLD_NAME)
+        log_meta.world_name = line_of_text[pos + len(NEW_PARAM_WORLD_NAME):].split("'", 2)[0]
+
     if line_of_text.startswith(DRFC_WORKER_INFO_LINE):
         _parse_drfc_worker_id(line_of_text, log_meta)
 

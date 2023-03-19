@@ -61,6 +61,9 @@ from src.tracks.jennens_super_speedway_track import JennensSuperSpeedwayTrack
 from src.tracks.reinvent_2022_track import Reinvent2022Track
 from src.tracks.hot_rod_super_speedway_cw_track import HotRodSuperSpeedwayClockwiseTrack
 from src.tracks.hot_rod_super_speedway_ccw_track import HotRodSuperSpeedwayCounterClockwiseTrack
+# Fudge to prevent merge conflicts - remove this again
+from src.tracks.smile_speedway_ccw import SmileSpeedwayCounterClockwiseTrack
+from src.tracks.smile_speedway_cw import SmileSpeedwayClockwiseTrack
 from src.tracks.champ_cup_2019_track_ccw import ChampionshipCup2019CounterClockwiseTrack
 from src.tracks.champ_cup_2019_track_cw import ChampionshipCup2019ClockwiseTrack
 from tracks.track import Track

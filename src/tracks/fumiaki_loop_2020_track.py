@@ -15,7 +15,7 @@ class FumiakiLoop2020Track(Track):
         super().__init__()
 
         self._ui_name = "Fumiaki Loop"
-        self._ui_description = "The Fumiaki Loop, is dedicated to our runner up at the 2019 Championship Cup, and inspired by Fuji Speedway."
+        self._ui_description = "Dedicated to our runner up at the 2019 Championship Cup and inspired by Fuji Speedway, the Fumiaki Loop is a serious challenge for any developer. Start racing today for your opportunity to punch a ticket to re:Invent 2023!"
         self._ui_length_in_m = 53.0  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "FS_June2020"

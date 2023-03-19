@@ -15,7 +15,7 @@ class YunSpeedwayTrack(Track):
         super().__init__()
 
         self._ui_name = "Yun Speedway"
-        self._ui_description = "Yun is the Chinese word for cloud. The Yun Speedway is a broad loop with constant cornering, void of any major straightaway."
+        self._ui_description = "\"Yun\" is the Chinese word for \"cloud\". A broad loop demanding constant cornering, the Yun Speedway is the lofty domain of the racing line specialist."
         self._ui_length_in_m = 51  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "Albert"

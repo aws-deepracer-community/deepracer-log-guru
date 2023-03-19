@@ -10,18 +10,18 @@ from src.tracks.track import Track
 import src.personalize.configuration.personal_track_annotations as config
 
 
-class Sola2020Track(Track):
+class SolaSpeedwayTrack(Track):
     def __init__(self):
         super().__init__()
 
         # Details of the track as it appears on the training UI
         self._ui_name = "SOLA Speedway"
-        self._ui_description = "The first track of the 2020 AWS DeepRacer League Virtual Circuit season is dedicated to our reigning champion: SOLA-DNP."
+        self._ui_description = "Dedicated to reigning AWS DeepRacer Championship Cup winner, SOLA-DNP, the SOLA Speedway features high-speed straightaways and hairpin turns."
         self._ui_length_in_m = 38.0  # metres
         self._ui_width_in_cm = 106  # centimetres
         self._world_name = "LGSWide"
         self._track_sector_dividers = [80, 162, 206]
-        self._annotations = config.sola_2020_annotations
+        self._annotations = config.sola_speedway_annotations
         self._track_width = 1.06
 
         self._track_waypoints = [

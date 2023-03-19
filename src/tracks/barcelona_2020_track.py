@@ -15,7 +15,7 @@ class Barcelona2020Track(Track):
         super().__init__()
 
         self._ui_name = "Circuit de Barcelona-Catalunya"
-        self._ui_description = "The Circuit de Barcelona-Catalunya is a turn for turn reproduction of the official F1 Spanish Grand Prix track. It features 16 turns of varying severity and two massive straightaways. "
+        self._ui_description = "A reproduction of the official F1 Spanish Grand Prix track, the Circuit de Barcelona-Catalunya features 16 turns and two massive straightaways."
         self._ui_length_in_m = 60.0  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "Spain_track"

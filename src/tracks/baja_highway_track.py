@@ -16,7 +16,7 @@ class BajaHighwayTrack(Track):
 
         self._ui_name = "Baja Highway"
         self._ui_description = "At 65.18m, The Baja Highway extends upon the shorter turnpike with pro level difficulty and even more opportunities for generating speed. A second massive straightaway mid course is similarly capped by a hairpin and increasing radius turn, along with an unforgiving technical section full of wrought with tight cutbacks and hairpins."
-        self._ui_length_in_m = 99.99  # metres  (99.99 = not stated in AWS DR GUI)
+        self._ui_length_in_m = 65.18  # metres
         self._ui_width_in_cm = 107  # centimetres   # TODO
         self._world_name = "dubai_pro"
         self._track_sector_dividers = [61, 111, 140, 200]

@@ -10,17 +10,17 @@ from src.tracks.track import Track
 import src.personalize.configuration.personal_track_annotations as config
 
 
-class Reinvent2018WideTrack(Track):
+class AtoZSpeedwayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "re:Invent 2018 Wide"
+        self._ui_name = "A to Z Speedway"
         self._ui_description = "It’s easier for an agent to navigate this extra wide version of re:Invent 2018. Use it to get started with object avoidance and head-to-head race training."
         self._ui_length_in_m = 16.64  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "reInvent2019_wide"
         self._track_sector_dividers = [21, 46, 75]
-        self._annotations = config.reinvent_2018_wide_annotations
+        self._annotations = config.a_to_z_speedway_annotations
         self._track_width = 1.067
 
         self._track_waypoints = [(2.5612279176712036, 1.0617161691188812), (2.7125390768051147, 1.0617932081222534),

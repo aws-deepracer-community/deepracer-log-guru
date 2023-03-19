@@ -6,9 +6,9 @@
 # Copyright (c) 2021 dmh23
 #
 
-from src.tracks.summit_raceway_track import SummitRacewayTrack
+from src.tracks.aws_summit_raceway_track import AwsSummitRacewayTrack
 from src.tracks.reinvent_2018_track import Reinvent2018Track
-from src.tracks.sola_2020_track import Sola2020Track
+from src.tracks.sola_speedway_track import SolaSpeedwayTrack
 from src.tracks.baadal_2020_track import Baadal2020Track
 from src.tracks.barcelona_2020_track import Barcelona2020Track
 from src.tracks.champ_cup_2019_track import ChampionshipCup2019Track
@@ -33,14 +33,14 @@ from src.tracks.baja_turnpike_track import BajaTurnpikeTrack
 from src.tracks.baja_highway_track import BajaHighwayTrack
 from src.tracks.hot_rod_speedway_track import HotRodSpeedwayTrack
 from src.tracks.hot_rod_super_speedway_track import HotRodSuperSpeedwayTrack
-from src.tracks.reinvent_2018_wide_track import Reinvent2018WideTrack
+from src.tracks.a_to_z_speedway_track import AtoZSpeedwayTrack
 from src.tracks.playa_raceway_track import PlayaRacewayTrack
 from src.tracks.playa_super_raceway_track import PlayaSuperRacewayTrack
 from src.tracks.expedition_super_loop_track import ExpeditionSuperLoopTrack
 from src.tracks.expedition_loop_track import ExpeditionLoopTrack
 from src.tracks.vivalas_loop_track import VivalasLoooTrack
 from src.tracks.vivalas_speedway_track import VivalasSpeedwayTrack
-from src.tracks.summit_speedway_track import SummitSpeedwayTrack
+from src.tracks.rl_speedway_track import RLSpeedwayTrack
 from src.tracks.rogue_raceway_track import RogueRacewayTrack
 from src.tracks.rogue_circuit_track import RogueCircuitTrack
 from src.tracks.ace_speedway_track import AceSpeedwayTrack
@@ -61,11 +61,8 @@ from src.tracks.jennens_super_speedway_track import JennensSuperSpeedwayTrack
 from src.tracks.reinvent_2022_track import Reinvent2022Track
 from src.tracks.hot_rod_super_speedway_cw_track import HotRodSuperSpeedwayClockwiseTrack
 from src.tracks.hot_rod_super_speedway_ccw_track import HotRodSuperSpeedwayCounterClockwiseTrack
-# Fudge to prevent merge conflicts - remove this again
 from src.tracks.smile_speedway_ccw import SmileSpeedwayCounterClockwiseTrack
 from src.tracks.smile_speedway_cw import SmileSpeedwayClockwiseTrack
-from src.tracks.champ_cup_2019_track_ccw import ChampionshipCup2019CounterClockwiseTrack
-from src.tracks.champ_cup_2019_track_cw import ChampionshipCup2019ClockwiseTrack
 from tracks.track import Track
 
 
@@ -73,19 +70,19 @@ def get_all_tracks() -> dict[str, Track]:
     tracks = {}
 
     for t in [AmericanHillsSpeedwayTrack(), AsiaPacificBayLoopTrack(), EuropeanSeasideCircuitTrack(),
-              Reinvent2018Track(), Reinvent2018WideTrack(),
+              Reinvent2018Track(), AtoZSpeedwayTrack(),
               ChampionshipCup2019Track(),
-              ChampionshipCup2019ClockwiseTrack(), ChampionshipCup2019CounterClockwiseTrack(),
+              SmileSpeedwayClockwiseTrack(), SmileSpeedwayCounterClockwiseTrack(),
               StratusLoop2020Track(), HotRodSpeedwayTrack(), HotRodSuperSpeedwayTrack(),
               HotRodSuperSpeedwayClockwiseTrack(), HotRodSuperSpeedwayCounterClockwiseTrack(),
               CumuloTurnpikeTrack(), YunSpeedwayTrack(),
-              RogerRacewayTrack(), FumiakiLoop2020Track(), SummitRacewayTrack(),
-              Sola2020Track(), Baadal2020Track(), Barcelona2020Track(), BowtieTrack(),
+              RogerRacewayTrack(), FumiakiLoop2020Track(), AwsSummitRacewayTrack(),
+              SolaSpeedwayTrack(), Baadal2020Track(), Barcelona2020Track(), BowtieTrack(),
               PoChunSuperSpeedwayTrack(), PoChunSpeedwayTrack(), LarsCircuitTrack(), LarsLoopTrack(),
               KueiRacewayTrack(), KueiSuperRacewayTrack(), CosmicLoopTrack(), CosmicCircuitTrack(),
               BajaTurnpikeTrack(), BajaHighwayTrack(),
               PlayaRacewayTrack(), PlayaSuperRacewayTrack(), ExpeditionSuperLoopTrack(), ExpeditionLoopTrack(),
-              VivalasLoooTrack(), VivalasSpeedwayTrack(), SummitSpeedwayTrack(), RogueRacewayTrack(),
+              VivalasLoooTrack(), VivalasSpeedwayTrack(), RLSpeedwayTrack(), RogueRacewayTrack(),
               RogueCircuitTrack(), AceSpeedwayTrack(), AceSuperSpeedwayTrack(), RossRacewayTrack(),
               RossSuperSpeedwayTrack(), OvalTrack(), BreadCentricLoopTrack(), BreadCentricSpeedwayTrack(),
               DBroRacewayTrack(), DBroSuperRacewayTrack(), JochemTurnpikeTrack(), JochemHighwayTrack(),

@@ -14,7 +14,8 @@ class ChampionshipCup2019Track(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "The 2019 DeepRacer Championship Cup (Original)"
+        # NB - New CW and CCW variants introduced in March 2022 have the new name "Smile Speedway"
+        self._ui_name = "The 2019 DeepRacer Championship Cup"
         self._ui_description = "This is the official track for the 2019 DeepRacer Championship Cup finals. Train your model on this track if you are taking part in the Knockouts, or plan to be at re:Invent 2019 where you will get the opportunity to race on the track for prizes and glory."
         self._ui_length_in_m = 60.0  # metres
         self._ui_width_in_cm = 107  # centimetres

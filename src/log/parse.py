@@ -37,13 +37,9 @@ def parse_intro_event(line_of_text: str, log_meta: LogMeta):
     if DATE_LINE_PASSING_ARG in line_of_text:
         _parse_date_from_argument_message(line_of_text, log_meta)
 
-    # Fudge to prevent merge conflicts - remove this again
     if NEW_PARAM_WORLD_NAME in line_of_text:
         pos = line_of_text.find(NEW_PARAM_WORLD_NAME)
         log_meta.world_name = line_of_text[pos + len(NEW_PARAM_WORLD_NAME):].split("'", 2)[0]
-
-    if line_of_text.startswith(DRFC_WORKER_INFO_LINE):
-        _parse_drfc_worker_id(line_of_text, log_meta)
 
     if line_of_text.startswith("{'") and PARAM_JOB_TYPE in line_of_text and PARAM_WORLD_NAME in line_of_text:
         _parse_intro_event_parameters(line_of_text, log_meta)
@@ -258,7 +254,6 @@ HYPER_STACK_SIZE = "stack_size"
 HYPER_TERM_AVG_SCORE = "term_cond_avg_score"
 HYPER_TERM_MAX_EPISODES = "term_cond_max_episodes"
 
-PARAM_WORLD_NAME = "WORLD_NAME"
 PARAM_RACE_TYPE = "RACE_TYPE"
 PARAM_JOB_TYPE = "JOB_TYPE"
 PARAM_DOMAIN_RANDOMIZATION = "ENABLE_DOMAIN_RANDOMIZATION"
@@ -289,6 +284,8 @@ PARAM_START_POSITION_OFFSET = "START_POSITION_OFFSET"
 PARAM_MIN_EVAL_TRIALS = "MIN_EVAL_TRIALS"
 PARAM_CHANGE_START_POSITION = "CHANGE_START_POSITION"
 PARAM_ROUND_ROBIN_ADVANCE_DIST = "ROUND_ROBIN_ADVANCE_DIST"
+
+NEW_PARAM_WORLD_NAME = "'WORLD_NAME': '"
 
 MISC_MODEL_NAME_OLD_LOGS = "Successfully downloaded model metadata from model-metadata/"
 MISC_MODEL_NAME_NEW_LOGS_A = "Successfully downloaded model metadata"

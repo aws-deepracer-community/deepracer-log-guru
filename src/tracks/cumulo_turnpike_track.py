@@ -15,7 +15,7 @@ class CumuloTurnpikeTrack(Track):
         super().__init__()
 
         self._ui_name = "Cumulo Turnpike"
-        self._ui_description = "The Cumulo Turnpike features numerous high speed straightaways interspersed between multiple challenging corners, requiring exceptional speed control to navigate"
+        self._ui_description = "The Cumulo Turnpike shifts from high-speed straightaways to challenging corners. It requires a perfect storm of exceptional navigation skill and speed control."
         self._ui_length_in_m = 60  # metres
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "Belille"

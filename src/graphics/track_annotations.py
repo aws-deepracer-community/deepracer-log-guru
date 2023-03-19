@@ -6,11 +6,13 @@
 # Copyright (c) 2021 dmh23
 #
 
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
+
 
 class Annotation:
     def draw(self, track_graphics: TrackGraphics, track_drawing_points, track_width):
         pass # Override in child classes
+
 
 def get_exact_point_(drawing_points, track_width, waypoint_id: int, side, distance_from_centre):
     points = drawing_points[waypoint_id]

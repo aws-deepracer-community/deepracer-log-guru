@@ -1,0 +1,3830 @@
+Starting as worker 0, using world 2022_reinvent_champ and configuration training_params.yaml.
+11/02/2023 17:14:13 passing arg to libvncserver: -rfbport
+11/02/2023 17:14:13 passing arg to libvncserver: 5900
+11/02/2023 17:14:13 x11vnc version: 0.9.13 lastmod: 2011-08-10  pid: 62
+11/02/2023 17:14:13 
+11/02/2023 17:14:13 wait_for_client: WAIT:0
+11/02/2023 17:14:13 
+11/02/2023 17:14:13 initialize_screen: fb_depth/fb_bpp/fb_Bpl 24/32/2560
+11/02/2023 17:14:13 
+11/02/2023 17:14:13 Listening for VNC connections on TCP port 5900
+11/02/2023 17:14:13 Listening for VNC connections on TCP6 port 5900
+11/02/2023 17:14:13 listen6: bind: Address already in use
+11/02/2023 17:14:13 Not listening on IPv6 interface.
+11/02/2023 17:14:13 
+
+The VNC desktop is:      496dc484d94a:0
+PORT=5900
+JWM: warning: /etc/jwm/system.jwmrc[6]: invalid include: /etc/jwm/debian-menu
+IP: 10.0.0.9 172.18.0.5 10.0.1.12  (496dc484d94a)
+[s3] Successfully downloaded yaml file from s3 key Four-Worker-Test/training_params.yaml to local ./custom_files/training_params.yaml.
+{'ALTERNATE_DRIVING_DIRECTION': 'False', 'AWS_REGION': 'us-east-1', 'BODY_SHELL_TYPE': ['deepracer'], 'CAR_COLOR': ['Black'], 'CAR_NAME': 'FastCar', 'CHANGE_START_POSITION': 'True', 'DISPLAY_NAME': 'FastCar', 'ENABLE_DOMAIN_RANDOMIZATION': 'False', 'JOB_TYPE': 'TRAINING', 'KINESIS_VIDEO_STREAM_NAME': 'None', 'METRICS_S3_BUCKET': ['dmh-base-2023-jan-bucket-1x1o0jxxrxubo'], 'METRICS_S3_OBJECT_KEY': ['Four-Worker-Test/metrics/TrainingMetrics.json'], 'MIN_EVAL_TRIALS': '5', 'MODEL_METADATA_FILE_S3_KEY': ['custom_files/model_metadata.json'], 'NUM_WORKERS': '4', 'RACER_NAME': 'FastCar', 'RACE_TYPE': 'TIME_TRIAL', 'REWARD_FILE_S3_KEY': 'custom_files/reward_function.py', 'ROBOMAKER_SIMULATION_JOB_ACCOUNT_ID': 'Dummy', 'ROUND_ROBIN_ADVANCE_DIST': '0.1', 'SAGEMAKER_SHARED_S3_BUCKET': ['dmh-base-2023-jan-bucket-1x1o0jxxrxubo'], 'SAGEMAKER_SHARED_S3_PREFIX': ['Four-Worker-Test'], 'SIMTRACE_S3_BUCKET': 'dmh-base-2023-jan-bucket-1x1o0jxxrxubo', 'SIMTRACE_S3_PREFIX': 'Four-Worker-Test', 'START_POSITION_OFFSET': '0.0', 'TRAINING_JOB_ARN': 'arn:Dummy', 'WORLD_NAME': '2022_reinvent_champ'}
+[s3] Successfully downloaded model metadata                  from s3 key custom_files/model_metadata.json to local ./custom_files/racecar/model_metadata.json.
+Sensor list ['FRONT_FACING_CAMERA'], network DEEP_CONVOLUTIONAL_NETWORK_SHALLOW, simapp_version 5.0, training_algorithm clipped_ppo, action_space_type discrete lidar_config {'num_sectors': 8, 'num_values_per_sector': 8, 'clipping_dist': 2.0}
+xacro: in-order processing became default in ROS Melodic. You can drop the option.
+... logging to /root/.ros/log/81c14ab8-aa2f-11ed-be28-02420a000009/roslaunch-496dc484d94a-182.log
+Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;/opt/install/deepracer_simulation_environment/share/deepracer_simulation_environment/launch/rollout_rl_agent.launch
+[1mstarted roslaunch server http://496dc484d94a:34913/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /ALTERNATE_DRIVING_DIRECTION: False
+ * /AWS_REGION: us-east-1
+ * /BODY_SHELL_TYPE: deepracer
+ * /CAR_COLOR: Black
+ * /CAR_NAME: FastCar
+ * /CHANGE_START_POSITION: True
+ * /DISPLAY_NAME: FastCar
+ * /ENABLE_DOMAIN_RANDOMIZATION: False
+ * /JOB_TYPE: TRAINING
+ * /KINESIS_VIDEO_STREAM_NAME: None
+ * /METRICS_S3_BUCKET: dmh-base-2023-jan...
+ * /METRICS_S3_OBJECT_KEY: Four-Worker-Test/...
+ * /MIN_EVAL_TRIALS: 5
+ * /MODEL_METADATA_FILE_S3_KEY: custom_files/mode...
+ * /NUM_WORKERS: 4
+ * /RACER_NAME: FastCar
+ * /RACE_TYPE: TIME_TRIAL
+ * /REWARD_FILE_S3_KEY: custom_files/rewa...
+ * /ROBOMAKER_SIMULATION_JOB_ACCOUNT_ID: Dummy
+ * /ROUND_ROBIN_ADVANCE_DIST: 0.1
+ * /SAGEMAKER_SHARED_S3_BUCKET: dmh-base-2023-jan...
+ * /SAGEMAKER_SHARED_S3_PREFIX: Four-Worker-Test
+ * /SIMTRACE_S3_BUCKET: dmh-base-2023-jan...
+ * /SIMTRACE_S3_PREFIX: Four-Worker-Test
+ * /START_POSITION_OFFSET: 0.0
+ * /TRAINING_JOB_ARN: arn:Dummy
+ * /WORLD_NAME: 2022_reinvent_champ
+ * /racecar/gazebo_ros_control/pid_gains/left_front_wheel_joint/d: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/left_front_wheel_joint/i: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/left_front_wheel_joint/i_clamp: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/left_front_wheel_joint/p: 0.5
+ * /racecar/gazebo_ros_control/pid_gains/left_rear_wheel_joint/d: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/left_rear_wheel_joint/i: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/left_rear_wheel_joint/i_clamp: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/left_rear_wheel_joint/p: 1.0
+ * /racecar/gazebo_ros_control/pid_gains/left_steering_hinge_joint/d: 0.5
+ * /racecar/gazebo_ros_control/pid_gains/left_steering_hinge_joint/i: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/left_steering_hinge_joint/p: 1.0
+ * /racecar/gazebo_ros_control/pid_gains/right_front_wheel_joint/d: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/right_front_wheel_joint/i: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/right_front_wheel_joint/i_clamp: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/right_front_wheel_joint/p: 0.5
+ * /racecar/gazebo_ros_control/pid_gains/right_rear_wheel_joint/d: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/right_rear_wheel_joint/i: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/right_rear_wheel_joint/i_clamp: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/right_rear_wheel_joint/p: 1.0
+ * /racecar/gazebo_ros_control/pid_gains/right_steering_hinge_joint/d: 0.5
+ * /racecar/gazebo_ros_control/pid_gains/right_steering_hinge_joint/i: 0.0
+ * /racecar/gazebo_ros_control/pid_gains/right_steering_hinge_joint/p: 1.0
+ * /racecar/joint_state_controller/publish_rate: 60
+ * /racecar/joint_state_controller/type: joint_state_contr...
+ * /racecar/left_front_wheel_velocity_controller/joint: left_front_wheel_...
+ * /racecar/left_front_wheel_velocity_controller/pid/d: 0.0
+ * /racecar/left_front_wheel_velocity_controller/pid/i: 0.0
+ * /racecar/left_front_wheel_velocity_controller/pid/i_clamp: 0.0
+ * /racecar/left_front_wheel_velocity_controller/pid/p: 0.5
+ * /racecar/left_front_wheel_velocity_controller/type: velocity_controll...
+ * /racecar/left_rear_wheel_velocity_controller/joint: left_rear_wheel_j...
+ * /racecar/left_rear_wheel_velocity_controller/pid/d: 0.0
+ * /racecar/left_rear_wheel_velocity_controller/pid/i: 0.0
+ * /racecar/left_rear_wheel_velocity_controller/pid/i_clamp: 0.0
+ * /racecar/left_rear_wheel_velocity_controller/pid/p: 1.0
+ * /racecar/left_rear_wheel_velocity_controller/type: velocity_controll...
+ * /racecar/left_steering_hinge_position_controller/joint: left_steering_hin...
+ * /racecar/left_steering_hinge_position_controller/pid/d: 0.5
+ * /racecar/left_steering_hinge_position_control[INFO] [1676135659.003026, 0.000000]: Loading model XML from ros parameter /racecar/robot_description
+[INFO] [1676135659.009894, 0.000000]: Waiting for service /gazebo/spawn_urdf_model
+[INFO] [1676135660.818786, 0.000000]: Calling service /gazebo/spawn_urdf_model
+[INFO] [1676135660.974056, 0.120000]: Spawn status: SpawnModel: Successfully spawned entity
+[CameraManager]: Added <markov.cameras.handlers.follow_car_camera.FollowCarCamera object at 0x7f8c0091a5c0> to camera_namespaces racecar
+[CameraManager]: Added <markov.cameras.handlers.top_camera.TopCamera object at 0x7f8c0091a828> to camera_namespaces racecar
+[CameraManager]: Removed <markov.cameras.handlers.follow_car_camera.FollowCarCamera object at 0x7f8c0091a5c0> from camera_namespaces racecar
+[CameraManager]: Removed <markov.cameras.handlers.top_camera.TopCamera object at 0x7f8c0091a828> from camera_namespaces racecar
+Publishing to KVS stream is enabled: False
++ export PYTHONUNBUFFERED=1
++ PYTHONUNBUFFERED=1
++ ROLLOUT_IDX=0
++ python3 -m markov.rollout_worker --rollout_idx 0
+Pausing physics after initializing the cars
+[0m[ INFO] [1676135660.245896785]: DeepRacerGazeboSystemPlugin: Load[0m
+[0m[ INFO] [1676135660.246909816]: DeepRacerGazeboSystemPlugin: Finished loading.[0m
+[0m[ INFO] [1676135660.261506344]: Finished loading Gazebo ROS API Plugin.[0m
+[0m[ INFO] [1676135660.262729106]: waitForService: Service [/gazebo/set_physics_properties] has not been advertised, waiting...[0m
+[0m[ INFO] [1676135660.741104752]: DeepRacerGazeboSystemPlugin: Init Complete[0m
+[0m[ INFO] [1676135660.760530099]: waitForService: Service [/gazebo/set_physics_properties] is now available.[0m
+[0m[ INFO] [1676135660.789356237, 0.010000000]: Physics dynamic reconfigure ready.[0m
+[0m[ INFO] [1676135661.550563115, 0.120000000]: Camera Plugin: Using the 'robotNamespace' param: '/racecar/'[0m
+[0m[ INFO] [1676135661.552976982, 0.120000000]: Camera Plugin (ns = /racecar/)  <tf_prefix_>, set to "/racecar"[0m
+Topic [2022_reinvent_champ//racecar/main_camera/camera_link/camera_sensor/image] is not valid.
+[0m[ INFO] [1676135661.618321417, 0.120000000]: Loading gazebo_ros_control plugin[0m
+[0m[ INFO] [1676135661.618412377, 0.120000000]: Starting gazebo_ros_control plugin in namespace: /racecar[0m
+[0m[ INFO] [1676135661.618781256, 0.120000000]: gazebo_ros_control plugin is waiting for model URDF in parameter [/racecar/robot_description] on the ROS param server.[0m
+[0m[ INFO] [1676135661.863417425, 0.120000000]: Loaded gazebo_ros_control.[0m
+Spawning sub camera model
+[0m[ INFO] [1676135662.777521991, 0.776000000]: Camera Plugin: Using the 'robotNamespace' param: '/racecar/main_camera'[0m
+[0m[ INFO] [1676135662.779328625, 0.776000000]: Camera Plugin (ns = /racecar/main_camera)  <tf_prefix_>, set to "/racecar/main_camera"[0m
+[1;33mWarning [parser.cc:950][0m XML Element[projection_type], child of element[camera] not defined in SDF. Ignoring[projection_type]. You may have an incorrect SDF file, or an sdformat version that doesn't support this element.
+Topic [2022_reinvent_champ//sub_camera/camera_link/camera_sensor/image] is not valid.
+/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:523: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:524: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:525: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:526: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:527: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:532: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+S3 bucket: dmh-base-2023-jan-bucket-1x1o0jxxrxubo
+S3 prefix: Four-Worker-Test
+S3 endpoint URL: None
+[s3] Successfully downloaded reward function from s3 key custom_files/reward_function.py to local                  ./custom_files/agent/customer_reward_function.py.
+Succeed to import user's reward function
+[CameraManager]: Added <markov.cameras.handlers.follow_car_camera.FollowCarCamera object at 0x7fd1e169a6d8> to camera_namespaces racecar
+[CameraManager]: Added <markov.cameras.handlers.top_camera.TopCamera object at 0x7fd1fbe27dd8> to camera_namespaces racecar
+[s3] Successfully downloaded model metadata                  from s3 key custom_files/model_metadata.json to local ./custom_files/agent/model_metadata.json.
+Sensor list ['FRONT_FACING_CAMERA'], network DEEP_CONVOLUTIONAL_NETWORK_SHALLOW, simapp_version 5.0, training_algorithm clipped_ppo, action_space_type discrete lidar_config {'num_sectors': 8, 'num_values_per_sector': 8, 'clipping_dist': 2.0}
+Action space from file: [{'steering_angle': 0, 'speed': 4.0}, {'steering_angle': 30, 'speed': 1.0}, {'steering_angle': 20, 'speed': 1.5}, {'steering_angle': 10, 'speed': 2.0}, {'steering_angle': -30, 'speed': 1.0}, {'steering_angle': -20, 'speed': 1.5}, {'steering_angle': -10, 'speed': 2.0}]
+Waiting for SageMaker Redis server IP: Time elapsed: 5 seconds
+Waiting for SageMaker Redis server IP: Time elapsed: 10 seconds
+Waiting for SageMaker Redis server IP: Time elapsed: 15 seconds
+Waiting for SageMaker Redis server IP: Time elapsed: 20 seconds
+Waiting for SageMaker Redis server IP: Time elapsed: 25 seconds
+Waiting for SageMaker Redis server IP: Time elapsed: 30 seconds
+Waiting for SageMaker Redis server IP: Time elapsed: 35 seconds
+Waiting for SageMaker Redis server IP: Time elapsed: 40 seconds
+Waiting for SageMaker Redis server IP: Time elapsed: 45 seconds
+Waiting for SageMaker Redis server IP: Time elapsed: 50 seconds
+Waiting for SageMaker Redis server IP: Time elapsed: 55 seconds
+[s3] Successfully downloaded ip config from                  s3 key Four-Worker-Test/ip/ip.json to local ./custom_files/ip.json.
+[s3] Successfully downloaded hyperparameters from                      s3 key Four-Worker-Test/ip/hyperparameters.json to local ./custom_files/agent/hyperparameters.json.
+Using the following hyper-parameters
+{
+  "batch_size": 256,
+  "beta_entropy": 0.01,
+  "discount_factor": 0.97,
+  "e_greedy_value": 0.05,
+  "epsilon_steps": 10000,
+  "exploration_type": "categorical",
+  "loss_type": "huber",
+  "lr": 0.0003,
+  "num_episodes_between_training": 40,
+  "num_epochs": 5,
+  "stack_size": 1,
+  "term_cond_avg_score": 35000.0,
+  "term_cond_max_episodes": 100000
+}
+Exception when checking for DEEPRACER_JOB_TYPE_ENV 'LOCAL' is not a valid DeepRacerJobType
+s3 failed, retry after 1.3492061231963168 seconds. Re-try count: 1/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 4.718657181881287 seconds. Re-try count: 2/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 9.30686002858624 seconds. Re-try count: 3/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 16.301270081216416 seconds. Re-try count: 4/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 25.794149977572275 seconds. Re-try count: 5/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 1.0533146501354098 seconds. Re-try count: 1/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 4.660728656134765 seconds. Re-try count: 2/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 9.979056488037084 seconds. Re-try count: 3/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 16.28328456383011 seconds. Re-try count: 4/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 25.33387202912909 seconds. Re-try count: 5/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 1.9723154985155076 seconds. Re-try count: 1/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 4.227045422672334 seconds. Re-try count: 2/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 9.50146059950057 seconds. Re-try count: 3/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 16.511909412194914 seconds. Re-try count: 4/5: An error occurred (404) when calling the HeadObject operation: Not Found
+s3 failed, retry after 25.969017753098736 seconds. Re-try count: 5/5: An error occurred (404) when calling the HeadObject operation: Not Found
+[s3] Successfully downloaded 4_Step-0.ckpt.data-00000-of-00001 from                  s3 key Four-Worker-Test/model/4_Step-0.ckpt.data-00000-of-00001 to local checkpoint_robomaker/agent/4_Step-0.ckpt.data-00000-of-00001.
+[s3] Successfully downloaded 4_Step-0.ckpt.index from                  s3 key Four-Worker-Test/model/4_Step-0.ckpt.index to local checkpoint_robomaker/agent/4_Step-0.ckpt.index.
+[s3] Successfully downloaded 4_Step-0.ckpt.meta from                  s3 key Four-Worker-Test/model/4_Step-0.ckpt.meta to local checkpoint_robomaker/agent/4_Step-0.ckpt.meta.
+[s3] Successfully downloaded .ready from                  s3 key Four-Worker-Test/model/.ready to local checkpoint_robomaker/agent/.ready.
+## Creating graph - name: MultiAgentGraphManager
+## Start physics before creating graph
+## Create graph
+## Creating agent - name: agent
+[RL] Created agent loggers
+[RL] Dynamic import of memory:  "DeepRacerMemoryParameters" {
+    "load_memory_from_file_path": null,
+    "max_size": [
+        "<MemoryGranularity.Transitions: 0>",
+        1000000
+    ],
+    "n_step": -1,
+    "shared_memory": false,
+    "train_to_eval_ratio": 1
+}
+
+[RL] Dynamically imported of memory <markov.memories.deepracer_memory.DeepRacerMemory object at 0x7fd1aea8a3c8>
+[RL] Setting devices
+[RL] Setting filters
+[RL] Setting filter devices: numpy
+[RL] Setting Phase
+[RL] After setting Phase
+[RL] Setting signals
+[RL] Agent init successful
+[RL] ActorCriticAgent init
+[RL] ActorCriticAgent  init successful
+## Created agent: agent
+## Stop physics after creating graph
+## Creating session
+Creating regular session
+2023-02-11 17:19:20.518396: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX512F
+Checkpoint> Restoring from path=./checkpoint_robomaker/agent/4_Step-0.ckpt
+[BestModelSelection] Number of evaluations: 0 Evaluation episode progress: []
+[BestModelSelection] Evaluation episode progress mean: None
+[BestModelSelection] current progress mean: None >= best progress mean: None
+[BestModelSelection] Updating the best checkpoint to "4_Step-0.ckpt" from "None".
+[s3] Successfully uploaded deepracer checkpoint to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/model/deepracer_checkpoints.json.
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:0,1,0.6159,0.4622,131.5767,20.00,1.50,2,0.0000,False,True,0.4212,0,33.28,34.648,prepare,0.00
+
+5.4 0.0
+SIM_TRACE_LOG:0,2,0.6160,0.4620,131.5773,-20.00,1.50,5,54.0000,False,True,0.4207,0,33.28,34.715,in_progress,0.00
+
+5.4 0.1
+SIM_TRACE_LOG:0,3,0.6097,0.4670,131.9921,30.00,1.00,1,54.0000,False,True,0.4443,0,33.28,34.778,in_progress,0.00
+
+1.7 0.2
+SIM_TRACE_LOG:0,4,0.5934,0.4756,133.4678,30.00,1.00,1,17.0000,False,True,0.4964,1,33.28,34.861,in_progress,0.00
+
+1.0 0.3
+SIM_TRACE_LOG:0,5,0.5545,0.4847,138.7537,0.00,4.00,0,10.0000,False,True,0.5944,1,33.28,34.915,in_progress,0.00
+
+1.1 0.4
+SIM_TRACE_LOG:0,6,0.5112,0.4986,142.9359,0.00,4.00,0,11.0000,False,True,0.7118,1,33.28,34.976,in_progress,0.00
+
+1.6 0.5
+SIM_TRACE_LOG:0,7,0.4550,0.5307,144.9453,-10.00,2.00,6,17.0000,False,True,0.8962,1,33.28,35.041,in_progress,0.00
+
+5.7 0.7
+SIM_TRACE_LOG:0,8,0.4015,0.5799,142.8646,-30.00,1.00,4,57.0000,False,True,1.1134,1,33.28,35.115,in_progress,0.00
+
+5.0 0.9
+SIM_TRACE_LOG:0,9,0.3490,0.6426,138.7441,0.00,4.00,0,51.0000,False,True,1.3591,1,33.28,35.155,in_progress,0.00
+
+4.7 1.0
+SIM_TRACE_LOG:0,10,0.3020,0.7032,135.5690,0.00,4.00,0,48.0000,False,True,1.5892,2,33.28,35.25,in_progress,0.00
+
+5.0 1.2
+SIM_TRACE_LOG:0,11,0.2319,0.7805,134.3075,-10.00,2.00,6,52.0000,False,True,1.9032,2,33.28,35.33,in_progress,0.00
+
+4.6 1.3
+SIM_TRACE_LOG:0,12,0.1615,0.8677,132.1068,0.00,4.00,0,48.0000,False,True,2.2397,2,33.28,35.374,in_progress,0.00
+
+4.3 1.6
+SIM_TRACE_LOG:0,13,0.0752,0.9832,129.5212,20.00,1.50,2,44.0000,False,True,2.6714,3,33.28,35.453,in_progress,0.00
+
+4.7 1.7
+SIM_TRACE_LOG:0,14,-0.0027,1.0665,130.7167,10.00,2.00,3,49.0000,False,True,3.0162,3,33.28,35.517,in_progress,0.00
+
+4.8 1.8
+SIM_TRACE_LOG:0,15,-0.0899,1.1476,133.4932,-30.00,1.00,4,50.0000,False,True,3.3729,4,33.28,35.591,in_progress,0.00
+
+4.7 1.8
+SIM_TRACE_LOG:0,16,-0.1790,1.2296,135.2782,-10.00,2.00,6,49.0000,False,True,3.7323,4,33.28,35.631,in_progress,0.00
+
+4.4 1.8
+SIM_TRACE_LOG:0,17,-0.2573,1.3136,134.3304,30.00,1.00,1,46.0000,False,True,4.0774,4,33.28,35.717,in_progress,0.00
+
+4.2 1.7
+SIM_TRACE_LOG:0,18,-0.3228,1.3870,133.2016,-10.00,2.00,6,43.0000,False,True,4.3733,5,33.28,35.788,in_progress,0.00
+
+4.1 1.7
+SIM_TRACE_LOG:0,19,-0.3928,1.4655,132.2404,-30.00,1.00,4,42.0000,False,True,4.6887,5,33.28,35.852,in_progress,0.00
+
+3.4 1.6
+SIM_TRACE_LOG:0,20,-0.4458,1.5427,129.4341,30.00,1.00,1,36.0000,False,True,4.9679,5,33.28,35.915,in_progress,0.00
+
+3.3 1.5
+SIM_TRACE_LOG:0,21,-0.4977,1.6192,127.6198,10.00,2.00,3,35.0000,False,True,5.2434,6,33.28,35.982,in_progress,0.00
+
+3.7 1.5
+SIM_TRACE_LOG:0,22,-0.5633,1.6942,129.0119,-20.00,1.50,5,39.0000,False,True,5.5428,6,33.28,36.057,in_progress,0.00
+
+3.6 1.5
+SIM_TRACE_LOG:0,23,-0.6277,1.7698,129.4912,-20.00,1.50,5,37.0000,False,True,5.8413,6,33.28,36.113,in_progress,0.00
+
+3.0 1.5
+SIM_TRACE_LOG:0,24,-0.6866,1.8600,126.9539,-10.00,2.00,6,31.0000,False,True,6.1615,7,33.28,36.177,in_progress,0.00
+
+2.4 1.5
+SIM_TRACE_LOG:0,25,-0.7383,1.9574,123.1769,-30.00,1.00,4,25.0000,False,True,6.4835,7,33.28,36.251,in_progress,0.00
+
+1.7 1.5
+SIM_TRACE_LOG:0,26,-0.7770,2.0514,119.0897,-20.00,1.50,5,19.0000,False,True,6.7719,7,33.28,36.319,in_progress,0.00
+
+1.3 1.5
+SIM_TRACE_LOG:0,27,-0.8105,2.1546,114.6021,0.00,4.00,0,15.0000,False,True,7.0708,8,33.28,36.382,in_progress,0.00
+
+1.1 1.5
+SIM_TRACE_LOG:0,28,-0.8386,2.2508,111.5251,-30.00,1.00,4,13.0000,False,True,7.3434,8,33.28,36.453,in_progress,0.00
+
+1.1 1.5
+SIM_TRACE_LOG:0,29,-0.8707,2.3562,109.4623,0.00,4.00,0,12.0000,False,True,7.6446,8,33.28,36.514,in_progress,0.00
+
+0.8 1.4
+SIM_TRACE_LOG:0,30,-0.8960,2.4567,107.4472,30.00,1.00,1,10.0000,False,True,7.9211,9,33.28,36.55,in_progress,0.00
+
+0.8 1.5
+SIM_TRACE_LOG:0,31,-0.9297,2.5665,106.5960,20.00,1.50,2,10.0000,False,True,8.2354,9,33.28,36.65,in_progress,0.00
+
+1.0 1.4
+SIM_TRACE_LOG:0,32,-0.9663,2.6534,108.7365,-30.00,1.00,4,11.0000,False,True,8.5040,9,33.28,36.721000000000004,in_progress,0.00
+
+0.8 1.4
+SIM_TRACE_LOG:0,33,-1.0053,2.7478,110.1997,30.00,1.00,1,10.0000,False,True,8.7941,10,33.28,36.784,in_progress,0.00
+
+0.7 1.4
+SIM_TRACE_LOG:0,34,-1.0350,2.8281,110.2373,30.00,1.00,1,8.0000,False,True,9.0340,10,33.28,36.85,in_progress,0.00
+
+1.0 1.4
+SIM_TRACE_LOG:0,35,-1.0756,2.9021,112.9929,0.00,4.00,0,11.0000,False,True,9.2819,10,33.28,36.914,in_progress,0.00
+
+1.2 1.3
+SIM_TRACE_LOG:0,36,-1.1181,2.9708,115.6559,20.00,1.50,2,13.0000,False,True,9.5210,10,33.28,36.984,in_progress,0.00
+
+1.2 1.3
+SIM_TRACE_LOG:0,37,-1.1687,3.0475,118.3437,0.00,4.00,0,13.0000,False,True,9.7943,11,33.28,37.066,in_progress,0.00
+
+1.4 1.3
+SIM_TRACE_LOG:0,38,-1.2336,3.1310,122.0355,20.00,1.50,2,15.0000,False,True,10.1106,11,33.28,37.12,in_progress,0.00
+
+1.3 1.4
+SIM_TRACE_LOG:0,39,-1.3019,3.2163,124.6110,-10.00,2.00,6,15.0000,False,True,10.4386,11,33.28,37.182,in_progress,0.00
+
+1.2 1.5
+SIM_TRACE_LOG:0,40,-1.3733,3.3034,126.4940,0.00,4.00,0,14.0000,False,False,10.7769,12,33.28,37.269,in_progress,0.00
+
+0.9 1.6
+SIM_TRACE_LOG:0,41,-1.4479,3.4106,125.7614,-10.00,2.00,6,10.0000,False,False,11.1636,12,33.28,37.319,in_progress,0.00
+
+0.6 1.7
+SIM_TRACE_LOG:0,42,-1.5103,3.5156,123.7494,30.00,1.00,1,8.0000,False,False,11.5241,13,33.28,37.375,in_progress,0.00
+
+0.4 1.8
+SIM_TRACE_LOG:0,43,-1.5774,3.6382,121.2371,10.00,2.00,3,6.0000,False,False,11.8768,13,33.28,37.446,in_progress,0.00
+
+0.4 1.7
+SIM_TRACE_LOG:0,44,-1.6321,3.7262,121.3424,-30.00,1.00,4,5.0000,False,False,12.1813,13,33.28,37.516,in_progress,0.00
+
+0.3 1.7
+SIM_TRACE_LOG:0,45,-1.6959,3.8228,122.3892,0.00,4.00,0,4.0000,False,False,12.5233,14,33.28,37.586,in_progress,0.00
+
+0.2 1.6
+SIM_TRACE_LOG:0,46,-1.7529,3.9095,123.0988,-10.00,2.00,6,3.0000,False,False,12.7559,14,33.28,37.653,in_progress,0.00
+
+0.0 1.5
+SIM_TRACE_LOG:0,47,-1.8173,4.0204,121.5994,0.00,4.00,0,2.0000,False,False,12.9865,14,33.28,37.714,in_progress,0.00
+
+0.0 1.4
+SIM_TRACE_LOG:0,48,-1.8660,4.1144,120.0254,0.00,4.00,0,1.0000,False,False,13.2778,15,33.28,37.797,in_progress,0.00
+
+0.0 1.5
+SIM_TRACE_LOG:0,49,-1.9413,4.2491,119.6280,-20.00,1.50,5,1.0000,True,False,13.6661,15,33.28,37.851,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=1, Total reward=1174.0, Steps=49, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:1,1,-1.5959,2.9481,131.4909,20.00,1.50,2,0.0000,False,True,0.4211,11,33.28,37.982,prepare,0.00
+
+2.1 0.0
+SIM_TRACE_LOG:1,2,-1.5958,2.9481,131.4795,10.00,2.00,3,21.0000,False,True,0.4207,11,33.28,38.056,in_progress,0.00
+
+2.1 0.1
+SIM_TRACE_LOG:1,3,-1.5998,2.9532,131.3377,-10.00,2.00,6,21.0000,False,True,0.4403,11,33.28,38.108,in_progress,0.00
+
+1.7 0.2
+SIM_TRACE_LOG:1,4,-1.6100,2.9703,130.4774,0.00,4.00,0,17.0000,False,True,0.4991,12,33.28,38.188,in_progress,0.00
+
+1.7 0.3
+SIM_TRACE_LOG:1,5,-1.6330,3.0059,129.1830,10.00,2.00,3,17.0000,False,True,0.6251,12,33.28,38.239,in_progress,0.00
+
+1.9 0.4
+SIM_TRACE_LOG:1,6,-1.6619,3.0392,129.3376,10.00,2.00,3,20.0000,False,True,0.7575,12,33.28,38.305,in_progress,0.00
+
+2.1 0.5
+SIM_TRACE_LOG:1,7,-1.7122,3.0861,131.3535,0.00,4.00,0,21.0000,False,True,0.9632,12,33.28,38.384,in_progress,0.00
+
+2.1 0.7
+SIM_TRACE_LOG:1,8,-1.7684,3.1341,133.6365,10.00,2.00,3,22.0000,False,True,1.1832,12,33.28,38.453,in_progress,0.00
+
+2.1 1.0
+SIM_TRACE_LOG:1,9,-1.8410,3.1921,136.3428,20.00,1.50,2,22.0000,False,True,1.4586,13,33.28,38.52,in_progress,0.00
+
+2.2 1.1
+SIM_TRACE_LOG:1,10,-1.9282,3.2478,140.5440,0.00,4.00,0,23.0000,False,True,1.7578,13,33.28,38.58,in_progress,0.00
+
+2.1 1.3
+SIM_TRACE_LOG:1,11,-2.0164,3.3021,143.4596,10.00,2.00,3,22.0000,False,True,2.0651,13,33.28,38.65,in_progress,0.00
+
+2.0 1.5
+SIM_TRACE_LOG:1,12,-2.1244,3.3655,146.1766,10.00,2.00,3,21.0000,False,True,2.4275,14,33.28,38.716,in_progress,0.00
+
+1.9 1.6
+SIM_TRACE_LOG:1,13,-2.2348,3.4204,149.4529,10.00,2.00,3,21.0000,False,True,2.8336,14,33.28,38.788,in_progress,0.00
+
+1.8 1.8
+SIM_TRACE_LOG:1,14,-2.3569,3.4725,152.9481,0.00,4.00,0,20.0000,False,True,3.2179,15,33.28,38.846000000000004,in_progress,0.00
+
+1.8 2.0
+SIM_TRACE_LOG:1,15,-2.4927,3.5200,157.4390,-30.00,1.00,4,20.0000,False,True,3.7787,15,33.28,38.9,in_progress,0.00
+
+1.6 2.1
+SIM_TRACE_LOG:1,16,-2.6150,3.5735,158.4932,30.00,1.00,1,18.0000,False,True,4.1795,16,33.28,38.986,in_progress,0.00
+
+1.4 2.3
+SIM_TRACE_LOG:1,17,-2.7190,3.6234,156.7801,30.00,1.00,1,16.0000,False,True,4.7018,16,33.28,39.04,in_progress,0.00
+
+1.4 2.2
+SIM_TRACE_LOG:1,18,-2.8207,3.6600,158.1477,30.00,1.00,1,16.0000,False,True,5.0238,16,33.28,39.109,in_progress,0.00
+
+1.3 2.1
+SIM_TRACE_LOG:1,19,-2.9034,3.6851,159.7685,-30.00,1.00,4,15.0000,False,True,5.2827,17,33.28,39.187,in_progress,0.00
+
+1.3 1.8
+SIM_TRACE_LOG:1,20,-2.9857,3.7066,161.5772,-20.00,1.50,5,15.0000,False,True,5.6315,17,33.28,39.246,in_progress,0.00
+
+1.1 1.7
+SIM_TRACE_LOG:1,21,-3.0573,3.7425,158.9777,-20.00,1.50,5,12.0000,False,True,5.8530,17,33.28,39.321,in_progress,0.00
+
+0.9 1.4
+SIM_TRACE_LOG:1,22,-3.1343,3.7965,154.0062,-20.00,1.50,5,11.0000,False,True,6.0944,18,33.28,39.393,in_progress,0.00
+
+0.8 1.3
+SIM_TRACE_LOG:1,23,-3.2181,3.8697,147.8556,0.00,4.00,0,9.0000,False,True,6.3593,18,33.28,39.447,in_progress,0.00
+
+0.7 1.3
+SIM_TRACE_LOG:1,24,-3.2899,3.9334,144.5982,-10.00,2.00,6,8.0000,False,True,6.5798,18,33.28,39.514,in_progress,0.00
+
+0.6 1.2
+SIM_TRACE_LOG:1,25,-3.3720,4.0032,142.5855,20.00,1.50,2,7.0000,False,True,6.7876,18,33.28,39.58,in_progress,0.00
+
+0.4 1.2
+SIM_TRACE_LOG:1,26,-3.4677,4.0867,140.8517,30.00,1.00,1,6.0000,False,True,7.0282,19,33.28,39.652,in_progress,0.00
+
+0.4 1.1
+SIM_TRACE_LOG:1,27,-3.5471,4.1483,141.3270,10.00,2.00,3,5.0000,False,True,7.2321,19,33.28,39.711,in_progress,0.00
+
+0.3 0.9
+SIM_TRACE_LOG:1,28,-3.6341,4.2055,143.4245,-10.00,2.00,6,3.0000,False,True,7.3040,19,33.28,39.775,in_progress,0.00
+
+0.1 0.7
+SIM_TRACE_LOG:1,29,-3.7285,4.2659,144.8805,30.00,1.00,1,2.0000,False,True,7.3040,19,33.28,39.845,in_progress,0.00
+
+0.0 0.5
+SIM_TRACE_LOG:1,30,-3.8198,4.3311,144.5444,-30.00,1.00,4,1.0000,False,False,7.3040,19,33.28,39.912,in_progress,0.00
+
+0.0 0.3
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:1,31,-3.8947,4.3795,145.3918,-30.00,1.00,4,0.0001,False,False,7.3040,19,33.28,39.95,in_progress,0.00
+
+0.0 0.1
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:1,32,-3.9665,4.4392,143.5645,-20.00,1.50,5,0.0001,True,False,7.3040,19,33.28,40.052,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=2, Total reward=432.0, Steps=81, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:2,1,-3.9364,2.9788,-98.2412,30.00,1.00,1,0.0000,False,True,0.4188,22,33.28,40.182,prepare,0.00
+
+1.5 0.0
+SIM_TRACE_LOG:2,2,-3.9364,2.9790,-98.2741,30.00,1.00,1,15.0000,False,True,0.4183,22,33.28,40.253,in_progress,0.00
+
+1.5 0.1
+SIM_TRACE_LOG:2,3,-3.9356,2.9699,-97.8095,20.00,1.50,2,15.0000,False,True,0.4456,22,33.28,40.319,in_progress,0.00
+
+2.0 0.2
+SIM_TRACE_LOG:2,4,-3.9288,2.9462,-95.3469,0.00,4.00,0,20.0000,False,True,0.5162,23,33.28,40.403,in_progress,0.00
+
+1.9 0.4
+SIM_TRACE_LOG:2,5,-3.9195,2.9050,-92.2777,20.00,1.50,2,19.0000,False,True,0.6390,23,33.28,40.438,in_progress,0.00
+
+1.9 0.4
+SIM_TRACE_LOG:2,6,-3.9051,2.8595,-88.6523,20.00,1.50,2,20.0000,False,True,0.7741,23,33.28,40.499,in_progress,0.00
+
+3.2 0.6
+SIM_TRACE_LOG:2,7,-3.8760,2.7931,-82.5015,10.00,2.00,3,32.0000,False,True,0.9795,23,33.28,40.587,in_progress,0.00
+
+3.1 0.8
+SIM_TRACE_LOG:2,8,-3.8438,2.7174,-77.6751,-20.00,1.50,5,32.0000,False,True,1.2091,23,33.28,40.646,in_progress,0.00
+
+1.7 0.9
+SIM_TRACE_LOG:2,9,-3.8213,2.6353,-76.5520,-20.00,1.50,5,18.0000,False,True,1.4571,24,33.28,40.719,in_progress,0.00
+
+1.4 1.1
+SIM_TRACE_LOG:2,10,-3.8140,2.5424,-79.7581,-30.00,1.00,4,15.0000,False,True,1.7368,24,33.28,40.788,in_progress,0.00
+
+1.2 1.2
+SIM_TRACE_LOG:2,11,-3.8229,2.4499,-85.9057,-30.00,1.00,4,13.0000,False,True,2.0236,24,33.28,40.847,in_progress,0.00
+
+1.0 1.3
+SIM_TRACE_LOG:2,12,-3.8377,2.3742,-90.5738,-30.00,1.00,4,11.0000,False,True,2.2484,24,33.28,40.913,in_progress,0.00
+
+0.9 1.3
+SIM_TRACE_LOG:2,13,-3.8570,2.2969,-94.6672,-20.00,1.50,5,10.0000,False,True,2.4771,25,33.28,40.988,in_progress,0.00
+
+0.8 1.2
+SIM_TRACE_LOG:2,14,-3.8869,2.2197,-99.8496,-20.00,1.50,5,9.0000,False,True,2.7037,25,33.28,41.049,in_progress,0.00
+
+0.6 1.2
+SIM_TRACE_LOG:2,15,-3.9310,2.1435,-106.5401,-30.00,1.00,4,7.0000,False,True,2.8994,25,33.28,41.109,in_progress,0.00
+
+0.5 1.0
+SIM_TRACE_LOG:2,16,-3.9801,2.0737,-112.5123,-20.00,1.50,5,6.0000,False,True,3.0587,25,33.28,41.168,in_progress,0.00
+
+0.4 1.0
+SIM_TRACE_LOG:2,17,-4.0479,2.0015,-120.1226,0.00,4.00,0,5.0000,False,True,3.2091,26,33.28,41.251,in_progress,0.00
+
+0.3 0.9
+SIM_TRACE_LOG:2,18,-4.1153,1.9271,-124.6646,20.00,1.50,2,4.0000,False,True,3.3660,26,33.28,41.32,in_progress,0.00
+
+0.2 0.9
+SIM_TRACE_LOG:2,19,-4.1690,1.8388,-124.1359,-30.00,1.00,4,3.0000,False,True,3.5744,26,33.28,41.374,in_progress,0.00
+
+0.1 0.8
+SIM_TRACE_LOG:2,20,-4.2166,1.7567,-122.6127,30.00,1.00,1,2.0000,False,True,3.6593,27,33.28,41.453,in_progress,0.00
+
+0.0 0.6
+SIM_TRACE_LOG:2,21,-4.2609,1.6839,-122.2112,20.00,1.50,2,1.0000,False,False,3.6593,27,33.28,41.52,in_progress,0.00
+
+0.0 0.4
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:2,22,-4.2917,1.6117,-119.4578,-10.00,2.00,6,0.0001,False,False,3.6593,27,33.28,41.578,in_progress,0.00
+
+0.0 0.3
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:2,23,-4.3266,1.5342,-117.8149,-10.00,2.00,6,0.0001,False,False,3.6593,27,33.28,41.65,in_progress,0.00
+
+0.0 0.1
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:2,24,-4.3863,1.4429,-120.0003,-10.00,2.00,6,0.0001,True,False,3.6593,27,33.28,41.723,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=3, Total reward=257.0, Steps=105, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:3,1,-2.9738,0.3815,-121.4830,-20.00,1.50,5,0.0000,False,True,0.4214,34,33.28,41.844,prepare,0.00
+
+2.8 0.0
+SIM_TRACE_LOG:3,2,-2.9737,0.3817,-121.5103,10.00,2.00,3,28.0000,False,True,0.4207,34,33.28,41.91,in_progress,0.00
+
+2.8 0.2
+SIM_TRACE_LOG:3,3,-2.9805,0.3692,-121.2684,20.00,1.50,2,28.0000,False,True,0.4634,35,33.28,41.988,in_progress,0.00
+
+4.2 0.3
+SIM_TRACE_LOG:3,4,-2.9885,0.3409,-119.4427,-30.00,1.00,4,42.0000,False,True,0.5485,35,33.28,42.04,in_progress,0.00
+
+3.3 0.4
+SIM_TRACE_LOG:3,5,-3.0055,0.3063,-118.8352,0.00,4.00,0,34.0000,False,True,0.6639,35,33.28,42.129,in_progress,0.00
+
+2.3 0.5
+SIM_TRACE_LOG:3,6,-3.0373,0.2612,-120.0838,10.00,2.00,3,24.0000,False,True,0.8293,35,33.28,42.166,in_progress,0.00
+
+3.6 0.6
+SIM_TRACE_LOG:3,7,-3.0614,0.2012,-118.1431,0.00,4.00,0,37.0000,False,True,1.0222,35,33.28,42.246,in_progress,0.00
+
+3.8 0.8
+SIM_TRACE_LOG:3,8,-3.0871,0.1246,-115.1743,-30.00,1.00,4,39.0000,False,True,1.2599,35,33.28,42.297,in_progress,0.00
+
+3.4 1.0
+SIM_TRACE_LOG:3,9,-3.1210,0.0444,-113.4311,-10.00,2.00,6,35.0000,False,True,1.5195,36,33.28,42.389,in_progress,0.00
+
+2.6 1.1
+SIM_TRACE_LOG:3,10,-3.1672,-0.0344,-115.8216,0.00,4.00,0,27.0000,False,True,1.7938,36,33.28,42.445,in_progress,0.00
+
+2.4 1.3
+SIM_TRACE_LOG:3,11,-3.2200,-0.1202,-117.9877,-30.00,1.00,4,25.0000,False,True,2.1059,36,33.28,42.515,in_progress,0.00
+
+2.3 1.4
+SIM_TRACE_LOG:3,12,-3.2768,-0.2141,-118.7746,-20.00,1.50,5,24.0000,False,True,2.4342,37,33.28,42.571,in_progress,0.00
+
+1.7 1.5
+SIM_TRACE_LOG:3,13,-3.3365,-0.2910,-122.0850,-30.00,1.00,4,19.0000,False,True,2.7204,37,33.28,42.655,in_progress,0.00
+
+1.3 1.5
+SIM_TRACE_LOG:3,14,-3.4022,-0.3610,-126.0969,-10.00,2.00,6,15.0000,False,True,2.9900,37,33.28,42.72,in_progress,0.00
+
+1.1 1.5
+SIM_TRACE_LOG:3,15,-3.4736,-0.4249,-130.3961,-10.00,2.00,6,12.0000,False,True,3.2474,38,33.28,42.773,in_progress,0.00
+
+0.8 1.4
+SIM_TRACE_LOG:3,16,-3.5570,-0.4872,-135.4035,-30.00,1.00,4,10.0000,False,True,3.5133,38,33.28,42.84,in_progress,0.00
+
+0.6 1.3
+SIM_TRACE_LOG:3,17,-3.6432,-0.5393,-140.8435,0.00,4.00,0,8.0000,False,True,3.7381,38,33.28,42.914,in_progress,0.00
+
+0.5 1.3
+SIM_TRACE_LOG:3,18,-3.7325,-0.5907,-144.1747,-10.00,2.00,6,6.0000,False,True,3.9747,38,33.28,42.968,in_progress,0.00
+
+0.4 1.3
+SIM_TRACE_LOG:3,19,-3.8375,-0.6546,-146.1947,0.00,4.00,0,5.0000,False,True,4.2629,39,33.28,43.038,in_progress,0.00
+
+0.3 1.3
+SIM_TRACE_LOG:3,20,-3.9364,-0.7094,-148.1633,30.00,1.00,1,4.0000,False,True,4.5187,39,33.28,43.122,in_progress,0.00
+
+0.2 1.2
+SIM_TRACE_LOG:3,21,-4.0409,-0.7708,-149.6723,-30.00,1.00,4,3.0000,False,False,4.7537,39,33.28,43.186,in_progress,0.00
+
+0.1 1.2
+SIM_TRACE_LOG:3,22,-4.1243,-0.8239,-148.8774,20.00,1.50,2,2.0000,False,False,4.9832,39,33.28,43.245,in_progress,0.00
+
+0.0 1.3
+SIM_TRACE_LOG:3,23,-4.2170,-0.8899,-146.9786,-10.00,2.00,6,1.0000,False,False,5.2584,40,33.28,43.31,in_progress,0.00
+
+0.0 1.2
+SIM_TRACE_LOG:3,24,-4.2985,-0.9496,-145.8691,-10.00,2.00,6,1.0000,True,False,5.4646,40,33.28,43.388,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=4, Total reward=429.0, Steps=129, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:4,1,-3.8956,-2.7697,-90.5059,20.00,1.50,2,0.0000,False,True,0.4178,45,33.28,43.514,prepare,0.00
+
+1.2 0.0
+SIM_TRACE_LOG:4,2,-3.8956,-2.7695,-90.4962,20.00,1.50,2,12.0000,False,True,0.4170,45,33.28,43.59,in_progress,0.00
+
+1.2 0.1
+SIM_TRACE_LOG:4,3,-3.8976,-2.7766,-91.0371,10.00,2.00,3,12.0000,False,True,0.4375,45,33.28,43.645,in_progress,0.00
+
+1.4 0.2
+SIM_TRACE_LOG:4,4,-3.8941,-2.7974,-90.1034,-10.00,2.00,6,14.0000,False,True,0.5010,46,33.28,43.714,in_progress,0.00
+
+1.1 0.3
+SIM_TRACE_LOG:4,5,-3.8948,-2.8299,-90.2604,-30.00,1.00,4,12.0000,False,True,0.5974,46,33.28,43.759,in_progress,0.00
+
+0.8 0.4
+SIM_TRACE_LOG:4,6,-3.9100,-2.8796,-93.6766,-20.00,1.50,5,9.0000,False,True,0.7397,46,33.28,43.851,in_progress,0.00
+
+0.7 0.5
+SIM_TRACE_LOG:4,7,-3.9377,-2.9325,-99.1530,-10.00,2.00,6,7.0000,False,True,0.8870,46,33.28,43.907,in_progress,0.00
+
+0.6 0.6
+SIM_TRACE_LOG:4,8,-3.9711,-2.9982,-104.1922,20.00,1.50,2,7.0000,False,True,0.9957,46,33.28,43.985,in_progress,0.00
+
+0.6 0.7
+SIM_TRACE_LOG:4,9,-4.0032,-3.0772,-106.7993,-20.00,1.50,5,6.0000,False,True,1.1899,46,33.28,44.041,in_progress,0.00
+
+0.5 0.8
+SIM_TRACE_LOG:4,10,-4.0306,-3.1575,-107.5772,-20.00,1.50,5,6.0000,False,True,1.3925,47,33.28,44.12,in_progress,0.00
+
+0.3 0.9
+SIM_TRACE_LOG:4,11,-4.0790,-3.2442,-111.8737,0.00,4.00,0,4.0000,False,True,1.5929,47,33.28,44.185,in_progress,0.00
+
+0.2 0.9
+SIM_TRACE_LOG:4,12,-4.1288,-3.3211,-115.8075,-20.00,1.50,5,3.0000,False,True,1.7643,47,33.28,44.25,in_progress,0.00
+
+0.1 0.8
+SIM_TRACE_LOG:4,13,-4.1945,-3.4097,-120.1434,-20.00,1.50,5,2.0000,False,False,1.8417,47,33.28,44.314,in_progress,0.00
+
+0.0 0.7
+SIM_TRACE_LOG:4,14,-4.2615,-3.4909,-123.7352,-20.00,1.50,5,1.0000,False,False,1.8417,47,33.28,44.384,in_progress,0.00
+
+0.0 0.4
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:4,15,-4.3309,-3.5652,-127.2088,20.00,1.50,2,0.0001,False,False,1.8417,47,33.28,44.442,in_progress,0.00
+
+0.0 0.2
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:4,16,-4.3970,-3.6486,-127.6849,30.00,1.00,1,0.0001,True,False,1.8418,47,33.28,44.518,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=5, Total reward=95.0, Steps=145, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:5,1,-1.9471,-2.6350,80.7821,-20.00,1.50,5,0.0000,False,True,0.4145,56,33.28,44.658,prepare,0.00
+
+2.6 0.0
+SIM_TRACE_LOG:5,2,-1.9470,-2.6351,80.7407,0.00,4.00,0,26.0000,False,True,0.4141,56,33.28,44.712,in_progress,0.00
+
+2.6 0.1
+SIM_TRACE_LOG:5,3,-1.9472,-2.6270,81.1156,30.00,1.00,1,26.0000,False,True,0.4386,56,33.28,44.778,in_progress,0.00
+
+1.3 0.2
+SIM_TRACE_LOG:5,4,-1.9573,-2.6069,84.0802,0.00,4.00,0,13.0000,False,True,0.4996,57,33.28,44.843,in_progress,0.00
+
+1.5 0.3
+SIM_TRACE_LOG:5,5,-1.9716,-2.5675,88.2859,-20.00,1.50,5,15.0000,False,True,0.6187,57,33.28,44.909,in_progress,0.00
+
+2.1 0.4
+SIM_TRACE_LOG:5,6,-1.9728,-2.5188,89.3781,0.00,4.00,0,21.0000,False,True,0.7652,57,33.28,44.983,in_progress,0.00
+
+2.3 0.5
+SIM_TRACE_LOG:5,7,-1.9669,-2.4581,88.3373,0.00,4.00,0,23.0000,False,True,0.9460,57,33.28,45.05,in_progress,0.00
+
+2.0 0.7
+SIM_TRACE_LOG:5,8,-1.9661,-2.3830,88.5906,-20.00,1.50,5,21.0000,False,True,1.1711,57,33.28,45.109,in_progress,0.00
+
+2.1 0.9
+SIM_TRACE_LOG:5,9,-1.9584,-2.3004,87.3393,-10.00,2.00,6,22.0000,False,True,1.4172,58,33.28,45.187,in_progress,0.00
+
+2.2 1.1
+SIM_TRACE_LOG:5,10,-1.9356,-2.2036,83.4383,-20.00,1.50,5,23.0000,False,True,1.7028,58,33.28,45.256,in_progress,0.00
+
+2.2 1.2
+SIM_TRACE_LOG:5,11,-1.9043,-2.1064,79.2341,30.00,1.00,1,23.0000,False,True,1.9985,58,33.28,45.322,in_progress,0.00
+
+2.1 1.3
+SIM_TRACE_LOG:5,12,-1.8757,-2.0162,76.4015,-30.00,1.00,4,22.0000,False,True,2.2666,58,33.28,45.386,in_progress,0.00
+
+1.9 1.4
+SIM_TRACE_LOG:5,13,-1.8535,-1.9264,76.2881,-30.00,1.00,4,21.0000,False,True,2.5343,59,33.28,45.46,in_progress,0.00
+
+2.0 1.4
+SIM_TRACE_LOG:5,14,-1.8310,-1.8605,74.9197,-20.00,1.50,5,21.0000,False,True,2.7866,59,33.28,45.523,in_progress,0.00
+
+2.0 1.3
+SIM_TRACE_LOG:5,15,-1.7977,-1.7861,72.0497,10.00,2.00,3,21.0000,False,True,3.0173,59,33.28,45.578,in_progress,0.00
+
+1.9 1.3
+SIM_TRACE_LOG:5,16,-1.7543,-1.6960,69.2999,-30.00,1.00,4,20.0000,False,True,3.2974,60,33.28,45.652,in_progress,0.00
+
+1.8 1.3
+SIM_TRACE_LOG:5,17,-1.7225,-1.6179,68.9510,10.00,2.00,3,19.0000,False,True,3.5389,60,33.28,45.708,in_progress,0.00
+
+1.6 1.4
+SIM_TRACE_LOG:5,18,-1.6880,-1.5277,69.1237,0.00,4.00,0,18.0000,False,True,3.9733,60,33.28,45.777,in_progress,0.00
+
+1.4 1.5
+SIM_TRACE_LOG:5,19,-1.6589,-1.4197,71.4629,-20.00,1.50,5,16.0000,False,True,4.3093,61,33.28,45.855,in_progress,0.00
+
+1.4 1.8
+SIM_TRACE_LOG:5,20,-1.6221,-1.3230,70.6915,20.00,1.50,2,16.0000,False,True,4.8273,61,33.28,45.911,in_progress,0.00
+
+1.3 1.8
+SIM_TRACE_LOG:5,21,-1.5849,-1.2222,70.3677,30.00,1.00,1,15.0000,False,True,5.1462,62,33.28,45.983,in_progress,0.00
+
+1.2 2.1
+SIM_TRACE_LOG:5,22,-1.5576,-1.1276,71.5971,10.00,2.00,3,14.0000,False,True,5.6154,62,33.28,46.053,in_progress,0.00
+
+1.0 1.9
+SIM_TRACE_LOG:5,23,-1.5370,-1.0161,74.9002,-20.00,1.50,5,12.0000,False,True,5.9004,62,33.28,46.12,in_progress,0.00
+
+0.9 1.8
+SIM_TRACE_LOG:5,24,-1.5197,-0.9135,77.0458,-30.00,1.00,4,11.0000,False,True,6.1592,63,33.28,46.186,in_progress,0.00
+
+0.8 1.6
+SIM_TRACE_LOG:5,25,-1.4931,-0.8195,76.0293,0.00,4.00,0,10.0000,False,True,6.4615,63,33.28,46.248,in_progress,0.00
+
+0.7 1.5
+SIM_TRACE_LOG:5,26,-1.4638,-0.7218,75.0107,-20.00,1.50,5,9.0000,False,True,6.6974,63,33.28,46.313,in_progress,0.00
+
+0.6 1.4
+SIM_TRACE_LOG:5,27,-1.4265,-0.6038,73.9689,30.00,1.00,1,8.0000,False,True,6.9869,64,33.28,46.384,in_progress,0.00
+
+0.5 1.3
+SIM_TRACE_LOG:5,28,-1.3952,-0.5167,72.5550,10.00,2.00,3,7.0000,False,True,7.2101,64,33.28,46.459,in_progress,0.00
+
+0.4 1.1
+SIM_TRACE_LOG:5,29,-1.3664,-0.4094,73.6111,10.00,2.00,3,5.0000,False,True,7.3072,64,33.28,46.526,in_progress,0.00
+
+0.3 0.9
+SIM_TRACE_LOG:5,30,-1.3521,-0.3001,77.2089,-10.00,2.00,6,4.0000,False,True,7.3265,64,33.28,46.576,in_progress,0.00
+
+0.2 0.7
+SIM_TRACE_LOG:5,31,-1.3344,-0.1906,78.5851,30.00,1.00,1,2.0000,False,True,7.4459,64,33.28,46.647,in_progress,0.00
+
+0.0 0.6
+SIM_TRACE_LOG:5,32,-1.3087,-0.0746,78.1030,-10.00,2.00,6,1.0000,False,False,7.5931,64,33.28,46.714,in_progress,0.00
+
+0.0 0.5
+SIM_TRACE_LOG:5,33,-1.2812,0.0403,77.2396,0.00,4.00,0,1.0000,False,False,7.7449,64,33.28,46.778,in_progress,0.00
+
+0.0 0.6
+SIM_TRACE_LOG:5,34,-1.2460,0.1565,75.5073,-10.00,2.00,6,1.0000,True,False,7.9200,65,33.28,46.841,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=6, Total reward=487.0, Steps=179, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:6,1,-0.3638,-0.9003,-36.7788,-20.00,1.50,5,0.0000,False,True,0.4128,67,33.28,46.981,prepare,0.00
+
+1.1 0.0
+SIM_TRACE_LOG:6,2,-0.3640,-0.9001,-36.8009,0.00,4.00,0,11.0000,False,True,0.4119,67,33.28,47.047,in_progress,0.00
+
+1.1 0.2
+SIM_TRACE_LOG:6,3,-0.3559,-0.9072,-36.9865,20.00,1.50,2,11.0000,False,True,0.4439,67,33.28,47.121,in_progress,0.00
+
+1.1 0.2
+SIM_TRACE_LOG:6,4,-0.3383,-0.9122,-35.3388,-10.00,2.00,6,11.0000,False,True,0.4899,68,33.28,47.182,in_progress,0.00
+
+0.9 0.3
+SIM_TRACE_LOG:6,5,-0.3073,-0.9286,-34.3615,30.00,1.00,1,9.0000,False,True,0.5886,68,33.28,47.243,in_progress,0.00
+
+0.9 0.4
+SIM_TRACE_LOG:6,6,-0.2746,-0.9497,-34.1795,-20.00,1.50,5,10.0000,False,True,0.7010,68,33.28,47.313,in_progress,0.00
+
+0.8 0.4
+SIM_TRACE_LOG:6,7,-0.2272,-0.9705,-31.9706,-20.00,1.50,5,8.0000,False,True,0.8417,68,33.28,47.382,in_progress,0.00
+
+1.0 0.5
+SIM_TRACE_LOG:6,8,-0.1771,-1.0159,-34.7190,-10.00,2.00,6,10.0000,False,True,0.9870,68,33.28,47.449,in_progress,0.00
+
+1.0 0.7
+SIM_TRACE_LOG:6,9,-0.1309,-1.0665,-38.1531,-30.00,1.00,4,11.0000,False,True,1.1880,68,33.28,47.518,in_progress,0.00
+
+0.9 0.8
+SIM_TRACE_LOG:6,10,-0.0773,-1.1280,-41.4007,10.00,2.00,3,10.0000,False,True,1.4284,69,33.28,47.582,in_progress,0.00
+
+0.8 1.0
+SIM_TRACE_LOG:6,11,-0.0207,-1.1832,-42.1864,-30.00,1.00,4,9.0000,False,True,1.6569,69,33.28,47.618,in_progress,0.00
+
+0.6 1.0
+SIM_TRACE_LOG:6,12,0.0431,-1.2350,-40.9438,-30.00,1.00,4,7.0000,False,True,1.8415,69,33.28,47.694,in_progress,0.00
+
+0.6 0.9
+SIM_TRACE_LOG:6,13,0.0958,-1.2832,-41.3715,0.00,4.00,0,7.0000,False,True,1.9116,69,33.28,47.783,in_progress,0.00
+
+0.5 1.0
+SIM_TRACE_LOG:6,14,0.1572,-1.3471,-42.8342,30.00,1.00,1,6.0000,False,True,2.1416,69,33.28,47.855,in_progress,0.00
+
+0.4 0.9
+SIM_TRACE_LOG:6,15,0.2231,-1.4046,-42.9613,-20.00,1.50,5,5.0000,False,True,2.3558,70,33.28,47.919,in_progress,0.00
+
+0.3 0.9
+SIM_TRACE_LOG:6,16,0.2837,-1.4634,-43.5346,30.00,1.00,1,4.0000,False,True,2.5704,70,33.28,47.984,in_progress,0.00
+
+0.3 0.9
+SIM_TRACE_LOG:6,17,0.3461,-1.5246,-43.9125,0.00,4.00,0,4.0000,False,True,2.7499,70,33.28,48.049,in_progress,0.00
+
+0.2 0.8
+SIM_TRACE_LOG:6,18,0.4129,-1.5787,-42.4561,-20.00,1.50,5,3.0000,False,False,2.7499,70,33.28,48.121,in_progress,0.00
+
+0.1 0.7
+SIM_TRACE_LOG:6,19,0.4844,-1.6517,-43.5686,-20.00,1.50,5,1.0000,False,False,2.8689,70,33.28,48.173,in_progress,0.00
+
+0.0 0.8
+SIM_TRACE_LOG:6,20,0.5495,-1.7334,-46.6547,-30.00,1.00,4,1.0000,False,False,3.1118,70,33.28,48.246,in_progress,0.00
+
+0.0 0.8
+SIM_TRACE_LOG:6,21,0.6041,-1.8192,-50.8217,-20.00,1.50,5,1.0000,False,False,3.3676,71,33.28,48.315,in_progress,0.00
+
+0.0 0.9
+SIM_TRACE_LOG:6,22,0.6409,-1.9049,-56.4346,20.00,1.50,2,1.0000,True,False,3.6238,71,33.28,48.374,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=7, Total reward=140.0, Steps=201, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:7,1,0.0293,-3.9224,-36.3306,-30.00,1.00,4,0.0000,False,True,0.3736,78,33.28,48.501,prepare,0.00
+
+0.8 0.0
+SIM_TRACE_LOG:7,2,0.0290,-3.9221,-36.2725,30.00,1.00,1,8.0000,False,True,0.3728,78,33.28,48.574,in_progress,0.00
+
+0.8 0.1
+SIM_TRACE_LOG:7,3,0.0381,-3.9254,-35.7300,-20.00,1.50,5,8.0000,False,True,0.4012,78,33.28,48.654,in_progress,0.00
+
+1.0 0.2
+SIM_TRACE_LOG:7,4,0.0587,-3.9332,-34.3456,0.00,4.00,0,10.0000,False,True,0.4657,78,33.28,48.72,in_progress,0.00
+
+0.7 0.3
+SIM_TRACE_LOG:7,5,0.0823,-3.9554,-35.6644,-10.00,2.00,6,7.0000,False,True,0.5451,79,33.28,48.781,in_progress,0.00
+
+0.6 0.4
+SIM_TRACE_LOG:7,6,0.1185,-3.9892,-37.3323,-10.00,2.00,6,7.0000,False,True,0.6671,79,33.28,48.865,in_progress,0.00
+
+0.5 0.5
+SIM_TRACE_LOG:7,7,0.1652,-4.0375,-39.5796,-10.00,2.00,6,6.0000,False,True,0.8265,79,33.28,48.929,in_progress,0.00
+
+0.5 0.5
+SIM_TRACE_LOG:7,8,0.2161,-4.0931,-41.9424,20.00,1.50,2,5.0000,False,True,0.9258,79,33.28,48.984,in_progress,0.00
+
+0.4 0.5
+SIM_TRACE_LOG:7,9,0.2802,-4.1573,-42.9866,0.00,4.00,0,4.0000,False,True,0.9845,79,33.28,49.052,in_progress,0.00
+
+0.3 0.6
+SIM_TRACE_LOG:7,10,0.3605,-4.2204,-41.2489,0.00,4.00,0,4.0000,False,True,1.1954,79,33.28,49.119,in_progress,0.00
+
+0.2 0.8
+SIM_TRACE_LOG:7,11,0.4543,-4.2902,-39.2926,-30.00,1.00,4,3.0000,False,True,1.4437,80,33.28,49.184,in_progress,0.00
+
+0.1 0.9
+SIM_TRACE_LOG:7,12,0.5453,-4.3577,-36.9795,10.00,2.00,3,2.0000,False,False,1.6842,80,33.28,49.256,in_progress,0.00
+
+0.0 0.9
+SIM_TRACE_LOG:7,13,0.6440,-4.4257,-35.5044,20.00,1.50,2,1.0000,False,False,1.8356,80,33.28,49.305,in_progress,0.00
+
+0.0 0.8
+SIM_TRACE_LOG:7,14,0.7384,-4.4776,-32.8957,30.00,1.00,1,1.0000,False,False,1.8356,80,33.28,49.38,in_progress,0.00
+
+0.0 0.7
+SIM_TRACE_LOG:7,15,0.8286,-4.5197,-29.9221,10.00,2.00,3,1.0000,True,False,1.9200,80,33.28,49.449,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=8, Total reward=67.0, Steps=216, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:8,1,2.8715,-3.8890,-12.4192,10.00,2.00,3,0.0000,False,True,0.4216,89,33.28,49.582,prepare,0.00
+
+1.3 0.0
+SIM_TRACE_LOG:8,2,2.8712,-3.8888,-12.3750,-10.00,2.00,6,13.0000,False,True,0.4207,89,33.28,49.654,in_progress,0.00
+
+1.3 0.1
+SIM_TRACE_LOG:8,3,2.8801,-3.8911,-12.4432,30.00,1.00,1,13.0000,False,True,0.4483,89,33.28,49.715,in_progress,0.00
+
+1.5 0.2
+SIM_TRACE_LOG:8,4,2.8988,-3.8893,-11.3595,-30.00,1.00,4,15.0000,False,True,0.5020,90,33.28,49.782,in_progress,0.00
+
+1.5 0.3
+SIM_TRACE_LOG:8,5,2.9267,-3.8881,-9.6720,-30.00,1.00,4,15.0000,False,True,0.5831,90,33.28,49.848,in_progress,0.00
+
+1.1 0.3
+SIM_TRACE_LOG:8,6,2.9622,-3.9032,-11.8204,-10.00,2.00,6,11.0000,False,True,0.6972,90,33.28,49.919,in_progress,0.00
+
+1.0 0.4
+SIM_TRACE_LOG:8,7,3.0080,-3.9241,-14.4057,-10.00,2.00,6,11.0000,False,True,0.8450,90,33.28,49.979,in_progress,0.00
+
+1.0 0.6
+SIM_TRACE_LOG:8,8,3.0700,-3.9454,-15.6145,30.00,1.00,1,11.0000,False,True,1.0277,90,33.28,50.055,in_progress,0.00
+
+1.0 0.7
+SIM_TRACE_LOG:8,9,3.1360,-3.9640,-15.8719,30.00,1.00,1,10.0000,False,True,1.2247,90,33.28,50.12,in_progress,0.00
+
+1.1 0.9
+SIM_TRACE_LOG:8,10,3.2108,-3.9702,-12.6244,0.00,4.00,0,11.0000,False,True,1.4489,91,33.28,50.177,in_progress,0.00
+
+1.0 1.0
+SIM_TRACE_LOG:8,11,3.2910,-3.9747,-9.9954,-10.00,2.00,6,11.0000,False,True,1.6895,91,33.28,50.242,in_progress,0.00
+
+0.8 1.1
+SIM_TRACE_LOG:8,12,3.3830,-3.9976,-11.3842,30.00,1.00,1,9.0000,False,True,1.9219,91,33.28,50.307,in_progress,0.00
+
+0.6 1.1
+SIM_TRACE_LOG:8,13,3.4711,-4.0246,-13.5364,0.00,4.00,0,8.0000,False,True,2.1668,91,33.28,50.38,in_progress,0.00
+
+0.6 1.2
+SIM_TRACE_LOG:8,14,3.5647,-4.0515,-14.6192,-30.00,1.00,4,7.0000,False,True,2.4280,92,33.28,50.443,in_progress,0.00
+
+0.5 1.2
+SIM_TRACE_LOG:8,15,3.6445,-4.0769,-15.1166,-20.00,1.50,5,6.0000,False,True,2.6496,92,33.28,50.511,in_progress,0.00
+
+0.3 1.0
+SIM_TRACE_LOG:8,16,3.7242,-4.1180,-19.2956,30.00,1.00,1,4.0000,False,True,2.7241,92,33.28,50.579,in_progress,0.00
+
+0.2 0.8
+SIM_TRACE_LOG:8,17,3.8152,-4.1649,-22.2831,-10.00,2.00,6,3.0000,False,True,2.7241,92,33.28,50.653,in_progress,0.00
+
+0.2 0.6
+SIM_TRACE_LOG:8,18,3.8856,-4.1955,-22.7038,-30.00,1.00,4,2.0000,False,True,2.7241,92,33.28,50.707,in_progress,0.00
+
+0.1 0.3
+SIM_TRACE_LOG:8,19,3.9564,-4.2402,-25.7196,-30.00,1.00,4,1.0000,False,False,2.7496,92,33.28,50.786,in_progress,0.00
+
+0.0 0.2
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:8,20,4.0225,-4.2890,-29.1353,20.00,1.50,2,0.0001,False,False,2.8082,92,33.28,50.866,in_progress,0.00
+
+0.0 0.1
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:8,21,4.0880,-4.3418,-32.3892,20.00,1.50,2,0.0001,False,False,2.8579,92,33.28,50.908,in_progress,0.00
+
+0.0 0.2
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:8,22,4.1649,-4.3847,-31.2748,-30.00,1.00,4,0.0001,True,False,2.9533,92,33.28,50.986,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=9, Total reward=161.0, Steps=238, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:9,1,3.0522,-1.7177,163.7988,-30.00,1.00,4,0.0000,False,True,0.4211,100,33.28,51.094,prepare,0.00
+
+1.8 0.0
+SIM_TRACE_LOG:9,2,3.0523,-1.7178,163.7847,-30.00,1.00,4,18.0000,False,True,0.4207,100,33.28,51.177,in_progress,0.00
+
+1.8 0.2
+SIM_TRACE_LOG:9,3,3.0417,-1.7108,162.9411,10.00,2.00,3,18.0000,False,True,0.4573,101,33.28,51.245,in_progress,0.00
+
+1.8 0.2
+SIM_TRACE_LOG:9,4,3.0273,-1.7025,162.1151,0.00,4.00,0,18.0000,False,True,0.5059,101,33.28,51.318,in_progress,0.00
+
+1.9 0.4
+SIM_TRACE_LOG:9,5,2.9812,-1.6864,161.7434,20.00,1.50,2,20.0000,False,True,0.6521,101,33.28,51.379,in_progress,0.00
+
+1.4 0.4
+SIM_TRACE_LOG:9,6,2.9470,-1.6813,163.0573,-20.00,1.50,5,15.0000,False,True,0.7553,101,33.28,51.455,in_progress,0.00
+
+1.5 0.5
+SIM_TRACE_LOG:9,7,2.8781,-1.6666,164.2980,0.00,4.00,0,15.0000,False,True,0.9663,101,33.28,51.518,in_progress,0.00
+
+1.8 0.7
+SIM_TRACE_LOG:9,8,2.8234,-1.6460,163.1650,-10.00,2.00,6,19.0000,False,True,1.1421,101,33.28,51.582,in_progress,0.00
+
+2.4 0.9
+SIM_TRACE_LOG:9,9,2.7425,-1.6015,158.9203,20.00,1.50,2,25.0000,False,True,1.4151,102,33.28,51.644,in_progress,0.00
+
+2.1 1.0
+SIM_TRACE_LOG:9,10,2.6609,-1.5602,156.8928,20.00,1.50,2,22.0000,False,True,1.6870,102,33.28,51.724,in_progress,0.00
+
+1.4 1.3
+SIM_TRACE_LOG:9,11,2.5497,-1.5244,159.1432,-20.00,1.50,5,15.0000,False,True,2.0521,102,33.28,51.782,in_progress,0.00
+
+1.2 1.3
+SIM_TRACE_LOG:9,12,2.4608,-1.4999,161.0346,-20.00,1.50,5,14.0000,False,True,2.3178,103,33.28,51.849,in_progress,0.00
+
+1.4 1.5
+SIM_TRACE_LOG:9,13,2.3562,-1.4579,159.7808,-20.00,1.50,5,15.0000,False,True,2.6516,103,33.28,51.907,in_progress,0.00
+
+1.6 1.5
+SIM_TRACE_LOG:9,14,2.2676,-1.4113,156.9743,-20.00,1.50,5,18.0000,False,True,2.9298,103,33.28,51.989,in_progress,0.00
+
+1.9 1.6
+SIM_TRACE_LOG:9,15,2.1736,-1.3527,153.4035,10.00,2.00,3,21.0000,False,True,3.2593,104,33.28,52.061,in_progress,0.00
+
+1.7 1.6
+SIM_TRACE_LOG:9,16,2.0632,-1.2876,151.7773,30.00,1.00,1,18.0000,False,True,3.6218,104,33.28,52.11,in_progress,0.00
+
+1.2 1.6
+SIM_TRACE_LOG:9,17,1.9808,-1.2475,152.3631,0.00,4.00,0,14.0000,False,True,3.8714,104,33.28,52.186,in_progress,0.00
+
+1.1 1.5
+SIM_TRACE_LOG:9,18,1.8781,-1.1981,153.0111,0.00,4.00,0,13.0000,False,True,4.1927,105,33.28,52.258,in_progress,0.00
+
+1.2 1.6
+SIM_TRACE_LOG:9,19,1.7648,-1.1329,151.5056,10.00,2.00,3,14.0000,False,True,4.5520,105,33.28,52.31,in_progress,0.00
+
+0.9 1.7
+SIM_TRACE_LOG:9,20,1.6483,-1.0766,152.6729,0.00,4.00,0,10.0000,False,True,4.9128,105,33.28,52.381,in_progress,0.00
+
+0.7 1.7
+SIM_TRACE_LOG:9,21,1.5083,-1.0106,153.6075,30.00,1.00,1,9.0000,False,True,5.3430,106,33.28,52.456,in_progress,0.00
+
+0.5 1.9
+SIM_TRACE_LOG:9,22,1.3673,-0.9465,154.5578,-10.00,2.00,6,7.0000,False,True,5.7554,106,33.28,52.516,in_progress,0.00
+
+0.4 1.9
+SIM_TRACE_LOG:9,23,1.2514,-0.8985,155.7603,20.00,1.50,2,6.0000,False,True,6.0943,107,33.28,52.581,in_progress,0.00
+
+0.3 1.9
+SIM_TRACE_LOG:9,24,1.1326,-0.8430,155.5147,30.00,1.00,1,5.0000,False,False,6.4452,107,33.28,52.669,in_progress,0.00
+
+0.1 1.9
+SIM_TRACE_LOG:9,25,1.0162,-0.7994,157.2051,30.00,1.00,1,3.0000,False,False,6.7740,107,33.28,52.715,in_progress,0.00
+
+0.0 1.6
+SIM_TRACE_LOG:9,26,0.9414,-0.7797,159.6787,0.00,4.00,0,2.0000,False,False,6.9663,108,33.28,52.784,in_progress,0.00
+
+0.0 1.5
+SIM_TRACE_LOG:9,27,0.8331,-0.7546,162.5518,-30.00,1.00,4,1.0000,False,False,7.2374,108,33.28,52.853,in_progress,0.00
+
+0.0 1.4
+SIM_TRACE_LOG:9,28,0.7338,-0.7234,163.3840,-30.00,1.00,4,1.0000,True,False,7.5104,108,33.28,52.909,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=10, Total reward=356.0, Steps=266, Training iteration=0
+Reset agent
+Reset agent finished
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+4.8 0.2
+5.2 0.4
+5.1 0.5
+5.0 0.6
+4.8 0.8
+4.6 1.0
+4.4 1.3
+4.3 1.5
+4.0 1.7
+3.9 2.0
+3.7 2.1
+3.5 2.4
+3.3 2.6
+3.1 2.8
+2.8 3.0
+2.6 3.2
+2.3 3.3
+2.1 3.4
+1.9 3.5
+1.7 3.6
+1.5 3.6
+1.2 3.7
+1.0 3.5
+0.8 3.7
+0.5 3.4
+0.3 3.1
+0.1 3.0
+0.0 2.7
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=962.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 962.0
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.9 0.2
+5.7 0.3
+5.5 0.4
+5.5 0.5
+5.3 0.8
+5.2 1.0
+5.2 1.2
+5.1 1.4
+4.9 1.7
+4.9 1.9
+4.7 2.1
+4.6 2.3
+4.4 2.6
+4.2 2.8
+4.0 3.0
+3.8 3.1
+3.6 3.3
+3.3 3.4
+3.1 3.4
+2.9 3.5
+2.6 3.6
+2.4 3.6
+2.2 3.5
+1.9 3.7
+1.7 3.8
+1.4 4.6
+1.2 4.7
+0.9 5.0
+0.7 4.7
+0.5 4.2
+0.2 2.9
+0.0 2.3
+0.0 1.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1268.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1268.0
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.4 0.2
+5.5 0.3
+5.5 0.4
+5.5 0.5
+5.4 0.7
+5.3 1.0
+5.2 1.2
+5.1 1.5
+4.9 1.7
+4.7 2.0
+4.6 2.2
+4.4 2.4
+4.1 2.7
+3.9 2.9
+3.7 3.0
+3.5 3.2
+3.3 3.5
+3.1 3.4
+2.9 3.4
+2.7 3.5
+2.4 3.6
+2.2 3.5
+2.0 3.5
+1.7 3.6
+1.5 3.7
+1.3 3.9
+1.0 4.0
+0.8 4.0
+0.6 3.8
+0.3 3.4
+0.1 2.9
+0.0 2.1
+0.0 1.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1214.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1214.0
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.1 0.2
+5.2 0.3
+5.2 0.4
+5.1 0.5
+5.1 0.8
+5.1 1.0
+5.0 1.2
+4.8 1.5
+4.7 1.7
+4.5 1.9
+4.4 2.2
+4.2 2.5
+3.9 2.6
+3.7 2.9
+3.4 3.1
+3.2 3.3
+2.9 3.4
+2.7 3.4
+2.5 3.4
+2.2 3.6
+2.0 3.6
+1.8 3.6
+1.5 3.6
+1.3 3.6
+1.1 3.5
+0.8 3.5
+0.6 3.3
+0.3 3.2
+0.1 2.9
+0.0 2.6
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1106.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1106.0
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.3 0.2
+5.3 0.4
+5.3 0.5
+5.2 0.6
+5.1 0.8
+4.9 1.0
+4.8 1.3
+4.7 1.6
+4.5 1.8
+4.4 2.1
+4.1 2.2
+3.9 2.4
+3.7 2.7
+3.6 2.9
+3.4 3.0
+3.0 3.3
+2.8 3.4
+2.6 3.5
+2.4 3.4
+2.1 3.6
+1.9 3.6
+1.7 3.6
+1.4 3.6
+1.2 3.6
+0.9 3.5
+0.7 3.4
+0.5 3.2
+0.2 3.0
+0.0 2.7
+0.0 2.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1080.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1080.0
+Additional evaluation. New Checkpoint: -1, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.4 0.1
+5.6 0.2
+5.4 0.3
+5.5 0.4
+5.3 0.6
+5.2 0.9
+5.1 1.1
+5.1 1.3
+4.9 1.6
+4.8 1.8
+4.7 2.0
+4.5 2.2
+4.4 2.4
+4.2 2.6
+4.0 2.9
+3.8 3.0
+3.6 3.2
+3.4 3.3
+3.2 3.4
+3.0 3.4
+2.7 3.5
+2.5 3.5
+2.3 3.6
+2.1 3.5
+1.8 3.8
+1.6 4.1
+1.4 4.5
+1.1 4.6
+0.9 4.7
+0.6 4.3
+0.4 3.5
+0.2 2.8
+0.0 2.2
+0.0 1.4
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1281.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1281.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.0 0.3
+5.0 0.4
+5.1 0.5
+5.1 0.6
+5.0 0.8
+4.7 1.0
+4.6 1.2
+4.4 1.4
+4.2 1.6
+4.0 1.8
+3.7 2.0
+3.6 2.2
+3.3 2.4
+3.1 2.6
+2.9 2.9
+2.6 3.1
+2.4 3.1
+2.2 3.3
+1.9 3.3
+1.6 3.4
+1.4 3.4
+1.2 3.5
+0.9 3.5
+0.7 3.5
+0.5 3.4
+0.2 3.4
+0.0 2.9
+0.0 2.8
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=963.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 963.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.5 0.2
+5.4 0.3
+5.3 0.4
+5.1 0.5
+5.2 0.8
+5.1 0.9
+5.0 1.2
+4.8 1.4
+4.7 1.7
+4.5 1.8
+4.3 2.1
+4.1 2.4
+3.9 2.6
+3.7 2.8
+3.4 3.1
+3.2 3.1
+3.0 3.3
+2.8 3.4
+2.5 3.5
+2.3 3.5
+2.1 3.6
+1.9 3.6
+1.6 3.6
+1.4 3.6
+1.1 3.6
+0.9 3.5
+0.6 3.5
+0.4 3.2
+0.2 2.9
+0.0 2.7
+0.0 2.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1125.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1125.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.5 0.2
+5.5 0.3
+5.3 0.5
+5.1 0.6
+5.2 0.8
+5.1 1.1
+5.0 1.3
+4.9 1.5
+4.7 1.8
+4.6 1.9
+4.4 2.2
+4.2 2.4
+4.0 2.7
+3.8 2.9
+3.5 3.2
+3.3 3.2
+3.0 3.4
+2.7 3.5
+2.5 3.6
+2.3 3.4
+2.0 3.6
+1.8 3.6
+1.6 3.6
+1.4 3.6
+1.1 3.7
+0.9 3.5
+0.6 3.4
+0.4 3.3
+0.2 2.9
+0.0 2.7
+0.0 2.2
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1129.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1129.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.5 0.2
+5.6 0.4
+5.5 0.5
+5.4 0.6
+5.3 0.8
+5.2 1.1
+5.1 1.3
+5.0 1.6
+4.7 1.8
+4.5 2.1
+4.3 2.3
+4.1 2.5
+3.8 2.7
+3.6 3.0
+3.4 3.1
+3.2 3.2
+2.9 3.4
+2.7 3.4
+2.5 3.5
+2.2 3.6
+2.0 3.6
+1.8 3.6
+1.6 3.6
+1.3 3.6
+1.1 3.6
+0.8 3.6
+0.6 3.4
+0.4 3.3
+0.1 2.9
+0.0 2.8
+0.0 2.1
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1126.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1126.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+3.6 0.2
+5.1 0.3
+5.3 0.4
+5.2 0.5
+5.1 0.8
+5.0 1.0
+4.9 1.2
+4.8 1.4
+4.7 1.6
+4.6 1.9
+4.5 2.1
+4.3 2.3
+4.2 2.4
+4.0 2.7
+3.8 2.9
+3.6 3.0
+3.4 3.2
+3.2 3.4
+3.0 3.4
+2.8 3.5
+2.6 3.5
+2.4 3.5
+2.2 3.6
+1.9 3.7
+1.7 3.7
+1.5 3.9
+1.2 4.2
+1.0 4.1
+0.8 4.1
+0.5 3.8
+0.3 3.2
+0.1 2.3
+0.0 1.7
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1208.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1208.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+3.1 0.2
+5.3 0.3
+5.3 0.4
+5.2 0.5
+5.1 0.7
+5.0 0.9
+5.0 1.2
+4.9 1.4
+4.8 1.6
+4.7 1.9
+4.5 2.1
+4.4 2.3
+4.2 2.5
+4.0 2.8
+3.8 2.9
+3.6 3.2
+3.4 3.3
+3.2 3.4
+2.9 3.4
+2.7 3.5
+2.5 3.5
+2.2 3.6
+2.0 3.6
+1.8 3.6
+1.5 3.8
+1.3 3.9
+1.0 3.9
+0.8 3.8
+0.5 3.6
+0.3 3.1
+0.0 2.8
+0.0 2.4
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1179.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1179.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.7 0.2
+5.4 0.3
+5.2 0.4
+5.2 0.5
+5.2 0.7
+5.1 0.9
+5.0 1.1
+4.8 1.4
+4.7 1.6
+4.5 1.9
+4.3 2.0
+4.1 2.3
+3.9 2.5
+3.7 2.7
+3.5 2.9
+3.3 3.1
+3.0 3.4
+2.8 3.4
+2.6 3.5
+2.3 3.5
+2.1 3.6
+1.9 3.5
+1.6 3.6
+1.4 3.6
+1.2 3.6
+0.9 3.5
+0.7 3.5
+0.4 3.2
+0.2 3.1
+0.0 2.7
+0.0 2.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1131.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1131.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.7 0.2
+5.3 0.3
+5.2 0.4
+5.3 0.5
+5.1 0.8
+5.1 1.0
+5.0 1.2
+4.8 1.4
+4.6 1.7
+4.5 1.8
+4.2 2.1
+4.0 2.4
+3.7 2.6
+3.5 2.8
+3.3 3.0
+3.1 3.2
+2.9 3.3
+2.6 3.4
+2.3 3.5
+2.1 3.5
+1.9 3.5
+1.6 3.6
+1.4 3.6
+1.2 3.6
+0.9 3.5
+0.7 3.4
+0.4 3.4
+0.2 3.0
+0.0 2.8
+0.0 2.4
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1087.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1087.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+3.1 0.2
+4.6 0.4
+5.0 0.5
+4.9 0.6
+4.8 0.8
+4.8 1.1
+4.6 1.3
+4.5 1.5
+4.3 1.7
+4.2 2.0
+4.0 2.2
+3.9 2.4
+3.7 2.6
+3.5 2.8
+3.3 2.9
+3.1 3.1
+2.9 3.3
+2.6 3.4
+2.4 3.5
+2.2 3.6
+2.0 3.5
+1.8 3.5
+1.6 3.5
+1.3 3.6
+1.1 3.5
+0.8 3.5
+0.6 3.4
+0.4 3.1
+0.1 2.8
+0.0 2.6
+0.0 2.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1044.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1044.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.8 0.3
+5.5 0.4
+5.4 0.5
+5.2 0.6
+5.2 0.9
+5.1 1.1
+5.0 1.3
+4.9 1.6
+4.8 1.8
+4.6 2.1
+4.4 2.3
+4.3 2.5
+4.2 2.7
+4.0 2.9
+3.8 3.0
+3.6 3.1
+3.4 3.3
+3.2 3.4
+3.0 3.4
+2.7 3.5
+2.5 3.6
+2.3 3.5
+2.0 3.6
+1.8 3.8
+1.6 4.1
+1.3 4.4
+1.1 4.6
+0.8 4.6
+0.6 4.2
+0.4 3.4
+0.1 2.6
+0.0 2.0
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1220.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1220.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.5 0.3
+5.4 0.4
+5.3 0.5
+5.2 0.6
+5.1 0.8
+5.1 1.0
+5.0 1.3
+5.0 1.5
+4.9 1.7
+4.7 2.0
+4.5 2.2
+4.4 2.3
+4.3 2.6
+4.1 2.8
+3.9 3.0
+3.7 3.1
+3.5 3.3
+3.3 3.5
+3.0 3.5
+2.8 3.5
+2.6 3.5
+2.4 3.5
+2.1 3.5
+1.9 3.6
+1.6 3.8
+1.4 4.4
+1.2 4.5
+1.0 4.4
+0.7 4.3
+0.4 3.8
+0.2 2.7
+0.0 2.1
+0.0 1.8
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1237.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1237.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.5 0.2
+5.6 0.3
+5.5 0.4
+5.4 0.5
+5.3 0.8
+5.2 1.0
+5.2 1.2
+5.1 1.5
+4.9 1.7
+4.8 1.9
+4.6 2.2
+4.5 2.4
+4.3 2.6
+4.0 2.8
+3.8 3.1
+3.6 3.2
+3.4 3.3
+3.2 3.4
+2.9 3.5
+2.7 3.5
+2.4 3.6
+2.2 3.7
+2.0 3.6
+1.8 3.6
+1.5 3.8
+1.3 3.9
+1.1 4.0
+0.8 4.0
+0.6 3.8
+0.3 3.4
+0.0 2.9
+0.0 2.1
+0.0 1.4
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1227.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1227.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.9 0.2
+5.5 0.3
+5.3 0.4
+5.4 0.5
+5.3 0.7
+5.3 1.0
+5.1 1.2
+4.9 1.4
+4.8 1.7
+4.7 1.9
+4.6 2.1
+4.5 2.4
+4.3 2.6
+4.1 2.8
+3.8 3.0
+3.5 3.2
+3.3 3.3
+3.1 3.5
+2.9 3.5
+2.7 3.6
+2.4 3.6
+2.2 3.5
+2.0 3.5
+1.8 3.6
+1.5 3.7
+1.3 3.8
+1.0 4.0
+0.8 3.9
+0.5 3.7
+0.3 3.2
+0.1 2.8
+0.0 2.3
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1216.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1216.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.1 0.2
+5.3 0.3
+5.3 0.5
+5.3 0.6
+5.2 0.8
+5.1 1.0
+5.1 1.2
+4.9 1.5
+4.7 1.7
+4.6 2.0
+4.4 2.2
+4.3 2.4
+4.1 2.7
+3.8 2.9
+3.6 3.1
+3.4 3.2
+3.2 3.4
+2.9 3.4
+2.7 3.5
+2.4 3.6
+2.2 3.6
+2.0 3.6
+1.7 3.6
+1.5 3.7
+1.2 3.7
+1.0 3.7
+0.7 3.6
+0.5 3.5
+0.3 3.1
+0.0 2.9
+0.0 2.2
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1152.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1152.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.6 0.3
+5.5 0.4
+5.4 0.6
+5.4 0.7
+5.3 0.9
+5.2 1.1
+5.0 1.4
+4.9 1.6
+4.8 1.8
+4.6 2.1
+4.4 2.3
+4.2 2.6
+4.0 2.7
+3.8 2.9
+3.6 3.2
+3.3 3.2
+3.1 3.4
+2.9 3.4
+2.6 3.5
+2.4 3.6
+2.2 3.6
+1.9 3.6
+1.7 3.6
+1.4 3.7
+1.2 3.7
+1.0 3.8
+0.7 3.6
+0.5 3.4
+0.2 3.2
+0.0 2.5
+0.0 2.2
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1160.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1160.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.8 0.3
+5.5 0.4
+5.5 0.5
+5.3 0.6
+5.2 0.8
+5.2 1.1
+5.1 1.3
+5.0 1.5
+4.8 1.8
+4.7 2.0
+4.5 2.2
+4.3 2.4
+4.1 2.7
+3.9 2.9
+3.7 3.1
+3.5 3.2
+3.3 3.4
+3.1 3.4
+2.9 3.5
+2.7 3.5
+2.4 3.6
+2.2 3.5
+2.0 3.6
+1.7 3.8
+1.5 4.0
+1.3 4.2
+1.0 4.1
+0.8 4.1
+0.6 3.6
+0.3 3.2
+0.1 2.5
+0.0 1.9
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1210.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1210.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.5 0.3
+5.4 0.4
+5.2 0.5
+5.3 0.6
+5.0 0.8
+5.0 1.0
+4.7 1.2
+4.7 1.5
+4.6 1.6
+4.3 1.9
+4.2 2.1
+4.0 2.3
+3.7 2.6
+3.5 2.8
+3.3 3.0
+3.2 3.1
+3.0 3.2
+2.7 3.3
+2.5 3.3
+2.2 3.4
+2.0 3.5
+1.8 3.6
+1.5 3.6
+1.3 3.7
+1.0 3.6
+0.8 3.4
+0.6 3.4
+0.3 3.1
+0.1 3.0
+0.0 2.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1094.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1094.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.5 0.2
+5.3 0.3
+5.1 0.4
+5.1 0.5
+4.9 0.7
+5.0 1.0
+4.8 1.2
+4.7 1.4
+4.6 1.6
+4.5 1.8
+4.3 2.1
+4.2 2.2
+4.0 2.5
+3.8 2.7
+3.6 2.9
+3.4 3.1
+3.2 3.2
+2.9 3.3
+2.8 3.4
+2.5 3.5
+2.3 3.5
+2.1 3.6
+1.9 3.5
+1.6 3.6
+1.3 3.7
+1.1 3.7
+0.9 3.6
+0.6 3.5
+0.4 3.1
+0.1 3.0
+0.0 2.6
+0.0 2.1
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1152.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1152.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.0 0.2
+5.3 0.3
+5.3 0.5
+5.3 0.6
+5.2 0.8
+5.1 1.1
+4.9 1.3
+4.8 1.5
+4.7 1.7
+4.5 2.0
+4.4 2.2
+4.1 2.5
+3.8 2.6
+3.6 2.9
+3.3 3.1
+3.1 3.2
+2.9 3.3
+2.6 3.5
+2.4 3.5
+2.1 3.5
+1.9 3.6
+1.7 3.6
+1.5 3.6
+1.2 3.6
+1.0 3.5
+0.8 3.5
+0.5 3.3
+0.3 3.1
+0.1 2.7
+0.0 2.6
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1095.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1095.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+4.8 0.2
+5.4 0.3
+5.3 0.5
+5.3 0.6
+5.3 0.8
+5.3 1.0
+5.2 1.3
+5.1 1.5
+5.0 1.7
+4.8 2.0
+4.7 2.2
+4.5 2.5
+4.3 2.8
+4.1 2.9
+3.9 3.1
+3.7 3.3
+3.5 3.3
+3.2 3.4
+3.0 3.5
+2.8 3.5
+2.5 3.6
+2.3 3.5
+2.1 3.6
+1.8 3.8
+1.6 4.1
+1.3 4.5
+1.1 4.6
+0.9 4.6
+0.6 4.2
+0.4 3.4
+0.2 2.5
+0.0 1.9
+0.0 1.4
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1234.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1234.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.0 0.3
+5.3 0.3
+5.4 0.5
+5.3 0.6
+5.2 0.8
+5.2 1.0
+5.1 1.3
+5.0 1.6
+4.9 1.7
+4.8 2.1
+4.6 2.3
+4.4 2.5
+4.3 2.7
+4.1 3.0
+3.9 3.1
+3.7 3.3
+3.5 3.3
+3.2 3.4
+3.0 3.4
+2.7 3.6
+2.5 3.5
+2.3 3.5
+2.0 3.6
+1.8 3.8
+1.6 4.1
+1.3 4.4
+1.1 4.6
+0.9 4.5
+0.6 4.2
+0.4 3.3
+0.1 2.6
+0.0 1.9
+0.0 1.4
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1233.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1233.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.3 0.2
+5.3 0.3
+5.3 0.4
+5.2 0.6
+5.2 0.8
+5.2 1.0
+5.1 1.2
+5.0 1.5
+4.9 1.7
+4.8 1.9
+4.6 2.1
+4.4 2.4
+4.2 2.6
+4.0 2.8
+3.8 3.0
+3.6 3.2
+3.4 3.3
+3.2 3.4
+3.0 3.5
+2.7 3.5
+2.6 3.5
+2.3 3.5
+2.1 3.6
+1.9 3.6
+1.6 3.7
+1.4 4.0
+1.1 4.2
+0.9 4.1
+0.7 4.1
+0.4 3.7
+0.2 2.9
+0.0 2.0
+0.0 1.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1225.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1225.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.3 0.3
+5.3 0.3
+5.3 0.5
+5.1 0.6
+5.1 0.8
+5.0 1.0
+4.9 1.2
+4.8 1.5
+4.6 1.7
+4.5 1.9
+4.3 2.1
+4.1 2.4
+3.8 2.6
+3.6 2.8
+3.3 3.0
+3.1 3.1
+2.8 3.3
+2.7 3.4
+2.4 3.5
+2.2 3.5
+1.9 3.6
+1.6 3.5
+1.4 3.6
+1.2 3.5
+1.0 3.6
+0.7 3.3
+0.5 3.4
+0.2 3.0
+0.0 2.9
+0.0 2.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1086.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1086.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.1 0.2
+5.5 0.3
+5.4 0.5
+5.4 0.6
+5.3 0.8
+5.3 1.0
+5.1 1.3
+5.0 1.5
+4.9 1.7
+4.7 2.0
+4.6 2.2
+4.4 2.4
+4.2 2.6
+4.0 2.9
+3.8 3.1
+3.6 3.2
+3.4 3.4
+3.1 3.4
+2.9 3.5
+2.6 3.5
+2.4 3.6
+2.2 3.6
+1.9 3.6
+1.7 3.8
+1.5 3.7
+1.2 3.8
+0.9 4.0
+0.7 3.9
+0.5 3.5
+0.3 3.2
+0.0 2.7
+0.0 2.0
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1206.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1206.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.2 0.3
+5.3 0.4
+5.3 0.5
+5.3 0.6
+5.2 0.8
+5.0 1.0
+4.9 1.3
+4.8 1.5
+4.7 1.8
+4.5 2.0
+4.3 2.2
+4.1 2.4
+3.9 2.6
+3.7 2.8
+3.5 3.0
+3.3 3.1
+3.0 3.3
+2.8 3.4
+2.5 3.5
+2.3 3.6
+2.1 3.6
+1.8 3.6
+1.6 3.6
+1.3 3.7
+1.1 3.6
+0.9 3.5
+0.6 3.3
+0.4 3.2
+0.1 2.8
+0.0 2.7
+0.0 2.3
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1117.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1117.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.4 0.2
+5.4 0.3
+5.3 0.4
+5.2 0.5
+5.3 0.7
+5.2 1.0
+5.1 1.2
+5.1 1.5
+4.9 1.7
+4.8 2.0
+4.6 2.2
+4.5 2.4
+4.3 2.6
+4.2 2.9
+3.9 3.1
+3.8 3.1
+3.5 3.3
+3.3 3.4
+3.1 3.4
+2.8 3.4
+2.6 3.5
+2.4 3.5
+2.1 3.5
+1.9 3.6
+1.7 3.8
+1.4 4.5
+1.2 4.6
+1.0 4.5
+0.7 4.5
+0.5 4.0
+0.2 2.9
+0.0 2.3
+0.0 1.9
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1252.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1252.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+2.1 0.2
+4.7 0.3
+5.1 0.4
+5.1 0.5
+4.9 0.7
+4.9 1.0
+4.6 1.2
+4.4 1.5
+4.2 1.7
+4.1 1.9
+3.9 2.2
+3.7 2.4
+3.4 2.6
+3.2 2.8
+2.9 3.1
+2.7 3.2
+2.5 3.4
+2.3 3.4
+2.1 3.7
+1.8 3.5
+1.6 3.6
+1.3 3.5
+1.1 3.6
+0.8 3.5
+0.6 3.4
+0.3 3.2
+0.1 3.0
+0.0 2.7
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=962.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 962.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.8 0.2
+5.5 0.4
+5.5 0.5
+5.4 0.6
+5.3 0.8
+5.2 1.0
+5.1 1.3
+5.0 1.5
+4.9 1.7
+4.7 1.9
+4.5 2.2
+4.2 2.4
+4.0 2.6
+3.8 2.8
+3.6 3.0
+3.3 3.1
+3.1 3.2
+2.9 3.4
+2.6 3.5
+2.4 3.5
+2.2 3.6
+2.0 3.5
+1.7 3.7
+1.5 3.6
+1.2 3.8
+1.0 3.6
+0.7 3.6
+0.5 3.3
+0.2 3.2
+0.0 2.9
+0.0 2.3
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1164.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1164.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.0 0.3
+5.3 0.4
+5.1 0.5
+5.2 0.6
+5.1 0.8
+5.0 1.0
+4.8 1.3
+4.7 1.5
+4.6 1.6
+4.5 1.9
+4.3 2.1
+4.1 2.3
+3.9 2.5
+3.7 2.8
+3.5 2.9
+3.2 3.2
+3.0 3.3
+2.8 3.4
+2.5 3.5
+2.3 3.5
+2.1 3.5
+1.8 3.6
+1.6 3.6
+1.4 3.6
+1.2 3.6
+0.9 3.7
+0.7 3.4
+0.4 3.3
+0.2 2.9
+0.0 2.8
+0.0 2.3
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1110.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1110.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+3.1 0.2
+5.8 0.3
+5.5 0.5
+5.3 0.6
+5.4 0.8
+5.3 1.0
+5.2 1.2
+5.0 1.5
+4.9 1.7
+4.8 1.9
+4.6 2.1
+4.5 2.3
+4.3 2.5
+4.1 2.7
+3.9 3.0
+3.7 3.1
+3.5 3.3
+3.3 3.4
+3.1 3.4
+2.9 3.4
+2.6 3.6
+2.4 3.5
+2.1 3.6
+1.9 3.6
+1.7 3.8
+1.5 4.0
+1.2 4.4
+1.0 4.3
+0.7 4.3
+0.5 3.9
+0.2 3.1
+0.0 2.3
+0.0 1.7
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1231.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1231.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+3.7 0.3
+5.6 0.4
+5.3 0.5
+5.3 0.6
+5.3 0.8
+5.2 1.1
+5.1 1.3
+5.0 1.5
+4.9 1.8
+4.7 2.1
+4.6 2.3
+4.4 2.5
+4.1 2.8
+3.9 3.0
+3.7 3.1
+3.5 3.3
+3.3 3.4
+3.1 3.5
+2.9 3.4
+2.6 3.6
+2.4 3.5
+2.2 3.5
+1.9 3.6
+1.7 3.8
+1.4 4.0
+1.2 4.2
+1.0 4.2
+0.8 4.0
+0.5 3.6
+0.3 3.1
+0.0 2.3
+0.0 1.6
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1192.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1192.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.8 0.2
+5.5 0.4
+5.6 0.5
+5.4 0.6
+5.4 0.8
+5.2 1.0
+5.1 1.3
+5.0 1.5
+4.9 1.8
+4.7 2.0
+4.6 2.3
+4.4 2.5
+4.2 2.7
+4.0 3.0
+3.9 3.0
+3.7 3.2
+3.5 3.2
+3.2 3.4
+3.0 3.4
+2.7 3.6
+2.5 3.6
+2.3 3.6
+2.0 3.6
+1.8 3.8
+1.6 4.0
+1.4 4.4
+1.1 4.4
+0.9 4.4
+0.6 4.1
+0.4 3.3
+0.1 2.5
+0.0 1.9
+0.0 1.4
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1239.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1239.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+4.5 0.2
+5.1 0.3
+5.3 0.4
+5.2 0.5
+5.2 0.7
+5.1 1.0
+5.0 1.3
+4.9 1.5
+4.8 1.7
+4.7 2.0
+4.5 2.2
+4.4 2.4
+4.2 2.7
+4.0 2.8
+3.9 3.1
+3.7 3.2
+3.5 3.3
+3.2 3.3
+3.0 3.5
+2.8 3.4
+2.5 3.6
+2.3 3.6
+2.1 3.6
+1.9 3.6
+1.6 3.8
+1.4 4.3
+1.1 4.2
+0.9 4.3
+0.7 4.2
+0.4 3.8
+0.2 2.6
+0.0 2.1
+0.0 1.6
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1217.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1217.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.7 0.3
+5.6 0.4
+5.5 0.5
+5.4 0.6
+5.4 0.8
+5.3 1.0
+5.2 1.3
+5.0 1.5
+4.9 1.7
+4.8 1.9
+4.6 2.2
+4.5 2.4
+4.3 2.6
+4.1 2.8
+3.9 3.0
+3.7 3.2
+3.5 3.2
+3.3 3.4
+3.1 3.4
+2.8 3.5
+2.6 3.5
+2.3 3.6
+2.1 3.6
+1.9 3.6
+1.6 4.2
+1.4 4.5
+1.2 4.6
+0.9 4.7
+0.7 4.5
+0.5 3.6
+0.2 2.8
+0.0 2.1
+0.0 1.6
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1255.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1255.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.9 0.2
+5.2 0.3
+5.2 0.4
+5.1 0.5
+5.1 0.7
+5.0 0.9
+4.9 1.2
+4.8 1.4
+4.7 1.6
+4.6 1.8
+4.5 2.1
+4.4 2.3
+4.2 2.5
+4.1 2.7
+3.9 2.9
+3.7 3.1
+3.5 3.3
+3.3 3.3
+3.1 3.4
+2.9 3.5
+2.7 3.5
+2.4 3.5
+2.2 3.5
+2.0 3.6
+1.7 3.8
+1.5 4.1
+1.3 4.4
+1.0 4.5
+0.8 4.4
+0.6 4.0
+0.3 3.2
+0.1 2.5
+0.0 2.0
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1240.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1240.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+4.5 0.2
+5.3 0.3
+5.4 0.4
+5.2 0.5
+5.0 0.7
+5.0 0.9
+4.9 1.2
+4.8 1.4
+4.6 1.6
+4.4 1.8
+4.2 2.1
+4.1 2.3
+3.9 2.5
+3.6 2.8
+3.4 3.0
+3.1 3.1
+2.9 3.2
+2.7 3.3
+2.5 3.5
+2.3 3.5
+2.0 3.6
+1.8 3.6
+1.6 3.6
+1.3 3.6
+1.1 3.6
+0.8 3.4
+0.6 3.4
+0.4 3.1
+0.1 2.9
+0.0 2.5
+0.0 2.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1098.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1098.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.4 0.2
+5.5 0.3
+5.4 0.4
+5.4 0.5
+5.4 0.7
+5.3 0.9
+5.2 1.2
+5.1 1.4
+5.1 1.6
+4.9 1.8
+4.7 2.1
+4.6 2.3
+4.5 2.5
+4.3 2.7
+4.1 2.9
+3.8 3.0
+3.6 3.3
+3.4 3.4
+3.2 3.4
+2.9 3.5
+2.7 3.5
+2.5 3.6
+2.2 3.5
+2.0 3.6
+1.8 3.8
+1.5 4.2
+1.3 4.5
+1.0 4.6
+0.8 4.6
+0.5 4.1
+0.3 3.2
+0.1 2.4
+0.0 1.8
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1280.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1280.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.5 0.2
+5.4 0.3
+5.4 0.5
+5.4 0.6
+5.2 0.8
+5.1 1.0
+5.0 1.3
+4.9 1.5
+4.7 1.7
+4.5 2.0
+4.3 2.2
+4.1 2.4
+3.8 2.6
+3.6 2.9
+3.4 3.1
+3.2 3.2
+2.9 3.3
+2.7 3.5
+2.5 3.6
+2.2 3.6
+2.0 3.6
+1.8 3.6
+1.5 3.5
+1.3 3.5
+1.1 3.6
+0.8 3.5
+0.6 3.3
+0.4 3.2
+0.1 2.8
+0.0 2.6
+0.0 2.3
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1118.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1118.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+4.3 0.3
+4.9 0.4
+5.1 0.5
+5.2 0.6
+5.0 0.8
+4.9 1.0
+4.8 1.2
+4.7 1.4
+4.4 1.7
+4.2 1.9
+4.1 2.0
+3.9 2.3
+3.6 2.5
+3.4 2.7
+3.2 2.9
+2.9 3.1
+2.7 3.2
+2.5 3.3
+2.2 3.4
+2.0 3.5
+1.7 3.6
+1.5 3.5
+1.3 3.6
+1.0 3.6
+0.8 3.5
+0.5 3.4
+0.3 3.2
+0.1 2.9
+0.0 2.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1029.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1029.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.5 0.2
+5.4 0.3
+5.3 0.4
+4.9 0.5
+5.1 0.7
+5.1 0.9
+4.9 1.1
+5.0 1.4
+4.8 1.5
+4.8 1.7
+4.6 1.9
+4.5 2.1
+4.4 2.2
+4.1 2.5
+3.9 2.7
+3.8 2.9
+3.6 3.0
+3.4 3.2
+3.2 3.3
+3.0 3.4
+2.8 3.5
+2.6 3.5
+2.3 3.6
+2.1 3.5
+1.9 3.7
+1.6 3.7
+1.4 4.0
+1.2 4.2
+0.9 4.2
+0.7 4.1
+0.5 3.8
+0.2 3.0
+0.0 2.2
+0.0 1.6
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1265.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1265.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.2 0.2
+5.4 0.4
+5.3 0.4
+5.2 0.6
+5.0 0.8
+5.0 1.0
+4.9 1.1
+4.8 1.4
+4.7 1.6
+4.5 1.8
+4.4 2.0
+4.3 2.2
+4.1 2.4
+3.9 2.6
+3.7 2.8
+3.5 2.9
+3.2 3.2
+3.0 3.3
+2.8 3.4
+2.6 3.5
+2.4 3.6
+2.2 3.6
+1.9 3.6
+1.7 3.6
+1.5 3.7
+1.2 3.7
+1.0 3.7
+0.8 3.6
+0.5 3.4
+0.3 3.1
+0.1 2.7
+0.0 2.4
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1175.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1175.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.0 0.2
+5.3 0.4
+5.2 0.5
+5.0 0.6
+5.1 0.8
+5.0 1.0
+4.9 1.3
+4.8 1.5
+4.7 1.7
+4.6 2.0
+4.4 2.2
+4.2 2.4
+4.1 2.6
+3.9 2.8
+3.7 3.1
+3.5 3.2
+3.3 3.3
+3.1 3.5
+2.8 3.5
+2.6 3.5
+2.5 3.6
+2.3 3.5
+2.0 3.5
+1.8 3.6
+1.6 3.7
+1.3 3.9
+1.1 4.0
+0.9 4.0
+0.6 3.8
+0.4 3.5
+0.1 2.9
+0.0 2.1
+0.0 1.4
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1189.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1189.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+5.3 0.2
+5.3 0.3
+5.4 0.5
+5.3 0.6
+5.3 0.8
+5.2 1.0
+5.1 1.2
+5.0 1.5
+4.9 1.7
+4.7 2.0
+4.6 2.2
+4.4 2.5
+4.3 2.6
+4.1 2.9
+3.9 3.0
+3.7 3.2
+3.5 3.3
+3.3 3.4
+3.0 3.5
+2.8 3.5
+2.5 3.6
+2.3 3.6
+2.1 3.7
+1.8 3.8
+1.6 4.2
+1.3 4.5
+1.1 4.5
+0.9 4.5
+0.7 4.1
+0.4 3.4
+0.2 2.5
+0.0 2.0
+0.0 1.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1233.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1233.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+4.6 0.2
+5.4 0.3
+5.2 0.4
+5.2 0.6
+5.2 0.8
+5.2 1.0
+5.1 1.2
+5.0 1.5
+4.8 1.7
+4.7 1.9
+4.6 2.2
+4.4 2.4
+4.2 2.6
+4.0 2.9
+3.9 3.0
+3.7 3.2
+3.4 3.3
+3.2 3.4
+3.0 3.4
+2.8 3.5
+2.6 3.6
+2.3 3.6
+2.1 3.5
+1.9 3.6
+1.6 3.8
+1.4 4.0
+1.2 4.2
+0.9 4.3
+0.7 4.1
+0.4 3.8
+0.2 2.9
+0.0 2.1
+0.0 1.6
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1228.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1228.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.1
+4.8 0.2
+5.3 0.3
+5.3 0.5
+5.1 0.6
+5.1 0.8
+5.0 1.0
+4.9 1.2
+4.8 1.5
+4.7 1.7
+4.5 1.9
+4.4 2.1
+4.3 2.3
+4.0 2.4
+3.9 2.7
+3.6 2.9
+3.5 3.0
+3.3 3.2
+3.1 3.4
+2.9 3.4
+2.7 3.4
+2.4 3.6
+2.2 3.6
+2.0 3.6
+1.8 3.6
+1.5 3.8
+1.3 3.8
+1.0 3.9
+0.8 3.8
+0.6 3.7
+0.4 3.2
+0.1 2.9
+0.0 2.4
+0.0 1.8
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1182.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1182.0
+Additional evaluation. New Checkpoint: 4, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.4 0.3
+5.3 0.4
+5.1 0.5
+5.2 0.6
+5.1 0.8
+5.0 1.0
+5.0 1.3
+4.8 1.5
+4.7 1.7
+4.5 1.9
+4.4 2.1
+4.3 2.2
+4.1 2.5
+3.9 2.6
+3.6 2.9
+3.4 3.0
+3.1 3.2
+2.9 3.3
+2.7 3.4
+2.4 3.5
+2.2 3.6
+2.0 3.6
+1.7 3.7
+1.5 3.7
+1.3 3.6
+1.1 3.6
+0.8 3.6
+0.6 3.4
+0.3 3.1
+0.1 3.0
+0.0 2.5
+0.0 2.0
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1150.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1150.0
+Additional evaluation. New Checkpoint: -1, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.9 0.3
+5.7 0.4
+5.4 0.5
+5.3 0.6
+5.2 0.8
+5.1 1.0
+5.0 1.2
+4.9 1.4
+4.8 1.6
+4.7 1.9
+4.4 2.1
+4.2 2.3
+4.0 2.5
+3.8 2.7
+3.5 3.0
+3.3 3.1
+3.1 3.2
+2.9 3.3
+2.6 3.5
+2.4 3.5
+2.2 3.5
+2.0 3.7
+1.7 3.7
+1.5 3.7
+1.2 3.6
+1.0 3.7
+0.8 3.6
+0.5 3.4
+0.3 3.0
+0.0 2.9
+0.0 2.5
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1160.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1160.0
+Additional evaluation. New Checkpoint: -1, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.3 0.3
+5.2 0.4
+5.2 0.5
+5.2 0.6
+5.1 0.8
+5.1 1.0
+5.1 1.3
+4.9 1.5
+4.8 1.7
+4.6 1.9
+4.5 2.1
+4.3 2.4
+4.1 2.6
+4.0 2.8
+3.8 3.1
+3.6 3.2
+3.4 3.3
+3.2 3.5
+3.0 3.5
+2.7 3.6
+2.5 3.6
+2.3 3.5
+2.1 3.5
+1.9 3.6
+1.6 4.0
+1.4 4.3
+1.1 4.4
+0.9 4.3
+0.7 4.3
+0.4 3.4
+0.2 2.6
+0.0 2.1
+0.0 1.6
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1215.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1215.0
+Additional evaluation. New Checkpoint: -1, Last Checkpoint: 4
+## agent: Starting evaluation phase
+Reset agent
+Reset agent finished
+5.4 0.0
+5.4 0.2
+5.6 0.3
+5.6 0.4
+5.6 0.5
+5.4 0.6
+5.4 0.9
+5.3 1.1
+5.2 1.3
+5.0 1.6
+5.0 1.8
+4.8 2.0
+4.6 2.3
+4.4 2.5
+4.2 2.7
+3.9 2.9
+3.7 3.0
+3.5 3.2
+3.3 3.3
+3.0 3.5
+2.7 3.5
+2.5 3.6
+2.3 3.6
+2.0 3.7
+1.8 3.6
+1.6 3.7
+1.3 3.8
+1.1 4.0
+0.9 3.8
+0.6 3.7
+0.4 3.4
+0.1 2.8
+0.0 2.4
+0.0 2.0
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Testing> Name=main_level/agent, Worker=0, Episode=10, Total reward=1193.0, Steps=266, Training iteration=0
+## agent: Finished evaluation phase. Success rate = 0.0, Avg Total Reward = 1193.0
+[s3] Successfully uploaded simtrace_training to              s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/0/training-simtrace/0-iteration.csv.
+[s3] Successfully downloaded 5_Step-1040.ckpt.data-00000-of-00001 from                  s3 key Four-Worker-Test/model/5_Step-1040.ckpt.data-00000-of-00001 to local checkpoint_robomaker/agent/5_Step-1040.ckpt.data-00000-of-00001.
+[s3] Successfully downloaded 5_Step-1040.ckpt.index from                  s3 key Four-Worker-Test/model/5_Step-1040.ckpt.index to local checkpoint_robomaker/agent/5_Step-1040.ckpt.index.
+[s3] Successfully downloaded 5_Step-1040.ckpt.meta from                  s3 key Four-Worker-Test/model/5_Step-1040.ckpt.meta to local checkpoint_robomaker/agent/5_Step-1040.ckpt.meta.
+[s3] Successfully downloaded .ready from                  s3 key Four-Worker-Test/model/.ready to local checkpoint_robomaker/agent/.ready.
+Checkpoint> Restoring from path=./checkpoint_robomaker/agent/5_Step-1040.ckpt
+[BestModelSelection] Number of evaluations: 55 Evaluation episode progress: [14.57504797437754, 18.203618564382197, 17.304032086597246, 15.951868117204697, 15.929472672348567, 18.203618564382197, 14.326509356358159, 16.395807776271923, 16.395807776271923, 16.395807776271923, 17.47152908695608, 17.27430202998363, 16.288347303652372, 15.60170775313108, 16.395807776271923, 18.020701873153413, 17.96567728238125, 17.304032086597246, 17.304032086597246, 16.447150537445694, 16.80428372559433, 17.304032086597246, 15.734495003023568, 16.58282585575222, 16.00232844281561, 18.08432844634042, 18.088567991831937, 17.54824901015482, 15.609879803238158, 17.304032086597246, 16.395807776271923, 18.203618564382197, 14.57504797437754, 16.395807776271923, 16.395807776271923, 17.84892628319477, 17.304032086597246, 17.90073961777287, 17.808646927445025, 18.203618564382197, 18.014899258590447, 16.17020785126728, 17.95115698955418, 16.395807776271923, 14.887333165005884, 17.666209087746125, 16.818663220130276, 17.304032086597246, 18.045928744440815, 17.700293342621165, 17.304032086597246, 16.558801214441274, 16.395807776271923, 17.903415621258063, 17.304032086597246]
+[BestModelSelection] Evaluation episode progress mean: 16.914010447035285
+[BestModelSelection] current progress mean: 16.914010447035285 >= best progress mean: None
+[BestModelSelection] Updating the best checkpoint to "4_Step-0.ckpt" from "4_Step-0.ckpt".
+[s3] Successfully uploaded deepracer checkpoint to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/model/deepracer_checkpoints.json.
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:10,1,0.6147,0.4614,132.1468,20.00,1.50,2,0.0000,False,True,0.4217,0,33.28,184.054,prepare,0.00
+
+5.4 0.0
+SIM_TRACE_LOG:10,2,0.6150,0.4611,132.1376,-20.00,1.50,5,54.0000,False,True,0.4207,0,33.28,184.115,in_progress,0.00
+
+5.4 0.1
+SIM_TRACE_LOG:10,3,0.6097,0.4694,131.8503,-10.00,2.00,6,55.0000,False,True,0.4498,0,33.28,184.187,in_progress,0.00
+
+3.9 0.2
+SIM_TRACE_LOG:10,4,0.5986,0.4864,131.0394,20.00,1.50,2,39.0000,False,True,0.5100,1,33.28,184.257,in_progress,0.00
+
+5.2 0.3
+SIM_TRACE_LOG:10,5,0.5761,0.5131,130.8836,10.00,2.00,3,52.0000,False,True,0.6151,1,33.28,184.303,in_progress,0.00
+
+2.2 0.4
+SIM_TRACE_LOG:10,6,0.5317,0.5419,134.2912,30.00,1.00,1,22.0000,False,True,0.7684,1,33.28,184.385,in_progress,0.00
+
+1.6 0.5
+SIM_TRACE_LOG:10,7,0.4837,0.5673,138.0792,-30.00,1.00,4,17.0000,False,True,0.9213,1,33.28,184.45,in_progress,0.00
+
+1.6 0.7
+SIM_TRACE_LOG:10,8,0.4237,0.5998,141.8158,-20.00,1.50,5,16.0000,False,True,1.1140,1,33.28,184.522,in_progress,0.00
+
+5.6 0.8
+SIM_TRACE_LOG:10,9,0.3753,0.6426,140.9504,-30.00,1.00,4,57.0000,False,True,1.3067,1,33.28,184.587,in_progress,0.00
+
+4.7 0.9
+SIM_TRACE_LOG:10,10,0.3249,0.7068,136.9495,0.00,4.00,0,48.0000,False,True,1.5516,2,33.28,184.65,in_progress,0.00
+
+4.5 1.1
+SIM_TRACE_LOG:10,11,0.2707,0.7787,133.7672,30.00,1.00,1,46.0000,False,True,1.8213,2,33.28,184.706,in_progress,0.00
+
+5.2 1.1
+SIM_TRACE_LOG:10,12,0.2222,0.8252,133.8949,10.00,2.00,3,54.0000,False,True,2.0228,2,33.28,184.785,in_progress,0.00
+
+2.7 1.2
+SIM_TRACE_LOG:10,13,0.1480,0.8821,136.9088,0.00,4.00,0,29.0000,False,True,2.2990,3,33.28,184.85,in_progress,0.00
+
+1.9 1.3
+SIM_TRACE_LOG:10,14,0.0590,0.9404,140.6042,30.00,1.00,1,20.0000,False,True,2.6077,3,33.28,184.914,in_progress,0.00
+
+1.9 1.3
+SIM_TRACE_LOG:10,15,-0.0182,0.9923,142.4248,-30.00,1.00,4,20.0000,False,True,2.8829,3,33.28,184.981,in_progress,0.00
+
+1.7 1.4
+SIM_TRACE_LOG:10,16,-0.1031,1.0473,144.0623,0.00,4.00,0,18.0000,False,True,3.1771,3,33.28,185.051,in_progress,0.00
+
+2.7 1.4
+SIM_TRACE_LOG:10,17,-0.1658,1.0986,143.1300,30.00,1.00,1,28.0000,False,True,3.4182,4,33.28,185.121,in_progress,0.00
+
+1.8 1.4
+SIM_TRACE_LOG:10,18,-0.2370,1.1483,142.8850,-30.00,1.00,4,19.0000,False,True,3.6661,4,33.28,185.184,in_progress,0.00
+
+1.6 1.3
+SIM_TRACE_LOG:10,19,-0.3152,1.2022,143.7368,20.00,1.50,2,18.0000,False,True,3.9436,4,33.28,185.251,in_progress,0.00
+
+1.5 1.3
+SIM_TRACE_LOG:10,20,-0.3736,1.2422,144.2783,0.00,4.00,0,17.0000,False,True,4.1499,5,33.28,185.317,in_progress,0.00
+
+1.1 1.2
+SIM_TRACE_LOG:10,21,-0.4569,1.2908,146.1527,20.00,1.50,2,12.0000,False,True,4.4256,5,33.28,185.34,in_progress,0.00
+
+0.8 1.3
+SIM_TRACE_LOG:10,22,-0.5536,1.3390,148.8390,-30.00,1.00,4,9.0000,False,True,4.7254,5,33.28,185.452,in_progress,0.00
+
+0.6 1.3
+SIM_TRACE_LOG:10,23,-0.6457,1.3798,151.9181,-10.00,2.00,6,8.0000,False,True,5.0008,5,33.28,185.512,in_progress,0.00
+
+0.7 1.3
+SIM_TRACE_LOG:10,24,-0.7315,1.4274,151.5795,10.00,2.00,3,8.0000,False,True,5.2788,6,33.28,185.597,in_progress,0.00
+
+0.5 1.5
+SIM_TRACE_LOG:10,25,-0.8429,1.4866,151.8541,10.00,2.00,3,7.0000,False,True,5.6334,6,33.28,185.653,in_progress,0.00
+
+0.3 1.5
+SIM_TRACE_LOG:10,26,-0.9348,1.5219,154.4781,30.00,1.00,1,4.0000,False,False,5.8962,6,33.28,185.718,in_progress,0.00
+
+0.1 1.4
+SIM_TRACE_LOG:10,27,-1.0401,1.5520,158.3211,-10.00,2.00,6,3.0000,False,False,6.1739,7,33.28,185.786,in_progress,0.00
+
+0.0 1.5
+SIM_TRACE_LOG:10,28,-1.1547,1.5923,159.0505,30.00,1.00,1,2.0000,False,False,6.4924,7,33.28,185.852,in_progress,0.00
+
+0.0 1.5
+SIM_TRACE_LOG:10,29,-1.2441,1.6270,158.8374,20.00,1.50,2,1.0000,False,False,6.7484,7,33.28,185.913,in_progress,0.00
+
+0.0 1.4
+SIM_TRACE_LOG:10,30,-1.3467,1.6556,161.0500,-30.00,1.00,4,1.0000,True,False,7.0175,8,33.28,185.987,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=11, Total reward=684.0, Steps=296, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:11,1,-1.5957,2.9484,131.4039,0.00,4.00,0,0.0000,False,True,0.4214,11,33.28,186.115,prepare,0.00
+
+2.1 0.0
+SIM_TRACE_LOG:11,2,-1.5958,2.9481,131.4795,0.00,4.00,0,21.0000,False,True,0.4207,11,33.28,186.18,in_progress,0.00
+
+2.1 0.1
+SIM_TRACE_LOG:11,3,-1.6006,2.9553,131.2938,10.00,2.00,3,21.0000,False,True,0.4466,11,33.28,186.249,in_progress,0.00
+
+2.6 0.2
+SIM_TRACE_LOG:11,4,-1.6190,2.9679,132.8307,30.00,1.00,1,26.0000,False,True,0.5118,12,33.28,186.315,in_progress,0.00
+
+2.7 0.3
+SIM_TRACE_LOG:11,5,-1.6513,2.9850,135.6183,0.00,4.00,0,27.0000,False,True,0.6143,12,33.28,186.382,in_progress,0.00
+
+2.6 0.4
+SIM_TRACE_LOG:11,6,-1.6916,3.0067,138.3614,30.00,1.00,1,26.0000,False,True,0.7434,12,33.28,186.454,in_progress,0.00
+
+2.7 0.5
+SIM_TRACE_LOG:11,7,-1.7422,3.0278,142.1830,20.00,1.50,2,27.0000,False,True,0.8918,12,33.28,186.518,in_progress,0.00
+
+2.7 0.6
+SIM_TRACE_LOG:11,8,-1.7978,3.0414,147.6110,-30.00,1.00,4,27.0000,False,True,1.0338,12,33.28,186.575,in_progress,0.00
+
+2.6 0.7
+SIM_TRACE_LOG:11,9,-1.8659,3.0625,152.2807,-20.00,1.50,5,26.0000,False,True,1.2173,12,33.28,186.644,in_progress,0.00
+
+2.3 0.8
+SIM_TRACE_LOG:11,10,-1.9327,3.1035,151.0545,-30.00,1.00,4,24.0000,False,True,1.4428,13,33.28,186.707,in_progress,0.00
+
+2.0 0.9
+SIM_TRACE_LOG:11,11,-1.9913,3.1544,147.5096,-30.00,1.00,4,21.0000,False,True,1.6741,13,33.28,186.776,in_progress,0.00
+
+1.8 1.0
+SIM_TRACE_LOG:11,12,-2.0393,3.2036,144.0149,-30.00,1.00,4,19.0000,False,True,1.8998,13,33.28,186.852,in_progress,0.00
+
+1.5 1.1
+SIM_TRACE_LOG:11,13,-2.0885,3.2691,138.7352,20.00,1.50,2,16.0000,False,True,2.1440,13,33.28,186.922,in_progress,0.00
+
+1.6 1.2
+SIM_TRACE_LOG:11,14,-2.1413,3.3248,137.3175,10.00,2.00,3,18.0000,False,True,2.3747,14,33.28,186.985,in_progress,0.00
+
+1.8 1.2
+SIM_TRACE_LOG:11,15,-2.2141,3.3746,140.0591,20.00,1.50,2,20.0000,False,True,2.6345,14,33.28,187.051,in_progress,0.00
+
+1.9 1.3
+SIM_TRACE_LOG:11,16,-2.2917,3.4138,144.3876,30.00,1.00,1,20.0000,False,True,2.9545,14,33.28,187.115,in_progress,0.00
+
+1.9 1.3
+SIM_TRACE_LOG:11,17,-2.3844,3.4496,149.7773,30.00,1.00,1,20.0000,False,True,3.2392,15,33.28,187.178,in_progress,0.00
+
+1.9 1.3
+SIM_TRACE_LOG:11,18,-2.4685,3.4713,155.0284,-20.00,1.50,5,20.0000,False,True,3.4769,15,33.28,187.254,in_progress,0.00
+
+1.7 1.5
+SIM_TRACE_LOG:11,19,-2.5485,3.4990,156.8198,10.00,2.00,3,19.0000,False,True,3.9010,15,33.28,187.318,in_progress,0.00
+
+1.6 1.6
+SIM_TRACE_LOG:11,20,-2.6404,3.5324,158.0713,-30.00,1.00,4,18.0000,False,True,4.1932,16,33.28,187.399,in_progress,0.00
+
+1.6 1.7
+SIM_TRACE_LOG:11,21,-2.7281,3.5589,159.9593,10.00,2.00,3,18.0000,False,True,4.6878,16,33.28,187.448,in_progress,0.00
+
+1.5 1.7
+SIM_TRACE_LOG:11,22,-2.8255,3.5832,162.3461,-20.00,1.50,5,17.0000,False,True,4.9893,16,33.28,187.521,in_progress,0.00
+
+1.4 1.8
+SIM_TRACE_LOG:11,23,-2.9219,3.6055,164.0179,20.00,1.50,2,16.0000,False,True,5.2868,17,33.28,187.579,in_progress,0.00
+
+1.3 1.8
+SIM_TRACE_LOG:11,24,-3.0243,3.6315,164.7037,0.00,4.00,0,15.0000,False,True,5.7332,17,33.28,187.656,in_progress,0.00
+
+1.2 1.9
+SIM_TRACE_LOG:11,25,-3.1432,3.6502,167.4148,-20.00,1.50,5,14.0000,False,True,6.0934,18,33.28,187.711,in_progress,0.00
+
+1.1 1.9
+SIM_TRACE_LOG:11,26,-3.2547,3.6716,168.2309,30.00,1.00,1,13.0000,False,True,6.6091,18,33.28,187.787,in_progress,0.00
+
+1.0 1.9
+SIM_TRACE_LOG:11,27,-3.3641,3.6953,168.0143,0.00,4.00,0,11.0000,False,True,6.9210,19,33.28,187.852,in_progress,0.00
+
+0.9 2.2
+SIM_TRACE_LOG:11,28,-3.4623,3.7104,168.8188,20.00,1.50,2,11.0000,False,True,7.4671,19,33.28,187.912,in_progress,0.00
+
+0.8 2.0
+SIM_TRACE_LOG:11,29,-3.5711,3.7241,170.4893,-10.00,2.00,6,10.0000,False,True,7.6973,19,33.28,187.988,in_progress,0.00
+
+0.7 1.8
+SIM_TRACE_LOG:11,30,-3.6813,3.7367,171.6108,30.00,1.00,1,8.0000,False,True,7.9329,20,33.28,188.056,in_progress,0.00
+
+0.5 1.5
+SIM_TRACE_LOG:11,31,-3.7902,3.7607,169.8547,10.00,2.00,3,7.0000,False,True,8.1445,20,33.28,188.11,in_progress,0.00
+
+0.4 1.3
+SIM_TRACE_LOG:11,32,-3.8910,3.7768,170.2447,0.00,4.00,0,6.0000,False,True,8.2036,20,33.28,188.2,in_progress,0.00
+
+0.3 0.7
+SIM_TRACE_LOG:11,33,-4.0138,3.7904,171.6661,30.00,1.00,1,4.0000,False,True,8.2149,20,33.28,188.252,in_progress,0.00
+
+0.2 0.6
+SIM_TRACE_LOG:11,34,-4.1266,3.8015,172.5218,-10.00,2.00,6,3.0000,False,True,8.3129,20,33.28,188.324,in_progress,0.00
+
+0.1 0.5
+SIM_TRACE_LOG:11,35,-4.2366,3.8132,172.9431,30.00,1.00,1,1.0000,False,True,8.4063,20,33.28,188.381,in_progress,0.00
+
+0.0 0.3
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:11,36,-4.3378,3.8313,171.6649,-10.00,2.00,6,0.0001,False,False,8.4718,20,33.28,188.437,in_progress,0.00
+
+0.0 0.3
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:11,37,-4.4503,3.8585,169.2643,20.00,1.50,2,0.0001,True,False,8.5247,20,33.28,188.522,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=12, Total reward=570.0, Steps=333, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:12,1,-3.9362,2.9788,-98.2217,-30.00,1.00,4,0.0000,False,True,0.4189,22,33.28,188.652,prepare,0.00
+
+1.5 0.0
+SIM_TRACE_LOG:12,2,-3.9365,2.9790,-98.2680,0.00,4.00,0,15.0000,False,True,0.4185,22,33.28,188.707,in_progress,0.00
+
+1.5 0.1
+SIM_TRACE_LOG:12,3,-3.9400,2.9721,-98.9267,20.00,1.50,2,15.0000,False,True,0.4394,22,33.28,188.784,in_progress,0.00
+
+2.0 0.2
+SIM_TRACE_LOG:12,4,-3.9342,2.9512,-96.8280,-20.00,1.50,5,20.0000,False,True,0.5016,23,33.28,188.823,in_progress,0.00
+
+1.8 0.3
+SIM_TRACE_LOG:12,5,-3.9304,2.9186,-94.9989,0.00,4.00,0,18.0000,False,True,0.5991,23,33.28,188.913,in_progress,0.00
+
+1.4 0.4
+SIM_TRACE_LOG:12,6,-3.9364,2.8712,-95.3761,30.00,1.00,1,15.0000,False,True,0.7420,23,33.28,188.981,in_progress,0.00
+
+1.7 0.5
+SIM_TRACE_LOG:12,7,-3.9309,2.8135,-93.1980,30.00,1.00,1,17.0000,False,True,0.9148,23,33.28,189.045,in_progress,0.00
+
+1.9 0.7
+SIM_TRACE_LOG:12,8,-3.9086,2.7526,-87.2976,-30.00,1.00,4,19.0000,False,True,1.0988,23,33.28,189.118,in_progress,0.00
+
+1.8 0.7
+SIM_TRACE_LOG:12,9,-3.8913,2.7043,-83.7430,-30.00,1.00,4,19.0000,False,True,1.2452,23,33.28,189.192,in_progress,0.00
+
+1.5 0.9
+SIM_TRACE_LOG:12,10,-3.8854,2.6271,-84.3400,-10.00,2.00,6,16.0000,False,True,1.4774,24,33.28,189.245,in_progress,0.00
+
+1.2 1.0
+SIM_TRACE_LOG:12,11,-3.8922,2.5489,-87.5435,-20.00,1.50,5,13.0000,False,True,1.7120,24,33.28,189.297,in_progress,0.00
+
+1.0 1.0
+SIM_TRACE_LOG:12,12,-3.9078,2.4657,-91.7255,-30.00,1.00,4,11.0000,False,True,1.9618,24,33.28,189.382,in_progress,0.00
+
+0.9 1.1
+SIM_TRACE_LOG:12,13,-3.9335,2.3810,-96.7386,-30.00,1.00,4,10.0000,False,True,2.2120,24,33.28,189.448,in_progress,0.00
+
+0.8 1.2
+SIM_TRACE_LOG:12,14,-3.9628,2.3049,-101.1531,10.00,2.00,3,9.0000,False,True,2.4354,25,33.28,189.502,in_progress,0.00
+
+0.7 1.2
+SIM_TRACE_LOG:12,15,-3.9846,2.2336,-102.6598,0.00,4.00,0,8.0000,False,True,2.6455,25,33.28,189.581,in_progress,0.00
+
+0.7 1.1
+SIM_TRACE_LOG:12,16,-4.0020,2.1439,-102.1662,0.00,4.00,0,8.0000,False,True,2.8377,25,33.28,189.645,in_progress,0.00
+
+0.6 1.2
+SIM_TRACE_LOG:12,17,-4.0210,2.0332,-101.2936,0.00,4.00,0,7.0000,False,True,3.1407,25,33.28,189.723,in_progress,0.00
+
+0.5 1.3
+SIM_TRACE_LOG:12,18,-4.0390,1.9020,-99.6329,0.00,4.00,0,6.0000,False,True,3.5034,26,33.28,189.781,in_progress,0.00
+
+0.3 1.2
+SIM_TRACE_LOG:12,19,-4.0536,1.7709,-98.1315,0.00,4.00,0,5.0000,False,True,3.6593,27,33.28,189.843,in_progress,0.00
+
+0.2 1.0
+SIM_TRACE_LOG:12,20,-4.0691,1.6107,-96.7795,0.00,4.00,0,3.0000,False,True,3.6767,27,33.28,189.912,in_progress,0.00
+
+0.0 1.2
+SIM_TRACE_LOG:12,21,-4.0836,1.4308,-95.4966,-10.00,2.00,6,1.0000,False,False,3.9944,27,33.28,189.986,in_progress,0.00
+
+0.0 1.1
+SIM_TRACE_LOG:12,22,-4.0996,1.2786,-95.3499,30.00,1.00,1,1.0000,False,False,4.2548,28,33.28,190.056,in_progress,0.00
+
+0.0 1.0
+SIM_TRACE_LOG:12,23,-4.1247,1.1023,-96.9897,-10.00,2.00,6,1.0000,True,False,4.5414,28,33.28,190.102,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=13, Total reward=237.0, Steps=356, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:13,1,-2.9737,0.3814,-121.4915,-10.00,2.00,6,0.0000,False,True,0.4215,34,33.28,190.248,prepare,0.00
+
+2.8 0.0
+SIM_TRACE_LOG:13,2,-2.9737,0.3817,-121.5103,-30.00,1.00,4,28.0000,False,True,0.4207,34,33.28,190.325,in_progress,0.00
+
+2.8 0.1
+SIM_TRACE_LOG:13,3,-2.9758,0.3765,-121.1480,0.00,4.00,0,28.0000,False,True,0.4373,34,33.28,190.375,in_progress,0.00
+
+1.3 0.2
+SIM_TRACE_LOG:13,4,-2.9909,0.3651,-122.5277,-10.00,2.00,6,13.0000,False,True,0.4902,35,33.28,190.449,in_progress,0.00
+
+1.8 0.3
+SIM_TRACE_LOG:13,5,-3.0139,0.3397,-123.9043,-10.00,2.00,6,18.0000,False,True,0.5915,35,33.28,190.517,in_progress,0.00
+
+1.6 0.4
+SIM_TRACE_LOG:13,6,-3.0518,0.3003,-126.1427,-20.00,1.50,5,17.0000,False,True,0.7521,35,33.28,190.586,in_progress,0.00
+
+1.3 0.5
+SIM_TRACE_LOG:13,7,-3.1025,0.2577,-129.7229,0.00,4.00,0,13.0000,False,True,0.9377,35,33.28,190.645,in_progress,0.00
+
+1.1 0.7
+SIM_TRACE_LOG:13,8,-3.1602,0.2145,-133.4532,0.00,4.00,0,12.0000,False,True,1.1372,35,33.28,190.711,in_progress,0.00
+
+1.3 0.9
+SIM_TRACE_LOG:13,9,-3.2206,0.1551,-134.1178,-30.00,1.00,4,14.0000,False,True,1.3828,36,33.28,190.783,in_progress,0.00
+
+1.1 1.1
+SIM_TRACE_LOG:13,10,-3.2886,0.0917,-134.8853,30.00,1.00,1,12.0000,False,True,1.6504,36,33.28,190.848,in_progress,0.00
+
+0.9 1.1
+SIM_TRACE_LOG:13,11,-3.3555,0.0353,-136.4988,30.00,1.00,1,11.0000,False,True,1.8633,36,33.28,190.934,in_progress,0.00
+
+1.1 1.1
+SIM_TRACE_LOG:13,12,-3.4103,-0.0213,-135.7971,-30.00,1.00,4,12.0000,False,True,2.0882,36,33.28,190.97,in_progress,0.00
+
+1.0 1.2
+SIM_TRACE_LOG:13,13,-3.4611,-0.0731,-135.3412,-20.00,1.50,5,11.0000,False,True,2.2948,37,33.28,191.06,in_progress,0.00
+
+0.6 1.1
+SIM_TRACE_LOG:13,14,-3.5383,-0.1228,-139.5492,-10.00,2.00,6,7.0000,False,True,2.5304,37,33.28,191.106,in_progress,0.00
+
+0.4 1.1
+SIM_TRACE_LOG:13,15,-3.6157,-0.1613,-144.1790,0.00,4.00,0,5.0000,False,True,2.7311,37,33.28,191.18,in_progress,0.00
+
+0.3 1.0
+SIM_TRACE_LOG:13,16,-3.7022,-0.2078,-146.9499,10.00,2.00,3,4.0000,False,True,2.8919,37,33.28,191.247,in_progress,0.00
+
+0.3 1.1
+SIM_TRACE_LOG:13,17,-3.7928,-0.2684,-146.8201,20.00,1.50,2,4.0000,False,True,3.1610,37,33.28,191.322,in_progress,0.00
+
+0.2 1.2
+SIM_TRACE_LOG:13,18,-3.8868,-0.3457,-144.0481,-20.00,1.50,5,3.0000,False,False,3.4807,38,33.28,191.382,in_progress,0.00
+
+0.1 1.2
+SIM_TRACE_LOG:13,19,-3.9723,-0.4182,-142.2316,0.00,4.00,0,2.0000,False,False,3.7325,38,33.28,191.454,in_progress,0.00
+
+0.0 1.3
+SIM_TRACE_LOG:13,20,-4.0622,-0.4895,-142.0086,0.00,4.00,0,1.0000,False,False,4.0261,38,33.28,191.512,in_progress,0.00
+
+0.0 1.5
+SIM_TRACE_LOG:13,21,-4.1816,-0.5717,-143.8248,30.00,1.00,1,1.0000,True,False,4.3805,39,33.28,191.596,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=14, Total reward=216.0, Steps=377, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:14,1,-3.8956,-2.7697,-90.5150,20.00,1.50,2,0.0000,False,True,0.4178,45,33.28,191.718,prepare,0.00
+
+1.2 0.0
+SIM_TRACE_LOG:14,2,-3.8956,-2.7695,-90.4962,20.00,1.50,2,12.0000,False,True,0.4170,45,33.28,191.795,in_progress,0.00
+
+1.2 0.1
+SIM_TRACE_LOG:14,3,-3.8959,-2.7759,-90.6582,10.00,2.00,3,12.0000,False,True,0.4361,45,33.28,191.851,in_progress,0.00
+
+1.3 0.2
+SIM_TRACE_LOG:14,4,-3.8943,-2.7966,-90.2437,20.00,1.50,2,13.0000,False,True,0.4983,46,33.28,191.921,in_progress,0.00
+
+1.6 0.3
+SIM_TRACE_LOG:14,5,-3.8823,-2.8336,-87.3647,0.00,4.00,0,16.0000,False,True,0.6132,46,33.28,191.977,in_progress,0.00
+
+1.5 0.4
+SIM_TRACE_LOG:14,6,-3.8691,-2.8834,-84.8477,-10.00,2.00,6,15.0000,False,True,0.7668,46,33.28,192.068,in_progress,0.00
+
+1.1 0.5
+SIM_TRACE_LOG:14,7,-3.8692,-2.9508,-86.0558,-20.00,1.50,5,11.0000,False,True,0.9581,46,33.28,192.118,in_progress,0.00
+
+0.9 0.7
+SIM_TRACE_LOG:14,8,-3.8800,-3.0219,-89.6130,30.00,1.00,1,9.0000,False,True,1.1503,46,33.28,192.171,in_progress,0.00
+
+0.8 0.9
+SIM_TRACE_LOG:14,9,-3.8957,-3.1021,-93.2616,-10.00,2.00,6,9.0000,False,True,1.3637,46,33.28,192.239,in_progress,0.00
+
+0.7 1.0
+SIM_TRACE_LOG:14,10,-3.9087,-3.1912,-95.2031,-10.00,2.00,6,8.0000,False,True,1.6052,47,33.28,192.306,in_progress,0.00
+
+0.5 1.1
+SIM_TRACE_LOG:14,11,-3.9380,-3.2872,-99.5872,10.00,2.00,3,6.0000,False,True,1.8417,47,33.28,192.354,in_progress,0.00
+
+0.4 0.9
+SIM_TRACE_LOG:14,12,-3.9690,-3.3861,-102.7022,0.00,4.00,0,5.0000,False,True,1.8979,47,33.28,192.43,in_progress,0.00
+
+0.3 1.0
+SIM_TRACE_LOG:14,13,-3.9980,-3.5054,-103.1912,0.00,4.00,0,4.0000,False,True,2.1483,47,33.28,192.509,in_progress,0.00
+
+0.2 1.0
+SIM_TRACE_LOG:14,14,-4.0277,-3.6268,-103.4842,-10.00,2.00,6,3.0000,False,True,2.4024,48,33.28,192.585,in_progress,0.00
+
+0.1 1.0
+SIM_TRACE_LOG:14,15,-4.0644,-3.7471,-104.9440,0.00,4.00,0,2.0000,False,False,2.6421,48,33.28,192.652,in_progress,0.00
+
+0.0 0.9
+SIM_TRACE_LOG:14,16,-4.1131,-3.8908,-107.2056,0.00,4.00,0,1.0000,False,False,2.7519,48,33.28,192.73,in_progress,0.00
+
+0.0 0.9
+SIM_TRACE_LOG:14,17,-4.1682,-4.0497,-108.3882,0.00,4.00,0,1.0000,True,False,2.7519,48,33.28,192.784,off_track,0.00
+
+[s3] Successfully uploaded metrics to                  s3 bucket dmh-base-2023-jan-bucket-1x1o0jxxrxubo with s3 key Four-Worker-Test/metrics/TrainingMetrics.json.
+Training> Name=main_level/agent, Worker=0, Episode=15, Total reward=127.0, Steps=394, Training iteration=0
+Reset agent
+Reset agent finished
+SIM_TRACE_LOG:15,1,-1.9470,-2.6348,80.7388,-30.00,1.00,4,0.0000,False,True,0.4149,56,33.28,192.906,prepare,0.00
+
+2.6 0.0
+SIM_TRACE_LOG:15,2,-1.9469,-2.6349,80.7094,30.00,1.00,1,26.0000,False,True,0.4147,56,33.28,192.985,in_progress,0.00
+
+2.6 0.1
+SIM_TRACE_LOG:15,3,-1.9492,-2.6308,81.3383,-20.00,1.50,5,26.0000,False,True,0.4273,56,33.28,193.054,in_progress,0.00
+
+2.6 0.2
+SIM_TRACE_LOG:15,4,-1.9461,-2.6135,81.1596,30.00,1.00,1,26.0000,False,True,0.4791,57,33.28,193.102,in_progress,0.00
+
+2.5 0.2
+SIM_TRACE_LOG:15,5,-1.9422,-2.5854,81.1785,-20.00,1.50,5,25.0000,False,True,0.5632,57,33.28,193.158,in_progress,0.00
+
+2.2 0.3
+SIM_TRACE_LOG:15,6,-1.9429,-2.5433,82.8459,-10.00,2.00,6,22.0000,False,True,0.6897,57,33.28,193.253,in_progress,0.00
+
+2.5 0.4
+SIM_TRACE_LOG:15,7,-1.9302,-2.4933,81.3514,10.00,2.00,3,26.0000,False,True,0.8391,57,33.28,193.319,in_progress,0.00
+
+2.4 0.6
+SIM_TRACE_LOG:15,8,-1.9177,-2.4354,80.4954,0.00,4.00,0,25.0000,False,True,1.0042,57,33.28,193.374,in_progress,0.00
+
+2.2 0.8
+SIM_TRACE_LOG:15,9,-1.9090,-2.3569,81.4824,-10.00,2.00,6,23.0000,False,True,1.2376,57,33.28,193.452,in_progress,0.00
+
+2.2 0.9
+SIM_TRACE_LOG:15,10,-1.8906,-2.2640,80.4769,10.00,2.00,3,23.0000,False,True,1.5125,58,33.28,193.52,in_progress,0.00
+
+2.1 1.1
+SIM_TRACE_LOG:15,11,-1.8741,-2.1622,80.6200,20.00,1.50,2,22.0000,False,True,1.8143,58,33.28,193.589,in_progress,0.00
+
+1.8 1.3
+SIM_TRACE_LOG:15,12,-1.8691,-2.0532,83.2920,-20.00,1.50,5,19.0000,False,True,2.1549,58,33.28,193.655,in_progress,0.00
+
+1.7 1.5
+SIM_TRACE_LOG:15,13,-1.8611,-1.9425,84.2920,-10.00,2.00,6,19.0000,False,True,2.4867,59,33.28,193.721,in_progress,0.00
+
+1.8 1.6
+SIM_TRACE_LOG:15,14,-1.8413,-1.8296,82.4376,-10.00,2.00,6,19.0000,False,True,2.8769,59,33.28,193.784,in_progress,0.00
+
+1.8 1.7
+SIM_TRACE_LOG:15,15,-1.8090,-1.7243,78.5890,30.00,1.00,1,19.0000,False,True,3.1999,59,33.28,193.852,in_progress,0.00
+
+1.7 1.7
+SIM_TRACE_LOG:15,16,-1.7665,-1.6091,73.7701,-20.00,1.50,5,19.0000,False,True,3.5550,60,33.28,193.908,in_progress,0.00
+
+1.6 1.8
+SIM_TRACE_LOG:15,17,-1.7311,-1.5091,72.3379,20.00,1.50,2,18.0000,False,True,3.9939,60,33.28,193.991,in_progress,0.00
+
+1.4 1.9
+SIM_TRACE_LOG:15,18,-1.6981,-1.3965,72.9773,0.00,4.00,0,16.0000,False,True,4.3465,61,33.28,194.04,in_progress,0.00
+
+1.3 2.0
+SIM_TRACE_LOG:15,19,-1.6738,-1.2850,74.8607,10.00,2.00,3,15.0000,False,True,4.8517,61,33.28,194.108,in_progress,0.00
+
+1.1 2.0
+SIM_TRACE_LOG:15,20,-1.6596,-1.1663,78.5625,0.00,4.00,0,13.0000,False,True,5.1840,62,33.28,194.184,in_progress,0.00
+
+0.9 2.1
+SIM_TRACE_LOG:15,21,-1.6511,-1.0392,82.0908,-20.00,1.50,5,11.0000,False,True,5.6131,62,33.28,194.249,in_progress,0.00
+
+0.8 2.0
+SIM_TRACE_LOG:15,22,-1.6311,-0.8877,83.0059,-20.00,1.50,5,10.0000,False,True,5.9838,63,33.28,194.302,in_progress,0.00
+
+0.7 1.9
+SIM_TRACE_LOG:15,23,-1.6072,-0.7760,80.8775,-30.00,1.00,4,9.0000,False,True,6.2760,63,33.28,194.385,in_progress,0.00
+
+0.7 1.7
+SIM_TRACE_LOG:15,24,-1.5744,-0.6671,77.5890,0.00,4.00,0,8.0000,False,True,6.5115,63,33.28,194.451,in_progress,0.00
+
+0.6 1.6
+SIM_TRACE_LOG:15,25,-1.5400,-0.5680,74.6962,-10.00,2.00,6,7.0000,False,True,6.7624,63,33.28,194.531,in_progress,0.00
+
+0.5 1.4
+SIM_TRACE_LOG:15,26,-1.4998,-0.4584,72.0340,30.00,1.00,1,6.0000,False,True,7.0453,64,33.28,194.584,in_progress,0.00
+
+0.3 1.3
+SIM_TRACE_LOG:15,27,-1.4628,-0.3579,70.7549,20.00,1.50,2,5.0000,False,True,7.3051,64,33.28,194.643,in_progress,0.00
+
+0.2 1.0
+SIM_TRACE_LOG:15,28,-1.4353,-0.2597,72.1589,-30.00,1.00,4,3.0000,False,True,7.3072,64,33.28,194.706,in_progress,0.00
+
+0.1 0.8
+SIM_TRACE_LOG:15,29,-1.4171,-0.1616,74.9079,30.00,1.00,1,2.0000,False,True,7.3072,64,33.28,194.783,in_progress,0.00
+
+0.0 0.6
+SIM_TRACE_LOG:15,30,-1.4012,-0.0796,76.3457,-30.00,1.00,4,1.0000,False,False,7.3181,64,33.28,194.857,in_progress,0.00
+
+0.0 0.4
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:15,31,-1.3871,0.0045,77.7643,-10.00,2.00,6,0.0001,False,False,7.4112,64,33.28,194.911,in_progress,0.00
+
+0.0 0.2
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:15,32,-1.3644,0.0860,76.6616,20.00,1.50,2,0.0001,False,False,7.5282,64,33.28,194.979,in_progress,0.00
+
+0.0 0.3
+WARNING - Invalid reward 0.0 replaced with 0.0001
+SIM_TRACE_LOG:15,33,-1.3398,0.1764,75.9637,10.00,2.00,3,0.0001,True,False,7.6562,64,33.28,195.053,off_track,0.00
+

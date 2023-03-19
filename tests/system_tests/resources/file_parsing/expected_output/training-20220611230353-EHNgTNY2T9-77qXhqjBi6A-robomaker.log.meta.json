@@ -1,0 +1,144 @@
+{
+  "guru_version": "4.0.0.DEVELOPMENT",
+  "model_name": "training-20220611230353-EHNgTNY2T9-77qXhqjBi6A-robomaker",
+  "job": {
+    "type": "TRAINING",
+    "platform": "AWS_CONSOLE",
+    "workers": 1,
+    "worker_id": 0,
+    "start_date": "2022-06-11"
+  },
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.05
+  },
+  "environment": {
+    "simulation_version": "4.0",
+    "track_name": "reinvent_base"
+  },
+  "log_file": {
+    "name": "training-20220611230353-EHNgTNY2T9-77qXhqjBi6A-robomaker.log",
+    "os_stats": {
+      "uid": 0,
+      "size": 5756304,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "TIME_TRIAL"
+  },
+  "car": {
+    "trim_colour": "BLACK",
+    "shell_type": "deepracer",
+    "sensors": [
+      "SINGLE_CAMERA"
+    ]
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
+  },
+  "hyperparameters": {
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "discount_factor": 0.95,
+    "loss_type": "HUBER",
+    "episodes_per_training_iteration": 20,
+    "beta_entropy": 0.01,
+    "epochs": 3,
+    "e_greedy_value": 1.0,
+    "epsilon_steps": 10000,
+    "exploration_type": "CATEGORICAL",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 100000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 563,
+    "iteration_count": 29,
+    "success_count": 48,
+    "average_percent_complete": 33.88343570159857,
+    "best_steps": 213,
+    "average_steps": 228,
+    "worst_steps": 242,
+    "best_time": 14.128000000000156,
+    "average_time": 15.106958333333395,
+    "worst_time": 16.067000000000007,
+    "best_distance": 16.76814028430743,
+    "average_distance": 17.806931498888197,
+    "worst_distance": 18.760062510745428,
+    "best_reward": 184.0,
+    "average_reward": 49.94522202486678,
+    "worst_reward": 6.304
+  },
+  "action_space": {
+    "type": "DISCRETE",
+    "min_speed": 1.0,
+    "max_speed": 2.0,
+    "max_left_steering": 30.0,
+    "max_right_steering": -30.0,
+    "actions": [
+      {
+        "speed": 1.0,
+        "steering_angle": -30.0
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": -30.0
+      },
+      {
+        "speed": 1.0,
+        "steering_angle": -20.0
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": -20.0
+      },
+      {
+        "speed": 1.0,
+        "steering_angle": -10.000000000000004
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": -10.000000000000004
+      },
+      {
+        "speed": 1.0,
+        "steering_angle": 0.0
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": 0.0
+      },
+      {
+        "speed": 1.0,
+        "steering_angle": 9.999999999999998
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": 9.999999999999998
+      },
+      {
+        "speed": 1.0,
+        "steering_angle": 20.0
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": 20.0
+      },
+      {
+        "speed": 1.0,
+        "steering_angle": 30.0
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": 30.0
+      }
+    ]
+  }
+}

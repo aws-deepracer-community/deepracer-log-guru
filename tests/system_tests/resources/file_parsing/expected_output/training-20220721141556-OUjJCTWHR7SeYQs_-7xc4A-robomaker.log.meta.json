@@ -1,0 +1,132 @@
+{
+  "guru_version": "4.0.0.DEVELOPMENT",
+  "model_name": "training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker",
+  "job": {
+    "type": "TRAINING",
+    "platform": "AWS_CONSOLE",
+    "workers": 1,
+    "worker_id": 0,
+    "start_date": "2022-07-21"
+  },
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.05
+  },
+  "environment": {
+    "simulation_version": "5.0",
+    "track_name": "reinvent_base"
+  },
+  "log_file": {
+    "name": "training-20220721141556-OUjJCTWHR7SeYQs_-7xc4A-robomaker.log",
+    "os_stats": {
+      "uid": 0,
+      "size": 473560,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "TIME_TRIAL"
+  },
+  "car": {
+    "trim_colour": "BLACK",
+    "shell_type": "deepracer",
+    "sensors": [
+      "SINGLE_CAMERA"
+    ]
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
+  },
+  "hyperparameters": {
+    "batch_size": 128,
+    "learning_rate": 2e-05,
+    "discount_factor": 0.97,
+    "loss_type": "HUBER",
+    "episodes_per_training_iteration": 20,
+    "beta_entropy": 0.002,
+    "epochs": 10,
+    "e_greedy_value": 0.05,
+    "epsilon_steps": 10000,
+    "exploration_type": "CATEGORICAL",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 35000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 20,
+    "iteration_count": 1,
+    "success_count": 18,
+    "average_percent_complete": 97.147795,
+    "best_steps": 132,
+    "average_steps": 141,
+    "worst_steps": 156,
+    "best_time": 8.732,
+    "average_time": 9.306555555555555,
+    "worst_time": 10.332,
+    "best_distance": 17.043004962005536,
+    "average_distance": 17.539005043029206,
+    "worst_distance": 18.12623261923561,
+    "best_reward": 33774.0,
+    "average_reward": 28649.64188,
+    "worst_reward": 12513.2011
+  },
+  "action_space": {
+    "type": "DISCRETE",
+    "min_speed": 1.2,
+    "max_speed": 3.0,
+    "max_left_steering": 30.0,
+    "max_right_steering": -30.0,
+    "actions": [
+      {
+        "speed": 3,
+        "steering_angle": 0
+      },
+      {
+        "speed": 3,
+        "steering_angle": -5
+      },
+      {
+        "speed": 3,
+        "steering_angle": 5
+      },
+      {
+        "speed": 3,
+        "steering_angle": -10
+      },
+      {
+        "speed": 3,
+        "steering_angle": 10
+      },
+      {
+        "speed": 3,
+        "steering_angle": -15
+      },
+      {
+        "speed": 3,
+        "steering_angle": 15
+      },
+      {
+        "speed": 1.7,
+        "steering_angle": 30
+      },
+      {
+        "speed": 1.7,
+        "steering_angle": -30
+      },
+      {
+        "speed": 1.2,
+        "steering_angle": 30
+      },
+      {
+        "speed": 1.2,
+        "steering_angle": -30
+      }
+    ]
+  }
+}

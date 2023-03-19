@@ -1,3 +1,6 @@
+# v4 UI STATUS - CONVERSION IN PROGRESS
+# *************************************
+
 #
 # DeepRacer Guru
 #
@@ -5,12 +8,15 @@
 #
 # Copyright (c) 2021 dmh23
 #
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor
 
 import src.utils.geometry as geometry
+from graphics.track_analysis_canvas import TrackAnalysisCanvas, TrackArea, Line, FilledCircle, Text
 from src.analyze.util.heatmap import HeatMap
 from src.analyze.util.visitor import VisitorMap
 from src.configuration.real_world import VEHICLE_LENGTH, VEHICLE_WIDTH, BOX_OBSTACLE_WIDTH, BOX_OBSTACLE_LENGTH
-from src.graphics.track_graphics import TrackGraphics
+from src.graphics.track_graphics_old_v3 import TrackGraphics
 from src.utils.types import Point
 
 DISPLAY_BORDER = 0.3
@@ -106,22 +112,22 @@ class Track:
 
         all_tracks[self._world_name] = self
 
-    def configure_track_graphics(self, track_graphics: TrackGraphics):
-        track_graphics.set_track_area(
-            self._min_x - DISPLAY_BORDER, self._min_y - DISPLAY_BORDER,
-            self._max_x + DISPLAY_BORDER, self._max_y + DISPLAY_BORDER)
+    def configure_track_canvas(self, canvas: TrackAnalysisCanvas):
+        area = TrackArea(self._min_x - DISPLAY_BORDER, self._min_y - DISPLAY_BORDER,
+                         self._max_x + DISPLAY_BORDER, self._max_y + DISPLAY_BORDER)
+        canvas.set_track_area(area)
 
-    def draw_track_edges(self, track_graphics: TrackGraphics, colour: str):
+    def draw_track_edges(self, track_canvas: TrackAnalysisCanvas, colour: QColor):
         previous_left = self._drawing_points[-1].left
         previous_right = self._drawing_points[-1].right
 
         for p in self._drawing_points:
-            track_graphics.plot_line(previous_left, p.left, 3, colour)
+            track_canvas.add_fixed_shape(Line(previous_left, p.left, 3, colour))
             previous_left = p.left
-            track_graphics.plot_line(previous_right, p.right, 3, colour)
+            track_canvas.add_fixed_shape(Line(previous_right, p.right, 3, colour))
             previous_right = p.right
 
-    def draw_section_highlight(self, track_graphics: TrackGraphics, colour: str, start: int, finish: int):
+    def draw_section_highlight(self, track_canvas: TrackAnalysisCanvas, colour: QColor, start: int, finish: int):
         previous_left = self._drawing_points[start].left_outer
         previous_right = self._drawing_points[start].right_outer
 
@@ -131,42 +137,51 @@ class Track:
             highlight_points = self._drawing_points[start:] + self._drawing_points[:finish + 1]
 
         for p in highlight_points:
-            track_graphics.plot_line(previous_left, p.left_outer, 5, colour)
+            track_canvas.add_fixed_shape(Line(previous_left, p.left_outer, 4, colour))
             previous_left = p.left_outer
-            track_graphics.plot_line(previous_right, p.right_outer, 5, colour)
+            track_canvas.add_fixed_shape(Line(previous_right, p.right_outer, 4, colour))
             previous_right = p.right_outer
 
-    def draw_starting_line(self, track_graphics: TrackGraphics, colour: str):
-        track_graphics.plot_line(self._drawing_points[0].left, self._drawing_points[0].right, 3, colour)
+    def draw_starting_line(self, track_canvas: TrackAnalysisCanvas, colour: QColor):
+        track_canvas.add_fixed_shape(Line(self._drawing_points[0].left, self._drawing_points[0].right, 3, colour))
 
-    def draw_sector_dividers(self, track_graphics: TrackGraphics, colour: str):
+    def draw_sector_dividers(self, track_canvas: TrackAnalysisCanvas, colour: QColor):
         for p in self._drawing_points:
             if p.is_divider:
-                track_graphics.plot_line(p.left, p.right, 3, colour, (4, 2))
+                track_canvas.add_fixed_shape(Line(p.left, p.right, 2, colour, (2, 3)))
 
-    def draw_waypoints(self, track_graphics: TrackGraphics, colour: str, minor_size: int, major_size: int):
+    def draw_waypoints(self, track_canvas: TrackAnalysisCanvas, colour: QColor, minor_size: int, major_size: int):
         assert major_size >= minor_size
         for (i, p) in enumerate(self._drawing_points):
             if i % 10 == 0:
-                track_graphics.plot_dot(p.middle, major_size, colour)
+                track_canvas.add_fixed_shape(FilledCircle(p.middle, major_size, colour))
             else:
-                track_graphics.plot_dot(p.middle, minor_size, colour)
+                track_canvas.add_fixed_shape(FilledCircle(p.middle, minor_size, colour))
 
-    def draw_waypoint_labels(self, track_graphics: TrackGraphics, colour: str, font_size: int):
+    def draw_waypoint_labels(self, track_canvas: TrackAnalysisCanvas, colour: QColor, font_size: int):
         last_label_position = None
-        for (i, p) in enumerate(self._drawing_points[:-2]):
+        for (i, p) in enumerate(self._drawing_points[1:-2]):
             if self._is_vertical_at_waypoint(i):
-                label = track_graphics.plot_text(p.middle, str(i), font_size, colour, -1.5 * font_size, 0.0)
+                y_offset = 0
+                if i >= 99:
+                    x_offset = -round(1.5 * font_size)
+                else:
+                    x_offset = -font_size
             else:
-                label = track_graphics.plot_text(p.middle, str(i), font_size, colour, 0.0, 1.5 * font_size)
+                x_offset = 0
+                y_offset = font_size + 2
 
-            label_position = track_graphics.get_widget_position(label)
-            if last_label_position is None:
-                last_label_position = label_position
-            elif geometry.get_distance_between_points(last_label_position, label_position) < 2.5 * font_size:
-                track_graphics.delete_widget(label)
-            else:
-                last_label_position = label_position
+            track_canvas.add_fixed_shape(Text(p.middle, str(i+1), font_size, colour, x_offset, y_offset))
+            # track_canvas.add_fixed_shape(Text(p.middle, str(i+1), font_size, colour))
+
+            # TODO Clever stuff to skip labels which would be too close together!
+            # label_position = track_canvas.get_widget_position(label)
+            # if last_label_position is None:
+            #     last_label_position = label_position
+            # elif geometry.get_distance_between_points(last_label_position, label_position) < 2.5 * font_size:
+            #     track_graphics.delete_widget(label)
+            # else:
+            #     last_label_position = label_position
 
     def draw_annotations(self, track_graphics: TrackGraphics):
         for a in self._annotations:

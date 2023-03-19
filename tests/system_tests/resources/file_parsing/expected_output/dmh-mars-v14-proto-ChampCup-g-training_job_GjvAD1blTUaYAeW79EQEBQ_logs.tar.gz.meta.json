@@ -1,0 +1,173 @@
+{
+  "guru_version": "4.0.0.DEVELOPMENT",
+  "model_name": "dmh-mars-v14-proto-ChampCup-g",
+  "job": {
+    "type": "TRAINING",
+    "platform": "AWS_CONSOLE",
+    "workers": 1,
+    "worker_id": 0,
+    "start_date": "2020-08-07"
+  },
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.05
+  },
+  "environment": {
+    "simulation_version": "3.0",
+    "track_name": "reInvent2019_track"
+  },
+  "log_file": {
+    "name": "dmh-mars-v14-proto-ChampCup-g-training_job_GjvAD1blTUaYAeW79EQEBQ_logs.tar.gz",
+    "os_stats": {
+      "uid": 0,
+      "size": 5086633,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "TIME_TRIAL"
+  },
+  "car": {
+    "trim_colour": "RED",
+    "name": "ReInventRacers-MARS",
+    "shell_type": "f1_2021",
+    "sensors": [
+      "SINGLE_CAMERA"
+    ]
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
+  },
+  "hyperparameters": {
+    "batch_size": 128,
+    "learning_rate": 1e-05,
+    "discount_factor": 0.995,
+    "loss_type": "HUBER",
+    "episodes_per_training_iteration": 40,
+    "beta_entropy": 1e-05,
+    "epochs": 10,
+    "e_greedy_value": 1.0,
+    "epsilon_steps": 10000,
+    "exploration_type": "CATEGORICAL",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 100000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 520,
+    "iteration_count": 13,
+    "success_count": 246,
+    "average_percent_complete": 71.27446230769225,
+    "best_steps": 133,
+    "average_steps": 154,
+    "worst_steps": 197,
+    "best_time": 8.954927682876587,
+    "average_time": 10.293760322942966,
+    "worst_time": 13.220787525177002,
+    "best_distance": 20.448732529711684,
+    "average_distance": 21.81402926535902,
+    "worst_distance": 23.81616322929046,
+    "best_reward": 217653.92140000002,
+    "average_reward": 101159.94227692307,
+    "worst_reward": 223.4
+  },
+  "action_space": {
+    "type": "DISCRETE",
+    "min_speed": 1.3333333333333333,
+    "max_speed": 4.0,
+    "max_left_steering": 30.0,
+    "max_right_steering": -30.0,
+    "actions": [
+      {
+        "speed": 1.3333333333333333,
+        "steering_angle": -30
+      },
+      {
+        "speed": 2.6666666666666665,
+        "steering_angle": -30
+      },
+      {
+        "speed": 4,
+        "steering_angle": -30
+      },
+      {
+        "speed": 1.3333333333333333,
+        "steering_angle": -20
+      },
+      {
+        "speed": 2.6666666666666665,
+        "steering_angle": -20
+      },
+      {
+        "speed": 4,
+        "steering_angle": -20
+      },
+      {
+        "speed": 1.3333333333333333,
+        "steering_angle": -10.000000000000004
+      },
+      {
+        "speed": 2.6666666666666665,
+        "steering_angle": -10.000000000000004
+      },
+      {
+        "speed": 4,
+        "steering_angle": -10.000000000000004
+      },
+      {
+        "speed": 1.3333333333333333,
+        "steering_angle": 0
+      },
+      {
+        "speed": 2.6666666666666665,
+        "steering_angle": 0
+      },
+      {
+        "speed": 4,
+        "steering_angle": 0
+      },
+      {
+        "speed": 1.3333333333333333,
+        "steering_angle": 9.999999999999998
+      },
+      {
+        "speed": 2.6666666666666665,
+        "steering_angle": 9.999999999999998
+      },
+      {
+        "speed": 4,
+        "steering_angle": 9.999999999999998
+      },
+      {
+        "speed": 1.3333333333333333,
+        "steering_angle": 20
+      },
+      {
+        "speed": 2.6666666666666665,
+        "steering_angle": 20
+      },
+      {
+        "speed": 4,
+        "steering_angle": 20
+      },
+      {
+        "speed": 1.3333333333333333,
+        "steering_angle": 30
+      },
+      {
+        "speed": 2.6666666666666665,
+        "steering_angle": 30
+      },
+      {
+        "speed": 4,
+        "steering_angle": 30
+      }
+    ]
+  }
+}

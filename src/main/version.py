@@ -6,4 +6,4 @@
 # Copyright (c) 2021 dmh23
 #
 
-VERSION = "VERSION 4 PROTOTYPE"
+VERSION = "3.2.19"

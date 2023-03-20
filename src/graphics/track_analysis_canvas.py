@@ -146,8 +146,16 @@ class Line(FixedShape):
     def paint(self, painter: QPainter, scale: Scale):
         x1, y1 = scale.apply(self._start)
         x2, y2 = scale.apply(self._finish)
+
+        plain_line = x1 == x2 or y1 == y2
+        if plain_line:
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
+
         painter.setPen(self._pen)
         painter.drawLine(x1, y1, x2, y2)
+
+        if plain_line:
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
 
 class Path(FixedShape):

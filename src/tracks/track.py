@@ -188,23 +188,24 @@ class Track:
         for a in self._annotations:
             a.draw(track_graphics, self._drawing_points, self._track_width)
 
-    def draw_grid(self, track_graphics: TrackGraphics, colour: str):
+    def draw_grid(self, track_canvas: TrackAnalysisCanvas, colour: QColor):
         x = self._min_x
+
         while x < self._max_x:
-            track_graphics.plot_line(
+            track_canvas.add_fixed_shape(Line(
                 (x, self._min_y),
                 (x, self._max_y),
-                1,
-                colour)
+                0,
+                colour))
             x += 1
 
         y = self._min_y
         while y < self._max_y:
-            track_graphics.plot_line(
+            track_canvas.add_fixed_shape(Line(
                 (self._min_x, y),
                 (self._max_x, y),
-                1,
-                colour)
+                0,
+                colour))
             y += 1
 
     def draw_sector_labels(self, track_graphics: TrackGraphics, colour: str):

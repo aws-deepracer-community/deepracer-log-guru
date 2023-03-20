@@ -5,7 +5,7 @@ from abc import ABC
 
 from graphics.canvas import Canvas
 from PyQt6.QtWidgets import QAbstractGraphicsShapeItem
-from PyQt6.QtGui import QPen, QPainter, QBrush, QColor, QFont
+from PyQt6.QtGui import QPen, QPainter, QBrush, QColor, QFont, QPainterPath
 from PyQt6.QtCore import Qt
 
 from utils import geometry
@@ -148,6 +148,28 @@ class Line(FixedShape):
         x2, y2 = scale.apply(self._finish)
         painter.setPen(self._pen)
         painter.drawLine(x1, y1, x2, y2)
+
+
+class Path(FixedShape):
+    def __init__(self, points: list[Point], width: int, colour: QColor, dash_pattern: (int, int) = None):
+        assert len(points) >= 2
+        self._points = points
+        self._pen = QPen(colour)
+        self._pen.setWidth(width)
+        if dash_pattern:
+            self._pen.setDashPattern(dash_pattern)
+
+    def paint(self, painter: QPainter, scale: Scale):
+        path = QPainterPath()
+        x, y = scale.apply(self._points[0])
+        path.moveTo(x, y)
+        for p in self._points[1:]:
+            x, y = scale.apply(p)
+            path.lineTo(x, y)
+
+        painter.setPen(self._pen)
+        painter.setBrush(QBrush())
+        painter.drawPath(path)
 
 
 # The point given is the approximate CENTRE of the text

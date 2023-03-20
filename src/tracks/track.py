@@ -8,11 +8,11 @@
 #
 # Copyright (c) 2021 dmh23
 #
-from PyQt6.QtCore import Qt
+
 from PyQt6.QtGui import QColor
 
 import src.utils.geometry as geometry
-from graphics.track_analysis_canvas import TrackAnalysisCanvas, TrackArea, Line, FilledCircle, Text
+from graphics.track_analysis_canvas import TrackAnalysisCanvas, TrackArea, Line, FilledCircle, Text, Path
 from src.analyze.util.heatmap import HeatMap
 from src.analyze.util.visitor import VisitorMap
 from src.configuration.real_world import VEHICLE_LENGTH, VEHICLE_WIDTH, BOX_OBSTACLE_WIDTH, BOX_OBSTACLE_LENGTH
@@ -118,18 +118,18 @@ class Track:
         canvas.set_track_area(area)
 
     def draw_track_edges(self, track_canvas: TrackAnalysisCanvas, colour: QColor):
-        previous_left = self._drawing_points[-1].left
-        previous_right = self._drawing_points[-1].right
-
+        left_path_points = [self._drawing_points[-1].left]
+        right_path_points = [self._drawing_points[-1].right]
         for p in self._drawing_points:
-            track_canvas.add_fixed_shape(Line(previous_left, p.left, 3, colour))
-            previous_left = p.left
-            track_canvas.add_fixed_shape(Line(previous_right, p.right, 3, colour))
-            previous_right = p.right
+            left_path_points.append(p.left)
+            right_path_points.append(p.right)
+
+        track_canvas.add_fixed_shape(Path(left_path_points, 3, colour))
+        track_canvas.add_fixed_shape(Path(right_path_points, 3, colour))
 
     def draw_section_highlight(self, track_canvas: TrackAnalysisCanvas, colour: QColor, start: int, finish: int):
-        previous_left = self._drawing_points[start].left_outer
-        previous_right = self._drawing_points[start].right_outer
+        left_path_points = [self._drawing_points[start].left_outer]
+        right_path_points = [self._drawing_points[start].right_outer]
 
         if finish >= start:
             highlight_points = self._drawing_points[start + 1:finish + 1]
@@ -137,10 +137,11 @@ class Track:
             highlight_points = self._drawing_points[start:] + self._drawing_points[:finish + 1]
 
         for p in highlight_points:
-            track_canvas.add_fixed_shape(Line(previous_left, p.left_outer, 4, colour))
-            previous_left = p.left_outer
-            track_canvas.add_fixed_shape(Line(previous_right, p.right_outer, 4, colour))
-            previous_right = p.right_outer
+            left_path_points.append(p.left_outer)
+            right_path_points.append(p.right_outer)
+
+        track_canvas.add_fixed_shape(Path(left_path_points, 4, colour))
+        track_canvas.add_fixed_shape(Path(right_path_points, 4, colour))
 
     def draw_starting_line(self, track_canvas: TrackAnalysisCanvas, colour: QColor):
         track_canvas.add_fixed_shape(Line(self._drawing_points[0].left, self._drawing_points[0].right, 3, colour))
@@ -148,7 +149,7 @@ class Track:
     def draw_sector_dividers(self, track_canvas: TrackAnalysisCanvas, colour: QColor):
         for p in self._drawing_points:
             if p.is_divider:
-                track_canvas.add_fixed_shape(Line(p.left, p.right, 2, colour, (2, 3)))
+                track_canvas.add_fixed_shape(Line(p.left, p.right, 3, colour, (2, 3)))
 
     def draw_waypoints(self, track_canvas: TrackAnalysisCanvas, colour: QColor, minor_size: int, major_size: int):
         assert major_size >= minor_size

@@ -20,18 +20,14 @@ BIG_JUMP = 25
 
 
 class PleaseWait:
-    def __init__(self, status_bar: QStatusBar, set_busy_cursor_method: callable, set_normal_cursor_method: callable):
+    def __init__(self, status_bar: QStatusBar):
         self._percent_done = 0
         self._status_bar = status_bar
-        self._set_busy_cursor_method = set_busy_cursor_method
-        self._set_normal_cursor_method = set_normal_cursor_method
         self._progress_bar = QProgressBar()
         self._progress_bar.setRange(0, 100)
         self._label_widget = QLabel()
 
     def start(self, title):
-        self._set_busy_cursor_method()
-
         self._percent_done = 0
 
         self._label_widget = QLabel(title)
@@ -50,7 +46,6 @@ class PleaseWait:
         self._status_bar.removeWidget(self._label_widget)
         self._status_bar.removeWidget(self._progress_bar)
         self._status_bar.repaint()
-        self._set_normal_cursor_method()
 
     def set_progress(self, percent_done: int | float):
         percent_done = min(100, max(0, round(percent_done)))

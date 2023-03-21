@@ -32,7 +32,7 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(get_custom_icon("window_icon"))
 
         # Status Bar
-        self._please_wait = PleaseWait(self.statusBar(), self.set_busy_cursor, self.set_normal_cursor)
+        self._please_wait = PleaseWait(self.statusBar())
 
         # Define UI actions
         self._actions = Actions(self.style())

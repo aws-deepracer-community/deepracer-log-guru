@@ -4,7 +4,7 @@
 from abc import ABC
 
 from graphics.canvas import Canvas
-from PyQt6.QtWidgets import QAbstractGraphicsShapeItem
+from PyQt6.QtWidgets import QAbstractGraphicsShapeItem, QGraphicsLineItem, QGraphicsItem
 from PyQt6.QtGui import QPen, QPainter, QBrush, QColor, QFont, QPainterPath
 from PyQt6.QtCore import Qt
 
@@ -70,7 +70,7 @@ class TrackAnalysisCanvas(Canvas):
     def set_track_area(self, track_area: TrackArea):
         self._track_area = track_area
 
-    def _get_current_scale(self):
+    def _get_current_scale(self, width: int, height: int):
         min_x = self._track_area.min_x
         min_y = self._track_area.min_y
         max_x = self._track_area.max_x
@@ -79,8 +79,8 @@ class TrackAnalysisCanvas(Canvas):
         x_size = max_x - min_x
         y_size = max_y - min_y
 
-        x_scale = self.geometry().width() / x_size
-        y_scale = self.geometry().height() / y_size
+        x_scale = width / x_size
+        y_scale = height / y_size
 
         scale = min(x_scale, y_scale)
 
@@ -89,21 +89,22 @@ class TrackAnalysisCanvas(Canvas):
 
         return Scale(min_x - x_border, max_y + y_border, scale)
 
-    def _paint(self, painter: QPainter):
-        scale = self._get_current_scale()
+    def _paint(self, painter: QPainter, width: int, height: int):
+        scale = self._get_current_scale(width, height)
         for f in self._fixed_shapes:
             f.paint(painter, scale)
 
-    def _get_scene_items(self) -> list[QAbstractGraphicsShapeItem]:
-        # rect = QGraphicsRectItem(0, 0, self._width / 20, self._height / 20)
-        # rect.setPos(self._width / 10, self._height / 10)
-        # brush = QBrush(Qt.GlobalColor.red)
-        # rect.setBrush(brush)
+    def _get_scene_items(self) -> list[QGraphicsItem]:
         # pen = QPen(Qt.GlobalColor.cyan)
-        # pen.setWidth(10)
-        # rect.setPen(pen)
+        # pen.setWidth(0)
+        # result = []
+        # for i in range(0, 200):
+        #     line = QGraphicsLineItem(i * 2, 0, i * 2, 200)
+        #     line.setPos(0, 0)
+        #     line.setPen(pen)
+        #     result.append(line)
         #
-        # return [rect]
+        # return result
         return []
 
     def add_fixed_shape(self, item: FixedShape):
@@ -126,7 +127,7 @@ class FilledCircle(FixedShape):
         painter.setPen(self._pen)
         painter.setBrush(self._brush)
         radius = self._diameter / 2
-        if self._diameter >= 3:
+        if self._diameter >= 2:
             painter.drawEllipse(round(x - radius), round(y - radius), self._diameter, self._diameter)
         else:
             painter.drawPoint(round(x), round(y))

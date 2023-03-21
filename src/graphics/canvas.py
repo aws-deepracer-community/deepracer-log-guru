@@ -13,13 +13,13 @@ class Canvas(QGraphicsView):
     def __init__(self, background_colour: Qt.GlobalColor):
         super().__init__(None)
         self._background_colour = background_colour
-        self._width = self.geometry().width() - 2
-        self._height = self.geometry().height() - 2
+        self._width = self.geometry().width() - 5
+        self._height = self.geometry().height() - 5
         self._recreate_scene()
 
     def paintEvent(self, event):
-        new_width = self.geometry().width() - 2
-        new_height = self.geometry().height() - 2
+        new_width = self.geometry().width() - 5
+        new_height = self.geometry().height() - 5
         if self._width != new_width or self._height != new_height:
             self._width = new_width
             self._height = new_height
@@ -32,7 +32,7 @@ class Canvas(QGraphicsView):
         pixmap.fill(self._background_colour)
         painter = QPainter(pixmap)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        self._paint(painter)
+        self._paint(painter, self._width, self._height)
         painter.end()
 
         scene = QGraphicsScene(0, 0, self._width, self._height)
@@ -42,7 +42,7 @@ class Canvas(QGraphicsView):
         self.setScene(scene)
 
     @abstractmethod
-    def _paint(self, painter: QPainter):
+    def _paint(self, painter: QPainter, width: int, height: int):
         pass
 
     @abstractmethod

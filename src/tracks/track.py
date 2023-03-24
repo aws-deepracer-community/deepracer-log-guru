@@ -184,9 +184,9 @@ class Track:
             # else:
             #     last_label_position = label_position
 
-    def draw_annotations(self, track_graphics: TrackGraphics):
+    def draw_annotations(self, track_canvas: TrackAnalysisCanvas):
         for a in self._annotations:
-            a.draw(track_graphics, self._drawing_points, self._track_width)
+            a.draw(track_canvas, self._drawing_points, self._track_width)
 
     def draw_grid(self, track_canvas: TrackAnalysisCanvas, colour: QColor):
         x = self._min_x

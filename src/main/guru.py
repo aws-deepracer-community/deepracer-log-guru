@@ -1,8 +1,7 @@
 import sys
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QColor
-from PyQt6.QtWidgets import QMainWindow, QApplication, QProgressBar, QFileDialog, QVBoxLayout, QLabel, QHBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QApplication, QProgressBar, QFileDialog, QLabel, QHBoxLayout
 
 from src.log.log import Log
 from src.configuration.config_manager import ConfigManager
@@ -14,7 +13,7 @@ from src.graphics.track_analysis_canvas import TrackAnalysisCanvas
 from src.tracks.tracks import get_all_tracks
 from src.ui.open_file_dialog import OpenFileDialog
 from ui.icons import get_custom_icon
-from ui.track_painter import TrackPainter
+from graphics.track_painter import TrackPainter
 
 
 class MainWindow(QMainWindow):

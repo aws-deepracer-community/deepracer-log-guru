@@ -7,106 +7,107 @@ SECTOR_BORDER = 0.2
 
 class TrackPainter:
     def __init__(self):
-        self.track_colour = Colours.TRACK_GREY
+        self._track_colour = Colours.TRACK_GREY
 
-        self.waypoint_major_size = 0
-        self.waypoint_minor_size = 0
+        self._waypoint_major_size = 0
+        self._waypoint_minor_size = 0
 
-        self.waypoints_on = True
-        self.waypoint_labels_on = False
-        self.grid_on = False
-        self.annotations_on = False
-        self.sectors_on = False
+        self._waypoints_on = True
+        self._waypoint_labels_on = False
+        self._grid_on = False
+        self._annotations_on = False
+        self._sectors_on = False
 
-        self.drawing_order = [ "G", "A", "T", "N" ]
+        self._drawing_order = ["G", "A", "T", "N"]
 
         self.set_track_colour_grey()
         self.set_waypoint_sizes_micro()
 
-        self.zoom_x = None
-        self.zoom_y = None
-        self.zoom_x2 = None
-        self.zoom_y2 = None
-
-        self.zoom_in = False
+        # Moves elsewhere
+        # self.zoom_x = None
+        # self.zoom_y = None
+        # self.zoom_x2 = None
+        # self.zoom_y2 = None
+        #
+        # self.zoom_in = False
 
     def set_track_colour_grey(self):
-        self.track_colour = Colours.TRACK_GREY
+        self._track_colour = Colours.TRACK_GREY
 
     def set_track_colour_blue(self):
-        self.track_colour = Colours.TRACK_BLUE
+        self._track_colour = Colours.TRACK_BLUE
 
     def set_waypoint_sizes_large(self):
-        self.waypoint_minor_size = 5
-        self.waypoint_major_size = 9
-        self.waypoints_on = True
+        self._waypoint_minor_size = 5
+        self._waypoint_major_size = 9
+        self._waypoints_on = True
 
     def set_waypoint_sizes_small(self):
-        self.waypoint_minor_size = 3
-        self.waypoint_major_size = 5
-        self.waypoints_on = True
+        self._waypoint_minor_size = 3
+        self._waypoint_major_size = 5
+        self._waypoints_on = True
 
     def set_waypoint_sizes_micro(self):
-        self.waypoint_minor_size = 2
-        self.waypoint_major_size = 3
-        self.waypoints_on = True
+        self._waypoint_minor_size = 2
+        self._waypoint_major_size = 3
+        self._waypoints_on = True
 
     def set_waypoints_off(self):
-        self.waypoints_on = False
+        self._waypoints_on = False
 
     def set_waypoint_labels_on(self):
-        self.waypoint_labels_on = True
+        self._waypoint_labels_on = True
 
     def set_waypoint_labels_off(self):
-        self.waypoint_labels_on = False
+        self._waypoint_labels_on = False
 
     def set_grid_front(self):
-        self.grid_on = True
-        self.drawing_order.remove("G")
-        self.drawing_order.append("G")
+        self._grid_on = True
+        self._drawing_order.remove("G")
+        self._drawing_order.append("G")
 
     def set_grid_back(self):
-        self.grid_on = True
-        self.drawing_order.remove("G")
-        self.drawing_order.insert(0, "G")
+        self._grid_on = True
+        self._drawing_order.remove("G")
+        self._drawing_order.insert(0, "G")
 
     def set_grid_off(self):
-        self.grid_on = False
+        self._grid_on = False
 
     def set_track_front(self):
-        self.drawing_order.remove("T")
-        self.drawing_order.append("T")
+        self._drawing_order.remove("T")
+        self._drawing_order.append("T")
 
     def set_track_back(self):
-        self.drawing_order.remove("T")
-        self.drawing_order.insert(0, "T")
+        self._drawing_order.remove("T")
+        self._drawing_order.insert(0, "T")
 
     def set_analyze_front(self):
-        self.drawing_order.remove("A")
-        self.drawing_order.append("A")
+        self._drawing_order.remove("A")
+        self._drawing_order.append("A")
 
     def set_analyze_back(self):
-        self.drawing_order.remove("A")
-        self.drawing_order.insert(0, "A")
+        self._drawing_order.remove("A")
+        self._drawing_order.insert(0, "A")
 
     def set_annotations_front(self):
-        self.annotations_on = True
-        self.drawing_order.remove("N")
-        self.drawing_order.append("N")
+        self._annotations_on = True
+        self._drawing_order.remove("N")
+        self._drawing_order.append("N")
 
     def set_annotations_back(self):
-        self.annotations_on = True
-        self.drawing_order.remove("N")
-        self.drawing_order.insert(0, "N")
+        self._annotations_on = True
+        self._drawing_order.remove("N")
+        self._drawing_order.insert(0, "N")
 
     def set_annotations_off(self):
-        self.annotations_on = False
+        self._annotations_on = False
 
     def set_sectors_on(self):
-        self.sectors_on = True
+        self._sectors_on = True
 
     def set_sectors_off(self):
-        self.sectors_on = False
+        self._sectors_on = False
 
     def draw(self, track_canvas: TrackAnalysisCanvas, current_track: Track, episode_filter: EpisodeFilter):
         # analyzer.recalculate()
@@ -120,32 +121,32 @@ class TrackPainter:
         # else:
         #     current_track.configure_track_graphics(track_graphics)
 
-        for do in self.drawing_order:
-            if do == "G" and self.grid_on:
+        for do in self._drawing_order:
+            if do == "G" and self._grid_on:
                 current_track.draw_grid(track_canvas, Colours.GRID_GREY)
 
             if do == "T":
-                current_track.draw_track_edges(track_canvas, self.track_colour)
+                current_track.draw_track_edges(track_canvas, self._track_colour)
                 if episode_filter.filter_complete_section:
                     (start, finish) = episode_filter.filter_complete_section
-                    current_track.draw_section_highlight(track_canvas, self.track_colour, start, finish)
+                    current_track.draw_section_highlight(track_canvas, self._track_colour, start, finish)
 
-                current_track.draw_starting_line(track_canvas, self.track_colour)
-                if self.sectors_on:
-                    current_track.draw_sector_dividers(track_canvas, self.track_colour)
-                    current_track.draw_sector_labels(track_canvas, self.track_colour)
-                if self.waypoints_on:
-                    current_track.draw_waypoints(track_canvas, self.track_colour, self.waypoint_minor_size,
-                                                 self.waypoint_major_size)
-                    if self.waypoint_labels_on:
-                        current_track.draw_waypoint_labels(track_canvas, self.track_colour, 9)
+                current_track.draw_starting_line(track_canvas, self._track_colour)
+                if self._sectors_on:
+                    current_track.draw_sector_dividers(track_canvas, self._track_colour)
+                    current_track.draw_sector_labels(track_canvas, self._track_colour)
+                if self._waypoints_on:
+                    current_track.draw_waypoints(track_canvas, self._track_colour, self._waypoint_minor_size,
+                                                 self._waypoint_major_size)
+                    if self._waypoint_labels_on:
+                        current_track.draw_waypoint_labels(track_canvas, self._track_colour, 9)
 
             # if do == "A":
             #     if background_analyser:
             #         background_analyser.redraw()
             #     analyzer.redraw()
 
-            if do == "N" and self.annotations_on:
+            if do == "N" and self._annotations_on:
                 current_track.draw_annotations(track_canvas)
 
     # def zoom_set(self, track_graphics, x, y, x2, y2):

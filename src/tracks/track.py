@@ -149,7 +149,7 @@ class Track:
     def draw_sector_dividers(self, track_canvas: TrackAnalysisCanvas, colour: QColor):
         for p in self._drawing_points:
             if p.is_divider:
-                track_canvas.add_fixed_shape(Line(p.left, p.right, 3, colour, (2, 3)))
+                track_canvas.add_fixed_shape(Line(p.left, p.right, 3, colour, (1, 2)))
 
     def draw_waypoints(self, track_canvas: TrackAnalysisCanvas, colour: QColor, minor_size: int, major_size: int):
         assert major_size >= minor_size
@@ -208,16 +208,16 @@ class Track:
                 colour))
             y += 1
 
-    def draw_sector_labels(self, track_graphics: TrackGraphics, colour: str):
+    def draw_sector_labels(self, track_canvas: TrackAnalysisCanvas, colour: QColor):
         for name in self.get_all_sector_names():
             (start, finish) = self.get_sector_start_and_finish(name)
             label_waypoint = int((start + finish) / 2)
             point = self._drawing_points[label_waypoint].middle
 
             if self._is_vertical_at_waypoint(label_waypoint):
-                track_graphics.plot_text(point, name, 20, colour, 14, 0)
+                track_canvas.add_fixed_shape(Text(point, name, 18, colour, 14, 0))
             else:
-                track_graphics.plot_text(point, name, 20, colour, 0, -14)
+                track_canvas.add_fixed_shape(Text(point, name, 18, colour, 0, -14))
 
     def get_bearing_and_distance_to_next_waypoint(self, waypoint_id: int):
         this_point = self._drawing_points[waypoint_id].middle

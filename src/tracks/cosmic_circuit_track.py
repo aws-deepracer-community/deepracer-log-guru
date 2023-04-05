@@ -14,7 +14,7 @@ class CosmicCircuitTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Cosmic Circuit"
+        self._ui_name = "Cosmic Circuit (Original)"
         self._ui_description = "Cosmic Circuit expands the universe of its short loop cohort (62.24m). The pro difficulty course adds a deceivingly technical section with multiple 90 degree turns separating meandering sprints void of a true straightaway."
         self._ui_length_in_m = 62.24  # metres
         self._ui_width_in_cm = 107  # centimetres   # TODO

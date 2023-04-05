@@ -14,7 +14,7 @@ class HotRodSuperSpeedwayCounterClockwiseTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Hot Rod Super Speedway (New - Counter Clockwise)"
+        self._ui_name = "Hot Rod Super Speedway (Counter Clockwise)"
         self._ui_description = "The Hot Rod Super Speedway adds pro difficulty to the short track counterpart. With a length of 59.69m, the speed loving arch is replaced by 4 short straightaways coupled with variable angle turns. Skillful racers may bisect the chicanes to extending speed generating opportunities and pull away from the pack."
         self._ui_length_in_m = 59.69  # metres
         self._ui_width_in_cm = 107  # centimetres

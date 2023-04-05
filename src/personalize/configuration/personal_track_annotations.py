@@ -85,6 +85,8 @@ cosmic_loop_annotations = []
 
 cosmic_circuit_annotations = []
 
+cosmic_circuit_cw_annotations = []
+
 baja_highway_annotations = []
 
 baja_turnpike_annotations = []

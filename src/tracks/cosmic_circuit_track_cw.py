@@ -17,10 +17,10 @@ class CosmicCircuitClockwiseTrack(Track):
         self._ui_name = "Cosmic Circuit (Clockwise)"
         self._ui_description = "Cosmic Circuit expands the universe of its short loop cohort (62.24m). The pro difficulty course adds a deceivingly technical section with multiple 90 degree turns separating meandering sprints void of a true straightaway."
         self._ui_length_in_m = 62.24  # metres
-        self._ui_width_in_cm = 107  # centimetres   # TODO
+        self._ui_width_in_cm = 107  # centimetres
         self._world_name = "jyllandsringen_pro_cw"
         self._track_sector_dividers = [61, 100, 128, 175]
-        self._annotations = config.cosmic_circuit_annotations
+        self._annotations = config.cosmic_circuit_cw_annotations
         self._track_width = 1.066
 
         self._track_waypoints = [(5.471676650038228, -6.354715003325272), (5.341705083847046, -6.351996183395386),

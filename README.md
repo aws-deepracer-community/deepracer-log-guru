@@ -1,7 +1,7 @@
 # deepracer-log-guru
 
 ## Announcement
-1st April 2023: Version 3.2.20 is now available with the new clockwise version of the Cosmic Circuit track.
+5th April 2023: Version 3.2.20 is now available with the new clockwise version of the Cosmic Circuit track.
 
 ## Introduction
 

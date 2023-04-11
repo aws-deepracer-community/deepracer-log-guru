@@ -3,6 +3,7 @@ import sys
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QApplication, QProgressBar, QFileDialog, QLabel, QHBoxLayout
 
+from src.main.open_log_status import OpenLogStatus
 from src.log.log import Log
 from src.configuration.config_manager import ConfigManager
 from src.ui.actions import Actions
@@ -12,8 +13,8 @@ from src.ui.toolbar import ToolBarManager
 from src.graphics.track_analysis_canvas import TrackAnalysisCanvas
 from src.tracks.tracks import get_all_tracks
 from src.ui.open_file_dialog import OpenFileDialog
-from ui.icons import get_custom_icon
-from graphics.track_painter import TrackPainter
+from src.ui.icons import get_custom_icon
+from src.graphics.track_painter import TrackPainter
 
 
 class MainWindow(QMainWindow):
@@ -51,9 +52,8 @@ class MainWindow(QMainWindow):
         # Internal variable(s) to communicate from dialogs to main after they are closed
         self._open_file_dialog_chosen_files = None
 
-        # Main variables to keep details of current open logs etc.
-        self._log: Log | None = None
-        self._current_model_ui_title = ""
+        # Keep details of current open log and filters etc. in a form easily shared with analyzers etc.
+        self._open_log_status = OpenLogStatus()
 
         # Canvas etc. comments TODO
 
@@ -130,24 +130,25 @@ class MainWindow(QMainWindow):
             print("Cancelled dialog")
             return
 
-        self._current_model_ui_title = self._open_file_dialog_chosen_model_title
-        self.setWindowTitle(self._current_model_ui_title)
+        self.setWindowTitle(self._open_file_dialog_chosen_model_title)
 
-        self._log = Log(self._config_manager.get_log_directory())
-        self._log.load_all(self._open_file_dialog_chosen_files, self._please_wait, self._current_track,
-                           self._config_manager.get_calculate_new_reward(),
-                           self._config_manager.get_calculate_alternate_discount_factors())
+        log = Log(self._config_manager.get_log_directory())
+        log.load_all(self._open_file_dialog_chosen_files, self._please_wait, self._current_track,
+                     self._config_manager.get_calculate_new_reward(),
+                     self._config_manager.get_calculate_alternate_discount_factors())
+        self._open_log_status.open_log(log, self._open_file_dialog_chosen_model_title)
 
     def _chosen_open_file_callback(self, file_names, model_title):
         self._open_file_dialog_chosen_files = file_names
         self._open_file_dialog_chosen_model_title = model_title
 
     def _action_file_info(self):
+        log = self._open_log_status.get_log()
         print("DEBUG FILE INFO")
-        print("Title / Model Name =", self._current_model_ui_title)
-        print("Log directory =", self._log.get_log_directory())
-        print("Log filename(s) =", self._log.get_log_file_name())
-        print("Log meta filename(s) =", self._log.get_meta_file_name())
+        print("Title / Model Name =", self._open_log_status.get_model_name())
+        print("Log directory =", log.get_log_directory())
+        print("Log filename(s) =", log.get_log_file_name())
+        print("Log meta filename(s) =", log.get_meta_file_name())
 
     def _action_change_log_directory(self):
         new_directory = QFileDialog.getExistingDirectory(self, self._actions.change_log_directory.statusTip(), self._config_manager.get_log_directory())

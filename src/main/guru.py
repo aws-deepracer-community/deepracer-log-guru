@@ -82,7 +82,7 @@ class MainWindow(QMainWindow):
         # Initialise tracks & draw here temporarily to prove everything works or not
 
         self._tracks = get_all_tracks()
-        self._current_track = self._tracks["arctic_pro_cw"]
+        self._current_track = self._tracks["jyllandsringen_pro_cw"]
 
 
         self._track_painter = TrackPainter()

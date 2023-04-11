@@ -3,7 +3,7 @@ import sys
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMainWindow, QApplication, QProgressBar, QFileDialog, QLabel, QHBoxLayout
 
-from src.main.open_log_status import OpenLogStatus
+from src.main.analysis_status import AnalysisStatus
 from src.log.log import Log
 from src.configuration.config_manager import ConfigManager
 from src.ui.actions import Actions
@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         self._open_file_dialog_chosen_files = None
 
         # Keep details of current open log and filters etc. in a form easily shared with analyzers etc.
-        self._open_log_status = OpenLogStatus()
+        self._analysis_status = AnalysisStatus()
 
         # Canvas etc. comments TODO
 
@@ -72,9 +72,6 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(centre_widget)
 
-
-
-
         self.make_status_bar_tall_enough_to_contain_progress_bar()
 
         self.show()
@@ -82,12 +79,11 @@ class MainWindow(QMainWindow):
         # Initialise tracks & draw here temporarily to prove everything works or not
 
         self._tracks = get_all_tracks()
-        self._current_track = self._tracks["jyllandsringen_pro_cw"]
+        self._analysis_status.set_track(self._tracks["jyllandsringen_pro_cw"])
 
 
         self._track_painter = TrackPainter()
-        from episode.episode_filter import EpisodeFilter
-        self._episode_filter = EpisodeFilter()
+
 
 
         # Code that will move to the view menu etc.
@@ -100,8 +96,8 @@ class MainWindow(QMainWindow):
 
         ## Code that will move to the analyzer
 
-        self._current_track.configure_track_canvas(self.canvas)
-        self._track_painter.draw(self.canvas, self._current_track, self._episode_filter)
+        self._analysis_status.get_track().configure_track_canvas(self.canvas)
+        self._track_painter.draw(self.canvas, self._analysis_status.get_track(), self._analysis_status.get_episode_filter())
 
         # self._current_track.draw_track_edges(self.canvas, track_grey)
         # self._current_track.draw_waypoints(self.canvas, track_grey, 2, 8)
@@ -125,7 +121,8 @@ class MainWindow(QMainWindow):
         self.statusBar().setMinimumHeight(h)
 
     def _action_open_file(self):
-        dlg = OpenFileDialog(self, self._please_wait, self._current_track, self._config_manager.get_log_directory(), self._chosen_open_file_callback)
+        current_track = self._analysis_status.get_track()
+        dlg = OpenFileDialog(self, self._please_wait, current_track, self._config_manager.get_log_directory(), self._chosen_open_file_callback)
         if not dlg.exec():
             print("Cancelled dialog")
             return
@@ -133,19 +130,19 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(self._open_file_dialog_chosen_model_title)
 
         log = Log(self._config_manager.get_log_directory())
-        log.load_all(self._open_file_dialog_chosen_files, self._please_wait, self._current_track,
+        log.load_all(self._open_file_dialog_chosen_files, self._please_wait, current_track,
                      self._config_manager.get_calculate_new_reward(),
                      self._config_manager.get_calculate_alternate_discount_factors())
-        self._open_log_status.open_log(log, self._open_file_dialog_chosen_model_title)
+        self._analysis_status.open_log(log, self._open_file_dialog_chosen_model_title)
 
     def _chosen_open_file_callback(self, file_names, model_title):
         self._open_file_dialog_chosen_files = file_names
         self._open_file_dialog_chosen_model_title = model_title
 
     def _action_file_info(self):
-        log = self._open_log_status.get_log()
+        log = self._analysis_status.get_log()
         print("DEBUG FILE INFO")
-        print("Title / Model Name =", self._open_log_status.get_model_name())
+        print("Title / Model Name =", self._analysis_status.get_model_name())
         print("Log directory =", log.get_log_directory())
         print("Log filename(s) =", log.get_log_file_name())
         print("Log meta filename(s) =", log.get_meta_file_name())

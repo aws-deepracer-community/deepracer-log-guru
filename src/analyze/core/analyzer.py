@@ -11,7 +11,7 @@ import tkinter as tk
 from src.log.log_meta import LogMeta
 
 
-class Analyzer:
+class AnalyzerOld:
 
     def __init__(self, guru_parent_redraw, control_frame :tk.Frame):
         self.guru_parent_redraw = guru_parent_redraw

@@ -1,10 +1,13 @@
-# v4 UI STATUS - BRAND NEW
-# ************************
+# VERSION 4
+#
+# This file defines the TrackAnalysisCanvas which draw track-analysis specific elements on a Canvas
+# This class deals with scaling to elements to the correct physical screen position
+# Elements are available as FixedShape - these are the fixed background elements
+#                    and FloatingShape - these are foreground elements that are easily modified on top of the background
 
-from abc import ABC
 
 from graphics.canvas import Canvas
-from PyQt6.QtWidgets import QAbstractGraphicsShapeItem, QGraphicsLineItem, QGraphicsItem
+from PyQt6.QtWidgets import QGraphicsItem
 from PyQt6.QtGui import QPen, QPainter, QBrush, QColor, QFont, QPainterPath
 from PyQt6.QtCore import Qt
 
@@ -13,15 +16,11 @@ from utils import geometry
 Point = (float | int, float | int)     # Typedef which we will use a lot for graphics
 
 
-class CanvasItem(ABC):
+class FixedShape:
     pass
 
 
-class FixedShape(CanvasItem):
-    pass
-
-
-class FloatingShape(CanvasItem):
+class FloatingShape:
     pass
 
 

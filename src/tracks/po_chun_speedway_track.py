@@ -14,7 +14,7 @@ class PoChunSpeedwayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Po-Chun Speedway"
+        self._ui_name = "Po-Chun Speedway (Original)"
         self._ui_description = "Po-Chun Speedway is a short track (68.68m) featuring a simple oval track paired with a dragstrip, and single hairpin. It is named in honor of the 2020 AWS DeepRacer League Champion from NCTU CGI Taiwan."
         self._ui_length_in_m = 68.68  # metres
         self._ui_width_in_cm = 107  # centimetres   # TODO

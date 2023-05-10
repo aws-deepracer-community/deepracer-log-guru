@@ -1,7 +1,8 @@
 # deepracer-log-guru
 
 ## Announcement
-5th April 2023: Version 3.2.20 is now available with the new clockwise version of the Cosmic Circuit track.
+
+10th May 2023: Version 3.2.21 is now available with the new clockwise version of the Po-Chun Speedway.
 
 ## Introduction
 
@@ -33,6 +34,7 @@ See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_rac
 * [Troubleshooting](docs/trouble_shooting.md)
 
 ## Old Announcements
+* 1st April 2023: Version 3.2.20 is now available with the new clockwise version of the Cosmic Circuit track.
 * 18th March 2023: Version 3.2.19 is now available with updated track names and waypoints
 * 11th March 2023: Version 3.2.18 is now available with support for the new clockwise & counterclockwise versions of the 2019 DeepRacer Championship Cup track.
 * 11th March 2023: Version 3.2.17 has been withdrawn due to a defect

@@ -64,6 +64,8 @@ from src.tracks.hot_rod_super_speedway_cw_track import HotRodSuperSpeedwayClockw
 from src.tracks.hot_rod_super_speedway_ccw_track import HotRodSuperSpeedwayCounterClockwiseTrack
 from src.tracks.smile_speedway_ccw import SmileSpeedwayCounterClockwiseTrack
 from src.tracks.smile_speedway_cw import SmileSpeedwayClockwiseTrack
+from src.tracks.po_chun_speedway_cw_track import PoChunSpeedwayClockwiseTrack
+from src.tracks.po_chun_speedway_ccw_track import PoChunSpeedwayCounterClockwiseTrack
 
 
 def get_all_tracks():
@@ -87,7 +89,7 @@ def get_all_tracks():
               RossSuperSpeedwayTrack(), OvalTrack(), BreadCentricLoopTrack(), BreadCentricSpeedwayTrack(),
               DBroRacewayTrack(), DBroSuperRacewayTrack(), JochemTurnpikeTrack(), JochemHighwayTrack(),
               RogerSuperRacewayTrack(), RogerRingTrack(), JennensSuperSpeedwayTrack(), JennensFamilySpeedwayTrack(),
-              Reinvent2022Track()
+              Reinvent2022Track(), PoChunSpeedwayClockwiseTrack(), PoChunSpeedwayCounterClockwiseTrack()
               ]:
         t.prepare(tracks)
 

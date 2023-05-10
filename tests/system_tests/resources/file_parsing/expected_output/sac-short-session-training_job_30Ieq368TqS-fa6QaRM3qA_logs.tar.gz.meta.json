@@ -1,0 +1,86 @@
+{
+  "guru_version": "4.0.0.DEVELOPMENT",
+  "model_name": "sac-short-session",
+  "job": {
+    "type": "TRAINING",
+    "platform": "AWS_CONSOLE",
+    "workers": 1,
+    "worker_id": 0,
+    "start_date": "2023-01-31"
+  },
+  "training": {
+    "learning_algorithm": "SAC",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.05
+  },
+  "environment": {
+    "simulation_version": "5.0",
+    "track_name": "2022_reinvent_champ"
+  },
+  "log_file": {
+    "name": "sac-short-session-training_job_30Ieq368TqS-fa6QaRM3qA_logs.tar.gz",
+    "os_stats": {
+      "uid": 0,
+      "size": 29100,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "TIME_TRIAL"
+  },
+  "car": {
+    "trim_colour": "BLACK",
+    "name": "banana-mono",
+    "shell_type": "f1_car_banana_01",
+    "sensors": [
+      "SINGLE_CAMERA"
+    ]
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
+  },
+  "hyperparameters": {
+    "batch_size": 256,
+    "learning_rate": 0.0003,
+    "discount_factor": 0.999,
+    "loss_type": "MEAN_SQUARED_ERROR",
+    "episodes_per_training_iteration": 1,
+    "sac_alpha": 0.2,
+    "e_greedy_value": 0.05,
+    "epsilon_steps": 10000,
+    "exploration_type": "ADDITIVE_NOISE",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 100000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 4,
+    "iteration_count": 4,
+    "success_count": 0,
+    "average_percent_complete": 4.593475,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 24.706,
+    "average_reward": 15.955750000000002,
+    "worst_reward": 9.105999999999996
+  },
+  "action_space": {
+    "type": "CONTINUOUS",
+    "min_speed": 0.5,
+    "max_speed": 1.0,
+    "max_left_steering": 30.0,
+    "max_right_steering": -28.0
+  }
+}

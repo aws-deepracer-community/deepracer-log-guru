@@ -1,0 +1,87 @@
+{
+  "guru_version": "4.0.0.DEVELOPMENT",
+  "model_name": "training-20220525035255-0NVXkrNsS0qJ1yHgfIXR6Q-robomaker",
+  "job": {
+    "type": "TRAINING",
+    "platform": "AWS_CONSOLE",
+    "workers": 1,
+    "worker_id": 0,
+    "start_date": "2022-05-25"
+  },
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.05
+  },
+  "environment": {
+    "simulation_version": "4.0",
+    "track_name": "2022_may_open"
+  },
+  "log_file": {
+    "name": "training-20220525035255-0NVXkrNsS0qJ1yHgfIXR6Q-robomaker.continuous_May_2022.log",
+    "os_stats": {
+      "uid": 0,
+      "size": 16984082,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "TIME_TRIAL"
+  },
+  "car": {
+    "trim_colour": "RED",
+    "name": "SpeedRacer",
+    "shell_type": "deepracer",
+    "sensors": [
+      "SINGLE_CAMERA"
+    ]
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
+  },
+  "hyperparameters": {
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "discount_factor": 0.999,
+    "loss_type": "HUBER",
+    "episodes_per_training_iteration": 20,
+    "beta_entropy": 0.01,
+    "epochs": 10,
+    "e_greedy_value": 1.0,
+    "epsilon_steps": 10000,
+    "exploration_type": "CATEGORICAL",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 100000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 952,
+    "iteration_count": 48,
+    "success_count": 0,
+    "average_percent_complete": 11.13216712184873,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 28621.509100000003,
+    "average_reward": 3988.912720063026,
+    "worst_reward": 701.0423
+  },
+  "action_space": {
+    "type": "CONTINUOUS",
+    "min_speed": 1.5,
+    "max_speed": 3.2,
+    "max_left_steering": 30.0,
+    "max_right_steering": -30.0
+  }
+}

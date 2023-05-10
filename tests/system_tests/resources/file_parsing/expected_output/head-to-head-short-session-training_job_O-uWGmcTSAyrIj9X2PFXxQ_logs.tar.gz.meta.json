@@ -1,0 +1,106 @@
+{
+  "guru_version": "4.0.0.DEVELOPMENT",
+  "model_name": "head-to-head-short-session",
+  "job": {
+    "type": "TRAINING",
+    "platform": "AWS_CONSOLE",
+    "workers": 1,
+    "worker_id": 0,
+    "start_date": "2023-01-30"
+  },
+  "training": {
+    "learning_algorithm": "SAC",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.05
+  },
+  "environment": {
+    "simulation_version": "5.0",
+    "track_name": "2022_reinvent_champ"
+  },
+  "log_file": {
+    "name": "head-to-head-short-session-training_job_O-uWGmcTSAyrIj9X2PFXxQ_logs.tar.gz",
+    "os_stats": {
+      "uid": 0,
+      "size": 25740,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "HEAD_TO_HEAD",
+    "object_avoidance": {
+      "number": 2,
+      "randomize_locations": true,
+      "type": "PURPLE_BOX"
+    },
+    "head_to_head": {
+      "number": 3,
+      "speed": 2.0,
+      "allow_lane_changes": true,
+      "lane_changes": {
+        "lower_change_time": 2.0,
+        "upper_change_time": 4.0
+      }
+    }
+  },
+  "car": {
+    "trim_colour": "BLACK",
+    "name": "Banana-stereo-and-lidar",
+    "shell_type": "f1_car_banana_01",
+    "sensors": [
+      "SECTOR_LIDAR",
+      "STEREO_CAMERAS"
+    ],
+    "lidar": {
+      "number_of_sectors": 8,
+      "number_of_values_per_sector": 8,
+      "clipping_distance": 2.0
+    }
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
+  },
+  "hyperparameters": {
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "discount_factor": 0.999,
+    "loss_type": "MEAN_SQUARED_ERROR",
+    "episodes_per_training_iteration": 1,
+    "sac_alpha": 0.2,
+    "e_greedy_value": 0.05,
+    "epsilon_steps": 10000,
+    "exploration_type": "ADDITIVE_NOISE",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 100000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 4,
+    "iteration_count": 4,
+    "success_count": 0,
+    "average_percent_complete": 6.374275,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 241.05300000000005,
+    "average_reward": 117.27825000000001,
+    "worst_reward": 65.019
+  },
+  "action_space": {
+    "type": "CONTINUOUS",
+    "min_speed": 1.2,
+    "max_speed": 3.1,
+    "max_left_steering": 25.0,
+    "max_right_steering": -26.0
+  }
+}

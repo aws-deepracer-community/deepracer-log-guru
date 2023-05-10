@@ -1,0 +1,162 @@
+{
+  "guru_version": "4.0.0.DEVELOPMENT",
+  "model_name": "oa-purple-box-with-fixed-objects",
+  "job": {
+    "type": "TRAINING",
+    "platform": "AWS_CONSOLE",
+    "workers": 1,
+    "worker_id": 0,
+    "start_date": "2023-02-05"
+  },
+  "training": {
+    "learning_algorithm": "CLIPPED_PPO",
+    "alternate_driving_direction": false,
+    "start_position_offset": 0.0,
+    "change_start_position": true,
+    "round_robin_advance_distance": 0.05
+  },
+  "environment": {
+    "simulation_version": "5.0",
+    "track_name": "2022_reinvent_champ"
+  },
+  "log_file": {
+    "name": "oa-purple-box-with-fixed-objects-training_job_hVpH4oZFQCSioa0MxKCkpA_logs.tar.gz",
+    "os_stats": {
+      "uid": 0,
+      "size": 114381,
+      "ctime": 123.456,
+      "mtime": 1234.5678
+    }
+  },
+  "race": {
+    "type": "OBJECT_AVOIDANCE",
+    "object_avoidance": {
+      "number": 5,
+      "randomize_locations": false,
+      "type": "PURPLE_BOX",
+      "fixed_locations": [
+        {
+          "percent": 0.1,
+          "lane": "OUTSIDE"
+        },
+        {
+          "percent": 0.25,
+          "lane": "INSIDE"
+        },
+        {
+          "percent": 0.4,
+          "lane": "OUTSIDE"
+        },
+        {
+          "percent": 0.55,
+          "lane": "INSIDE"
+        },
+        {
+          "percent": 0.7,
+          "lane": "OUTSIDE"
+        }
+      ]
+    }
+  },
+  "car": {
+    "trim_colour": "BLUE",
+    "name": "dfgdfgdgs",
+    "shell_type": "deepracer",
+    "sensors": [
+      "SECTOR_LIDAR",
+      "STEREO_CAMERAS"
+    ],
+    "lidar": {
+      "number_of_sectors": 8,
+      "number_of_values_per_sector": 8,
+      "clipping_distance": 2.0
+    }
+  },
+  "neural_network": {
+    "topology": "DEEP_CONVOLUTIONAL_3_LAYER"
+  },
+  "hyperparameters": {
+    "batch_size": 128,
+    "learning_rate": 0.0003,
+    "discount_factor": 0.999,
+    "loss_type": "MEAN_SQUARED_ERROR",
+    "episodes_per_training_iteration": 30,
+    "beta_entropy": 0.01,
+    "epochs": 8,
+    "e_greedy_value": 1.0,
+    "epsilon_steps": 10000,
+    "exploration_type": "CATEGORICAL",
+    "stack_size": 1,
+    "termination_condition": {
+      "average_score": 100000.0,
+      "max_episodes": 100000
+    }
+  },
+  "episode_stats": {
+    "episode_count": 60,
+    "iteration_count": 2,
+    "success_count": 0,
+    "average_percent_complete": 5.744788333333335,
+    "best_steps": 0,
+    "average_steps": 0,
+    "worst_steps": 0,
+    "best_time": 0.0,
+    "average_time": 0.0,
+    "worst_time": 0.0,
+    "best_distance": 0.0,
+    "average_distance": 0.0,
+    "worst_distance": 0.0,
+    "best_reward": 263.06100000000004,
+    "average_reward": 100.84105000000002,
+    "worst_reward": 61.01700000000001
+  },
+  "action_space": {
+    "type": "DISCRETE",
+    "min_speed": 2.0,
+    "max_speed": 4.0,
+    "max_left_steering": 20.0,
+    "max_right_steering": -25.0,
+    "actions": [
+      {
+        "speed": 2.0,
+        "steering_angle": -20.0
+      },
+      {
+        "speed": 3.8,
+        "steering_angle": -25.0
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": -10.0
+      },
+      {
+        "speed": 4.0,
+        "steering_angle": -10.0
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": 0.0
+      },
+      {
+        "speed": 4.0,
+        "steering_angle": 0.0
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": 10.0
+      },
+      {
+        "speed": 4.0,
+        "steering_angle": 10.0
+      },
+      {
+        "speed": 2.0,
+        "steering_angle": 20.0
+      },
+      {
+        "speed": 4.0,
+        "steering_angle": 20.0
+      }
+    ]
+  }
+}

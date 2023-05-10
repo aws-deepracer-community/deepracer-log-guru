@@ -1,6 +1,7 @@
 # deepracer-log-guru
 
 ## Announcement
+
 10th May 2023: Version 3.2.21 is now available with the new clockwise version of the Po-Chun Speedway.
 
 ## Introduction

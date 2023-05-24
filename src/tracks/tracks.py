@@ -35,6 +35,7 @@ from src.tracks.baja_highway_track import BajaHighwayTrack
 from src.tracks.hot_rod_speedway_track import HotRodSpeedwayTrack
 from src.tracks.hot_rod_super_speedway_track import HotRodSuperSpeedwayTrack
 from src.tracks.a_to_z_speedway_track import AtoZSpeedwayTrack
+from src.tracks.a_to_z_speedway_track_cw import AtoZSpeedwayClockwiseTrack
 from src.tracks.playa_raceway_track import PlayaRacewayTrack
 from src.tracks.playa_super_raceway_track import PlayaSuperRacewayTrack
 from src.tracks.expedition_super_loop_track import ExpeditionSuperLoopTrack
@@ -72,7 +73,7 @@ def get_all_tracks():
     tracks = {}
 
     for t in [AmericanHillsSpeedwayTrack(), AsiaPacificBayLoopTrack(), EuropeanSeasideCircuitTrack(),
-              Reinvent2018Track(), AtoZSpeedwayTrack(),
+              Reinvent2018Track(), AtoZSpeedwayTrack(), AtoZSpeedwayClockwiseTrack(),
               ChampionshipCup2019Track(),
               SmileSpeedwayClockwiseTrack(), SmileSpeedwayCounterClockwiseTrack(),
               StratusLoop2020Track(), HotRodSpeedwayTrack(), HotRodSuperSpeedwayTrack(),

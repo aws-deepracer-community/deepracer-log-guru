@@ -105,6 +105,8 @@ hot_rod_super_speedway_ccw_annotations = []
 
 a_to_z_speedway_annotations = []
 
+a_to_z_speedway_cw_annotations = []
+
 playa_raceway_annotations = []
 
 playa_super_raceway_annotations = []

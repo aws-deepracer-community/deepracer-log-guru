@@ -81,6 +81,8 @@ lars_loop_annotations = []
 
 lars_circuit_annotations = []
 
+lars_circuit_cw_annotations = []
+
 kuei_raceway_annotations = []
 
 kuei_super_raceway_annotations = []

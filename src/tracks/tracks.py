@@ -25,6 +25,7 @@ from src.tracks.po_chun_super_speedway_track import PoChunSuperSpeedwayTrack
 from src.tracks.po_chun_speedway_track import PoChunSpeedwayTrack
 from src.tracks.lars_loop_track import LarsLoopTrack
 from src.tracks.lars_circuit_track import LarsCircuitTrack
+from src.tracks.lars_circuit_cw_track import LarsCircuitClockwiseTrack
 from src.tracks.kuei_raceway_track import KueiRacewayTrack
 from src.tracks.kuei_super_raceway_track import KueiSuperRacewayTrack
 from src.tracks.cosmic_loop_track import CosmicLoopTrack
@@ -80,7 +81,7 @@ def get_all_tracks():
               CumuloTurnpikeTrack(), YunSpeedwayTrack(),
               RogerRacewayTrack(), FumiakiLoop2020Track(), AwsSummitRacewayTrack(),
               SolaSpeedwayTrack(), Baadal2020Track(), Barcelona2020Track(), BowtieTrack(),
-              PoChunSuperSpeedwayTrack(), PoChunSpeedwayTrack(), LarsCircuitTrack(), LarsLoopTrack(),
+              PoChunSuperSpeedwayTrack(), PoChunSpeedwayTrack(), LarsCircuitTrack(), LarsCircuitClockwiseTrack(), LarsLoopTrack(),
               KueiRacewayTrack(), KueiSuperRacewayTrack(), CosmicLoopTrack(),
               CosmicCircuitTrack(), CosmicCircuitClockwiseTrack(), BajaTurnpikeTrack(), BajaHighwayTrack(),
               PlayaRacewayTrack(), PlayaSuperRacewayTrack(), ExpeditionSuperLoopTrack(), ExpeditionLoopTrack(),

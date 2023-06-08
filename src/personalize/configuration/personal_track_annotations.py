@@ -81,6 +81,10 @@ lars_loop_annotations = []
 
 lars_circuit_annotations = []
 
+lars_circuit_cw_annotations = []
+
+lars_circuit_ccw_annotations = []
+
 kuei_raceway_annotations = []
 
 kuei_super_raceway_annotations = []
@@ -104,6 +108,10 @@ hot_rod_super_speedway_cw_annotations = []
 hot_rod_super_speedway_ccw_annotations = []
 
 a_to_z_speedway_annotations = []
+
+a_to_z_speedway_cw_annotations = []
+
+a_to_z_speedway_ccw_annotations = []
 
 playa_raceway_annotations = []
 

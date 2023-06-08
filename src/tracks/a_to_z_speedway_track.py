@@ -14,7 +14,7 @@ class AtoZSpeedwayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "A to Z Speedway"
+        self._ui_name = "A to Z Speedway (Original)"
         self._ui_description = "It’s easier for an agent to navigate this extra wide version of re:Invent 2018. Use it to get started with object avoidance and head-to-head race training."
         self._ui_length_in_m = 16.64  # metres
         self._ui_width_in_cm = 107  # centimetres

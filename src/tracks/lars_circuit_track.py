@@ -14,7 +14,7 @@ class LarsCircuitTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Lars Circuit"
+        self._ui_name = "Lars Circuit (Original)"
         self._ui_description = "Lars Circuit is a pro difficulty track that adds an increasing to decreasing double apex and multiple high speed straightaways to its shorter cohort Lars Loop. It is named in honor of 2020 AWS DeepRacer League silver medalist Lars Ludvigson (Duckworth)"
         self._ui_length_in_m = 99.99  # metres  (99.99 = not stated in AWS DR GUI)
         self._ui_width_in_cm = 107  # centimetres   # TODO

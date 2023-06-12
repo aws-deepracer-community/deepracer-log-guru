@@ -70,6 +70,8 @@ from src.tracks.lars_circuit_ccw_track import LarsCircuitCounterClockwiseTrack
 from src.tracks.lars_circuit_cw_track import LarsCircuitClockwiseTrack
 from src.tracks.a_to_z_speedway_cw_track import AtoZSpeedwayClockwiseTrack
 from src.tracks.a_to_z_speedway_ccw_track import AtoZSpeedwayCounterClockwiseTrack
+from src.tracks.ace_speedway_cw_track import AceSpeedwayClockwiseTrack
+from src.tracks.ace_speedway_ccw_track import AceSpeedwayCounterClockwiseTrack
 
 
 def get_all_tracks():
@@ -89,7 +91,8 @@ def get_all_tracks():
               CosmicCircuitTrack(), CosmicCircuitClockwiseTrack(), BajaTurnpikeTrack(), BajaHighwayTrack(),
               PlayaRacewayTrack(), PlayaSuperRacewayTrack(), ExpeditionSuperLoopTrack(), ExpeditionLoopTrack(),
               VivalasLoooTrack(), VivalasSpeedwayTrack(), RLSpeedwayTrack(), RogueRacewayTrack(),
-              RogueCircuitTrack(), AceSpeedwayTrack(), AceSuperSpeedwayTrack(), RossRacewayTrack(),
+              RogueCircuitTrack(), AceSpeedwayTrack(), AceSpeedwayClockwiseTrack(), AceSpeedwayCounterClockwiseTrack(),
+              AceSuperSpeedwayTrack(), RossRacewayTrack(),
               RossSuperSpeedwayTrack(), OvalTrack(), BreadCentricLoopTrack(), BreadCentricSpeedwayTrack(),
               DBroRacewayTrack(), DBroSuperRacewayTrack(), JochemTurnpikeTrack(), JochemHighwayTrack(),
               RogerSuperRacewayTrack(), RogerRingTrack(), JennensSuperSpeedwayTrack(), JennensFamilySpeedwayTrack(),

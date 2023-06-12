@@ -159,5 +159,10 @@ jennens_super_speedway_annotations = []
 
 reinvent_2022_annotations = []
 
+ace_speedway_annotations = []
+
+ace_speedway_cw_annotations = []
+
+ace_speedway_ccw_annotations = []
 
 

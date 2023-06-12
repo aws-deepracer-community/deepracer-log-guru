@@ -14,13 +14,13 @@ class AceSpeedwayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Ace Speedway"
+        self._ui_name = "Ace Speedway (Original)"
         self._ui_description = "The Ace Speedway was named in honor of the 2021 AWS DeepRacer 2nd place Champion, Yousuf Nizam. Expect many developers ace this track with lightning fast race times featuring a single sprint dragstrip into a broad sweeping turns."
         self._ui_length_in_m = 99.99  # metres     (NOT STATED)
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "2022_april_open"
         self._track_sector_dividers = [36, 72, 125]
-        self._annotations = config.rogue_raceway_annotations
+        self._annotations = config.ace_speedway_annotations
         self._track_width = 1.067
 
         self._track_waypoints = [(0.003066137433052063, -3.352921962738037), (0.26724113058298826, -3.4979465007781982),

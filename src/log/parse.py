@@ -119,6 +119,23 @@ def parse_episode_event(line_of_text: str, episode_events, episode_object_locati
          track_length,
          time,
          status) = input_line[14:].split(",")[:17]
+        if "]" not in action_taken_2:
+            (episode,
+             step,
+             x,
+             y,
+             heading,
+             steering_angle,
+             speed,
+             action_taken,
+             reward,
+             job_completed,
+             all_wheels_on_track,
+             progress,
+             closest_waypoint_index,
+             track_length,
+             time,
+             status) = input_line[14:].split(",")[:16]
     else:
         (episode,
          step,

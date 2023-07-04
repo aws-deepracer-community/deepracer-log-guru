@@ -72,6 +72,8 @@ from src.tracks.a_to_z_speedway_cw_track import AtoZSpeedwayClockwiseTrack
 from src.tracks.a_to_z_speedway_ccw_track import AtoZSpeedwayCounterClockwiseTrack
 from src.tracks.ace_speedway_cw_track import AceSpeedwayClockwiseTrack
 from src.tracks.ace_speedway_ccw_track import AceSpeedwayCounterClockwiseTrack
+from src.tracks.breadcentric_speedway_ccw_track import BreadCentricSpeedwayCounterClockwiseTrack
+from src.tracks.breadcentric_speedway_cw_track import BreadCentricSpeedwayClockwiseTrack
 
 
 def get_all_tracks():
@@ -94,6 +96,7 @@ def get_all_tracks():
               RogueCircuitTrack(), AceSpeedwayTrack(), AceSpeedwayClockwiseTrack(), AceSpeedwayCounterClockwiseTrack(),
               AceSuperSpeedwayTrack(), RossRacewayTrack(),
               RossSuperSpeedwayTrack(), OvalTrack(), BreadCentricLoopTrack(), BreadCentricSpeedwayTrack(),
+              BreadCentricSpeedwayClockwiseTrack(), BreadCentricSpeedwayCounterClockwiseTrack(),
               DBroRacewayTrack(), DBroSuperRacewayTrack(), JochemTurnpikeTrack(), JochemHighwayTrack(),
               RogerSuperRacewayTrack(), RogerRingTrack(), JennensSuperSpeedwayTrack(), JennensFamilySpeedwayTrack(),
               Reinvent2022Track(), PoChunSpeedwayClockwiseTrack(), PoChunSpeedwayCounterClockwiseTrack(),

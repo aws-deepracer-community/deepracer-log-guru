@@ -33,7 +33,7 @@ Or:
 Run it manually using the following example commands:
 
     cd C:\DRG-Demo\projects\deep_racer_guru
-    C:\DRG-Demo\python\3.9.4\python.exe -m src.main.guru
+    C:\DRG-Demo\python\3.9.13\python.exe -m src.main.guru
 
 On some platforms such as AppleMac it may be necessary to run using "python3" to ensure to correct version is used:
 

@@ -2,7 +2,7 @@
 
 ## Announcement
 
-12th June 2023: Version 3.2.24 is now available with the new clockwise and counter-clockwise versions of the Ace Speedway
+6th July 2023: Version 3.2.25 is now available with the new clockwise and counter-clockwise versions of the BreadCentric Speedway
 
 ## Introduction
 
@@ -34,6 +34,7 @@ See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_rac
 * [Troubleshooting](docs/trouble_shooting.md)
 
 ## Old Announcements
+* 12th June 2023: Version 3.2.24 is now available with the new clockwise and counter-clockwise versions of the Ace Speedway
 * 8th June 2023: Version 3.2.23 is now available with the new clockwise and counter-clockwise versions of the Lars Circuit (for the June virtual circuit qualifier) and A to Z Speedway (for racing in-person at summits)
 * 14th May 2023: Version 3.2.22 is now available with the new clockwise version of the Po-Chun Speedway (replaces faulty release 3.2.21)
 * 14th May 2023: Version 3.2.21 has been withdrawn due to a defect

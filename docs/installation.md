@@ -11,7 +11,7 @@ Note - If you change the install options, be sure you still install *pip* and *t
 
 Download additional packages by running this command in the directory where you just installed Python:
 
-    python -m pip install matplotlib==3.3.3 numpy==1.19.3 scipy==1.6.0
+    pip3 install matplotlib==3.3.3 numpy==1.19.3 scipy==1.6.0
     
 For example:
 
@@ -34,6 +34,10 @@ Run it manually using the following example commands:
 
     cd C:\DRG-Demo\projects\deep_racer_guru
     C:\DRG-Demo\python\3.9.4\python.exe -m src.main.guru
+
+On some platforms such as AppleMac it may be necessary to run using "python3" to ensure to correct version is used:
+
+    python3 -m src.main.guru
 
 Note:
 * You must "cd" to the root directory/folder where you unzipped or cloned the Deep Racer Guru code

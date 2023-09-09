@@ -14,7 +14,7 @@ class RogueRacewayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Rogue Raceway"
+        self._ui_name = "Rogue Raceway (Original)"
         self._ui_description = "Named in honor of the 2021 DeepRacer Championship Cup winner, Sairam Naragoni, the Rogue Raceway boasts a variety of sweeping turns and drag strips for a worthy training challenge."
         self._ui_length_in_m = 99.99  # metres     (NOT STATED)
         self._ui_width_in_cm = 107  # centimetres

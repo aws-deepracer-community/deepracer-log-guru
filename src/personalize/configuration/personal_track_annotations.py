@@ -129,6 +129,10 @@ rl_speedway_annotations = []
 
 rogue_raceway_annotations = []
 
+rogue_raceway_cw_annotations = []
+
+rogue_raceway_ccw_annotations = []
+
 rogue_circuit_annotations = []
 
 ross_raceway_annotations = []
@@ -154,6 +158,10 @@ jochem_highway_annotations = []
 jochem_turnpike_annotations = []
 
 roger_super_raceway_annotations = []
+
+roger_super_raceway_cw_annotations = []
+
+roger_super_raceway_ccw_annotations = []
 
 roger_ring_annotations = []
 

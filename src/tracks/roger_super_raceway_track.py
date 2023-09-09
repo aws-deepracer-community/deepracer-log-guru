@@ -14,7 +14,7 @@ class RogerSuperRacewayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Roger Super Raceway"
+        self._ui_name = "Roger Super Raceway (Original)"
         self._ui_description = "Are you ready rip on the Roger Super Raceway? The Roger Super Raceway was inspired by a real-life track in the home town of AWS Community Member, Roger Logan. At 60.17m this track features no shortage of lightning fast drag strips and unforgiving technical sections that will put even the most skilled developer to the test."
         self._ui_length_in_m = 60.17  # metres
         self._ui_width_in_cm = 107  # centimetres

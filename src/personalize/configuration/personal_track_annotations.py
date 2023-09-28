@@ -133,6 +133,12 @@ rogue_raceway_cw_annotations = []
 
 rogue_raceway_ccw_annotations = []
 
+ace_super_speedway_annotations = []
+
+ace_super_speedway_cw_annotations = []
+
+ace_super_speedway_ccw_annotations = []
+
 rogue_circuit_annotations = []
 
 ross_raceway_annotations = []

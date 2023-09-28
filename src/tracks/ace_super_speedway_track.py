@@ -20,7 +20,7 @@ class AceSuperSpeedwayTrack(Track):
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "2022_april_pro"
         self._track_sector_dividers = [36, 64, 95, 123, 165, 203]
-        self._annotations = config.rogue_raceway_annotations
+        self._annotations = config.ace_super_speedway_annotations
         self._track_width = 1.067
 
         self._track_waypoints = [(0.02379524707794491, -3.2461709976196307), (0.27965644421055913, -3.4055914878845215),

@@ -19,7 +19,7 @@ class AceSuperSpeedwayClockwiseTrack(Track):
         self._ui_length_in_m = 99.99  # metres     (NOT STATED)
         self._ui_width_in_cm = 107  # centimetres
         self._world_name = "2022_april_pro_cw"
-        self._track_sector_dividers = [36, 64, 95, 123, 165, 203]
+        self._track_sector_dividers = [24, 62, 103, 131, 162, 190]
         self._annotations = config.ace_super_speedway_cw_annotations
         self._track_width = 1.067
         self._track_waypoints = [(0.13473508673746287, -3.3152049903099843), (0.024409905076026917, -3.246441960334778),

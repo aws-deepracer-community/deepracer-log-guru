@@ -14,7 +14,7 @@ class BreadCentricSpeedwayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "BreadCentric Speedway"
+        self._ui_name = "BreadCentric Speedway (Original)"
         self._ui_description = "The BreadCentric Speedway is named after AWS DeepRacer Community Hero, Tomasz Ptak AKA BreadCentric. This track adds a deceivingly technical section with an unforgiving hairpin turn separating the varying dragstrips. The BreadCentric Speedway will test the skills of even the most experienced developer."
         self._ui_length_in_m = 99.99  # metres     (NOT STATED)
         self._ui_width_in_cm = 107  # centimetres

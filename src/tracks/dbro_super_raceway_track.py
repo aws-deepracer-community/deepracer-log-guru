@@ -14,7 +14,7 @@ class DBroSuperRacewayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "DBro Super Raceway"
+        self._ui_name = "DBro Super Raceway (Original)"
         self._ui_description = "Named after the 2021 AWS DeepRacer finalist Darren \"DBro\" Broderick, the DBro Super Raceway features 2 lightning fast dragstrips and an unforgiving technical section of hairpin turns and cutbacks. Do you have what it takes to advance or will get caught doing DOH-nuts in the green?"
         self._ui_length_in_m = 99.99  # metres     (NOT STATED)
         self._ui_width_in_cm = 107  # centimetres

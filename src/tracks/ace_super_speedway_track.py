@@ -14,7 +14,7 @@ class AceSuperSpeedwayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Ace Super Speedway"
+        self._ui_name = "Ace Super Speedway (Original)"
         self._ui_description = "The Ace Super Speedway was named in honor of the 2021 AWS DeepRacer 2nd place Champion, Yousuf Nizam. Featuring full throttle straightaways and unforgiving hairpin turns the Ace Super Speedway will surely require an ace in the hole to come away with a win."
         self._ui_length_in_m = 99.99  # metres     (NOT STATED)
         self._ui_width_in_cm = 107  # centimetres

@@ -157,6 +157,10 @@ breadcentric_loop_annotations = []
 
 dbro_super_raceway_annotations = []
 
+dbro_super_raceway_cw_annotations = []
+
+dbro_super_raceway_ccw_annotations = []
+
 dbro_raceway_annotations = []
 
 jochem_highway_annotations = []

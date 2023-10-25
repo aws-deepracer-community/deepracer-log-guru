@@ -14,7 +14,7 @@ class ExpeditionSuperLoopTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Expedition Super Loop"
+        self._ui_name = "Expedition Super Loop (Original)"
         self._ui_description = "The pro racers will be drifting into uncharted territory on the Expedition Super Loop! This is a long track at 69.96m featuring exceptionally difficult hairpin turns and high speed straightaways. This track is sure to test even the most skillful racers."
         self._ui_length_in_m = 69.96  # metres
         self._ui_width_in_cm = 107  # centimetres   # TODO

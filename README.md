@@ -2,11 +2,11 @@
 
 ## Announcement
 
-28th September 2023: Version 3.2.28 is now available with the new clockwise and counter-clockwise versions of the DBro Super Raceway
+28th October 2023: Version 3.2.29 is now available with the new clockwise and counter-clockwise versions of the tracks for the 2023 Championship
 
 ## Introduction
 
-Deep Racer Guru (DRG) is an interactive detailed analysis tool for AWS Deep Racer logs.
+Deep Racer Guru (DRG) is an interactive analysis tool for AWS Deep Racer logs.
 
 Its main purpose is to provide "out-of-the-box" analysis that can run locally on your own computer.
 
@@ -34,6 +34,7 @@ See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_rac
 * [Troubleshooting](docs/trouble_shooting.md)
 
 ## Old Announcements
+* 28th September 2023: Version 3.2.28 is now available with the new clockwise and counter-clockwise versions of the DBro Super Raceway
 * 28th September 2023: Version 3.2.27 is now available with an updated definition of the Ace Super Speedway track
 * 9th September 2023: Version 3.2.26 is now available with updated competition tracks for August and September
 * 6th July 2023: Version 3.2.25 is now available with the new clockwise and counter-clockwise versions of the BreadCentric Speedway

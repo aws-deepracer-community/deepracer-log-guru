@@ -119,6 +119,10 @@ playa_super_raceway_annotations = []
 
 expedition_super_loop_annotations = []
 
+expedition_super_loop_cw_annotations = []
+
+expedition_super_loop_ccw_annotations = []
+
 expedition_loop_annotations = []
 
 vivalas_loop_annotations = []
@@ -180,6 +184,10 @@ jennens_family_speedway_annotations = []
 jennens_super_speedway_annotations = []
 
 reinvent_2022_annotations = []
+
+reinvent_2022_cw_annotations = []
+
+reinvent_2022_ccw_annotations = []
 
 ace_speedway_annotations = []
 

@@ -2,7 +2,7 @@
 
 ## Announcement
 
-28th October 2023: Version 3.2.29 is now available with the new clockwise and counter-clockwise versions of the tracks for the 2023 Championship
+25th October 2023: Version 3.2.29 is now available with the new clockwise and counter-clockwise versions of the tracks for the 2023 Championship
 
 ## Introduction
 

@@ -11,7 +11,7 @@ Note - If you change the install options, be sure you still install *pip* and *t
 
 Download additional packages by running this command in the directory where you just installed Python:
 
-    pip3 install matplotlib==3.3.3 numpy==1.19.3 scipy==1.6.0
+    pip3 install matplotlib==3.8.3 numpy==1.26.4 scipy==1.12.0
     
 For example:
 

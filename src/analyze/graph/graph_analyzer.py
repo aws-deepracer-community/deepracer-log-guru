@@ -24,7 +24,7 @@ class GraphAnalyzer(Analyzer):
         super().__init__(guru_parent_redraw, control_frame)
         self.matplotlib_canvas = matplotlib_canvas
         self.graph_figure: Figure = matplotlib_canvas.figure
-        mpl_style.use("seaborn")
+        mpl_style.use("seaborn-v0_8")
         self.graph_figure.patch.set_facecolor('lightgrey')
         self.graph_figure.canvas.mpl_connect('pick_event', self.handle_mouse_picker)
         self._guru_parent_callback_for_episode_choice = guru_parent_callback_for_episode_choice

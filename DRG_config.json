@@ -1,0 +1,6 @@
+{
+  "log_directory": "/Users/aamir/Documents/projects/ai/deepracer-sample-logs",
+  "last_open_track": "2022_reinvent_champ_ccw",
+  "calculate_alternate_discount_factors": false,
+  "calculate_new_reward": false
+}

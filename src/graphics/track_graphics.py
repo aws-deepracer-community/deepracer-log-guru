@@ -64,6 +64,7 @@ class TrackGraphics:
 
         x = (x - self.min_x) * self.scale
         y = (self.max_y - y) * self.scale
+        x, y = self.rotate_point((x, y), self.rotation)
 
         self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=fill_colour, width=0)
 

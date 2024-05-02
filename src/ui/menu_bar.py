@@ -113,6 +113,15 @@ class MenuBar():
         menu.add_command(label="Track - Grey", command=self.main_app.menu_callback_track_grey)
         menu.add_command(label="Track - Blue", command=self.main_app.menu_callback_track_blue)
         menu.add_separator()
+        menu.add_command(
+            label="Track - Rotate 90",
+            command=self.main_app.menu_callback_rotate_track_90,
+        )
+        menu.add_command(
+            label="Track - Rotate 0",
+            command=self.main_app.menu_callback_rotate_track_0,
+        )
+        menu.add_separator()
         menu.add_command(label="Sectors - On", command=self.main_app.menu_callback_sectors_on)
         menu.add_command(label="Sectors - Off", command=self.main_app.menu_callback_sectors_off)
         menu.add_separator()

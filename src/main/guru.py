@@ -104,7 +104,6 @@ class MainApp(tk.Frame):
         self.track_canvas.bind("<ButtonRelease-1>", self.left_button_released_on_track_canvas)
         self.track_canvas.bind("<Double-1>", self.left_button_double_clicked_on_track_canvas)
 
-
         self.control_frame = tk.Frame(root)
         self.inner_control_frame = tk.Frame(self.control_frame)
 
@@ -125,7 +124,6 @@ class MainApp(tk.Frame):
         self.graph_canvas = matplotlib_canvas.get_tk_widget()
         self.graph_canvas.config(width=DEFAULT_CANVAS_WIDTH, height=DEFAULT_CANVAS_HEIGHT)
 
-
         #
         # Initialize the "please wait" widget in the middle of each canvas
         #
@@ -133,7 +131,6 @@ class MainApp(tk.Frame):
         self.please_wait_track = PleaseWait(root, self.track_canvas)
         self.please_wait_graph = PleaseWait(root, self.graph_canvas)
         self.please_wait = self.please_wait_track
-
 
         #
         # Create the various "analyzers" and let them take control of the contents of the high level UI components
@@ -198,13 +195,11 @@ class MainApp(tk.Frame):
         else:
             self.secret_analyzers = None
 
-
         #
         # Define the layout of the high level UI components
         #
 
         self.layout_ui_for_track_analyzer()
-
 
         #
         # Configure the rest of the application window and then make it appear
@@ -213,14 +208,12 @@ class MainApp(tk.Frame):
         self.master.title("Deep Racer Guru v" + VERSION)
         self.menu_bar = MenuBar(root, self, False, False)
 
-
         #
         # All done, so display main window now
         #
 
         self.already_drawing = False
         self.update()
-
 
         #
         # And now lock-in the sizes of the control and status frames so switches between views will be smooth
@@ -636,6 +629,14 @@ class MainApp(tk.Frame):
         self.view_manager.set_waypoint_sizes_large()
         self.redraw()
 
+    def menu_callback_rotate_track_90(self):
+        self.view_manager.rotate_track(90)
+        self.redraw()
+
+    def menu_callback_rotate_track_0(self):
+        self.view_manager.rotate_track(0)
+        self.redraw()
+
     def menu_callback_waypoints_small(self):
         self.view_manager.set_waypoint_sizes_small()
         self.redraw()
@@ -710,7 +711,6 @@ class MainApp(tk.Frame):
 
     def expect_objects(self):
         return self.log is not None and self.log.get_log_meta().race_type == "OBJECT_AVOIDANCE"
-
 
 
 root = tk.Tk()

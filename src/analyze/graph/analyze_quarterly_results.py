@@ -54,6 +54,7 @@ class AnalyzeQuarterlyResults(GraphAnalyzer):
         self.plot_minimum_percents(episodes, gs, 100, 2, 0)
 
         self.plot_lap_times_stat(episodes, gs, np.median, 2, 1)
+        self.plot_lap_times_stat(episodes, gs, np.median, 2, 2, minimum_percent=10)
 
     def plot_minimum_percents(self, episodes, gs, minimum_percent, graph_x, graph_y):
         axes :Axes = self.graph_figure.add_subplot(gs[graph_x, graph_y])
@@ -156,10 +157,12 @@ class AnalyzeQuarterlyResults(GraphAnalyzer):
             border = 0.15 * (max_value - min_value)
             axes.set_ybound(max(0.0, min_value - border), max_value + border)
 
-    def plot_lap_times_stat(self, episodes, gs, stat_method, graph_x, graph_y):
+    def plot_lap_times_stat(self, episodes, gs, stat_method, graph_x, graph_y, minimum_percent=None):
+        if minimum_percent:
+            episodes = [e for e in episodes if e.percent_complete >= minimum_percent]
         axes :Axes = self.graph_figure.add_subplot(gs[graph_x, graph_y])
 
-        axes.set_title("Lap Time " + stat_method.__name__)
+        axes.set_title("Lap Time " + stat_method.__name__ + (" " + str(minimum_percent) + "%" if minimum_percent else ""))
 
         axes.get_xaxis().set_ticklabels([])
         axes.get_yaxis().set_ticklabels([])

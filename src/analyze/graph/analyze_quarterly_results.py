@@ -55,6 +55,13 @@ class AnalyzeQuarterlyResults(GraphAnalyzer):
 
         self.plot_lap_times_stat(episodes, gs, np.median, 2, 1)
 
+    def diff_list(self, data):
+        new_list = []
+        for i in range(len(data) - 1, 0, -1):
+            new_list.append(data[i] - data[i-1])
+        new_list.append(data[0])
+        return list(reversed(new_list))
+
     def plot_minimum_percents(self, episodes, gs, minimum_percent, graph_x, graph_y):
         axes :Axes = self.graph_figure.add_subplot(gs[graph_x, graph_y])
 
@@ -71,8 +78,10 @@ class AnalyzeQuarterlyResults(GraphAnalyzer):
 
         plot_x = np.array([1, 2, 3, 4])
         plot_y = get_data_minimum_percents(episodes, minimum_percent)
+        diffs = self.diff_list(plot_y)
+        colors = ["C1" if x > 0 else "C2" for x in diffs]
 
-        bars = axes.bar(plot_x, plot_y, color="C1")
+        bars = axes.bar(plot_x, plot_y, color=colors)
 
         for bar in bars:
             height = bar.get_height()

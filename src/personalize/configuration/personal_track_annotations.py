@@ -91,6 +91,8 @@ kuei_super_raceway_annotations = []
 
 cosmic_loop_annotations = []
 
+cosmic_loop_ccw_annotations = []
+
 cosmic_circuit_annotations = []
 
 cosmic_circuit_cw_annotations = []

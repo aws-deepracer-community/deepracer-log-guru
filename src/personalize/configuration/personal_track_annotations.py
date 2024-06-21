@@ -147,6 +147,8 @@ rogue_circuit_annotations = []
 
 ross_raceway_annotations = []
 
+ross_raceway_ccw_annotations = []
+
 ross_super_speedway_annotations = []
 
 oval_track_annotations = []

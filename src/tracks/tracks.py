@@ -53,6 +53,7 @@ from src.tracks.ace_super_speedway_track import AceSuperSpeedwayTrack
 from src.tracks.ace_super_speedway_cw_track import AceSuperSpeedwayClockwiseTrack
 from src.tracks.ace_super_speedway_ccw_track import AceSuperSpeedwayCounterClockwiseTrack
 from src.tracks.ross_raceway_track import RossRacewayTrack
+from src.tracks.ross_raceway_track_ccw import RossRacewayCounterClockwiseTrack
 from src.tracks.ross_super_speedway_track import RossSuperSpeedwayTrack
 from src.tracks.oval_track import OvalTrack
 from src.tracks.breadcentric_loop_track import BreadCentricLoopTrack
@@ -109,7 +110,7 @@ def get_all_tracks():
               VivalasLoooTrack(), VivalasSpeedwayTrack(), RLSpeedwayTrack(),
               RogueCircuitTrack(), AceSpeedwayTrack(), AceSpeedwayClockwiseTrack(), AceSpeedwayCounterClockwiseTrack(),
               AceSuperSpeedwayTrack(), AceSuperSpeedwayClockwiseTrack(), AceSuperSpeedwayCounterClockwiseTrack(),
-              RossRacewayTrack(), DBroSuperRacewayClockwiseTrack(), DBroSuperRacewayCounterClockwiseTrack(),
+              RossRacewayTrack(), RossRacewayCounterClockwiseTrack(), DBroSuperRacewayClockwiseTrack(), DBroSuperRacewayCounterClockwiseTrack(),
               RossSuperSpeedwayTrack(), OvalTrack(), BreadCentricLoopTrack(), BreadCentricSpeedwayTrack(),
               BreadCentricSpeedwayClockwiseTrack(), BreadCentricSpeedwayCounterClockwiseTrack(),
               DBroRacewayTrack(), DBroSuperRacewayTrack(), JochemTurnpikeTrack(), JochemHighwayTrack(),

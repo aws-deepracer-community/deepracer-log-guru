@@ -2,7 +2,7 @@
 
 ## Announcement
 
-17th March 2024: Version 3.2.30 is now available which uses the latest versions of Python packages
+30th July 2024: Version 3.2.31 is now available which has been updated with modified tracks
 
 ## Introduction
 
@@ -34,6 +34,7 @@ See its sibling product [Deep Racer Framework](https://github.com/dmh23/deep_rac
 * [Troubleshooting](docs/trouble_shooting.md)
 
 ## Old Announcements
+* 17th March 2024: Version 3.2.30 is now available which uses the latest versions of Python packages
 * 25th October 2023: Version 3.2.29 is now available with the new clockwise and counter-clockwise versions of the tracks for the 2023 Championship
 * 28th September 2023: Version 3.2.28 is now available with the new clockwise and counter-clockwise versions of the DBro Super Raceway
 * 28th September 2023: Version 3.2.27 is now available with an updated definition of the Ace Super Speedway track

@@ -86,6 +86,12 @@ from src.tracks.ace_speedway_cw_track import AceSpeedwayClockwiseTrack
 from src.tracks.ace_speedway_ccw_track import AceSpeedwayCounterClockwiseTrack
 from src.tracks.breadcentric_speedway_ccw_track import BreadCentricSpeedwayCounterClockwiseTrack
 from src.tracks.breadcentric_speedway_cw_track import BreadCentricSpeedwayClockwiseTrack
+from src.tracks.ross_raceway_cw_track import RossRacewayClockwiseTrack
+from src.tracks.ross_raceway_ccw_track import RossRacewayCounterClockwiseTrack
+from src.tracks.cosmic_loop_cw_track import CosmicLoopClockwiseTrack
+from src.tracks.cosmic_loop_ccw_track import CosmicLoopCounterClockwiseTrack
+from src.tracks.baja_turnpike_cw_track import BajaTurnpikeClockwiseTrack
+from src.tracks.baja_turnpike_ccw_track import BajaTurnpikeCounterClockwiseTrack
 
 
 def get_all_tracks():
@@ -118,7 +124,10 @@ def get_all_tracks():
               PoChunSpeedwayClockwiseTrack(), PoChunSpeedwayCounterClockwiseTrack(),
               LarsCircuitClockwiseTrack(), LarsCircuitCounterClockwiseTrack(),
               RogueRacewayTrack(), RogueRacewayClockwiseTrack(), RogueRacewayCounterClockwiseTrack(),
-              RogerSuperRacewayTrack(), RogerSuperRacewayClockwiseTrack(), RogerSuperRacewayCounterClockwiseTrack()
+              RogerSuperRacewayTrack(), RogerSuperRacewayClockwiseTrack(), RogerSuperRacewayCounterClockwiseTrack(),
+              RossRacewayClockwiseTrack(), RossRacewayCounterClockwiseTrack(),
+              CosmicLoopClockwiseTrack(), CosmicLoopCounterClockwiseTrack(),
+              BajaTurnpikeClockwiseTrack(), BajaTurnpikeCounterClockwiseTrack()
               ]:
         t.prepare(tracks)
 

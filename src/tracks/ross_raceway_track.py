@@ -14,7 +14,7 @@ class RossRacewayTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Ross Raceway"
+        self._ui_name = "Ross Raceway (Original)"
         self._ui_description = "The Ross Raceway was named in honor of the 2021 AWS DeepRacer 3rd place Champion, Ross Williams. Expect to see racers put the pedal to the metal on the 3x dragstrips featured on the Ross Raceway, but there will be no shortage of off tracks as they navigate the various sweeping turns."
         self._ui_length_in_m = 99.99  # metres  NOT SPECIFIED
         self._ui_width_in_cm = 107  # centimetres   NOT SPECIFIED

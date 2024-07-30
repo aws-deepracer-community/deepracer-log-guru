@@ -14,7 +14,7 @@ class BajaTurnpikeTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Baja Turnpike"
+        self._ui_name = "Baja Turnpike (Original)"
         self._ui_description = "At 40.79m, the Baja Turnpike is a short angular track that mixes full throttle straightaways with hard decelerating turns. Signature features include a long high speed sprint over the finish line end capped by a harsh hairpin and tight 90 degree turn. While you won't find any sand traps on this course there are no shortage of places to get stuck."
         self._ui_length_in_m = 40.79  # metres
         self._ui_width_in_cm = 107  # centimetres   # TODO

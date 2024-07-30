@@ -14,7 +14,7 @@ class CosmicLoopTrack(Track):
     def __init__(self):
         super().__init__()
 
-        self._ui_name = "Cosmic Loop"
+        self._ui_name = "Cosmic Loop (Original)"
         self._ui_description = "Cosmic Loop is a short track (46.18m) that features a single sprint straightaway and a challenging technical section with multiple 90 degree turns and and two hairpins. A successful run will require skillful command of time (steps) and (action) space."
         self._ui_length_in_m = 46.18  # metres
         self._ui_width_in_cm = 107  # centimetres   # TODO

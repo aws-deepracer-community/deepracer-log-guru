@@ -91,6 +91,10 @@ kuei_super_raceway_annotations = []
 
 cosmic_loop_annotations = []
 
+cosmic_loop_cw_annotations = []
+
+cosmic_loop_ccw_annotations = []
+
 cosmic_circuit_annotations = []
 
 cosmic_circuit_cw_annotations = []
@@ -98,6 +102,10 @@ cosmic_circuit_cw_annotations = []
 baja_highway_annotations = []
 
 baja_turnpike_annotations = []
+
+baja_turnpike_cw_annotations = []
+
+baja_turnpike_ccw_annotations = []
 
 hot_rod_speedway_annotations = []
 
@@ -146,6 +154,10 @@ ace_super_speedway_ccw_annotations = []
 rogue_circuit_annotations = []
 
 ross_raceway_annotations = []
+
+ross_raceway_cw_annotations = []
+
+ross_raceway_ccw_annotations = []
 
 ross_super_speedway_annotations = []
 

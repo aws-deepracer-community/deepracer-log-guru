@@ -13,7 +13,7 @@ def reward_function(params):
 
     # Give a high reward if no wheels go off the track and
     # the agent is somewhere in between the track borders
-    if all_wheels_on_track and (0.5 * track_width - distance_from_center) >= 0.05:
+    if all_wheels_on_track and (0.5 * track_width - distance_from_center) >= 0.01:
         reward = 1.0
 
     # Always return a float value

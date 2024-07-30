@@ -2,7 +2,7 @@
 
 ## Announcement
 
-17th March 2024: Version 3.2.30 is now available which uses the latest versions of Python libraries
+17th March 2024: Version 3.2.30 is now available which uses the latest versions of Python packages
 
 ## Introduction
 

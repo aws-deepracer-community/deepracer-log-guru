@@ -109,6 +109,8 @@ baja_turnpike_ccw_annotations = []
 
 hot_rod_speedway_annotations = []
 
+hot_rod_speedway_ccw_annotations = []
+
 hot_rod_super_speedway_annotations = []
 
 hot_rod_super_speedway_cw_annotations = []

@@ -163,6 +163,8 @@ ross_super_speedway_annotations = []
 
 oval_track_annotations = []
 
+ross_super_speedway_cw_annotations = []
+
 breadcentric_speedway_annotations = []
 
 breadcentric_speedway_cw_annotations = []

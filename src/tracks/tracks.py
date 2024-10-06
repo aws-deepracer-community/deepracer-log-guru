@@ -33,6 +33,7 @@ from src.tracks.cosmic_circuit_track_cw import CosmicCircuitClockwiseTrack
 from src.tracks.baja_turnpike_track import BajaTurnpikeTrack
 from src.tracks.baja_highway_track import BajaHighwayTrack
 from src.tracks.hot_rod_speedway_track import HotRodSpeedwayTrack
+from src.tracks.hot_rod_speedway_ccw_track import HotRodSpeedwayCounterClockwiseTrack
 from src.tracks.hot_rod_super_speedway_track import HotRodSuperSpeedwayTrack
 from src.tracks.a_to_z_speedway_track import AtoZSpeedwayTrack
 from src.tracks.playa_raceway_track import PlayaRacewayTrack
@@ -102,7 +103,7 @@ def get_all_tracks():
               Reinvent2018Track(), AtoZSpeedwayTrack(), AtoZSpeedwayClockwiseTrack(),
               AtoZSpeedwayCounterClockwiseTrack(), ChampionshipCup2019Track(),
               SmileSpeedwayClockwiseTrack(), SmileSpeedwayCounterClockwiseTrack(),
-              StratusLoop2020Track(), HotRodSpeedwayTrack(), HotRodSuperSpeedwayTrack(),
+              StratusLoop2020Track(), HotRodSpeedwayTrack(), HotRodSpeedwayCounterClockwiseTrack(), HotRodSuperSpeedwayTrack(),
               HotRodSuperSpeedwayClockwiseTrack(), HotRodSuperSpeedwayCounterClockwiseTrack(),
               CumuloTurnpikeTrack(), YunSpeedwayTrack(),
               RogerRacewayTrack(), FumiakiLoop2020Track(), AwsSummitRacewayTrack(),

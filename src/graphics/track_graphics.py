@@ -9,6 +9,7 @@
 from tkinter import *
 import src.utils.geometry as geometry
 import src.configuration.real_world as config
+import math
 
 
 class TrackGraphics:
@@ -17,11 +18,19 @@ class TrackGraphics:
         self.scale = 100.0
         self.min_x = 0
         self.max_y = 0
+        self.rotation = math.pi * 90 / 180
 
         self.ring_highlight_widgets = []
         self.angle_line_highlight_widgets = []
         self.car_widgets = []
         self.old_car_widgets = []
+
+    def set_rotation(self, angle):
+        self.rotation = math.pi * angle / 180
+
+
+    def get_origin(self):
+        return (self.canvas.winfo_width() / 2, self.canvas.winfo_height() / 2)
 
     def reset_to_blank(self):
         self.canvas.delete("all")
@@ -55,6 +64,7 @@ class TrackGraphics:
 
         x = (x - self.min_x) * self.scale
         y = (self.max_y - y) * self.scale
+        x, y = self.rotate_point((x, y), self.rotation)
 
         self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=fill_colour, width=0)
 
@@ -68,6 +78,11 @@ class TrackGraphics:
         x2 = (x2 - self.min_x) * self.scale
         y2 = (self.max_y - y2) * self.scale
 
+        x, y = self.rotate_point((x, y), self.rotation)
+        x2, y2 = self.rotate_point(
+            (x2, y2), self.rotation
+        )
+
         return self.canvas.create_line(x, y, x2, y2, fill=fill_colour, width=width, dash=dash_pattern)
 
     def plot_angle_line(self, start_point, bearing, distance, width, fill_colour, dash_pattern=None):
@@ -79,6 +94,8 @@ class TrackGraphics:
 
         x = (x - self.min_x) * self.scale
         y = (self.max_y - y) * self.scale
+
+        x, y = self.rotate_point((x, y), self.rotation)
 
         return self.canvas.create_text(x + offset_x, y + offset_y, text=text_string, fill=colour, font=("", font_size))
 
@@ -120,7 +137,6 @@ class TrackGraphics:
         self.plot_line(front_left, rear_left, line_width, colour)
         self.plot_line(front_right, rear_right, line_width, colour)
 
-
     def plot_polygon(self, points, colour):
 
         points_as_array = []
@@ -161,3 +177,13 @@ class TrackGraphics:
         for w in self.old_car_widgets:
             self.canvas.delete(w)
         self.old_car_widgets = []
+
+    def rotate_point(self, point, angle, origin=None):
+        x, y = point
+        new_origin = origin if origin else self.get_origin()
+        ox, oy = new_origin
+
+        qx = ox + math.cos(angle) * (x - ox) - math.sin(angle) * (y - oy)
+        qy = oy + math.sin(angle) * (x - ox) + math.cos(angle) * (y - oy)
+
+        return qx, qy

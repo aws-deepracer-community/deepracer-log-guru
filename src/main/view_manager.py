@@ -21,6 +21,7 @@ class ViewManager:
 
         self.waypoint_major_size = 0
         self.waypoint_minor_size = 0
+        self.rotation_angle = 0
 
         self.waypoints_on = True
         self.waypoint_labels_on = False
@@ -60,6 +61,9 @@ class ViewManager:
         self.waypoint_minor_size = 0
         self.waypoint_major_size = 0
         self.waypoints_on = True
+
+    def rotate_track(self, angle=0):
+        self.rotation_angle = angle
 
     def set_waypoints_off(self):
         self.waypoints_on = False
@@ -124,6 +128,7 @@ class ViewManager:
             background_analyser.recalculate()
 
         track_graphics.reset_to_blank()
+        track_graphics.set_rotation(self.rotation_angle)
 
         if self.zoom_in and self.zoom_x:
             track_graphics.set_track_area(self.zoom_x, self.zoom_y, self.zoom_x2, self.zoom_y2)

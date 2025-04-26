@@ -48,6 +48,7 @@ from src.tracks.rogue_raceway_track import RogueRacewayTrack
 from src.tracks.rogue_raceway_cw_track import RogueRacewayClockwiseTrack
 from src.tracks.rogue_raceway_ccw_track import RogueRacewayCounterClockwiseTrack
 from src.tracks.rogue_circuit_track import RogueCircuitTrack
+from src.tracks.rogue_circuit_ccw_track import RogueCircuitCounterClockWiseTrack
 from src.tracks.ace_speedway_track import AceSpeedwayTrack
 from src.tracks.ace_super_speedway_track import AceSuperSpeedwayTrack
 from src.tracks.ace_super_speedway_cw_track import AceSuperSpeedwayClockwiseTrack
@@ -114,7 +115,7 @@ def get_all_tracks():
               ExpeditionSuperLoopTrack(),
               ExpeditionSuperLoopClockwiseTrack(), ExpeditionSuperLoopCounterClockwiseTrack(),
               VivalasLoooTrack(), VivalasSpeedwayTrack(), RLSpeedwayTrack(),
-              RogueCircuitTrack(), AceSpeedwayTrack(), AceSpeedwayClockwiseTrack(), AceSpeedwayCounterClockwiseTrack(),
+              RogueCircuitTrack(), RogueCircuitCounterClockWiseTrack() ,AceSpeedwayTrack(), AceSpeedwayClockwiseTrack(), AceSpeedwayCounterClockwiseTrack(),
               AceSuperSpeedwayTrack(), AceSuperSpeedwayClockwiseTrack(), AceSuperSpeedwayCounterClockwiseTrack(),
               RossRacewayTrack(), DBroSuperRacewayClockwiseTrack(), DBroSuperRacewayCounterClockwiseTrack(),
               RossSuperSpeedwayTrack(), RossSuperSpeedwayClockwiseTrack(), OvalTrack(), BreadCentricLoopTrack(), BreadCentricSpeedwayTrack(),

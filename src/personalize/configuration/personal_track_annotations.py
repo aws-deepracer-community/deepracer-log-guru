@@ -153,6 +153,8 @@ ace_super_speedway_ccw_annotations = []
 
 rogue_circuit_annotations = []
 
+rogue_circuit_ccw_annotations = []
+
 ross_raceway_annotations = []
 
 ross_raceway_cw_annotations = []
